@@ -1,9 +1,7 @@
-import os
 import sys
 from pathlib import Path
-from rdflib import Graph, Namespace, URIRef
+from rdflib import Graph
 from rdflib.exceptions import ParserError
-import traceback
 
 def find_ttl_files():
     """Find all .ttl files in the current directory."""
@@ -131,9 +129,9 @@ def test_semantic_consistency():
     issues = []
     
     # Check for undefined classes/properties being used
-    all_subjects = set(combined_graph.subjects())
-    all_predicates = set(combined_graph.predicates())
-    all_objects = set(combined_graph.objects())
+    set(combined_graph.subjects())
+    set(combined_graph.predicates())
+    set(combined_graph.objects())
     
     defined_classes = set(combined_graph.subjects(RDF.type, RDFS.Class)) | \
                      set(combined_graph.subjects(RDF.type, OWL.Class))
@@ -162,7 +160,7 @@ def test_semantic_consistency():
 
 def test_cross_references():
     """Test that cross-references between files are valid."""
-    from rdflib import RDF, RDFS, OWL
+    from rdflib import RDF
     
     combined_graph = Graph()
     ttl_files = find_ttl_files()
@@ -241,7 +239,7 @@ def run_test_suite():
     
     consistency_result = test_ontology_consistency()
     if consistency_result['success']:
-        print(f"✅ All files loaded successfully")
+        print("✅ All files loaded successfully")
         print(f"   📊 Combined graph: {consistency_result['total_triples']} triples")
         print(f"   📁 Files loaded: {len(consistency_result['loaded_files'])}")
     else:
