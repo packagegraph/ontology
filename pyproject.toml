@@ -1,0 +1,9 @@
+[project]
+name = "ontology"
+version = "0.1.0"
+description = "Ontology for representing software packages and repositories across different package management systems"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "rdflib>=7.1.4",
+]
