@@ -115,6 +115,89 @@ def test_class_and_property_definitions():
         'property_count': len(properties)
     }
 
+def test_semantic_consistency():
+    """Test for semantic consistency issues."""
+    from rdflib import RDF, RDFS, OWL
+    
+    combined_graph = Graph()
+    ttl_files = find_ttl_files()
+    
+    for file_path in ttl_files:
+        try:
+            combined_graph.parse(file_path, format='turtle')
+        except:
+            continue
+    
+    issues = []
+    
+    # Check for undefined classes/properties being used
+    all_subjects = set(combined_graph.subjects())
+    all_predicates = set(combined_graph.predicates())
+    all_objects = set(combined_graph.objects())
+    
+    defined_classes = set(combined_graph.subjects(RDF.type, RDFS.Class)) | \
+                     set(combined_graph.subjects(RDF.type, OWL.Class))
+    
+    defined_properties = set(combined_graph.subjects(RDF.type, RDF.Property)) | \
+                        set(combined_graph.subjects(RDF.type, OWL.ObjectProperty)) | \
+                        set(combined_graph.subjects(RDF.type, OWL.DatatypeProperty))
+    
+    # Check for classes used but not defined (excluding external namespaces)
+    used_as_classes = set()
+    for s, p, o in combined_graph.triples((None, RDF.type, None)):
+        if str(o).startswith('http://packagegraph.github.io/ontology/'):
+            used_as_classes.add(o)
+    
+    undefined_classes = used_as_classes - defined_classes
+    if undefined_classes:
+        issues.append(f"Classes used but not defined: {[str(c) for c in undefined_classes]}")
+    
+    return {
+        'issues': issues,
+        'defined_classes_count': len(defined_classes),
+        'defined_properties_count': len(defined_properties),
+        'used_classes_count': len(used_as_classes),
+        'success': len(issues) == 0
+    }
+
+def test_cross_references():
+    """Test that cross-references between files are valid."""
+    combined_graph = Graph()
+    ttl_files = find_ttl_files()
+    
+    for file_path in ttl_files:
+        try:
+            combined_graph.parse(file_path, format='turtle')
+        except:
+            continue
+    
+    # Check for broken references to core ontology
+    core_namespace = "http://packagegraph.github.io/ontology/core#"
+    issues = []
+    
+    # Find all references to core namespace
+    core_refs = set()
+    for s, p, o in combined_graph:
+        if str(s).startswith(core_namespace):
+            core_refs.add(s)
+        if str(p).startswith(core_namespace):
+            core_refs.add(p)
+        if str(o).startswith(core_namespace):
+            core_refs.add(o)
+    
+    # Check if these are actually defined
+    defined_core_terms = set()
+    for s, p, o in combined_graph.triples((None, None, None)):
+        if str(s).startswith(core_namespace) and p in [RDF.type]:
+            defined_core_terms.add(s)
+    
+    return {
+        'core_references': len(core_refs),
+        'defined_core_terms': len(defined_core_terms),
+        'issues': issues,
+        'success': len(issues) == 0
+    }
+
 def run_test_suite():
     """Run the complete test suite."""
     print("🧪 Running Ontology Test Suite")
@@ -196,6 +279,35 @@ def run_test_suite():
         print("\n📋 Properties:")
         for prop in sorted(definitions['properties']):
             print(f"   🔗 {prop}")
+    
+    # Test 5: Semantic consistency
+    print("\n🔍 Test 5: Semantic Consistency")
+    print("-" * 40)
+    
+    semantic_result = test_semantic_consistency()
+    if semantic_result['success']:
+        print("✅ No semantic consistency issues found")
+        print(f"   📊 Defined classes: {semantic_result['defined_classes_count']}")
+        print(f"   📊 Used classes: {semantic_result['used_classes_count']}")
+    else:
+        print("❌ Semantic consistency issues found:")
+        for issue in semantic_result['issues']:
+            print(f"   🚨 {issue}")
+        all_valid = False
+    
+    # Test 6: Cross-references
+    print("\n🔗 Test 6: Cross-Reference Validation")
+    print("-" * 40)
+    
+    cross_ref_result = test_cross_references()
+    if cross_ref_result['success']:
+        print("✅ Cross-references are valid")
+        print(f"   📊 Core namespace references: {cross_ref_result['core_references']}")
+    else:
+        print("❌ Cross-reference issues found:")
+        for issue in cross_ref_result['issues']:
+            print(f"   🚨 {issue}")
+        all_valid = False
     
     # Final result
     print("\n" + "=" * 50)
