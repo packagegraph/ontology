@@ -1,0 +1,170 @@
+# Package Management Base Ontology
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+
+
+# Ontology Declaration
+pkg: a owl:Ontology ;
+    rdfs:label "Package Management Core Ontology" ;
+    rdfs:comment "Core ontology for representing software packages and repositories across different package management systems" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" .
+
+# Core Classes
+pkg:Package a owl:Class ;
+    rdfs:label "Package" ;
+    rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system" .
+
+pkg:Repository a owl:Class ;
+    rdfs:label "Repository" ;
+    rdfs:comment "A storage location for packages, accessible through a package management system" .
+
+pkg:PackageManager a owl:Class ;
+    rdfs:label "Package Manager" ;
+    rdfs:comment "A software tool that manages the installation, updating, and removal of packages" .
+
+pkg:Dependency a owl:Class ;
+    rdfs:label "Dependency" ;
+    rdfs:comment "A relationship indicating that one package requires another package to function properly" .
+
+pkg:Version a owl:Class ;
+    rdfs:label "Version" ;
+    rdfs:comment "A specific version or release of a package" .
+
+pkg:Maintainer a owl:Class ;
+    rdfs:label "Maintainer" ;
+    rdfs:comment "A person or organization responsible for maintaining a package" .
+
+pkg:License a owl:Class ;
+    rdfs:label "License" ;
+    rdfs:comment "The legal license under which a package is distributed" .
+
+pkg:Architecture a owl:Class ;
+    rdfs:label "Architecture" ;
+    rdfs:comment "The hardware or software architecture for which a package is built" .
+
+# Core Properties
+pkg:packageName a owl:DatatypeProperty ;
+    rdfs:label "package name" ;
+    rdfs:comment "The name of a package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:versionString a owl:DatatypeProperty ;
+    rdfs:label "version string" ;
+    rdfs:comment "The version identifier of a package" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range xsd:string .
+
+pkg:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "A human-readable description of what the package does" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:homepage a owl:DatatypeProperty ;
+    rdfs:label "homepage" ;
+    rdfs:comment "The homepage URL of the package or project" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:anyURI .
+
+pkg:downloadURL a owl:DatatypeProperty ;
+    rdfs:label "download URL" ;
+    rdfs:comment "The URL from which the package can be downloaded" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:anyURI .
+
+pkg:installSize a owl:DatatypeProperty ;
+    rdfs:label "install size" ;
+    rdfs:comment "The disk space required when the package is installed" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:long .
+
+pkg:packageSize a owl:DatatypeProperty ;
+    rdfs:label "package size" ;
+    rdfs:comment "The size of the package file" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:long .
+
+pkg:checksum a owl:DatatypeProperty ;
+    rdfs:label "checksum" ;
+    rdfs:comment "A cryptographic hash of the package for integrity verification" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:checksumType a owl:DatatypeProperty ;
+    rdfs:label "checksum type" ;
+    rdfs:comment "The algorithm used to generate the checksum (e.g., MD5, SHA256)" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+# Object Properties
+pkg:hasVersion a owl:ObjectProperty ;
+    rdfs:label "has version" ;
+    rdfs:comment "Links a package to one of its versions" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Version .
+
+pkg:dependsOn a owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "Indicates that a package requires another package to function" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:conflicts a owl:ObjectProperty ;
+    rdfs:label "conflicts" ;
+    rdfs:comment "Indicates that a package cannot be installed alongside another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:provides a owl:ObjectProperty ;
+    rdfs:label "provides" ;
+    rdfs:comment "Indicates that a package provides the functionality of another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:replaces a owl:ObjectProperty ;
+    rdfs:label "replaces" ;
+    rdfs:comment "Indicates that a package replaces another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:containedIn a owl:ObjectProperty ;
+    rdfs:label "contained in" ;
+    rdfs:comment "Links a package to the repository that contains it" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Repository .
+
+pkg:maintainedBy a owl:ObjectProperty ;
+    rdfs:label "maintained by" ;
+    rdfs:comment "Links a package to its maintainer" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Maintainer .
+
+pkg:hasLicense a owl:ObjectProperty ;
+    rdfs:label "has license" ;
+    rdfs:comment "Links a package to its license" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:License .
+
+pkg:targetArchitecture a owl:ObjectProperty ;
+    rdfs:label "target architecture" ;
+    rdfs:comment "Links a package to the architecture it targets" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Architecture .
+
+pkg:managedBy a owl:ObjectProperty ;
+    rdfs:label "managed by" ;
+    rdfs:comment "Links a repository to the package manager that manages it" ;
+    rdfs:domain pkg:Repository ;
+    rdfs:range pkg:PackageManager .

@@ -1,0 +1,456 @@
+# Package Management Ontologies Collection
+# A comprehensive set of RDF schemas for representing software packages
+# across major package management systems
+
+# =============================================================================
+# BASE PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+
+# Package Management Base Ontology
+
+pkg: a owl:Ontology ;
+    rdfs:label "Package Management Core Ontology" ;
+    rdfs:comment "Core ontology for representing software packages and repositories across different package management systems" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" .
+
+# Core Classes
+pkg:Package a owl:Class ;
+    rdfs:label "Package" ;
+    rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system" .
+
+pkg:Repository a owl:Class ;
+    rdfs:label "Repository" ;
+    rdfs:comment "A storage location for packages, accessible through a package management system" .
+
+pkg:PackageManager a owl:Class ;
+    rdfs:label "Package Manager" ;
+    rdfs:comment "A software tool that manages the installation, updating, and removal of packages" .
+
+pkg:Dependency a owl:Class ;
+    rdfs:label "Dependency" ;
+    rdfs:comment "A relationship indicating that one package requires another package to function properly" .
+
+pkg:Version a owl:Class ;
+    rdfs:label "Version" ;
+    rdfs:comment "A specific version or release of a package" .
+
+pkg:Maintainer a owl:Class ;
+    rdfs:label "Maintainer" ;
+    rdfs:comment "A person or organization responsible for maintaining a package" .
+
+pkg:License a owl:Class ;
+    rdfs:label "License" ;
+    rdfs:comment "The legal license under which a package is distributed" .
+
+pkg:Architecture a owl:Class ;
+    rdfs:label "Architecture" ;
+    rdfs:comment "The hardware or software architecture for which a package is built" .
+
+# Core Properties
+pkg:packageName a owl:DatatypeProperty ;
+    rdfs:label "package name" ;
+    rdfs:comment "The name of a package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:versionString a owl:DatatypeProperty ;
+    rdfs:label "version string" ;
+    rdfs:comment "The version identifier of a package" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range xsd:string .
+
+pkg:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "A human-readable description of what the package does" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:homepage a owl:DatatypeProperty ;
+    rdfs:label "homepage" ;
+    rdfs:comment "The homepage URL of the package or project" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:anyURI .
+
+pkg:downloadURL a owl:DatatypeProperty ;
+    rdfs:label "download URL" ;
+    rdfs:comment "The URL from which the package can be downloaded" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:anyURI .
+
+pkg:installSize a owl:DatatypeProperty ;
+    rdfs:label "install size" ;
+    rdfs:comment "The disk space required when the package is installed" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:long .
+
+pkg:packageSize a owl:DatatypeProperty ;
+    rdfs:label "package size" ;
+    rdfs:comment "The size of the package file" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:long .
+
+pkg:checksum a owl:DatatypeProperty ;
+    rdfs:label "checksum" ;
+    rdfs:comment "A cryptographic hash of the package for integrity verification" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+pkg:checksumType a owl:DatatypeProperty ;
+    rdfs:label "checksum type" ;
+    rdfs:comment "The algorithm used to generate the checksum (e.g., MD5, SHA256)" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range xsd:string .
+
+# Object Properties
+pkg:hasVersion a owl:ObjectProperty ;
+    rdfs:label "has version" ;
+    rdfs:comment "Links a package to one of its versions" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Version .
+
+pkg:dependsOn a owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "Indicates that a package requires another package to function" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:conflicts a owl:ObjectProperty ;
+    rdfs:label "conflicts" ;
+    rdfs:comment "Indicates that a package cannot be installed alongside another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:provides a owl:ObjectProperty ;
+    rdfs:label "provides" ;
+    rdfs:comment "Indicates that a package provides the functionality of another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:replaces a owl:ObjectProperty ;
+    rdfs:label "replaces" ;
+    rdfs:comment "Indicates that a package replaces another package" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Package .
+
+pkg:containedIn a owl:ObjectProperty ;
+    rdfs:label "contained in" ;
+    rdfs:comment "Links a package to the repository that contains it" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Repository .
+
+pkg:maintainedBy a owl:ObjectProperty ;
+    rdfs:label "maintained by" ;
+    rdfs:comment "Links a package to its maintainer" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Maintainer .
+
+pkg:hasLicense a owl:ObjectProperty ;
+    rdfs:label "has license" ;
+    rdfs:comment "Links a package to its license" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:License .
+
+pkg:targetArchitecture a owl:ObjectProperty ;
+    rdfs:label "target architecture" ;
+    rdfs:comment "Links a package to the architecture it targets" ;
+    rdfs:domain pkg:Package ;
+    rdfs:range pkg:Architecture .
+
+pkg:managedBy a owl:ObjectProperty ;
+    rdfs:label "managed by" ;
+    rdfs:comment "Links a repository to the package manager that manages it" ;
+    rdfs:domain pkg:Repository ;
+    rdfs:range pkg:PackageManager .
+
+# =============================================================================
+# DEBIAN PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix deb: <http://packagegraph.github.io/ontology/debian#> .
+
+deb: a owl:Ontology ;
+    rdfs:label "Debian Package Ontology" ;
+    rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Debian-specific Classes
+deb:DebianPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Debian Package" ;
+    rdfs:comment "A package in Debian .deb format" .
+
+deb:SourcePackage a owl:Class ;
+    rdfs:subClassOf deb:DebianPackage ;
+    rdfs:label "Source Package" ;
+    rdfs:comment "A Debian source package containing source code and build instructions" .
+
+deb:BinaryPackage a owl:Class ;
+    rdfs:subClassOf deb:DebianPackage ;
+    rdfs:label "Binary Package" ;
+    rdfs:comment "A Debian binary package containing compiled software" .
+
+deb:DebianRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Debian Repository" ;
+    rdfs:comment "A repository containing Debian packages accessible via APT" .
+
+deb:Suite a owl:Class ;
+    rdfs:label "Suite" ;
+    rdfs:comment "A Debian suite (e.g., stable, testing, unstable)" .
+
+deb:Component a owl:Class ;
+    rdfs:label "Component" ;
+    rdfs:comment "A Debian component (e.g., main, contrib, non-free)" .
+
+deb:Section a owl:Class ;
+    rdfs:label "Section" ;
+    rdfs:comment "A Debian package section (e.g., devel, utils, games)" .
+
+deb:Priority a owl:Class ;
+    rdfs:label "Priority" ;
+    rdfs:comment "A Debian package priority (e.g., required, important, standard, optional, extra)" .
+
+# =============================================================================
+# RPM PACKAGE ONTOLOGY 
+# =============================================================================
+
+@prefix rpm: <http://packagegraph.github.io/ontology/rpm#> .
+
+rpm: a owl:Ontology ;
+    rdfs:label "RPM Package Ontology" ;
+    rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# RPM-specific Classes
+rpm:RPMPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "RPM Package" ;
+    rdfs:comment "A package in RPM format" .
+
+rpm:SourceRPM a owl:Class ;
+    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:label "Source RPM" ;
+    rdfs:comment "An RPM source package (SRPM) containing source code and spec file" .
+
+rpm:BinaryRPM a owl:Class ;
+    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:label "Binary RPM" ;
+    rdfs:comment "A binary RPM package containing compiled software" .
+
+rpm:RPMRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "RPM Repository" ;
+    rdfs:comment "A repository containing RPM packages accessible via YUM/DNF" .
+
+# =============================================================================
+# ARCH LINUX PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix arch: <http://packagegraph.github.io/ontology/archlinux#> .
+
+arch: a owl:Ontology ;
+    rdfs:label "Arch Linux Package Ontology" ;
+    rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Arch-specific Classes
+arch:ArchPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Arch Package" ;
+    rdfs:comment "A package in Arch Linux .pkg.tar.xz format" .
+
+arch:PKGBUILD a owl:Class ;
+    rdfs:label "PKGBUILD" ;
+    rdfs:comment "A PKGBUILD file containing package build instructions" .
+
+arch:SplitPackage a owl:Class ;
+    rdfs:subClassOf arch:ArchPackage ;
+    rdfs:label "Split Package" ;
+    rdfs:comment "A package that is part of a split package group" .
+
+arch:ArchRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Arch Repository" ;
+    rdfs:comment "An Arch Linux repository accessible via Pacman" .
+
+arch:AUR a owl:Class ;
+    rdfs:subClassOf arch:ArchRepository ;
+    rdfs:label "AUR" ;
+    rdfs:comment "Arch User Repository containing user-contributed PKGBUILDs" .
+
+# =============================================================================
+# BSD PORTS PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix bsd: <http://packagegraph.github.io/ontology/bsd#> .
+
+bsd: a owl:Ontology ;
+    rdfs:label "BSD Ports Package Ontology" ;
+    rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# BSD-specific Classes
+bsd:Port a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Port" ;
+    rdfs:comment "A port in the BSD ports system" .
+
+bsd:PortsTree a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Ports Tree" ;
+    rdfs:comment "A collection of ports organized in a directory structure" .
+
+bsd:FreeBSDPort a owl:Class ;
+    rdfs:subClassOf bsd:Port ;
+    rdfs:label "FreeBSD Port" ;
+    rdfs:comment "A port in the FreeBSD ports system" .
+
+bsd:OpenBSDPort a owl:Class ;
+    rdfs:subClassOf bsd:Port ;
+    rdfs:label "OpenBSD Port" ;
+    rdfs:comment "A port in the OpenBSD ports system" .
+
+bsd:NetBSDPort a owl:Class ;
+    rdfs:subClassOf bsd:Port ;
+    rdfs:label "NetBSD Port" ;
+    rdfs:comment "A port in the NetBSD pkgsrc system" .
+
+# =============================================================================
+# CHOCOLATEY PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix choco: <http://packagegraph.github.io/ontology/chocolatey#> .
+
+choco: a owl:Ontology ;
+    rdfs:label "Chocolatey Package Ontology" ;
+    rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Chocolatey-specific Classes
+choco:ChocolateyPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Chocolatey Package" ;
+    rdfs:comment "A package in Chocolatey/NuGet format for Windows software management" .
+
+choco:Nupkg a owl:Class ;
+    rdfs:subClassOf choco:ChocolateyPackage ;
+    rdfs:label "NuPkg File" ;
+    rdfs:comment "A .nupkg file containing a Chocolatey package" .
+
+choco:Nuspec a owl:Class ;
+    rdfs:label "NuSpec File" ;
+    rdfs:comment "A .nuspec XML file containing package metadata" .
+
+choco:ChocolateyRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Chocolatey Repository" ;
+    rdfs:comment "A repository containing Chocolatey packages" .
+
+# =============================================================================
+# HOMEBREW PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix brew: <http://packagegraph.github.io/ontology/homebrew#> .
+
+brew: a owl:Ontology ;
+    rdfs:label "Homebrew Package Ontology" ;
+    rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Homebrew-specific Classes
+brew:Formula a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Homebrew Formula" ;
+    rdfs:comment "A formula defining how to build and install a package with Homebrew" .
+
+brew:Cask a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Homebrew Cask" ;
+    rdfs:comment "A cask for installing pre-built macOS applications" .
+
+brew:Tap a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Homebrew Tap" ;
+    rdfs:comment "A third-party repository of Homebrew formulae and casks" .
+
+brew:Bottle a owl:Class ;
+    rdfs:label "Homebrew Bottle" ;
+    rdfs:comment "A pre-compiled binary package for a formula" .
+
+# =============================================================================
+# NIX PACKAGE ONTOLOGY
+# =============================================================================
+
+@prefix nix: <http://packagegraph.github.io/ontology/nix#> .
+
+nix: a owl:Ontology ;
+    rdfs:label "Nix Package Ontology" ;
+    rdfs:comment "Ontology for representing Nix packages, derivations, and expressions" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Nix-specific Classes
+nix:Derivation a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Nix Derivation" ;
+    rdfs:comment "A Nix derivation describing how to build a package" .
+
+nix:StoreDerivation a owl:Class ;
+    rdfs:subClassOf nix:Derivation ;
+    rdfs:label "Store Derivation" ;
+    rdfs:comment "A derivation that has been instantiated in the Nix store" .
+
+nix:NixExpression a owl:Class ;
+    rdfs:label "Nix Expression" ;
+    rdfs:comment "A Nix language expression that evaluates to a derivation" .
+
+nix:Nixpkgs a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Nixpkgs" ;
+    rdfs:comment "The Nix package collection repository" .
+
+nix:Flake a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Nix Flake" ;
+    rdfs:comment "A self-contained unit with reproducible dependencies" .
+
+nix:StdenvMkDerivation a owl:Class ;
+    rdfs:subClassOf nix:Derivation ;
+    rdfs:label "stdenv.mkDerivation" ;
+    rdfs:comment "A derivation built using the standard environment" .
+
+# Common properties and relationships would be defined for each system...
+# This is a condensed version showing the class hierarchies.

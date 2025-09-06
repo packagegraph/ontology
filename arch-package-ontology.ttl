@@ -1,0 +1,316 @@
+# Arch Linux Package Ontology
+@prefix arch: <http://packagegraph.github.io/ontology/archlinux#> .
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+
+
+# Ontology Declaration
+arch: a owl:Ontology ;
+    rdfs:label "Arch Linux Package Ontology" ;
+    rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# Arch-specific Classes
+arch:ArchPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Arch Package" ;
+    rdfs:comment "A package in Arch Linux .pkg.tar.xz format" .
+
+arch:PKGBUILD a owl:Class ;
+    rdfs:label "PKGBUILD" ;
+    rdfs:comment "A PKGBUILD file containing package build instructions" .
+
+arch:SplitPackage a owl:Class ;
+    rdfs:subClassOf arch:ArchPackage ;
+    rdfs:label "Split Package" ;
+    rdfs:comment "A package that is part of a split package group" .
+
+arch:ArchRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Arch Repository" ;
+    rdfs:comment "An Arch Linux repository accessible via Pacman" .
+
+arch:AUR a owl:Class ;
+    rdfs:subClassOf arch:ArchRepository ;
+    rdfs:label "AUR" ;
+    rdfs:comment "Arch User Repository containing user-contributed PKGBUILDs" .
+
+arch:SRCINFO a owl:Class ;
+    rdfs:label "SRCINFO" ;
+    rdfs:comment "A .SRCINFO file containing package metadata in key=value format" .
+
+arch:PackageGroup a owl:Class ;
+    rdfs:label "Package Group" ;
+    rdfs:comment "A logical grouping of packages in Arch Linux" .
+
+# Arch-specific Properties
+arch:pkgbase a owl:DatatypeProperty ;
+    rdfs:label "package base" ;
+    rdfs:comment "The base name for split packages" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:pkgver a owl:DatatypeProperty ;
+    rdfs:label "package version" ;
+    rdfs:comment "The upstream version of the package" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:pkgrel a owl:DatatypeProperty ;
+    rdfs:label "package release" ;
+    rdfs:comment "The Arch-specific package release number" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:int .
+
+arch:epoch a owl:DatatypeProperty ;
+    rdfs:label "epoch" ;
+    rdfs:comment "The epoch version number for version comparison override" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:int .
+
+arch:pkgdesc a owl:DatatypeProperty ;
+    rdfs:label "package description" ;
+    rdfs:comment "A brief description of the package" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:url a owl:DatatypeProperty ;
+    rdfs:label "upstream URL" ;
+    rdfs:comment "The upstream project URL" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:anyURI .
+
+arch:install a owl:DatatypeProperty ;
+    rdfs:label "install script" ;
+    rdfs:comment "The filename of the install script" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:changelog a owl:DatatypeProperty ;
+    rdfs:label "changelog" ;
+    rdfs:comment "The filename of the changelog" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:source a owl:DatatypeProperty ;
+    rdfs:label "source" ;
+    rdfs:comment "A source URL or filename used to build the package" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:noextract a owl:DatatypeProperty ;
+    rdfs:label "no extract" ;
+    rdfs:comment "Files that should not be extracted during build" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:validpgpkeys a owl:DatatypeProperty ;
+    rdfs:label "valid PGP keys" ;
+    rdfs:comment "Valid PGP key IDs for source verification" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:backup a owl:DatatypeProperty ;
+    rdfs:label "backup" ;
+    rdfs:comment "Files that should be backed up during upgrades" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:string .
+
+arch:options a owl:DatatypeProperty ;
+    rdfs:label "options" ;
+    rdfs:comment "Build options (e.g., !strip, !docs)" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+# PKGBUILD Functions (as properties)
+arch:prepare a owl:DatatypeProperty ;
+    rdfs:label "prepare function" ;
+    rdfs:comment "Commands to prepare the source for building" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:build a owl:DatatypeProperty ;
+    rdfs:label "build function" ;
+    rdfs:comment "Commands to build the software" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:check a owl:DatatypeProperty ;
+    rdfs:label "check function" ;
+    rdfs:comment "Commands to run tests" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:package a owl:DatatypeProperty ;
+    rdfs:label "package function" ;
+    rdfs:comment "Commands to package the built software" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+# Checksum Properties
+arch:md5sums a owl:DatatypeProperty ;
+    rdfs:label "MD5 checksums" ;
+    rdfs:comment "MD5 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:sha1sums a owl:DatatypeProperty ;
+    rdfs:label "SHA1 checksums" ;
+    rdfs:comment "SHA1 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:sha256sums a owl:DatatypeProperty ;
+    rdfs:label "SHA256 checksums" ;
+    rdfs:comment "SHA256 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:sha384sums a owl:DatatypeProperty ;
+    rdfs:label "SHA384 checksums" ;
+    rdfs:comment "SHA384 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:sha512sums a owl:DatatypeProperty ;
+    rdfs:label "SHA512 checksums" ;
+    rdfs:comment "SHA512 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+arch:b2sums a owl:DatatypeProperty ;
+    rdfs:label "BLAKE2 checksums" ;
+    rdfs:comment "BLAKE2 checksums for source files" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string .
+
+# Object Properties
+arch:builtFrom a owl:ObjectProperty ;
+    rdfs:label "built from" ;
+    rdfs:comment "Links a package to the PKGBUILD it was built from" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range arch:PKGBUILD .
+
+arch:hasSRCINFO a owl:ObjectProperty ;
+    rdfs:label "has SRCINFO" ;
+    rdfs:comment "Links a PKGBUILD to its corresponding .SRCINFO file" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range arch:SRCINFO .
+
+arch:inGroup a owl:ObjectProperty ;
+    rdfs:label "in group" ;
+    rdfs:comment "Links a package to the group it belongs to" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range arch:PackageGroup .
+
+arch:partOfSplit a owl:ObjectProperty ;
+    rdfs:label "part of split" ;
+    rdfs:comment "Links a split package to other packages in the same split" ;
+    rdfs:domain arch:SplitPackage ;
+    rdfs:range arch:SplitPackage .
+
+# Dependency Properties
+arch:depends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "depends" ;
+    rdfs:comment "Runtime dependency" .
+
+arch:makedepends a owl:ObjectProperty ;
+    rdfs:label "make depends" ;
+    rdfs:comment "Build-time dependency" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range arch:ArchPackage .
+
+arch:checkdepends a owl:ObjectProperty ;
+    rdfs:label "check depends" ;
+    rdfs:comment "Test-time dependency" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range arch:ArchPackage .
+
+arch:optdepends a owl:ObjectProperty ;
+    rdfs:label "optional depends" ;
+    rdfs:comment "Optional dependency" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range arch:ArchPackage .
+
+arch:provides a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:provides ;
+    rdfs:label "provides" ;
+    rdfs:comment "Virtual package provision" .
+
+arch:conflicts a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:conflicts ;
+    rdfs:label "conflicts" ;
+    rdfs:comment "Package conflict" .
+
+arch:replaces a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:replaces ;
+    rdfs:label "replaces" ;
+    rdfs:comment "Package replacement" .
+
+# Common Repositories
+arch:core a arch:ArchRepository ;
+    rdfs:label "core" ;
+    rdfs:comment "Core Arch Linux repository" .
+
+arch:extra a arch:ArchRepository ;
+    rdfs:label "extra" ;
+    rdfs:comment "Extra Arch Linux repository" .
+
+arch:community a arch:ArchRepository ;
+    rdfs:label "community" ;
+    rdfs:comment "Community Arch Linux repository" .
+
+arch:multilib a arch:ArchRepository ;
+    rdfs:label "multilib" ;
+    rdfs:comment "Multilib Arch Linux repository for 32-bit support" .
+
+arch:testing a arch:ArchRepository ;
+    rdfs:label "testing" ;
+    rdfs:comment "Testing repository for core and extra" .
+
+arch:community-testing a arch:ArchRepository ;
+    rdfs:label "community-testing" ;
+    rdfs:comment "Testing repository for community packages" .
+
+arch:multilib-testing a arch:ArchRepository ;
+    rdfs:label "multilib-testing" ;
+    rdfs:comment "Testing repository for multilib packages" .
+
+# AUR Instance
+arch:aur a arch:AUR ;
+    rdfs:label "Arch User Repository" ;
+    rdfs:comment "The main Arch User Repository" .
+
+# Common Package Groups
+arch:base a arch:PackageGroup ;
+    rdfs:label "base" ;
+    rdfs:comment "Base system packages" .
+
+arch:base-devel a arch:PackageGroup ;
+    rdfs:label "base-devel" ;
+    rdfs:comment "Basic development tools" .
+
+arch:gnome a arch:PackageGroup ;
+    rdfs:label "gnome" ;
+    rdfs:comment "GNOME desktop environment packages" .
+
+arch:kde-applications a arch:PackageGroup ;
+    rdfs:label "kde-applications" ;
+    rdfs:comment "KDE application packages" .
+
+arch:xfce4 a arch:PackageGroup ;
+    rdfs:label "xfce4" ;
+    rdfs:comment "Xfce desktop environment packages" .

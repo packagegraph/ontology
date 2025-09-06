@@ -1,0 +1,306 @@
+# Version Control System Ontology
+@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+
+
+# Ontology Declaration
+vcs: a owl:Ontology ;
+    rdfs:label "Version Control System Ontology" ;
+    rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "PackageGraph Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: , foaf: , prov: .
+
+# VCS Classes
+vcs:Repository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Source Code Repository" ;
+    rdfs:comment "A version control repository containing source code" .
+
+vcs:Commit a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Commit" ;
+    rdfs:comment "A commit in a version control system" .
+
+vcs:Branch a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Branch" ;
+    rdfs:comment "A branch in a version control repository" .
+
+vcs:Tag a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Tag" ;
+    rdfs:comment "A tag pointing to a specific commit or release" .
+
+vcs:Reference a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "VCS Reference" ;
+    rdfs:comment "A generic reference in version control (HEAD, refs, etc.)" .
+
+vcs:File a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "File" ;
+    rdfs:comment "A file in a repository or package" .
+
+vcs:Diff a owl:Class ;
+    rdfs:label "Diff" ;
+    rdfs:comment "A diff or patch between two versions of files" .
+
+vcs:PullRequest a owl:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "Pull Request" ;
+    rdfs:comment "A pull/merge request for code changes" .
+
+vcs:Issue a owl:Class ;
+    rdfs:label "Issue" ;
+    rdfs:comment "An issue or bug report in a repository" .
+
+# VCS Properties
+vcs:vcsType a owl:DatatypeProperty ;
+    rdfs:label "VCS type" ;
+    rdfs:comment "Type of version control system (git, svn, hg, bzr, etc.)" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:string .
+
+vcs:remoteUrl a owl:DatatypeProperty ;
+    rdfs:label "remote URL" ;
+    rdfs:comment "URL of the remote repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:anyURI .
+
+vcs:cloneUrl a owl:DatatypeProperty ;
+    rdfs:label "clone URL" ;
+    rdfs:comment "URL for cloning the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:anyURI .
+
+vcs:defaultBranch a owl:DatatypeProperty ;
+    rdfs:label "default branch" ;
+    rdfs:comment "Name of the default branch" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:string .
+
+# Commit Properties
+vcs:commitHash a owl:DatatypeProperty ;
+    rdfs:label "commit hash" ;
+    rdfs:comment "Hash identifier of the commit (SHA1, SHA256, etc.)" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range xsd:string .
+
+vcs:commitMessage a owl:DatatypeProperty ;
+    rdfs:label "commit message" ;
+    rdfs:comment "Commit message describing the changes" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range xsd:string .
+
+vcs:commitTimestamp a owl:DatatypeProperty ;
+    rdfs:label "commit timestamp" ;
+    rdfs:comment "Timestamp when the commit was created" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range xsd:dateTime .
+
+vcs:authorTimestamp a owl:DatatypeProperty ;
+    rdfs:label "author timestamp" ;
+    rdfs:comment "Timestamp when the changes were authored" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range xsd:dateTime .
+
+# Branch Properties
+vcs:branchName a owl:DatatypeProperty ;
+    rdfs:label "branch name" ;
+    rdfs:comment "Name of the branch" ;
+    rdfs:domain vcs:Branch ;
+    rdfs:range xsd:string .
+
+vcs:isProtected a owl:DatatypeProperty ;
+    rdfs:label "is protected" ;
+    rdfs:comment "Whether the branch is protected from direct pushes" ;
+    rdfs:domain vcs:Branch ;
+    rdfs:range xsd:boolean .
+
+# Tag Properties
+vcs:tagName a owl:DatatypeProperty ;
+    rdfs:label "tag name" ;
+    rdfs:comment "Name of the tag" ;
+    rdfs:domain vcs:Tag ;
+    rdfs:range xsd:string .
+
+vcs:tagMessage a owl:DatatypeProperty ;
+    rdfs:label "tag message" ;
+    rdfs:comment "Message associated with the tag" ;
+    rdfs:domain vcs:Tag ;
+    rdfs:range xsd:string .
+
+vcs:isAnnotated a owl:DatatypeProperty ;
+    rdfs:label "is annotated" ;
+    rdfs:comment "Whether the tag is annotated" ;
+    rdfs:domain vcs:Tag ;
+    rdfs:range xsd:boolean .
+
+# File Properties
+vcs:filePath a owl:DatatypeProperty ;
+    rdfs:label "file path" ;
+    rdfs:comment "Path of the file within the repository" ;
+    rdfs:domain vcs:File ;
+    rdfs:range xsd:string .
+
+vcs:fileHash a owl:DatatypeProperty ;
+    rdfs:label "file hash" ;
+    rdfs:comment "Content hash of the file" ;
+    rdfs:domain vcs:File ;
+    rdfs:range xsd:string .
+
+vcs:fileSize a owl:DatatypeProperty ;
+    rdfs:label "file size" ;
+    rdfs:comment "Size of the file in bytes" ;
+    rdfs:domain vcs:File ;
+    rdfs:range xsd:long .
+
+vcs:mimeType a owl:DatatypeProperty ;
+    rdfs:label "MIME type" ;
+    rdfs:comment "MIME type of the file" ;
+    rdfs:domain vcs:File ;
+    rdfs:range xsd:string .
+
+vcs:encoding a owl:DatatypeProperty ;
+    rdfs:label "encoding" ;
+    rdfs:comment "Character encoding of the file" ;
+    rdfs:domain vcs:File ;
+    rdfs:range xsd:string .
+
+# Object Properties
+vcs:hasCommit a owl:ObjectProperty ;
+    rdfs:label "has commit" ;
+    rdfs:comment "Links repository or branch to commits" ;
+    rdfs:range vcs:Commit .
+
+vcs:hasBranch a owl:ObjectProperty ;
+    rdfs:label "has branch" ;
+    rdfs:comment "Links repository to branches" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range vcs:Branch .
+
+vcs:hasTag a owl:ObjectProperty ;
+    rdfs:label "has tag" ;
+    rdfs:comment "Links repository to tags" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range vcs:Tag .
+
+vcs:hasFile a owl:ObjectProperty ;
+    rdfs:label "has file" ;
+    rdfs:comment "Links commit or repository to files" ;
+    rdfs:range vcs:File .
+
+vcs:parentCommit a owl:ObjectProperty ;
+    rdfs:label "parent commit" ;
+    rdfs:comment "Parent commit(s) of this commit" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range vcs:Commit .
+
+vcs:pointsTo a owl:ObjectProperty ;
+    rdfs:label "points to" ;
+    rdfs:comment "Reference or tag points to a commit" ;
+    rdfs:domain owl:Thing ;
+    rdfs:range vcs:Commit .
+
+vcs:authoredBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasAttributedTo ;
+    rdfs:label "authored by" ;
+    rdfs:comment "Person who authored the commit" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range pkg:Contributor .
+
+vcs:committedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasAttributedTo ;
+    rdfs:label "committed by" ;
+    rdfs:comment "Person who committed the changes" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range pkg:Contributor .
+
+vcs:affectsFile a owl:ObjectProperty ;
+    rdfs:label "affects file" ;
+    rdfs:comment "Commit affects these files" ;
+    rdfs:domain vcs:Commit ;
+    rdfs:range vcs:File .
+
+vcs:addedFile a owl:ObjectProperty ;
+    rdfs:subPropertyOf vcs:affectsFile ;
+    rdfs:label "added file" ;
+    rdfs:comment "Files added in this commit" .
+
+vcs:modifiedFile a owl:ObjectProperty ;
+    rdfs:subPropertyOf vcs:affectsFile ;
+    rdfs:label "modified file" ;
+    rdfs:comment "Files modified in this commit" .
+
+vcs:deletedFile a owl:ObjectProperty ;
+    rdfs:subPropertyOf vcs:affectsFile ;
+    rdfs:label "deleted file" ;
+    rdfs:comment "Files deleted in this commit" .
+
+vcs:renamedFile a owl:ObjectProperty ;
+    rdfs:subPropertyOf vcs:affectsFile ;
+    rdfs:label "renamed file" ;
+    rdfs:comment "Files renamed in this commit" .
+
+# Repository hosting platforms
+vcs:GitHub a owl:NamedIndividual ;
+    rdfs:label "GitHub" ;
+    rdfs:comment "GitHub hosting platform" .
+
+vcs:GitLab a owl:NamedIndividual ;
+    rdfs:label "GitLab" ;
+    rdfs:comment "GitLab hosting platform" .
+
+vcs:Bitbucket a owl:NamedIndividual ;
+    rdfs:label "Bitbucket" ;
+    rdfs:comment "Bitbucket hosting platform" .
+
+vcs:Codeberg a owl:NamedIndividual ;
+    rdfs:label "Codeberg" ;
+    rdfs:comment "Codeberg hosting platform" .
+
+vcs:SourceHut a owl:NamedIndividual ;
+    rdfs:label "SourceHut" ;
+    rdfs:comment "SourceHut hosting platform" .
+
+vcs:Savannah a owl:NamedIndividual ;
+    rdfs:label "GNU Savannah" ;
+    rdfs:comment "GNU Savannah hosting platform" .
+
+# VCS Types
+vcs:Git a owl:NamedIndividual ;
+    rdfs:label "Git" ;
+    rdfs:comment "Git version control system" .
+
+vcs:Subversion a owl:NamedIndividual ;
+    rdfs:label "Subversion" ;
+    rdfs:comment "Apache Subversion version control system" .
+
+vcs:Mercurial a owl:NamedIndividual ;
+    rdfs:label "Mercurial" ;
+    rdfs:comment "Mercurial version control system" .
+
+vcs:Bazaar a owl:NamedIndividual ;
+    rdfs:label "Bazaar" ;
+    rdfs:comment "Bazaar version control system" .
+
+vcs:CVS a owl:NamedIndividual ;
+    rdfs:label "CVS" ;
+    rdfs:comment "Concurrent Versions System" .
+
+vcs:Fossil a owl:NamedIndividual ;
+    rdfs:label "Fossil" ;
+    rdfs:comment "Fossil distributed version control system" .

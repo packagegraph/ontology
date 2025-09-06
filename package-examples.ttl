@@ -1,0 +1,254 @@
+# Example Package Instances
+# Demonstrating how to represent real packages using the ontologies
+
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix deb: <http://packagegraph.github.io/ontology/debian#> .
+@prefix rpm: <http://packagegraph.github.io/ontology/rpm#> .
+@prefix arch: <http://packagegraph.github.io/ontology/archlinux#> .
+@prefix bsd: <http://packagegraph.github.io/ontology/bsd#> .
+@prefix choco: <http://packagegraph.github.io/ontology/chocolatey#> .
+@prefix brew: <http://packagegraph.github.io/ontology/homebrew#> .
+@prefix nix: <http://packagegraph.github.io/ontology/nix#> .
+@prefix ex: <http://example.org/packages#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+
+
+# =============================================================================
+# DEBIAN PACKAGE EXAMPLE - vim
+# =============================================================================
+
+ex:vim-debian a deb:BinaryPackage ;
+    pkg:packageName "vim" ;
+    pkg:description "Vi IMproved - enhanced vi editor" ;
+    pkg:homepage <https://www.vim.org/> ;
+    deb:version "2:9.0.1378-2" ;
+    deb:architecture "amd64" ;
+    deb:essential false ;
+    deb:multiArch "foreign" ;
+    deb:inSuite deb:unstable ;
+    deb:inComponent deb:main ;
+    deb:inSection deb:editors ;
+    deb:hasPriority deb:optional ;
+    pkg:maintainedBy ex:debian-vim-maintainers ;
+    pkg:installSize 3584000 ;
+    pkg:packageSize 1523456 .
+
+ex:debian-vim-maintainers a pkg:Maintainer ;
+    rdfs:label "Debian Vim Maintainers" ;
+    foaf:mbox <mailto:pkg-vim-maintainers@lists.alioth.debian.org> .
+
+# =============================================================================
+# RPM PACKAGE EXAMPLE - httpd
+# =============================================================================
+
+ex:httpd-rpm a rpm:BinaryRPM ;
+    pkg:packageName "httpd" ;
+    pkg:description "Apache HTTP Server" ;
+    pkg:homepage <https://httpd.apache.org/> ;
+    rpm:version "2.4.57" ;
+    rpm:release "5.el9" ;
+    rpm:epoch 0 ;
+    rpm:architecture "x86_64" ;
+    rpm:vendor "Red Hat, Inc." ;
+    rpm:distribution "Red Hat Enterprise Linux 9" ;
+    rpm:distTag "el9" ;
+    rpm:buildHost "buildvm-s390x-01.iad2.fedoraproject.org" ;
+    rpm:buildTime "2023-07-20T10:30:00Z"^^xsd:dateTime ;
+    rpm:sourceRPM "httpd-2.4.57-5.el9.src.rpm" ;
+    rpm:inGroup rpm:Applications ;
+    pkg:installSize 5242880 ;
+    pkg:packageSize 1638400 .
+
+# =============================================================================
+# ARCH LINUX PACKAGE EXAMPLE - git
+# =============================================================================
+
+ex:git-arch a arch:ArchPackage ;
+    pkg:packageName "git" ;
+    arch:pkgbase "git" ;
+    arch:pkgver "2.42.0" ;
+    arch:pkgrel 1 ;
+    arch:pkgdesc "the fast distributed version control system" ;
+    arch:url <https://git-scm.com/> ;
+    arch:architecture "x86_64" ;
+    arch:builtFrom ex:git-pkgbuild ;
+    pkg:containedIn arch:core ;
+    pkg:installSize 28311552 ;
+    arch:backup "/etc/gitconfig" .
+
+ex:git-pkgbuild a arch:PKGBUILD ;
+    arch:pkgname "git" ;
+    arch:pkgver "2.42.0" ;
+    arch:pkgrel 1 ;
+    arch:source "https://www.kernel.org/pub/software/scm/git/git-2.42.0.tar.xz" ;
+    arch:sha256sums "c3b8ac92cb8be1958eceed89d346ce6153a47bce2e9b86f9b3ce7c8e87012f97" .
+
+# =============================================================================
+# BSD PORT EXAMPLE - nginx
+# =============================================================================
+
+ex:nginx-freebsd a bsd:FreeBSDPort ;
+    pkg:packageName "nginx" ;
+    bsd:portname "nginx" ;
+    bsd:portversion "1.24.0" ;
+    bsd:portrevision 1 ;
+    bsd:comment "Robust and small WWW server" ;
+    bsd:wwwSite <https://nginx.org/> ;
+    bsd:maintainer "demon@FreeBSD.org" ;
+    bsd:categories "www" ;
+    bsd:inCategory bsd:www ;
+    bsd:masterSites <https://nginx.org/download/> ;
+    bsd:distname "nginx-1.24.0" ;
+    bsd:extractSufx ".tar.gz" .
+
+# =============================================================================
+# CHOCOLATEY PACKAGE EXAMPLE - 7zip
+# =============================================================================
+
+ex:7zip-choco a choco:ChocolateyPackage ;
+    choco:packageId "7zip" ;
+    choco:version "23.01.0" ;
+    choco:title "7-Zip" ;
+    choco:authors "Igor Pavlov" ;
+    choco:owners "chocolatey-community" ;
+    choco:summary "7-Zip is a file archiver with a high compression ratio" ;
+    pkg:description "7-Zip is a file archiver with a high compression ratio. The main features of 7-Zip are strong AES-256 encryption in 7z and ZIP formats." ;
+    choco:projectUrl <https://www.7-zip.org/> ;
+    choco:licenseUrl <https://www.7-zip.org/license.txt> ;
+    choco:tags "7zip archiver zip compression" ;
+    choco:installerType "exe" ;
+    choco:silentArgs "/S" ;
+    choco:url <https://www.7-zip.org/a/7z2301-x64.exe> ;
+    choco:checksum "4aa1c7d963c668c39c7235b58b9b5e9c78d52b2f73b1ddb0c39d9b5c6e8ba8a4" ;
+    choco:checksumType "sha256" .
+
+# =============================================================================
+# HOMEBREW FORMULA EXAMPLE - wget
+# =============================================================================
+
+ex:wget-brew a brew:Formula ;
+    brew:formulaName "wget" ;
+    pkg:packageName "wget" ;
+    pkg:version "1.21.4" ;
+    brew:desc "Internet file retriever" ;
+    pkg:homepage <https://www.gnu.org/software/wget/> ;
+    brew:license "GPL-3.0-or-later" ;
+    brew:revision 0 ;
+    brew:kegOnly false ;
+    brew:hasStable ex:wget-stable ;
+    pkg:containedIn brew:homebrew-core .
+
+ex:wget-stable a brew:StableSpec ;
+    brew:url <https://ftp.gnu.org/gnu/wget/wget-1.21.4.tar.gz> ;
+    brew:sha256 "81542f5cefb8faacc39bbbc6c82ded80e3e4a88505ae72ea51df27525bcde04c" .
+
+# =============================================================================
+# NIX DERIVATION EXAMPLE - hello
+# =============================================================================
+
+ex:hello-nix a nix:StdenvMkDerivation ;
+    nix:pname "hello" ;
+    nix:version "2.12.1" ;
+    nix:name "hello-2.12.1" ;
+    pkg:description "A program that produces a familiar, friendly greeting" ;
+    pkg:homepage <https://www.gnu.org/software/hello/> ;
+    nix:src ex:hello-src ;
+    nix:system "x86_64-linux" ;
+    nix:builder "/nix/store/...-bash-5.2-p15/bin/bash" ;
+    nix:doCheck true ;
+    pkg:hasLicense ex:gpl3-license .
+
+ex:hello-src a nix:StorePath ;
+    nix:sourceUrl <https://ftp.gnu.org/gnu/hello/hello-2.12.1.tar.gz> ;
+    nix:sha256 "8d99142afd92576f30b0cd7cb42a8dc6809998bc5d607d88761f512e26c7db20" ;
+    nix:storePathName "hello-2.12.1.tar.gz" .
+
+# =============================================================================
+# REPOSITORIES
+# =============================================================================
+
+ex:debian-main a deb:DebianRepository ;
+    rdfs:label "Debian Main Repository" ;
+    pkg:homepage <https://packages.debian.org/> ;
+    deb:suite deb:unstable ;
+    deb:component deb:main .
+
+ex:fedora-updates a rpm:RPMRepository ;
+    rdfs:label "Fedora Updates Repository" ;
+    pkg:homepage <https://fedoraproject.org/> .
+
+ex:arch-core-repo a arch:ArchRepository ;
+    rdfs:label "Arch Linux Core Repository" ;
+    pkg:homepage <https://archlinux.org/packages/core/> .
+
+ex:freebsd-ports a bsd:PortsTree ;
+    rdfs:label "FreeBSD Ports Collection" ;
+    pkg:homepage <https://www.freebsd.org/ports/> .
+
+ex:chocolatey-community a choco:ChocolateyRepository ;
+    rdfs:label "Chocolatey Community Repository" ;
+    pkg:homepage <https://community.chocolatey.org/> .
+
+ex:homebrew-core-tap a brew:Tap ;
+    rdfs:label "Homebrew Core Tap" ;
+    pkg:homepage <https://github.com/Homebrew/homebrew-core> .
+
+ex:nixpkgs-unstable a nix:Nixpkgs ;
+    rdfs:label "Nixpkgs Unstable" ;
+    pkg:homepage <https://github.com/NixOS/nixpkgs> .
+
+# =============================================================================
+# DEPENDENCIES AND RELATIONSHIPS
+# =============================================================================
+
+# Debian dependencies
+ex:vim-debian deb:depends ex:vim-common-debian, ex:vim-runtime-debian .
+ex:vim-debian deb:recommends ex:vim-addon-manager-debian .
+ex:vim-debian deb:suggests ex:ctags-debian, ex:vim-doc-debian .
+
+# RPM dependencies  
+ex:httpd-rpm rpm:requires ex:httpd-filesystem-rpm, ex:httpd-tools-rpm .
+ex:httpd-rpm rpm:provides ex:webserver-rpm .
+
+# Arch dependencies
+ex:git-arch arch:depends ex:curl-arch, ex:expat-arch, ex:perl-arch .
+ex:git-arch arch:optdepends ex:tk-arch, ex:perl-libwww-arch .
+
+# BSD dependencies
+ex:nginx-freebsd bsd:libDepends ex:pcre-freebsd, ex:zlib-freebsd .
+ex:nginx-freebsd bsd:runDepends ex:nginx-tools-freebsd .
+
+# Chocolatey dependencies
+ex:7zip-choco choco:dependsOn ex:chocolatey-core-extension .
+
+# Homebrew dependencies
+ex:wget-brew brew:hasDependency ex:openssl-brew, ex:libidn2-brew .
+
+# Nix dependencies
+ex:hello-nix nix:buildInputs ex:gcc-nix, ex:glibc-nix .
+ex:hello-nix nix:nativeBuildInputs ex:pkg-config-nix .
+
+# =============================================================================
+# LICENSES
+# =============================================================================
+
+ex:gpl3-license a pkg:License ;
+    rdfs:label "GNU General Public License v3.0" ;
+    pkg:homepage <https://www.gnu.org/licenses/gpl-3.0.html> .
+
+ex:apache2-license a pkg:License ;
+    rdfs:label "Apache License 2.0" ;
+    pkg:homepage <https://www.apache.org/licenses/LICENSE-2.0> .
+
+ex:mit-license a pkg:License ;
+    rdfs:label "MIT License" ;
+    pkg:homepage <https://opensource.org/licenses/MIT> .

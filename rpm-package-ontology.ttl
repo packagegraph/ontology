@@ -1,0 +1,275 @@
+# RPM Package Ontology
+@prefix rpm: <http://packagegraph.github.io/ontology/rpm#> .
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+
+
+# Ontology Declaration
+rpm: a owl:Ontology ;
+    rdfs:label "RPM Package Ontology" ;
+    rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories" ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    owl:versionInfo "1.0.0" ;
+    owl:imports pkg: .
+
+# RPM-specific Classes
+rpm:RPMPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "RPM Package" ;
+    rdfs:comment "A package in RPM format" .
+
+rpm:SourceRPM a owl:Class ;
+    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:label "Source RPM" ;
+    rdfs:comment "An RPM source package (SRPM) containing source code and spec file" .
+
+rpm:BinaryRPM a owl:Class ;
+    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:label "Binary RPM" ;
+    rdfs:comment "A binary RPM package containing compiled software" .
+
+rpm:RPMRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "RPM Repository" ;
+    rdfs:comment "A repository containing RPM packages accessible via YUM/DNF" .
+
+rpm:RPMGroup a owl:Class ;
+    rdfs:label "RPM Group" ;
+    rdfs:comment "A categorical grouping of RPM packages (e.g., Development/Tools)" .
+
+rpm:NEVR a owl:Class ;
+    rdfs:label "NEVR" ;
+    rdfs:comment "Name-Epoch-Version-Release identifier for RPM packages" .
+
+rpm:RPMTag a owl:Class ;
+    rdfs:label "RPM Tag" ;
+    rdfs:comment "A metadata tag in an RPM header" .
+
+rpm:Changelog a owl:Class ;
+    rdfs:label "Changelog" ;
+    rdfs:comment "A changelog entry for an RPM package" .
+
+# RPM-specific Properties
+rpm:epoch a owl:DatatypeProperty ;
+    rdfs:label "epoch" ;
+    rdfs:comment "The epoch version number (optional, defaults to 0)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:int .
+
+rpm:release a owl:DatatypeProperty ;
+    rdfs:label "release" ;
+    rdfs:comment "The release number of the package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:buildHost a owl:DatatypeProperty ;
+    rdfs:label "build host" ;
+    rdfs:comment "The hostname where the package was built" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:buildTime a owl:DatatypeProperty ;
+    rdfs:label "build time" ;
+    rdfs:comment "The timestamp when the package was built" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:dateTime .
+
+rpm:vendor a owl:DatatypeProperty ;
+    rdfs:label "vendor" ;
+    rdfs:comment "The vendor of the package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:packager a owl:DatatypeProperty ;
+    rdfs:label "packager" ;
+    rdfs:comment "The person or entity who packaged the software" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:distribution a owl:DatatypeProperty ;
+    rdfs:label "distribution" ;
+    rdfs:comment "The distribution name (e.g., Fedora, RHEL)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:distTag a owl:DatatypeProperty ;
+    rdfs:label "distribution tag" ;
+    rdfs:comment "The distribution tag (e.g., fc35, el8)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:sourceRPM a owl:DatatypeProperty ;
+    rdfs:label "source RPM" ;
+    rdfs:comment "The filename of the source RPM this package was built from" ;
+    rdfs:domain rpm:BinaryRPM ;
+    rdfs:range xsd:string .
+
+rpm:rpmVersion a owl:DatatypeProperty ;
+    rdfs:label "RPM version" ;
+    rdfs:comment "The version of RPM used to build the package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:payloadFormat a owl:DatatypeProperty ;
+    rdfs:label "payload format" ;
+    rdfs:comment "The format of the package payload (typically cpio)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:payloadCompressor a owl:DatatypeProperty ;
+    rdfs:label "payload compressor" ;
+    rdfs:comment "The compression method used for the payload" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:cookie a owl:DatatypeProperty ;
+    rdfs:label "cookie" ;
+    rdfs:comment "An opaque identifier for tracking packages from the same build" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:platform a owl:DatatypeProperty ;
+    rdfs:label "platform" ;
+    rdfs:comment "The platform string (arch-os-vendor)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:optFlags a owl:DatatypeProperty ;
+    rdfs:label "optimization flags" ;
+    rdfs:comment "The compiler optimization flags used during build" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:changelogText a owl:DatatypeProperty ;
+    rdfs:label "changelog text" ;
+    rdfs:comment "The text content of a changelog entry" ;
+    rdfs:domain rpm:Changelog ;
+    rdfs:range xsd:string .
+
+rpm:changelogAuthor a owl:DatatypeProperty ;
+    rdfs:label "changelog author" ;
+    rdfs:comment "The author of a changelog entry" ;
+    rdfs:domain rpm:Changelog ;
+    rdfs:range xsd:string .
+
+rpm:changelogTime a owl:DatatypeProperty ;
+    rdfs:label "changelog time" ;
+    rdfs:comment "The timestamp of a changelog entry" ;
+    rdfs:domain rpm:Changelog ;
+    rdfs:range xsd:dateTime .
+
+# Object Properties
+rpm:inGroup a owl:ObjectProperty ;
+    rdfs:label "in group" ;
+    rdfs:comment "Links a package to its RPM group" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range rpm:RPMGroup .
+
+rpm:hasNEVR a owl:ObjectProperty ;
+    rdfs:label "has NEVR" ;
+    rdfs:comment "Links a package to its NEVR identifier" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range rpm:NEVR .
+
+rpm:hasChangelog a owl:ObjectProperty ;
+    rdfs:label "has changelog" ;
+    rdfs:comment "Links a package to its changelog entries" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range rpm:Changelog .
+
+rpm:hasTag a owl:ObjectProperty ;
+    rdfs:label "has tag" ;
+    rdfs:comment "Links a package to its RPM tags" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range rpm:Tag .
+
+# Dependency Properties
+rpm:requires a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "requires" ;
+    rdfs:comment "Runtime dependency relationship" .
+
+rpm:provides a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:provides ;
+    rdfs:label "provides" ;
+    rdfs:comment "Virtual package provision" .
+
+rpm:obsoletes a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:replaces ;
+    rdfs:label "obsoletes" ;
+    rdfs:comment "Package obsolescence relationship" .
+
+rpm:conflicts a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:conflicts ;
+    rdfs:label "conflicts" ;
+    rdfs:comment "Package conflict relationship" .
+
+rpm:buildRequires a owl:ObjectProperty ;
+    rdfs:label "build requires" ;
+    rdfs:comment "Build-time dependency relationship" ;
+    rdfs:domain rpm:SourceRPM ;
+    rdfs:range rpm:RPMPackage .
+
+# File Properties
+rpm:fileName a owl:DatatypeProperty ;
+    rdfs:label "file name" ;
+    rdfs:comment "Name of a file contained in the package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:fileMode a owl:DatatypeProperty ;
+    rdfs:label "file mode" ;
+    rdfs:comment "Unix file permissions mode" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:int .
+
+rpm:fileSize a owl:DatatypeProperty ;
+    rdfs:label "file size" ;
+    rdfs:comment "Size of a file in bytes" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:long .
+
+rpm:fileDigest a owl:DatatypeProperty ;
+    rdfs:label "file digest" ;
+    rdfs:comment "Cryptographic digest of a file" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:fileOwner a owl:DatatypeProperty ;
+    rdfs:label "file owner" ;
+    rdfs:comment "Unix owner of a file" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+rpm:fileGroup a owl:DatatypeProperty ;
+    rdfs:label "file group" ;
+    rdfs:comment "Unix group of a file" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string .
+
+# Common RPM Groups
+rpm:Applications a rpm:RPMGroup ;
+    rdfs:label "Applications" ;
+    rdfs:comment "Application software group" .
+
+rpm:Development a rpm:RPMGroup ;
+    rdfs:label "Development" ;
+    rdfs:comment "Development tools and libraries" .
+
+rpm:System a rpm:RPMGroup ;
+    rdfs:label "System Environment" ;
+    rdfs:comment "System environment software" .
+
+rpm:Documentation a rpm:RPMGroup ;
+    rdfs:label "Documentation" ;
+    rdfs:comment "Documentation files" .
