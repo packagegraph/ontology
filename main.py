@@ -95,7 +95,7 @@ def test_class_and_property_definitions():
     for file_path in ttl_files:
         try:
             combined_graph.parse(file_path, format='turtle')
-        except:
+        except Exception:
             continue
     
     # Find classes and properties
@@ -123,7 +123,7 @@ def test_semantic_consistency():
     for file_path in ttl_files:
         try:
             combined_graph.parse(file_path, format='turtle')
-        except:
+        except Exception:
             continue
     
     issues = []
@@ -168,7 +168,7 @@ def test_cross_references():
     for file_path in ttl_files:
         try:
             combined_graph.parse(file_path, format='turtle')
-        except:
+        except Exception:
             continue
     
     # Check for broken references to core ontology
