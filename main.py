@@ -162,6 +162,8 @@ def test_semantic_consistency():
 
 def test_cross_references():
     """Test that cross-references between files are valid."""
+    from rdflib import RDF, RDFS, OWL
+    
     combined_graph = Graph()
     ttl_files = find_ttl_files()
     
