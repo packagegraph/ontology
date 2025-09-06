@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="http://packagegraph.github.io/ontology/core#" uri="core.ttl"/>
+    <uri name="https://packagegraph.github.io/ontology/vcs#" uri="vcs.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/debian#" uri="debian.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/nix#" uri="nix.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/rpm#" uri="rpm.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/bsd#" uri="bsd.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/archlinux#" uri="arch.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/homebrew#" uri="homebrew.ttl"/>
+    <uri name="http://packagegraph.github.io/ontology/chocolatey#" uri="chocolatey.ttl"/>
+</catalog>

@@ -1,6 +1,6 @@
 # Version Control System Ontology
 @prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,6 +12,7 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
 @prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 
 
 # Ontology Declaration
@@ -20,6 +21,9 @@ vcs: a owl:Ontology ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata" ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
+    dcterms:title "Version Control System Ontology" ;
+    dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports pkg: , foaf: , prov: .
 
@@ -27,233 +31,275 @@ vcs: a owl:Ontology ;
 vcs:Repository a owl:Class ;
     rdfs:subClassOf pkg:Repository ;
     rdfs:label "Source Code Repository" ;
-    rdfs:comment "A version control repository containing source code" .
+    rdfs:comment "A version control repository containing source code" ;
+    IAO:0000115 "A version control repository that stores and tracks changes to source code and related project files over time." .
 
 vcs:Commit a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Commit" ;
-    rdfs:comment "A commit in a version control system" .
+    rdfs:comment "A commit in a version control system" ;
+    IAO:0000115 "A snapshot of changes to files in a version control repository, representing a specific point in the project's history with associated metadata such as author, timestamp, and message." .
 
 vcs:Branch a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Branch" ;
-    rdfs:comment "A branch in a version control repository" .
+    rdfs:comment "A branch in a version control repository" ;
+    IAO:0000115 "A parallel line of development in a version control repository that allows developers to work on features or fixes independently from the main codebase." .
 
 vcs:Tag a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Tag" ;
-    rdfs:comment "A tag pointing to a specific commit or release" .
+    rdfs:comment "A tag pointing to a specific commit or release" ;
+    IAO:0000115 "A named reference pointing to a specific commit, typically used to mark release points or important milestones in a project's history." .
 
 vcs:Reference a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "VCS Reference" ;
-    rdfs:comment "A generic reference in version control (HEAD, refs, etc.)" .
+    rdfs:comment "A generic reference in version control (HEAD, refs, etc.)" ;
+    IAO:0000115 "A named pointer to a specific commit or object in a version control system, such as HEAD, branch references, or remote tracking branches." .
 
 vcs:File a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "File" ;
-    rdfs:comment "A file in a repository or package" .
+    rdfs:comment "A file in a repository or package" ;
+    IAO:0000115 "A file contained within a version control repository, including source code, documentation, configuration files, and other project assets." .
 
 vcs:Diff a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Diff" ;
-    rdfs:comment "A diff or patch between two versions of files" .
+    rdfs:comment "A diff or patch between two versions of files" ;
+    IAO:0000115 "A representation of the differences between two versions of files or commits, showing additions, deletions, and modifications in a structured format." .
 
 vcs:PullRequest a owl:Class ;
     rdfs:subClassOf prov:Activity ;
     rdfs:label "Pull Request" ;
-    rdfs:comment "A pull/merge request for code changes" .
+    rdfs:comment "A pull/merge request for code changes" ;
+    IAO:0000115 "A request to merge changes from one branch into another, typically used for code review and collaborative development workflows." .
 
 vcs:Issue a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Issue" ;
-    rdfs:comment "An issue or bug report in a repository" .
+    rdfs:comment "An issue or bug report in a repository" ;
+    IAO:0000115 "A tracked item representing a bug report, feature request, or other task associated with a software project repository." .
 
 # VCS Properties
 vcs:vcsType a owl:DatatypeProperty ;
     rdfs:label "VCS type" ;
     rdfs:comment "Type of version control system (git, svn, hg, bzr, etc.)" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Identifies the type of version control system used by the repository, such as Git, Subversion, or Mercurial." .
 
 vcs:remoteUrl a owl:DatatypeProperty ;
     rdfs:label "remote URL" ;
     rdfs:comment "URL of the remote repository" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL of a remote repository that this repository is connected to for synchronization purposes." .
 
 vcs:cloneUrl a owl:DatatypeProperty ;
     rdfs:label "clone URL" ;
     rdfs:comment "URL for cloning the repository" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL that can be used to create a local copy of the repository using version control tools." .
 
 vcs:defaultBranch a owl:DatatypeProperty ;
     rdfs:label "default branch" ;
     rdfs:comment "Name of the default branch" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the primary branch that serves as the default when cloning or accessing the repository." .
 
 # Commit Properties
 vcs:commitHash a owl:DatatypeProperty ;
     rdfs:label "commit hash" ;
     rdfs:comment "Hash identifier of the commit (SHA1, SHA256, etc.)" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The cryptographic hash that uniquely identifies a commit in the version control system." .
 
 vcs:commitMessage a owl:DatatypeProperty ;
     rdfs:label "commit message" ;
     rdfs:comment "Commit message describing the changes" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A human-readable description of the changes made in the commit, typically including a summary and optional detailed explanation." .
 
 vcs:commitTimestamp a owl:DatatypeProperty ;
     rdfs:label "commit timestamp" ;
     rdfs:comment "Timestamp when the commit was created" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range xsd:dateTime .
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time when the commit was created and added to the repository." .
 
 vcs:authorTimestamp a owl:DatatypeProperty ;
     rdfs:label "author timestamp" ;
     rdfs:comment "Timestamp when the changes were authored" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range xsd:dateTime .
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time when the changes in the commit were originally authored, which may differ from the commit timestamp." .
 
 # Branch Properties
 vcs:branchName a owl:DatatypeProperty ;
     rdfs:label "branch name" ;
     rdfs:comment "Name of the branch" ;
     rdfs:domain vcs:Branch ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The human-readable name identifier of a branch in the version control repository." .
 
 vcs:isProtected a owl:DatatypeProperty ;
     rdfs:label "is protected" ;
     rdfs:comment "Whether the branch is protected from direct pushes" ;
     rdfs:domain vcs:Branch ;
-    rdfs:range xsd:boolean .
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether the branch has protection rules that prevent direct pushes and require pull requests or other approval processes." .
 
 # Tag Properties
 vcs:tagName a owl:DatatypeProperty ;
     rdfs:label "tag name" ;
     rdfs:comment "Name of the tag" ;
     rdfs:domain vcs:Tag ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The human-readable name identifier of a tag in the version control repository." .
 
 vcs:tagMessage a owl:DatatypeProperty ;
     rdfs:label "tag message" ;
     rdfs:comment "Message associated with the tag" ;
     rdfs:domain vcs:Tag ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A human-readable message describing the purpose or significance of the tag, typically used for release notes." .
 
 vcs:isAnnotated a owl:DatatypeProperty ;
     rdfs:label "is annotated" ;
     rdfs:comment "Whether the tag is annotated" ;
     rdfs:domain vcs:Tag ;
-    rdfs:range xsd:boolean .
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether the tag includes additional metadata such as a message, tagger information, and timestamp." .
 
 # File Properties
 vcs:filePath a owl:DatatypeProperty ;
     rdfs:label "file path" ;
     rdfs:comment "Path of the file within the repository" ;
     rdfs:domain vcs:File ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The relative path and filename of the file within the repository's directory structure." .
 
 vcs:fileHash a owl:DatatypeProperty ;
     rdfs:label "file hash" ;
     rdfs:comment "Content hash of the file" ;
     rdfs:domain vcs:File ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A cryptographic hash of the file's content used for integrity verification and change detection." .
 
 vcs:fileSize a owl:DatatypeProperty ;
     rdfs:label "file size" ;
     rdfs:comment "Size of the file in bytes" ;
     rdfs:domain vcs:File ;
-    rdfs:range xsd:long .
+    rdfs:range xsd:long ;
+    IAO:0000115 "The size of the file content measured in bytes." .
 
 vcs:mimeType a owl:DatatypeProperty ;
     rdfs:label "MIME type" ;
     rdfs:comment "MIME type of the file" ;
     rdfs:domain vcs:File ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The MIME type that identifies the format and nature of the file content." .
 
 vcs:encoding a owl:DatatypeProperty ;
     rdfs:label "encoding" ;
     rdfs:comment "Character encoding of the file" ;
     rdfs:domain vcs:File ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The character encoding format used for the file content, such as UTF-8, ASCII, or ISO-8859-1." .
 
 # Object Properties
 vcs:hasCommit a owl:ObjectProperty ;
     rdfs:label "has commit" ;
     rdfs:comment "Links repository or branch to commits" ;
-    rdfs:range vcs:Commit .
+    rdfs:range vcs:Commit ;
+    IAO:0000115 "Associates a repository or branch with the commits it contains." .
 
 vcs:hasBranch a owl:ObjectProperty ;
     rdfs:label "has branch" ;
     rdfs:comment "Links repository to branches" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range vcs:Branch .
+    rdfs:range vcs:Branch ;
+    IAO:0000115 "Associates a repository with the branches it contains." .
 
 vcs:hasTag a owl:ObjectProperty ;
     rdfs:label "has tag" ;
     rdfs:comment "Links repository to tags" ;
     rdfs:domain vcs:Repository ;
-    rdfs:range vcs:Tag .
+    rdfs:range vcs:Tag ;
+    IAO:0000115 "Associates a repository with the tags it contains." .
 
 vcs:hasFile a owl:ObjectProperty ;
     rdfs:label "has file" ;
     rdfs:comment "Links commit or repository to files" ;
-    rdfs:range vcs:File .
+    rdfs:range vcs:File ;
+    IAO:0000115 "Associates a commit or repository with the files it contains or affects." .
 
 vcs:parentCommit a owl:ObjectProperty ;
     rdfs:label "parent commit" ;
     rdfs:comment "Parent commit(s) of this commit" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range vcs:Commit .
+    rdfs:range vcs:Commit ;
+    IAO:0000115 "Identifies the preceding commit(s) in the repository history from which this commit was derived." .
 
 vcs:pointsTo a owl:ObjectProperty ;
     rdfs:label "points to" ;
     rdfs:comment "Reference or tag points to a commit" ;
     rdfs:domain owl:Thing ;
-    rdfs:range vcs:Commit .
+    rdfs:range vcs:Commit ;
+    IAO:0000115 "Indicates that a reference or tag points to a specific commit in the repository." .
 
 vcs:authoredBy a owl:ObjectProperty ;
     rdfs:subPropertyOf prov:wasAttributedTo ;
     rdfs:label "authored by" ;
     rdfs:comment "Person who authored the commit" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range pkg:Contributor .
+    rdfs:range pkg:Contributor ;
+    IAO:0000115 "Identifies the person who originally wrote the changes contained in the commit." .
 
 vcs:committedBy a owl:ObjectProperty ;
     rdfs:subPropertyOf prov:wasAttributedTo ;
     rdfs:label "committed by" ;
     rdfs:comment "Person who committed the changes" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range pkg:Contributor .
+    rdfs:range pkg:Contributor ;
+    IAO:0000115 "Identifies the person who applied the changes to the repository, which may differ from the original author." .
 
 vcs:affectsFile a owl:ObjectProperty ;
     rdfs:label "affects file" ;
     rdfs:comment "Commit affects these files" ;
     rdfs:domain vcs:Commit ;
-    rdfs:range vcs:File .
+    rdfs:range vcs:File ;
+    IAO:0000115 "Indicates that a commit modifies, adds, deletes, or otherwise affects the specified file." .
 
 vcs:addedFile a owl:ObjectProperty ;
     rdfs:subPropertyOf vcs:affectsFile ;
     rdfs:label "added file" ;
-    rdfs:comment "Files added in this commit" .
+    rdfs:comment "Files added in this commit" ;
+    IAO:0000115 "Indicates files that were newly created and added to the repository in this commit." .
 
 vcs:modifiedFile a owl:ObjectProperty ;
     rdfs:subPropertyOf vcs:affectsFile ;
     rdfs:label "modified file" ;
-    rdfs:comment "Files modified in this commit" .
+    rdfs:comment "Files modified in this commit" ;
+    IAO:0000115 "Indicates files that had their content changed in this commit." .
 
 vcs:deletedFile a owl:ObjectProperty ;
     rdfs:subPropertyOf vcs:affectsFile ;
     rdfs:label "deleted file" ;
-    rdfs:comment "Files deleted in this commit" .
+    rdfs:comment "Files deleted in this commit" ;
+    IAO:0000115 "Indicates files that were removed from the repository in this commit." .
 
 vcs:renamedFile a owl:ObjectProperty ;
     rdfs:subPropertyOf vcs:affectsFile ;
     rdfs:label "renamed file" ;
-    rdfs:comment "Files renamed in this commit" .
+    rdfs:comment "Files renamed in this commit" ;
+    IAO:0000115 "Indicates files that were moved or renamed in this commit." .
 
 # Repository hosting platforms
 vcs:GitHub a owl:NamedIndividual ;

@@ -12,6 +12,7 @@
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 
 
 # Ontology Declaration
@@ -20,6 +21,9 @@ choco: a owl:Ontology ;
     rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows" ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
+    dcterms:title "Chocolatey Package Ontology" ;
+    dcterms:description "A comprehensive ontology for modeling Chocolatey packages, NuGet packages, PowerShell scripts, and Windows software management including installation scripts, dependencies, and package metadata." ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports pkg: .
 
@@ -27,298 +31,352 @@ choco: a owl:Ontology ;
 choco:ChocolateyPackage a owl:Class ;
     rdfs:subClassOf pkg:Package ;
     rdfs:label "Chocolatey Package" ;
-    rdfs:comment "A package in Chocolatey/NuGet format for Windows software management" .
+    rdfs:comment "A package in Chocolatey/NuGet format for Windows software management" ;
+    IAO:0000115 "A software package in Chocolatey format that can be installed and managed on Windows systems using the Chocolatey package manager." .
 
 choco:Nupkg a owl:Class ;
     rdfs:subClassOf choco:ChocolateyPackage ;
     rdfs:label "NuPkg File" ;
-    rdfs:comment "A .nupkg file containing a Chocolatey package" .
+    rdfs:comment "A .nupkg file containing a Chocolatey package" ;
+    IAO:0000115 "A compressed archive file with .nupkg extension that contains all the files, metadata, and scripts for a Chocolatey package." .
 
 choco:Nuspec a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "NuSpec File" ;
-    rdfs:comment "A .nuspec XML file containing package metadata" .
+    rdfs:comment "A .nuspec XML file containing package metadata" ;
+    IAO:0000115 "An XML file with .nuspec extension that contains metadata about a Chocolatey package including dependencies, version information, and descriptions." .
 
 choco:ChocolateyRepository a owl:Class ;
     rdfs:subClassOf pkg:Repository ;
     rdfs:label "Chocolatey Repository" ;
-    rdfs:comment "A repository containing Chocolatey packages" .
+    rdfs:comment "A repository containing Chocolatey packages" ;
+    IAO:0000115 "A repository that hosts Chocolatey packages and can be accessed by the Chocolatey package manager for package discovery and installation." .
 
 choco:ChocolateyScript a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Chocolatey Script" ;
-    rdfs:comment "A PowerShell script executed during package operations" .
+    rdfs:comment "A PowerShell script executed during package operations" ;
+    IAO:0000115 "A PowerShell script that is executed during various Chocolatey package operations such as installation, uninstallation, or modification." .
 
 choco:InstallScript a owl:Class ;
     rdfs:subClassOf choco:ChocolateyScript ;
     rdfs:label "Install Script" ;
-    rdfs:comment "PowerShell script executed during package installation" .
+    rdfs:comment "PowerShell script executed during package installation" ;
+    IAO:0000115 "A PowerShell script that is executed during the installation of a Chocolatey package to perform setup tasks and configuration." .
 
 choco:UninstallScript a owl:Class ;
     rdfs:subClassOf choco:ChocolateyScript ;
     rdfs:label "Uninstall Script" ;
-    rdfs:comment "PowerShell script executed during package uninstallation" .
+    rdfs:comment "PowerShell script executed during package uninstallation" ;
+    IAO:0000115 "A PowerShell script that is executed during the uninstallation of a Chocolatey package to perform cleanup tasks and remove configurations." .
 
 choco:BeforeModifyScript a owl:Class ;
     rdfs:subClassOf choco:ChocolateyScript ;
     rdfs:label "Before Modify Script" ;
-    rdfs:comment "PowerShell script executed before package modification" .
+    rdfs:comment "PowerShell script executed before package modification" ;
+    IAO:0000115 "A PowerShell script that is executed before any modification operations on a Chocolatey package, used for preparation tasks or validation." .
 
 choco:ChocolateyTools a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Chocolatey Tools" ;
-    rdfs:comment "Tools directory containing package-specific executables and scripts" .
+    rdfs:comment "Tools directory containing package-specific executables and scripts" ;
+    IAO:0000115 "A directory within a Chocolatey package that contains executable files, scripts, and other tools specific to the packaged software." .
 
 choco:ChocolateyFeature a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Chocolatey Feature" ;
-    rdfs:comment "A Chocolatey feature that affects package behavior" .
+    rdfs:comment "A Chocolatey feature that affects package behavior" ;
+    IAO:0000115 "A configurable feature in Chocolatey that controls specific behaviors or capabilities of the package management system." .
 
 # NuGet/Chocolatey Properties
 choco:packageId a owl:DatatypeProperty ;
     rdfs:label "package ID" ;
     rdfs:comment "The unique identifier of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A unique string identifier that distinguishes this package from all other packages in the Chocolatey ecosystem." .
 
 choco:version a owl:DatatypeProperty ;
     rdfs:label "version" ;
     rdfs:comment "The semantic version of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The version identifier of the Chocolatey package following semantic versioning conventions." .
 
 choco:title a owl:DatatypeProperty ;
     rdfs:label "title" ;
     rdfs:comment "The human-readable title of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A human-readable title or display name for the package that may be more descriptive than the package ID." .
 
 choco:authors a owl:DatatypeProperty ;
     rdfs:label "authors" ;
     rdfs:comment "The authors of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the original authors or creators of the software contained in the Chocolatey package." .
 
 choco:owners a owl:DatatypeProperty ;
     rdfs:label "owners" ;
     rdfs:comment "The owners of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the individuals or organizations who own and maintain the Chocolatey package." .
 
 choco:projectUrl a owl:DatatypeProperty ;
     rdfs:label "project URL" ;
     rdfs:comment "The URL of the project homepage" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL of the official homepage or main website for the software project." .
 
 choco:licenseUrl a owl:DatatypeProperty ;
     rdfs:label "license URL" ;
     rdfs:comment "The URL of the license text" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL where the full text of the software license can be found and reviewed." .
 
 choco:iconUrl a owl:DatatypeProperty ;
     rdfs:label "icon URL" ;
     rdfs:comment "The URL of the package icon" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL of an image file that serves as the visual icon representing the package." .
 
 choco:requireLicenseAcceptance a owl:DatatypeProperty ;
     rdfs:label "require license acceptance" ;
     rdfs:comment "Whether the package requires license acceptance" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:boolean .
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether users must explicitly accept the software license before installation can proceed." .
 
 choco:summary a owl:DatatypeProperty ;
     rdfs:label "summary" ;
     rdfs:comment "A short summary of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A brief summary description of the package's purpose and functionality." .
 
 choco:releaseNotes a owl:DatatypeProperty ;
     rdfs:label "release notes" ;
     rdfs:comment "Release notes for the package version" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Detailed information about changes, improvements, and fixes included in this version of the package." .
 
 choco:copyright a owl:DatatypeProperty ;
     rdfs:label "copyright" ;
     rdfs:comment "Copyright information for the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Copyright notice and ownership information for the software contained in the package." .
 
 choco:tags a owl:DatatypeProperty ;
     rdfs:label "tags" ;
     rdfs:comment "Space-delimited list of tags for the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A space-separated list of keywords or tags that help categorize and make the package discoverable in searches." .
 
 choco:bugTrackerUrl a owl:DatatypeProperty ;
     rdfs:label "bug tracker URL" ;
     rdfs:comment "The URL of the bug tracker" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL where users can report bugs, issues, or problems with the software." .
 
 choco:docsUrl a owl:DatatypeProperty ;
     rdfs:label "documentation URL" ;
     rdfs:comment "The URL of the documentation" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL where users can find documentation, user guides, or help information for the software." .
 
 choco:mailingListUrl a owl:DatatypeProperty ;
     rdfs:label "mailing list URL" ;
     rdfs:comment "The URL of the mailing list" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL for subscribing to or accessing the mailing list for discussions about the software." .
 
 choco:packageSourceUrl a owl:DatatypeProperty ;
     rdfs:label "package source URL" ;
     rdfs:comment "The URL where the package source can be found" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL where the source code or build scripts for the Chocolatey package itself can be found." .
 
 # Chocolatey-specific Properties
 choco:softwareName a owl:DatatypeProperty ;
     rdfs:label "software name" ;
     rdfs:comment "The name of the underlying software" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The actual name of the software application that is installed by this Chocolatey package." .
 
 choco:softwareVersion a owl:DatatypeProperty ;
     rdfs:label "software version" ;
     rdfs:comment "The version of the underlying software" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The version number of the actual software application that is installed by this package." .
 
 choco:softwareDisplayName a owl:DatatypeProperty ;
     rdfs:label "software display name" ;
     rdfs:comment "The display name of the software in Add/Remove Programs" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the software as it appears in Windows Add/Remove Programs or Programs and Features." .
 
 choco:softwareDisplayVersion a owl:DatatypeProperty ;
     rdfs:label "software display version" ;
     rdfs:comment "The display version in Add/Remove Programs" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The version string of the software as it appears in Windows Add/Remove Programs or Programs and Features." .
 
 choco:installerType a owl:DatatypeProperty ;
     rdfs:label "installer type" ;
     rdfs:comment "The type of installer (e.g., exe, msi, zip)" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the format or type of the installer file, such as EXE, MSI, ZIP, or portable application." .
 
 choco:silentArgs a owl:DatatypeProperty ;
     rdfs:label "silent arguments" ;
     rdfs:comment "Arguments for silent installation" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Command-line arguments passed to the installer to enable silent or unattended installation without user interaction." .
 
 choco:validExitCodes a owl:DatatypeProperty ;
     rdfs:label "valid exit codes" ;
     rdfs:comment "Exit codes that indicate successful installation" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A list of exit codes that the installer may return to indicate successful installation completion." .
 
 choco:unzipLocation a owl:DatatypeProperty ;
     rdfs:label "unzip location" ;
     rdfs:comment "Location where ZIP packages should be extracted" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the directory path where ZIP archive packages should be extracted during installation." .
 
 choco:checksumType a owl:DatatypeProperty ;
     rdfs:label "checksum type" ;
     rdfs:comment "The type of checksum (e.g., sha256, md5)" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd: ;
+    IAO:0000115 "Specifies the cryptographic hash algorithm used for checksum verification, such as SHA256, MD5, or SHA1." .
 
 choco:checksum a owl:DatatypeProperty ;
     rdfs:label "checksum" ;
     rdfs:comment "The checksum value for verification" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A cryptographic hash value used to verify the integrity of the downloaded installer file." .
 
 choco:checksum64 a owl:DatatypeProperty ;
     rdfs:label "64-bit checksum" ;
     rdfs:comment "The checksum value for 64-bit installers" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A cryptographic hash value used to verify the integrity of the 64-bit version of the downloaded installer file." .
 
 choco:url a owl:DatatypeProperty ;
     rdfs:label "download URL" ;
     rdfs:comment "The URL to download the software installer" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL from which the software installer or archive can be downloaded." .
 
 choco:url64bit a owl:DatatypeProperty ;
     rdfs:label "64-bit download URL" ;
     rdfs:comment "The URL to download the 64-bit software installer" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL from which the 64-bit version of the software installer can be downloaded." .
 
 choco:registryUninstallerKey a owl:DatatypeProperty ;
     rdfs:label "registry uninstaller key" ;
     rdfs:comment "The registry key for the uninstaller" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Windows registry key path where uninstaller information is stored for the software." .
 
 choco:uninstallRegistryKey a owl:DatatypeProperty ;
     rdfs:label "uninstall registry key" ;
     rdfs:comment "Alternative name for registry uninstaller key" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "An alternative reference to the Windows registry key path where uninstaller information is stored." .
 
 # Object Properties
 choco:hasNuspec a owl:ObjectProperty ;
     rdfs:label "has nuspec" ;
     rdfs:comment "Links a package to its nuspec file" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range choco:Nuspec .
+    rdfs:range choco:Nuspec ;
+    IAO:0000115 "Associates a Chocolatey package with its NuSpec metadata file containing package information." .
 
 choco:hasInstallScript a owl:ObjectProperty ;
     rdfs:label "has install script" ;
     rdfs:comment "Links a package to its installation script" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range choco:InstallScript .
+    rdfs:range choco:InstallScript ;
+    IAO:0000115 "Associates a Chocolatey package with its installation script that handles the software installation process." .
 
 choco:hasUninstallScript a owl:ObjectProperty ;
     rdfs:label "has uninstall script" ;
     rdfs:comment "Links a package to its uninstallation script" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range choco:UninstallScript .
+    rdfs:range choco:UninstallScript ;
+    IAO:0000115 "Associates a Chocolatey package with its uninstallation script that handles the software removal process." .
 
 choco:hasBeforeModifyScript a owl:ObjectProperty ;
     rdfs:label "has before modify script" ;
     rdfs:comment "Links a package to its before modify script" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range choco:BeforeModifyScript .
+    rdfs:range choco:BeforeModifyScript ;
+    IAO:0000115 "Associates a Chocolatey package with its before modify script that is executed before package modifications." .
 
 choco:hasTools a owl:ObjectProperty ;
     rdfs:label "has tools" ;
     rdfs:comment "Links a package to its tools directory" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range choco:ChocolateyTools .
+    rdfs:range choco:ChocolateyTools ;
+    IAO:0000115 "Associates a Chocolatey package with its tools directory containing executables and scripts." .
 
 # Dependency Properties
 choco:dependsOn a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:dependsOn ;
     rdfs:label "depends on" ;
-    rdfs:comment "Package dependency relationship" .
+    rdfs:comment "Package dependency relationship" ;
+    IAO:0000115 "Indicates that this Chocolatey package requires another package to be installed for proper functionality." .
 
 # Script Properties
 choco:scriptContent a owl:DatatypeProperty ;
     rdfs:label "script content" ;
     rdfs:comment "The PowerShell script content" ;
     rdfs:domain choco:ChocolateyScript ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The actual PowerShell code content of the script that will be executed during package operations." .
 
 choco:scriptFile a owl:DatatypeProperty ;
     rdfs:label "script file" ;
     rdfs:comment "The filename of the script" ;
     rdfs:domain choco:ChocolateyScript ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The filename of the PowerShell script file within the package structure." .
 
 # Common Chocolatey repositories
 choco:community a choco:ChocolateyRepository ;
     rdfs:label "Chocolatey Community Repository" ;
     rdfs:comment "The main community repository for Chocolatey packages" ;
-    pkg:homepage <https://community.chocolatey.org/> .
+    pkg:homepage "https://community.chocolatey.org/" .
 
 # Common installer types
 choco:exe a owl:NamedIndividual ;

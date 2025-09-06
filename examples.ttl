@@ -1,0 +1,210 @@
+# Example Package Instances
+# Demonstrating how to represent real packages using the ontologies
+
+@prefix ex:    <https://packagegraph.github.io/ontology/examples#> .
+@prefix pkg:   <http://packagegraph.github.io/ontology/core#> .
+@prefix deb:   <https://packagegraph.github.io/ontology/debian#> .
+@prefix rpm:   <https://packagegraph.github.io/ontology/rpm#> .
+@prefix arch:  <https://packagegraph.github.io/ontology/archlinux#> .
+@prefix bsd:   <https://packagegraph.github.io/ontology/bsd#> .
+@prefix choco: <https://packagegraph.github.io/ontology/chocolatey#> .
+@prefix brew:  <https://packagegraph.github.io/ontology/homebrew#> .
+@prefix nix:   <https://packagegraph.github.io/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+
+# Ontology metadata
+<https://packagegraph.github.io/ontology/examples#> a owl:Ontology ;
+  dc:title "Package Graph Examples Ontology" ;
+  dc:description "Example package instances demonstrating how to represent real packages using the Package Graph ontologies across different package management systems including Debian, RPM, Arch Linux, BSD Ports, Chocolatey, Homebrew, and Nix." ;
+  dct:license <https://creativecommons.org/licenses/by/4.0/> .
+
+################################################################
+# Debian (3)
+################################################################
+
+# glibc (Debian packaging repo on Salsa; upstream on Sourceware)
+ex:glibc-deb a deb:BinaryPackage ;
+  pkg:packageName "libc6" ;
+  rdfs:label "GNU C Library (Debian binary package: libc6)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:location <https://sourceware.org/git/glibc.git> ;
+    doap:browse   <https://sourceware.org/glibc/sources.html>
+  ] ;
+  dct:source <https://salsa.debian.org/glibc-team/glibc> ;
+  dct:description "Debian packaging for glibc; upstream VCS at Sourceware." .
+
+# wget (Debian packaging on Salsa)
+ex:wget-deb a deb:BinaryPackage ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (Debian binary package)" ;
+  dct:source <https://salsa.debian.org/debian/wget> ;
+  dct:description "Debian packaging repository for wget on Salsa." .
+
+# git (Debian packaging; placeholder VCS)
+ex:git-deb a deb:BinaryPackage ;
+  pkg:packageName "git" ;
+  rdfs:label "Git version control (Debian binary package)" ;
+  dct:source <https://salsa.debian.org/debian/git> ;
+  dct:description "Debian packaging for Git (Salsa namespace for Debian packages)." .
+
+################################################################
+# RPM (3)
+################################################################
+
+# glibc (RPM packaging in dist-git; upstream Sourceware)
+ex:glibc-rpm a rpm:BinaryRPM ;
+  pkg:packageName "glibc" ;
+  rdfs:label "GNU C Library (RPM package)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:location <https://sourceware.org/git/glibc.git> ;
+    doap:browse   <https://sourceware.org/glibc/sources.html>
+  ] ;
+  dct:source <https://src.fedoraproject.org/rpms/glibc> ;
+  dct:description "Fedora/CentOS/RHEL dist-git packaging for glibc; upstream VCS at Sourceware." .
+
+# wget (RPM packaging in dist-git)
+ex:wget-rpm a rpm:BinaryRPM ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (RPM package)" ;
+  dct:source <https://src.fedoraproject.org/rpms/wget> ;
+  dct:description "RPM dist-git packaging for wget; upstream at GNU." .
+
+# bash (RPM packaging in dist-git)
+ex:bash-rpm a rpm:BinaryRPM ;
+  pkg:packageName "bash" ;
+  rdfs:label "GNU Bash (RPM package)" ;
+  dct:source <https://src.fedoraproject.org/rpms/bash> ;
+  dct:description "RPM dist-git packaging repository for bash." .
+
+################################################################
+# Arch Linux (3)
+################################################################
+
+# glibc (Arch packaging on GitLab)
+ex:glibc-arch a arch:ArchPackage ;
+  pkg:packageName "glibc" ;
+  rdfs:label "GNU C Library (Arch package)" ;
+  dct:source <https://gitlab.archlinux.org/archlinux/packaging/packages/glibc> ;
+  dct:description "Arch Linux packaging repository for glibc on GitLab." .
+
+# wget (Arch packaging on GitLab)
+ex:wget-arch a arch:ArchPackage ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (Arch package)" ;
+  dct:source <https://gitlab.archlinux.org/archlinux/packaging/packages/wget> ;
+  dct:description "Arch Linux packaging repository for wget on GitLab." .
+
+# bash (Arch packaging; standard pattern)
+ex:bash-arch a arch:ArchPackage ;
+  pkg:packageName "bash" ;
+  rdfs:label "GNU Bash (Arch package)" ;
+  dct:source <https://gitlab.archlinux.org/archlinux/packaging/packages/bash> ;
+  dct:description "Arch Linux packaging repository for bash on GitLab." .
+
+################################################################
+# BSD Ports (3)
+################################################################
+
+# bash (FreeBSD ports cgit)
+ex:bash-bsd a bsd:Port ;
+  pkg:packageName "bash" ;
+  rdfs:label "GNU Bash (FreeBSD port shells/bash)" ;
+  dct:source <https://cgit.freebsd.org/ports/tree/shells/bash/> ;
+  dct:description "FreeBSD ports tree for shells/bash (cgit)." .
+
+# wget (FreeBSD ports cgit)
+ex:wget-bsd a bsd:Port ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (FreeBSD port ftp/wget)" ;
+  dct:source <https://cgit.freebsd.org/ports/tree/ftp/wget/> ;
+  dct:description "FreeBSD ports tree for ftp/wget (cgit)." .
+
+# git (FreeBSD ports cgit)
+ex:git-bsd a bsd:Port ;
+  pkg:packageName "git" ;
+  rdfs:label "Git (FreeBSD port devel/git)" ;
+  dct:source <https://cgit.freebsd.org/ports/tree/devel/git/> ;
+  dct:description "FreeBSD ports tree for devel/git (cgit)." .
+
+################################################################
+# Chocolatey (3)
+################################################################
+
+# cygwin (Chocolatey package; likely meta/distribution bootstrapper)
+ex:cygwin-choco a choco:ChocolateyPackage ;
+  pkg:packageName "cygwin" ;
+  rdfs:label "Cygwin (Chocolatey package)" ;
+  dct:source <https://community.chocolatey.org/packages/Cygwin> ;
+  dct:description "Chocolatey listing for Cygwin; behaves as an environment bootstrapper and may function as a metapackage." ;
+  ex:isMetapackage true .
+
+# wget (Chocolatey package page)
+ex:wget-choco a choco:ChocolateyPackage ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (Chocolatey package)" ;
+  dct:source <https://community.chocolatey.org/packages/wget> ;
+  dct:description "Chocolatey package for wget." .
+
+# git (Chocolatey package page)
+ex:git-choco a choco:ChocolateyPackage ;
+  pkg:packageName "git" ;
+  rdfs:label "Git (Chocolatey package)" ;
+  dct:source <https://community.chocolatey.org/packages/git> ;
+  dct:description "Chocolatey package for Git for Windows." .
+
+################################################################
+# Homebrew (3)
+################################################################
+
+# glibc (Homebrew on Linux; formula in homebrew-core)
+ex:glibc-brew a brew:Formula ;
+  pkg:packageName "glibc" ;
+  rdfs:label "GNU C Library (Homebrew formula, Linux-only)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:browse <https://formulae.brew.sh/formula/glibc>
+  ] ;
+  dct:source <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/glibc.rb> ;
+  dct:description "Homebrew formula metadata for glibc; keg-only on Linuxbrew." .
+
+# wget (Homebrew formula)
+ex:wget-brew a brew:Formula ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (Homebrew formula)" ;
+  dct:source <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/w/wget.rb> ;
+  dct:description "Homebrew formula definition for wget in homebrew-core." .
+
+# git (Homebrew formula)
+ex:git-brew a brew:Formula ;
+  pkg:packageName "git" ;
+  rdfs:label "Git (Homebrew formula)" ;
+  dct:source <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/git.rb> ;
+  dct:description "Homebrew formula definition for git in homebrew-core." .
+
+################################################################
+# Nix (3)
+################################################################
+
+# glibc (Nixpkgs)
+ex:glibc-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "glibc" ;
+  rdfs:label "GNU C Library (Nixpkgs derivation)" ;
+  dct:source <https://github.com/NixOS/nixpkgs/> ;
+  dct:description "Nixpkgs contains the glibc derivation used by stdenv; version pinning examples reference nixpkgs commits." .
+
+# wget (Nixpkgs)
+ex:wget-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "wget" ;
+  rdfs:label "GNU Wget (Nixpkgs derivation)" ;
+  dct:source <https://github.com/NixOS/nixpkgs/> ;
+  dct:description "Nixpkgs includes wget; the expression lives under pkgs/tools/networking/wget." .
+
+# git (Nixpkgs)
+ex:git-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "git" ;
+  rdfs:label "Git (Nixpkgs derivation)" ;
+  dct:source <https://github.com/NixOS/nixpkgs/> ;
+  dct:description "Nixpkgs includes git; the expression lives under pkgs/applications/version-management/git." .

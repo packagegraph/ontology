@@ -10,6 +10,7 @@
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 
 
 # Ontology Declaration
@@ -18,153 +19,191 @@ pkg: a owl:Ontology ;
     rdfs:comment "Core ontology for representing software packages and repositories across different package management systems" ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
+    dcterms:title "Package Management Core Ontology" ;
+    dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems." ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" .
 
 # Core Classes
 pkg:Package a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Package" ;
-    rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system" .
+    rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system" ;
+    IAO:0000115 "A discrete unit of software that can be installed, updated, or removed by a package management system, typically containing executable code, configuration files, documentation, and metadata." .
 
 pkg:Repository a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Repository" ;
-    rdfs:comment "A storage location for packages, accessible through a package management system" .
+    rdfs:comment "A storage location for packages, accessible through a package management system" ;
+    IAO:0000115 "A centralized storage location where software packages are hosted and made available for distribution, typically accessible via network protocols and managed by package management systems." .
 
 pkg:PackageManager a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Package Manager" ;
-    rdfs:comment "A software tool that manages the installation, updating, and removal of packages" .
+    rdfs:comment "A software tool that manages the installation, updating, and removal of packages" ;
+    IAO:0000115 "A software application or system that automates the process of installing, upgrading, configuring, and removing software packages, including dependency resolution and conflict management." .
 
 pkg:Dependency a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Dependency" ;
-    rdfs:comment "A relationship indicating that one package requires another package to function properly" .
+    rdfs:comment "A relationship indicating that one package requires another package to function properly" ;
+    IAO:0000115 "A requirement relationship between software packages where one package needs another package to be present and functional in order to operate correctly." .
 
 pkg:Version a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Version" ;
-    rdfs:comment "A specific version or release of a package" .
+    rdfs:comment "A specific version or release of a package" ;
+    IAO:0000115 "A specific release or iteration of a software package, identified by a version string and representing a particular state of the package's development." .
 
 pkg:Maintainer a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Maintainer" ;
-    rdfs:comment "A person or organization responsible for maintaining a package" .
+    rdfs:comment "A person or organization responsible for maintaining a package" ;
+    IAO:0000115 "An individual or organization that has responsibility for the ongoing development, maintenance, and support of a software package." .
 
 pkg:License a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "License" ;
-    rdfs:comment "The legal license under which a package is distributed" .
+    rdfs:comment "The legal license under which a package is distributed" ;
+    IAO:0000115 "A legal document or agreement that specifies the terms and conditions under which a software package may be used, modified, and distributed." .
 
 pkg:Architecture a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Architecture" ;
-    rdfs:comment "The hardware or software architecture for which a package is built" .
+    rdfs:comment "The hardware or software architecture for which a package is built" ;
+    IAO:0000115 "The specific hardware platform, instruction set, or system architecture for which a software package has been compiled or designed to run." .
 
 # Core Properties
 pkg:packageName a owl:DatatypeProperty ;
     rdfs:label "package name" ;
     rdfs:comment "The name of a package" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The unique identifier or name by which a software package is known within a package management system." .
 
 pkg:versionString a owl:DatatypeProperty ;
     rdfs:label "version string" ;
     rdfs:comment "The version identifier of a package" ;
     rdfs:domain pkg:Version ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A textual representation of a package version, typically following semantic versioning or other versioning schemes to indicate the release sequence and compatibility." .
 
 pkg:description a owl:DatatypeProperty ;
     rdfs:label "description" ;
     rdfs:comment "A human-readable description of what the package does" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A textual explanation of the package's purpose, functionality, and features, intended to help users understand what the package provides." .
 
 pkg:homepage a owl:DatatypeProperty ;
     rdfs:label "homepage" ;
     rdfs:comment "The homepage URL of the package or project" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The web address of the main website or homepage associated with the software package or its development project." .
 
 pkg:downloadURL a owl:DatatypeProperty ;
     rdfs:label "download URL" ;
     rdfs:comment "The URL from which the package can be downloaded" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:anyURI .
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The web address from which the package file or archive can be directly downloaded or accessed." .
 
 pkg:installSize a owl:DatatypeProperty ;
     rdfs:label "install size" ;
     rdfs:comment "The disk space required when the package is installed" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:long .
+    rdfs:range xsd:long ;
+    IAO:0000115 "The amount of disk space, measured in bytes, that the package will occupy after being fully installed on the target system." .
 
 pkg:packageSize a owl:DatatypeProperty ;
     rdfs:label "package size" ;
     rdfs:comment "The size of the package file" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:long .
+    rdfs:range xsd:long ;
+    IAO:0000115 "The size of the package file or archive, measured in bytes, before installation or extraction." .
 
 pkg:checksum a owl:DatatypeProperty ;
     rdfs:label "checksum" ;
     rdfs:comment "A cryptographic hash of the package for integrity verification" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "A cryptographic hash value computed from the package file contents, used to verify the integrity and authenticity of the package during download and installation." .
 
 pkg:checksumType a owl:DatatypeProperty ;
     rdfs:label "checksum type" ;
     rdfs:comment "The algorithm used to generate the checksum (e.g., MD5, SHA256)" ;
     rdfs:domain pkg:Package ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    IAO:0000115 "The specific cryptographic hash algorithm used to compute the package checksum, such as MD5, SHA1, SHA256, or other hash functions." .
 
 # Object Properties
 pkg:hasVersion a owl:ObjectProperty ;
     rdfs:label "has version" ;
     rdfs:comment "Links a package to one of its versions" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Version .
+    rdfs:range pkg:Version ;
+    IAO:0000115 "A relationship that associates a software package with a specific version or release of that package." .
 
 pkg:dependsOn a owl:ObjectProperty ;
     rdfs:label "depends on" ;
     rdfs:comment "Indicates that a package requires another package to function" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Package .
+    rdfs:range pkg:Package ;
+    IAO:0000115 "A relationship indicating that one package requires another package to be present and functional in order to operate correctly." .
 
 pkg:conflicts a owl:ObjectProperty ;
     rdfs:label "conflicts" ;
     rdfs:comment "Indicates that a package cannot be installed alongside another package" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Package .
+    rdfs:range pkg:Package ;
+    IAO:0000115 "A relationship indicating that two packages cannot be installed simultaneously on the same system due to incompatibilities or resource conflicts." .
 
 pkg:provides a owl:ObjectProperty ;
     rdfs:label "provides" ;
     rdfs:comment "Indicates that a package provides the functionality of another package" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Package .
+    rdfs:range pkg:Package ;
+    IAO:0000115 "A relationship indicating that one package offers the same functionality or interface as another package, potentially serving as a substitute or alternative implementation." .
 
 pkg:replaces a owl:ObjectProperty ;
     rdfs:label "replaces" ;
     rdfs:comment "Indicates that a package replaces another package" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Package .
+    rdfs:range pkg:Package ;
+    IAO:0000115 "A relationship indicating that one package is intended to supersede and replace another package, typically during system upgrades or package transitions." .
 
 pkg:containedIn a owl:ObjectProperty ;
     rdfs:label "contained in" ;
     rdfs:comment "Links a package to the repository that contains it" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Repository .
+    rdfs:range pkg:Repository ;
+    IAO:0000115 "A relationship that associates a software package with the repository where it is stored and made available for distribution." .
 
 pkg:maintainedBy a owl:ObjectProperty ;
     rdfs:label "maintained by" ;
     rdfs:comment "Links a package to its maintainer" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Maintainer .
+    rdfs:range pkg:Maintainer ;
+    IAO:0000115 "A relationship that associates a software package with the person or organization responsible for its ongoing maintenance and development." .
 
 pkg:hasLicense a owl:ObjectProperty ;
     rdfs:label "has license" ;
     rdfs:comment "Links a package to its license" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:License .
+    rdfs:range pkg:License ;
+    IAO:0000115 "A relationship that associates a software package with the legal license under which it is distributed and may be used." .
 
 pkg:targetArchitecture a owl:ObjectProperty ;
     rdfs:label "target architecture" ;
     rdfs:comment "Links a package to the architecture it targets" ;
     rdfs:domain pkg:Package ;
-    rdfs:range pkg:Architecture .
+    rdfs:range pkg:Architecture ;
+    IAO:0000115 "A relationship that associates a software package with the specific hardware or system architecture for which it has been compiled or designed." .
 
 pkg:managedBy a owl:ObjectProperty ;
     rdfs:label "managed by" ;
     rdfs:comment "Links a repository to the package manager that manages it" ;
     rdfs:domain pkg:Repository ;
-    rdfs:range pkg:PackageManager .
+    rdfs:range pkg:PackageManager ;
+    IAO:0000115 "A relationship that associates a package repository with the package management system that controls and provides access to it." .
