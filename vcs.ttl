@@ -1,6 +1,6 @@
 # Version Control System Ontology
 @prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +16,7 @@
 
 
 # Ontology Declaration
-vcs: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/vcs#> a owl:Ontology ;
     rdfs:label "Version Control System Ontology" ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -25,7 +25,7 @@ vcs: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: , foaf: , prov: .
+    owl:imports <core.ttl> , foaf: , prov: .
 
 # VCS Classes
 vcs:Repository a owl:Class ;
@@ -104,7 +104,7 @@ vcs:cloneUrl a owl:DatatypeProperty ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "The URL that can be used to create a local copy of the repository using version control tools." .
 
-vcs:defaultBranch a owl:DatatypeProperty ;
+vcs:defaultBranch a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "default branch" ;
     rdfs:comment "Name of the default branch" ;
     rdfs:domain vcs:Repository ;
@@ -112,7 +112,7 @@ vcs:defaultBranch a owl:DatatypeProperty ;
     IAO:0000115 "The name of the primary branch that serves as the default when cloning or accessing the repository." .
 
 # Commit Properties
-vcs:commitHash a owl:DatatypeProperty ;
+vcs:commitHash a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "commit hash" ;
     rdfs:comment "Hash identifier of the commit (SHA1, SHA256, etc.)" ;
     rdfs:domain vcs:Commit ;
@@ -126,7 +126,7 @@ vcs:commitMessage a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "A human-readable description of the changes made in the commit, typically including a summary and optional detailed explanation." .
 
-vcs:commitTimestamp a owl:DatatypeProperty ;
+vcs:commitTimestamp a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "commit timestamp" ;
     rdfs:comment "Timestamp when the commit was created" ;
     rdfs:domain vcs:Commit ;
@@ -141,7 +141,7 @@ vcs:authorTimestamp a owl:DatatypeProperty ;
     IAO:0000115 "The date and time when the changes in the commit were originally authored, which may differ from the commit timestamp." .
 
 # Branch Properties
-vcs:branchName a owl:DatatypeProperty ;
+vcs:branchName a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "branch name" ;
     rdfs:comment "Name of the branch" ;
     rdfs:domain vcs:Branch ;
@@ -156,7 +156,7 @@ vcs:isProtected a owl:DatatypeProperty ;
     IAO:0000115 "Indicates whether the branch has protection rules that prevent direct pushes and require pull requests or other approval processes." .
 
 # Tag Properties
-vcs:tagName a owl:DatatypeProperty ;
+vcs:tagName a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "tag name" ;
     rdfs:comment "Name of the tag" ;
     rdfs:domain vcs:Tag ;
@@ -217,6 +217,7 @@ vcs:encoding a owl:DatatypeProperty ;
 vcs:hasCommit a owl:ObjectProperty ;
     rdfs:label "has commit" ;
     rdfs:comment "Links repository or branch to commits" ;
+    rdfs:domain vcs:Repository ;
     rdfs:range vcs:Commit ;
     IAO:0000115 "Associates a repository or branch with the commits it contains." .
 
@@ -250,7 +251,7 @@ vcs:parentCommit a owl:ObjectProperty ;
 vcs:pointsTo a owl:ObjectProperty ;
     rdfs:label "points to" ;
     rdfs:comment "Reference or tag points to a commit" ;
-    rdfs:domain owl:Thing ;
+    rdfs:domain vcs:Reference ;
     rdfs:range vcs:Commit ;
     IAO:0000115 "Indicates that a reference or tag points to a specific commit in the repository." .
 
@@ -326,6 +327,194 @@ vcs:Savannah a owl:NamedIndividual ;
     rdfs:label "GNU Savannah" ;
     rdfs:comment "GNU Savannah hosting platform" .
 
+# Release and Package Integration
+vcs:Release a owl:Class ;
+    rdfs:subClassOf vcs:Tag ;
+    rdfs:label "Release" ;
+    rdfs:comment "A tagged release in version control" ;
+    IAO:0000115 "A specific tagged version in version control that represents a formal release of the software, typically corresponding to a published package version." .
+
+vcs:ReleaseCandidate a owl:Class ;
+    rdfs:subClassOf vcs:Release ;
+    rdfs:label "Release Candidate" ;
+    rdfs:comment "A pre-release version for testing" ;
+    IAO:0000115 "A version tagged as a candidate for release, used for final testing before the official release." .
+
+vcs:Milestone a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Milestone" ;
+    rdfs:comment "A development milestone or sprint" ;
+    IAO:0000115 "A significant point in the development timeline marking the completion of specific features or goals." .
+
+vcs:ReleaseNotes a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Release Notes" ;
+    rdfs:comment "Documentation describing changes in a release" ;
+    IAO:0000115 "Documentation that describes the changes, bug fixes, and new features included in a software release." .
+
+# Release cadence and timing properties
+vcs:releaseFrequency a owl:DatatypeProperty ;
+    rdfs:label "release frequency" ;
+    rdfs:comment "The typical frequency of releases (in days)" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The average number of days between releases for this repository." .
+
+vcs:releaseDate a owl:DatatypeProperty ;
+    rdfs:label "release date" ;
+    rdfs:comment "The date when a release was published" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time when a release was officially published or made available." .
+
+vcs:isPreRelease a owl:DatatypeProperty ;
+    rdfs:label "is pre-release" ;
+    rdfs:comment "Whether this is a pre-release version" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether this release is a pre-release, alpha, beta, or release candidate rather than a stable release." .
+
+vcs:releaseStability a owl:DatatypeProperty ;
+    rdfs:label "release stability" ;
+    rdfs:comment "The stability level of the release (alpha, beta, rc, stable)" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Indicates the stability level of the release, such as alpha, beta, release candidate, or stable." .
+
+vcs:developmentStatus a owl:DatatypeProperty ;
+    rdfs:label "development status" ;
+    rdfs:comment "Current development status of the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Indicates the current development status such as active, maintenance, archived, or deprecated." .
+
+# Package-VCS integration properties
+vcs:correspondingPackageVersion a owl:ObjectProperty ;
+    rdfs:label "corresponding package version" ;
+    rdfs:comment "Links a VCS release to the corresponding package version" ;
+    rdfs:domain vcs:Release ;
+    IAO:0000115 "Associates a VCS release with the package version that was built from this release." .
+
+vcs:hasUpstreamRepository a owl:ObjectProperty ;
+    rdfs:label "has upstream repository" ;
+    rdfs:comment "Links a package to its upstream source repository" ;
+    rdfs:range vcs:Repository ;
+    IAO:0000115 "Associates a package with the upstream version control repository where its source code is maintained." .
+
+vcs:packagedFromTag a owl:ObjectProperty ;
+    rdfs:label "packaged from tag" ;
+    rdfs:comment "Indicates which VCS tag a package was built from" ;
+    rdfs:range vcs:Tag ;
+    IAO:0000115 "Associates a package with the specific VCS tag or release from which it was built." .
+
+vcs:packagedFromCommit a owl:ObjectProperty ;
+    rdfs:label "packaged from commit" ;
+    rdfs:comment "Indicates which commit a package was built from" ;
+    rdfs:range vcs:Commit ;
+    IAO:0000115 "Associates a package with the specific commit from which it was built." .
+
+# Release relationship properties
+vcs:previousRelease a owl:ObjectProperty ;
+    rdfs:label "previous release" ;
+    rdfs:comment "Links to the previous release in sequence" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range vcs:Release ;
+    IAO:0000115 "Identifies the previous release in the chronological sequence of releases." .
+
+vcs:nextRelease a owl:ObjectProperty ;
+    owl:inverseOf vcs:previousRelease ;
+    rdfs:label "next release" ;
+    rdfs:comment "Links to the next release in sequence" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range vcs:Release ;
+    IAO:0000115 "Identifies the next release in the chronological sequence of releases." .
+
+vcs:hasReleaseNotes a owl:ObjectProperty ;
+    rdfs:label "has release notes" ;
+    rdfs:comment "Links a release to its documentation" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range vcs:ReleaseNotes ;
+    IAO:0000115 "Associates a release with its accompanying release notes or changelog documentation." .
+
+vcs:releasedBy a owl:ObjectProperty ;
+    rdfs:label "released by" ;
+    rdfs:comment "Person or organization who published the release" ;
+    rdfs:domain vcs:Release ;
+    IAO:0000115 "Identifies the person or organization responsible for publishing and announcing the release." .
+
+# Milestone and planning properties
+vcs:hasTarget a owl:ObjectProperty ;
+    rdfs:label "has target" ;
+    rdfs:comment "Links milestone to target release" ;
+    rdfs:domain vcs:Milestone ;
+    rdfs:range vcs:Release ;
+    IAO:0000115 "Associates a development milestone with its target release." .
+
+vcs:targetDate a owl:DatatypeProperty ;
+    rdfs:label "target date" ;
+    rdfs:comment "Target completion date for milestone" ;
+    rdfs:domain vcs:Milestone ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The planned or target completion date for a milestone or release." .
+
+vcs:milestoneProgress a owl:DatatypeProperty ;
+    rdfs:label "milestone progress" ;
+    rdfs:comment "Completion percentage of milestone (0.0 to 1.0)" ;
+    rdfs:domain vcs:Milestone ;
+    rdfs:range xsd:float ;
+    IAO:0000115 "The current completion progress of a milestone as a decimal value between 0.0 and 1.0." .
+
+# Enhanced security and signing
+vcs:isSignedRelease a owl:DatatypeProperty ;
+    rdfs:label "is signed release" ;
+    rdfs:comment "Whether the release is cryptographically signed" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether the release has been cryptographically signed for integrity verification." .
+
+vcs:signatureKeyId a owl:DatatypeProperty ;
+    rdfs:label "signature key ID" ;
+    rdfs:comment "The key ID used to sign the release" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The identifier of the cryptographic key used to sign the release." .
+
+vcs:signatureAlgorithm a owl:DatatypeProperty ;
+    rdfs:label "signature algorithm" ;
+    rdfs:comment "The cryptographic algorithm used for signing" ;
+    rdfs:domain vcs:Release ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The cryptographic algorithm used to create the release signature." .
+
+# Repository activity metrics
+vcs:lastActivity a owl:DatatypeProperty ;
+    rdfs:label "last activity" ;
+    rdfs:comment "Date of last commit or activity" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time of the most recent commit or activity in the repository." .
+
+vcs:totalCommits a owl:DatatypeProperty ;
+    rdfs:label "total commits" ;
+    rdfs:comment "Total number of commits in repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The total number of commits made to the repository throughout its history." .
+
+vcs:commitFrequency a owl:DatatypeProperty ;
+    rdfs:label "commit frequency" ;
+    rdfs:comment "Average commits per day over recent period" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:float ;
+    IAO:0000115 "The average number of commits per day over a recent time period, indicating development activity level." .
+
+vcs:contributorCount a owl:DatatypeProperty ;
+    rdfs:label "contributor count" ;
+    rdfs:comment "Number of unique contributors" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The total number of unique contributors who have made commits to the repository." .
+
 # VCS Types
 vcs:Git a owl:NamedIndividual ;
     rdfs:label "Git" ;
@@ -350,3 +539,34 @@ vcs:CVS a owl:NamedIndividual ;
 vcs:Fossil a owl:NamedIndividual ;
     rdfs:label "Fossil" ;
     rdfs:comment "Fossil distributed version control system" .
+
+# Cardinality Restrictions for VCS Classes
+vcs:Commit rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:commitHash ;
+    owl:cardinality 1
+] .
+
+vcs:Commit rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:commitTimestamp ;
+    owl:cardinality 1
+] .
+
+vcs:Tag rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:tagName ;
+    owl:cardinality 1
+] .
+
+vcs:Branch rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:branchName ;
+    owl:cardinality 1
+] .
+
+vcs:Repository rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:defaultBranch ;
+    owl:maxCardinality 1
+] .

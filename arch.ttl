@@ -1,6 +1,7 @@
 # Arch Linux Package Ontology
-@prefix arch: <http://packagegraph.github.io/ontology/archlinux#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix arch: <https://packagegraph.github.io/ontology/archlinux#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +16,7 @@
 
 
 # Ontology Declaration
-arch: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/archlinux#> a owl:Ontology ;
     rdfs:label "Arch Linux Package Ontology" ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -24,7 +25,7 @@ arch: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling Arch Linux packages, PKGBUILD files, AUR packages, and Pacman repositories including build dependencies, split packages, and package groups." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # Arch-specific Classes
 arch:ArchPackage a owl:Class ;
@@ -84,14 +85,14 @@ arch:pkgver a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The version number of the upstream software as provided by the original developers." .
 
-arch:pkgrel a owl:DatatypeProperty ;
+arch:pkgrel a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "package release" ;
     rdfs:comment "The Arch-specific package release number" ;
     rdfs:domain arch:ArchPackage ;
     rdfs:range xsd:int ;
     IAO:0000115 "The Arch Linux specific release number that increments when the PKGBUILD is updated without changing the upstream version." .
 
-arch:epoch a owl:DatatypeProperty ;
+arch:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "epoch" ;
     rdfs:comment "The epoch version number for version comparison override" ;
     rdfs:domain arch:ArchPackage ;
@@ -235,6 +236,7 @@ arch:b2sums a owl:DatatypeProperty ;
 
 # Object Properties
 arch:builtFrom a owl:ObjectProperty ;
+    owl:equivalentProperty vcs:packagedFromTag ;
     rdfs:label "built from" ;
     rdfs:comment "Links a package to the PKGBUILD it was built from" ;
     rdfs:domain arch:ArchPackage ;
@@ -262,9 +264,120 @@ arch:partOfSplit a owl:ObjectProperty ;
     rdfs:range arch:SplitPackage ;
     IAO:0000115 "Relates split packages that are built from the same PKGBUILD and share the same pkgbase." .
 
+# Cross-format property equivalences are declared within property definitions below
+
+# Link to core VCS and ecosystem concepts
+arch:ArchPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty pkg:partOfDistribution ;
+    owl:someValuesFrom pkg:Distribution
+] .
+
+arch:ArchRepository rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:hasUpstreamRepository ;
+    owl:someValuesFrom vcs:Repository
+] .
+
+# Enhanced AUR and build analysis
+arch:aurVotes a owl:DatatypeProperty ;
+    rdfs:label "AUR votes" ;
+    rdfs:comment "Number of votes for this AUR package" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of user votes indicating popularity for an AUR package." .
+
+arch:aurPopularity a owl:DatatypeProperty ;
+    rdfs:label "AUR popularity" ;
+    rdfs:comment "Popularity score for this AUR package" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:float ;
+    IAO:0000115 "A calculated popularity score for an AUR package based on votes and usage statistics." .
+
+arch:outOfDate a owl:DatatypeProperty ;
+    rdfs:label "out of date" ;
+    rdfs:comment "Whether the AUR package is marked as out of date" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether an AUR package has been flagged as out of date by users." .
+
+arch:orphaned a owl:DatatypeProperty ;
+    rdfs:label "orphaned" ;
+    rdfs:comment "Whether the AUR package is orphaned (no maintainer)" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether an AUR package has no current maintainer and is available for adoption." .
+
+arch:lastModified a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "last modified" ;
+    rdfs:comment "Date when the package was last modified" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time when the package was last updated or modified." .
+
+# PKGBUILD analysis enhancements
+arch:pkgbuildContent a owl:DatatypeProperty ;
+    rdfs:label "PKGBUILD content" ;
+    rdfs:comment "The complete PKGBUILD file content" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The complete text content of the PKGBUILD file including all functions and metadata." .
+
+arch:gitRepository a owl:DatatypeProperty ;
+    rdfs:label "git repository" ;
+    rdfs:comment "Git repository URL for the package source" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The Git repository URL where the package source code or PKGBUILD is maintained." .
+
+arch:buildFlags a owl:DatatypeProperty ;
+    rdfs:label "build flags" ;
+    rdfs:comment "Compiler flags used during build" ;
+    rdfs:domain arch:PKGBUILD ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Compiler flags and build options used when compiling the package from source." .
+
+# Package relationship analysis
+arch:splitPackageBase a owl:ObjectProperty ;
+    rdfs:label "split package base" ;
+    rdfs:comment "Links to the base package in a split package group" ;
+    rdfs:domain arch:SplitPackage ;
+    rdfs:range arch:ArchPackage ;
+    IAO:0000115 "Identifies the primary or base package in a group of split packages." .
+
+arch:aurMaintainer a owl:ObjectProperty ;
+    rdfs:label "AUR maintainer" ;
+    rdfs:comment "Links to the AUR package maintainer" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range pkg:Maintainer ;
+    IAO:0000115 "Identifies the current maintainer of an AUR package." .
+
+arch:aurSubmitter a owl:ObjectProperty ;
+    rdfs:label "AUR submitter" ;
+    rdfs:comment "Links to the original submitter of the AUR package" ;
+    rdfs:domain arch:ArchPackage ;
+    rdfs:range pkg:Contributor ;
+    IAO:0000115 "Identifies the person who originally submitted the package to the AUR." .
+
+# Repository and mirror analysis
+arch:repoSignature a owl:DatatypeProperty ;
+    rdfs:label "repository signature" ;
+    rdfs:comment "GPG signature for repository verification" ;
+    rdfs:domain arch:ArchRepository ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The GPG signature used to verify the authenticity of the repository and its packages." .
+
+arch:tierLevel a owl:DatatypeProperty ;
+    rdfs:label "tier level" ;
+    rdfs:comment "Mirror tier level (Tier 1, Tier 2, etc.)" ;
+    rdfs:domain arch:ArchRepository ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The tier classification of a repository mirror indicating its sync frequency and reliability." .
+
 # Dependency Properties
 arch:depends a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:dependsOn ;
+    owl:equivalentProperty pkg:archDepends ;
     rdfs:label "depends" ;
     rdfs:comment "Runtime dependency" ;
     IAO:0000115 "A runtime dependency that must be installed for the package to function correctly." .
@@ -298,6 +411,7 @@ arch:provides a owl:ObjectProperty ;
 
 arch:conflicts a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:conflicts ;
+    owl:equivalentProperty pkg:archConflicts ;
     rdfs:label "conflicts" ;
     rdfs:comment "Package conflict" ;
     IAO:0000115 "A package that cannot be installed simultaneously with this package due to file conflicts or incompatibility." .

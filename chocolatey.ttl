@@ -1,7 +1,7 @@
 # Chocolatey Package Ontology
-@prefix choco: <http://packagegraph.github.io/ontology/chocolatey#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
-@prefix nuget: <http://packagegraph.github.io/ontology/nuget#> .
+@prefix choco: <https://packagegraph.github.io/ontology/chocolatey#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix nuget: <https://packagegraph.github.io/ontology/nuget#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +16,7 @@
 
 
 # Ontology Declaration
-choco: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/chocolatey#> a owl:Ontology ;
     rdfs:label "Chocolatey Package Ontology" ;
     rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -25,7 +25,7 @@ choco: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling Chocolatey packages, NuGet packages, PowerShell scripts, and Windows software management including installation scripts, dependencies, and package metadata." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # Chocolatey-specific Classes
 choco:ChocolateyPackage a owl:Class ;
@@ -88,15 +88,19 @@ choco:ChocolateyFeature a owl:Class ;
     rdfs:comment "A Chocolatey feature that affects package behavior" ;
     IAO:0000115 "A configurable feature in Chocolatey that controls specific behaviors or capabilities of the package management system." .
 
+choco:InstallerType a owl:Class ;
+    rdfs:label "Installer Type" ;
+    rdfs:comment "A type of installer for a Chocolatey package" .
+
 # NuGet/Chocolatey Properties
-choco:packageId a owl:DatatypeProperty ;
+choco:packageId a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "package ID" ;
     rdfs:comment "The unique identifier of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "A unique string identifier that distinguishes this package from all other packages in the Chocolatey ecosystem." .
 
-choco:version a owl:DatatypeProperty ;
+choco:version a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "version" ;
     rdfs:comment "The semantic version of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
@@ -269,17 +273,17 @@ choco:checksumType a owl:DatatypeProperty ;
     rdfs:label "checksum type" ;
     rdfs:comment "The type of checksum (e.g., sha256, md5)" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd: ;
+    rdfs:range xsd:string ;
     IAO:0000115 "Specifies the cryptographic hash algorithm used for checksum verification, such as SHA256, MD5, or SHA1." .
 
-choco:checksum a owl:DatatypeProperty ;
+choco:checksum a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "checksum" ;
     rdfs:comment "The checksum value for verification" ;
     rdfs:domain choco:ChocolateyPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "A cryptographic hash value used to verify the integrity of the downloaded installer file." .
 
-choco:checksum64 a owl:DatatypeProperty ;
+choco:checksum64 a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "64-bit checksum" ;
     rdfs:comment "The checksum value for 64-bit installers" ;
     rdfs:domain choco:ChocolateyPackage ;
@@ -379,18 +383,37 @@ choco:community a choco:ChocolateyRepository ;
     pkg:homepage "https://community.chocolatey.org/" .
 
 # Common installer types
-choco:exe a owl:NamedIndividual ;
+choco:exe a choco:InstallerType ;
     rdfs:label "EXE installer" ;
     rdfs:comment "Executable installer type" .
 
-choco:msi a owl:NamedIndividual ;
+choco:msi a choco:InstallerType ;
     rdfs:label "MSI installer" ;
     rdfs:comment "Microsoft Installer package type" .
 
-choco:zip a owl:NamedIndividual ;
+choco:zip a choco:InstallerType ;
     rdfs:label "ZIP archive" ;
     rdfs:comment "ZIP archive package type" .
 
-choco:portable a owl:NamedIndividual ;
+choco:portable a choco:InstallerType ;
     rdfs:label "Portable application" ;
     rdfs:comment "Portable application that doesn't require installation" .
+
+# Cardinality Restrictions for Chocolatey Classes
+choco:ChocolateyPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty choco:packageId ;
+    owl:cardinality 1
+] .
+
+choco:ChocolateyPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty choco:version ;
+    owl:cardinality 1
+] .
+
+choco:ChocolateyPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty choco:hasNuspec ;
+    owl:cardinality 1
+] .

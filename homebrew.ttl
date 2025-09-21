@@ -1,6 +1,6 @@
 # Homebrew Package Ontology
-@prefix brew: <http://packagegraph.github.io/ontology/homebrew#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix brew: <https://packagegraph.github.io/ontology/homebrew#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,8 @@
 
 
 # Ontology Declaration
-<http://packagegraph.github.io/ontology/homebrew> a owl:Ontology ;
+# Ontology Declaration
+<https://packagegraph.github.io/ontology/homebrew#> a owl:Ontology ;
     rdfs:label "Homebrew Package Ontology" ;
     rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -24,7 +25,7 @@
     dcterms:description "A comprehensive ontology for modeling Homebrew packages, formulae, casks, taps, and macOS application management including bottles, dependencies, and build specifications." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # Homebrew-specific Classes
 brew:Formula a owl:Class ;
@@ -203,19 +204,12 @@ brew:Vst3Plugin a owl:Class ;
     IAO:0000115 "A VST3 audio plugin" .
 
 # Formula Properties
-brew:formulaName a owl:DatatypeProperty ;
+brew:formulaName a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "formula name" ;
     rdfs:comment "The name of the Homebrew formula" ;
     rdfs:domain brew:Formula ;
     rdfs:range xsd:string ;
     IAO:0000115 "The name of the Homebrew formula" .
-
-brew:desc a owl:DatatypeProperty ;
-    rdfs:label "description" ;
-    rdfs:comment "A brief description of the formula" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A brief description of the formula" .
 
 brew:license a owl:DatatypeProperty ;
     rdfs:label "license" ;
@@ -288,14 +282,14 @@ brew:disableReason a owl:DatatypeProperty ;
     IAO:0000115 "The reason for disabling" .
 
 # Cask Properties
-brew:caskName a owl:DatatypeProperty ;
+brew:caskName a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "cask name" ;
     rdfs:comment "The name of the Homebrew cask" ;
     rdfs:domain brew:Cask ;
     rdfs:range xsd:string ;
     IAO:0000115 "The name of the Homebrew cask" .
 
-brew:token a owl:DatatypeProperty ;
+brew:token a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "token" ;
     rdfs:comment "The unique token identifying the cask" ;
     rdfs:domain brew:Cask ;
@@ -338,7 +332,7 @@ brew:mirror a owl:DatatypeProperty ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "A mirror URL for the source" .
 
-brew:sha256 a owl:DatatypeProperty ;
+brew:sha256 a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "SHA256 checksum" ;
     rdfs:comment "The SHA256 checksum of the source" ;
     rdfs:domain brew:SoftwareSpec ;
@@ -494,18 +488,55 @@ brew:homebrew-cask-fonts a brew:Tap ;
     foaf:homepage <https://github.com/Homebrew/homebrew-cask-fonts> .
 
 # Common dependency types
-brew:build a owl:NamedIndividual ;
-    rdfs:label "build dependency" ;
+brew:BuildDependency a owl:Class ;
+    rdfs:subClassOf brew:Dependency ;
+    rdfs:label "Build Dependency" ;
     rdfs:comment "Dependency needed only at build time" .
 
-brew:optional a owl:NamedIndividual ;
-    rdfs:label "optional dependency" ;
+brew:OptionalDependency a owl:Class ;
+    rdfs:subClassOf brew:Dependency ;
+    rdfs:label "Optional Dependency" ;
     rdfs:comment "Optional dependency that adds extra functionality" .
 
-brew:recommended a owl:NamedIndividual ;
-    rdfs:label "recommended dependency" ;
+brew:RecommendedDependency a owl:Class ;
+    rdfs:subClassOf brew:Dependency ;
+    rdfs:label "Recommended Dependency" ;
     rdfs:comment "Recommended dependency (deprecated)" .
 
-brew:runtime a owl:NamedIndividual ;
-    rdfs:label "runtime dependency" ;
+brew:RuntimeDependency a owl:Class ;
+    rdfs:subClassOf brew:Dependency ;
+    rdfs:label "Runtime Dependency" ;
     rdfs:comment "Dependency needed at runtime" .
+
+# Cardinality Restrictions for Homebrew Classes
+brew:Formula rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty brew:formulaName ;
+    owl:cardinality 1
+] .
+
+brew:Formula rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty brew:hasStable ;
+    owl:qualifiedCardinality 1 ;
+    owl:onClass brew:StableSpec
+] .
+
+brew:Formula rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty brew:hasHead ;
+    owl:maxQualifiedCardinality 1 ;
+    owl:onClass brew:HeadSpec
+] .
+
+brew:Cask rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty brew:caskName ;
+    owl:cardinality 1
+] .
+
+brew:Cask rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty brew:token ;
+    owl:cardinality 1
+] .

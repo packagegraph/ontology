@@ -1,6 +1,7 @@
 # RPM Package Ontology
-@prefix rpm: <http://packagegraph.github.io/ontology/rpm#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix rpm: <https://packagegraph.github.io/ontology/rpm#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +16,7 @@
 
 
 # Ontology Declaration
-rpm: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/rpm#> a owl:Ontology ;
     rdfs:label "RPM Package Ontology" ;
     rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -24,7 +25,7 @@ rpm: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling RPM packages, YUM/DNF repositories, NEVR identifiers, and RPM-specific metadata including build information, changelogs, and file attributes." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # RPM-specific Classes
 rpm:RPMPackage a owl:Class ;
@@ -75,15 +76,21 @@ rpm:Changelog a owl:Class ;
     rdfs:comment "A changelog entry for an RPM package" ;
     IAO:0000115 "A record of changes made to an RPM package, including version updates, bug fixes, and feature additions, with associated timestamps and author information." .
 
+rpm:Dependency a owl:Class ;
+    rdfs:subClassOf pkg:Dependency ;
+    rdfs:label "RPM Dependency" ;
+    rdfs:comment "A dependency relationship in RPM, potentially with version constraints" ;
+    IAO:0000115 "Represents a dependency relationship between RPM packages, which can include version constraints and flags." .
+
 # RPM-specific Properties
-rpm:epoch a owl:DatatypeProperty ;
+rpm:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "epoch" ;
     rdfs:comment "The epoch version number (optional, defaults to 0)" ;
     rdfs:domain rpm:RPMPackage ;
     rdfs:range xsd:int ;
     IAO:0000115 "An optional integer that allows package maintainers to force a version ordering when the normal version comparison would be incorrect." .
 
-rpm:release a owl:DatatypeProperty ;
+rpm:release a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "release" ;
     rdfs:comment "The release number of the package" ;
     rdfs:domain rpm:RPMPackage ;
@@ -97,7 +104,7 @@ rpm:buildHost a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "Specifies the hostname of the machine where the RPM package was compiled and built." .
 
-rpm:buildTime a owl:DatatypeProperty ;
+rpm:buildTime a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "build time" ;
     rdfs:comment "The timestamp when the package was built" ;
     rdfs:domain rpm:RPMPackage ;
@@ -160,7 +167,7 @@ rpm:payloadCompressor a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "Specifies the compression algorithm used to compress the package payload, such as gzip, bzip2, or xz." .
 
-rpm:cookie a owl:DatatypeProperty ;
+rpm:cookie a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "cookie" ;
     rdfs:comment "An opaque identifier for tracking packages from the same build" ;
     rdfs:domain rpm:RPMPackage ;
@@ -231,15 +238,105 @@ rpm:hasTag a owl:ObjectProperty ;
     rdfs:range rpm:RPMTag ;
     IAO:0000115 "Associates an RPM package with its metadata tags stored in the package header." .
 
+# Cross-format property equivalences are declared within property definitions below
+
+# Link to core VCS and ecosystem concepts  
+rpm:RPMPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty pkg:partOfDistribution ;
+    owl:someValuesFrom pkg:Distribution
+] .
+
+rpm:RPMRepository rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty vcs:hasUpstreamRepository ;
+    owl:someValuesFrom vcs:Repository
+] .
+
+# Enhanced RPM-specific analysis properties
+rpm:rpmSignature a owl:DatatypeProperty ;
+    rdfs:label "RPM signature" ;
+    rdfs:comment "The cryptographic signature of the RPM package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The cryptographic signature used to verify the authenticity and integrity of the RPM package." .
+
+rpm:rpmSignatureKeyId a owl:DatatypeProperty ;
+    rdfs:label "RPM signature key ID" ;
+    rdfs:comment "The key ID used to sign the RPM package" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The identifier of the GPG key used to sign the RPM package." .
+
+rpm:buildArch a owl:DatatypeProperty ;
+    rdfs:label "build architecture" ;
+    rdfs:comment "The architecture this RPM was built on" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The architecture of the build system where this RPM package was compiled." .
+
+rpm:installTime a owl:DatatypeProperty ;
+    rdfs:label "install time" ;
+    rdfs:comment "When this package was installed (if applicable)" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date and time when this RPM package was installed on a system." .
+
+rpm:relocatable a owl:DatatypeProperty ;
+    rdfs:label "relocatable" ;
+    rdfs:comment "Whether the package can be relocated during installation" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates whether the RPM package can be installed to a different location than its default prefix." .
+
+# Enhanced NEVR analysis
+rpm:nevrString a owl:DatatypeProperty ;
+    rdfs:label "NEVR string" ;
+    rdfs:comment "The complete NEVR string representation" ;
+    rdfs:domain rpm:NEVR ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The complete Name-Epoch-Version-Release string in standard RPM format." .
+
+rpm:versionComparison a owl:DatatypeProperty ;
+    rdfs:label "version comparison" ;
+    rdfs:comment "Numeric value for version comparison ordering" ;
+    rdfs:domain rpm:NEVR ;
+    rdfs:range xsd:long ;
+    IAO:0000115 "A numeric representation that allows for proper version ordering and comparison of NEVR identifiers." .
+
+# Repository and distribution enhancements
+rpm:repomd a owl:DatatypeProperty ;
+    rdfs:label "repomd" ;
+    rdfs:comment "Repository metadata (repomd.xml) content" ;
+    rdfs:domain rpm:RPMRepository ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The repository metadata in repomd.xml format that describes the repository structure and contents." .
+
+rpm:gpgKeyUrl a owl:DatatypeProperty ;
+    rdfs:label "GPG key URL" ;
+    rdfs:comment "URL to the repository's GPG signing key" ;
+    rdfs:domain rpm:RPMRepository ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL where the GPG public key for verifying repository packages can be downloaded." .
+
+rpm:mirrorList a owl:DatatypeProperty ;
+    rdfs:label "mirror list" ;
+    rdfs:comment "URL to the list of repository mirrors" ;
+    rdfs:domain rpm:RPMRepository ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL that provides a list of mirror servers for this repository." .
+
 # Dependency Properties
 rpm:requires a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:dependsOn ;
+    owl:equivalentProperty pkg:rpmRequires ;
     rdfs:label "requires" ;
     rdfs:comment "Runtime dependency relationship" ;
     IAO:0000115 "Specifies packages or capabilities that must be available for this RPM package to function properly at runtime." .
 
 rpm:provides a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:provides ;
+    owl:equivalentProperty pkg:rpmProvides ;
     rdfs:label "provides" ;
     rdfs:comment "Virtual package provision" ;
     IAO:0000115 "Indicates that this RPM package provides the functionality of another package or virtual package name." .
@@ -252,6 +349,7 @@ rpm:obsoletes a owl:ObjectProperty ;
 
 rpm:conflicts a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:conflicts ;
+    owl:equivalentProperty pkg:rpmConflicts ;
     rdfs:label "conflicts" ;
     rdfs:comment "Package conflict relationship" ;
     IAO:0000115 "Indicates that this RPM package conflicts with another package and they cannot be installed simultaneously." .
@@ -262,6 +360,20 @@ rpm:buildRequires a owl:ObjectProperty ;
     rdfs:domain rpm:SourceRPM ;
     rdfs:range rpm:RPMPackage ;
     IAO:0000115 "Specifies packages that must be installed to build this source RPM package." .
+
+rpm:onPackage a owl:ObjectProperty ;
+    rdfs:label "on package" ;
+    rdfs:comment "Links a dependency relationship to the target package" ;
+    rdfs:domain rpm:Dependency ;
+    rdfs:range rpm:RPMPackage ;
+    IAO:0000115 "The target package of a dependency relationship." .
+
+rpm:versionConstraint a owl:DatatypeProperty ;
+    rdfs:label "version constraint" ;
+    rdfs:comment "A version constraint for a dependency (e.g., '>= 1.2.3')" ;
+    rdfs:domain rpm:Dependency ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A string specifying the version constraint for a dependency, such as '>= 1.2.3', '< 2.0', or '= 1.5'." .
 
 # File Properties
 rpm:fileName a owl:DatatypeProperty ;
@@ -305,6 +417,74 @@ rpm:fileGroup a owl:DatatypeProperty ;
     rdfs:domain rpm:RPMPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "Specifies the Unix group ownership of a file contained in the RPM package." .
+
+# RPM-specific Activities
+rpm:RPMBuildActivity a owl:Class ;
+    rdfs:subClassOf pkg:BuildActivity ;
+    rdfs:label "RPM Build Activity" ;
+    rdfs:comment "The process of building an RPM package using rpmbuild" ;
+    IAO:0000115 "An activity that uses rpmbuild to compile source code and create an RPM package from a spec file and source materials." .
+
+rpm:SpecFileProcessing a owl:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "Spec File Processing" ;
+    rdfs:comment "The process of parsing and executing an RPM spec file" ;
+    IAO:0000115 "An activity that parses an RPM spec file and executes its build instructions to create an RPM package." .
+
+rpm:SRPMCreation a owl:Class ;
+    rdfs:subClassOf pkg:PackagingActivity ;
+    rdfs:label "SRPM Creation" ;
+    rdfs:comment "The process of creating a source RPM package" ;
+    IAO:0000115 "An activity that packages source code, patches, and spec file into a source RPM (SRPM) package." .
+
+# RPM-specific provenance properties
+rpm:builtFromSRPM a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasGeneratedBy ;
+    rdfs:label "built from SRPM" ;
+    rdfs:comment "Links a binary RPM to the SRPM creation activity that produced its source" ;
+    rdfs:domain rpm:BinaryRPM ;
+    rdfs:range rpm:SRPMCreation ;
+    IAO:0000115 "Associates a binary RPM with the SRPM creation activity that produced the source package from which it was built." .
+
+rpm:usedSpecFile a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:used ;
+    rdfs:label "used spec file" ;
+    rdfs:comment "Links an RPM build activity to the spec file it used" ;
+    rdfs:domain rpm:RPMBuildActivity ;
+    IAO:0000115 "Associates an RPM build activity with the spec file that contained the build instructions." .
+
+rpm:generatedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasGeneratedBy ;
+    rdfs:label "generated by" ;
+    rdfs:comment "Links an RPM package to the build activity that created it" ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:range rpm:RPMBuildActivity ;
+    IAO:0000115 "Associates an RPM package with the specific build activity that created it using rpmbuild." .
+
+# Cardinality Restrictions for RPM Classes
+rpm:RPMPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty rpm:hasNEVR ;
+    owl:cardinality 1
+] .
+
+rpm:RPMPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty rpm:buildTime ;
+    owl:cardinality 1
+] .
+
+rpm:RPMPackage rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty rpm:release ;
+    owl:cardinality 1
+] .
+
+rpm:BinaryRPM rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty rpm:sourceRPM ;
+    owl:cardinality 1
+] .
 
 # Common RPM Groups
 rpm:Applications a rpm:RPMGroup ;

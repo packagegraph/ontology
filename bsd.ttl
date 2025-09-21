@@ -1,6 +1,6 @@
 # BSD Ports Package Ontology
-@prefix bsd: <http://packagegraph.github.io/ontology/bsd#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix bsd: <https://packagegraph.github.io/ontology/bsd#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,7 @@
 
 
 # Ontology Declaration
-bsd: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/bsd#> a owl:Ontology ;
     rdfs:label "BSD Ports Package Ontology" ;
     rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -24,7 +24,7 @@ bsd: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling BSD packages, ports systems, package databases, and BSD-specific metadata including origins, flavors, and port dependencies." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # BSD-specific Classes
 bsd:Port a owl:Class ;
@@ -203,11 +203,11 @@ bsd:maintainer a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The email address of the person or entity responsible for maintaining and updating this port." .
 
-bsd:categories a owl:DatatypeProperty ;
-    rdfs:label "categories" ;
+bsd:inCategory a owl:ObjectProperty ;
+    rdfs:label "in category" ;
     rdfs:comment "The categories this port belongs to" ;
     rdfs:domain bsd:Port ;
-    rdfs:range xsd:string ;
+    rdfs:range bsd:Category ;
     IAO:0000115 "Lists the functional categories that classify this port, with the first category determining its location in the ports tree." .
 
 bsd:masterPort a owl:DatatypeProperty ;

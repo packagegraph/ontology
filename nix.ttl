@@ -1,6 +1,6 @@
 # Nix Package Ontology
-@prefix nix: <http://packagegraph.github.io/ontology/nix#> .
-@prefix pkg: <http://packagegraph.github.io/ontology/core#> .
+@prefix nix: <https://packagegraph.github.io/ontology/nix#> .
+@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,7 @@
 
 
 # Ontology Declaration
-nix: a owl:Ontology ;
+<https://packagegraph.github.io/ontology/nix#> a owl:Ontology ;
     rdfs:label "Nix Package Ontology" ;
     rdfs:comment "Ontology for representing Nix packages, derivations, and expressions" ;
     dcterms:created "2025-09-05"^^xsd:date ;
@@ -24,7 +24,7 @@ nix: a owl:Ontology ;
     dcterms:description "A comprehensive ontology for modeling Nix packages, derivations, expressions, flakes, and the Nix package management ecosystem including store paths, build phases, and language-specific builders." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports pkg: .
+    owl:imports <core.ttl> .
 
 # Nix-specific Classes
 nix:Derivation a owl:Class ;
@@ -149,7 +149,7 @@ nix:BuildNpmPackage a owl:Class ;
     IAO:0000115 "A specialized Nix derivation builder for Node.js packages that handles NPM dependencies and builds JavaScript applications or libraries." .
 
 # Nix-specific Properties
-nix:name a owl:DatatypeProperty ;
+nix:name a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "derivation name" ;
     rdfs:comment "The name of the derivation" ;
     rdfs:domain nix:Derivation ;
@@ -205,7 +205,7 @@ nix:sourceUrl a owl:DatatypeProperty ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "The URL location from which the source code or archive can be downloaded." .
 
-nix:sha256 a owl:DatatypeProperty ;
+nix:sha256 a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "SHA256 hash" ;
     rdfs:comment "The SHA256 hash of the source"  ;
     rdfs:domain nix:Derivation ;
@@ -412,7 +412,7 @@ nix:flakeOutput a owl:DatatypeProperty ;
     IAO:0000115 "A named output provided by the flake, such as packages, apps, or development shells." .
 
 # Store Properties
-nix:storePathHash a owl:DatatypeProperty ;
+nix:storePathHash a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "store path hash" ;
     rdfs:comment "The hash component of a store path" ;
     rdfs:domain nix:StorePath ;
@@ -426,7 +426,7 @@ nix:storePathName a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The human-readable name component of a store path, typically including package name and version." .
 
-nix:narHash a owl:DatatypeProperty ;
+nix:narHash a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "NAR hash" ;
     rdfs:comment "The hash of the Nix archive (NAR)" ;
     rdfs:domain nix:StorePath ;
@@ -548,3 +548,28 @@ nix:nixos-23-11 a nix:Channel ;
 nix:nixpkgs-unstable a nix:Channel ;
     rdfs:label "nixpkgs-unstable" ;
     rdfs:comment "The unstable nixpkgs channel" .
+
+# Cardinality Restrictions for Nix Classes
+nix:Derivation rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty nix:name ;
+    owl:cardinality 1
+] .
+
+nix:Derivation rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty nix:system ;
+    owl:cardinality 1
+] .
+
+nix:StorePath rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty nix:storePathHash ;
+    owl:cardinality 1
+] .
+
+nix:StorePath rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty nix:narHash ;
+    owl:cardinality 1
+] .
