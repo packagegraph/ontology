@@ -13,7 +13,7 @@ ontology.
 
 ## Ontologies Included
 
-### 1. Core Package Ontology (`core-package-ontology.ttl`)
+### 1. Core Package Ontology (`core.ttl`)
 
 - **Purpose**: Base ontology defining common concepts across all package
   management systems
@@ -23,7 +23,15 @@ ontology.
   installSize, checksum
 - **Namespace**: `http://packagegraph.github.io/ontology/core#`
 
-### 2. Debian/APT Ontology (`debian-package-ontology.ttl`)
+### 2. VCS Integration Ontology (`vcs.ttl`)
+
+- **Purpose**: Represents version control system integration and source code
+  management
+- **Key Classes**: Repository, Commit, Tag, Branch, SourcePackage
+- **Key Features**: Git integration, commit tracking, tag-based packaging
+- **Namespace**: `http://packagegraph.github.io/ontology/vcs#`
+
+### 3. Debian/APT Ontology (`debian.ttl`)
 
 - **Purpose**: Represents Debian packages (.deb), APT repositories, and
   Debian-specific metadata
@@ -33,7 +41,7 @@ ontology.
   recommends, suggests), maintainer scripts
 - **Namespace**: `http://packagegraph.github.io/ontology/debian#`
 
-### 3. RPM Ontology (`rpm-package-ontology.ttl`)
+### 4. RPM Ontology (`rpm.ttl`)
 
 - **Purpose**: Represents RPM packages, YUM/DNF repositories, and RPM-specific
   metadata
@@ -42,7 +50,7 @@ ontology.
   entries
 - **Namespace**: `http://packagegraph.github.io/ontology/rpm#`
 
-### 4. Arch Linux Ontology (`arch-package-ontology.ttl`)
+### 5. Arch Linux Ontology (`arch.ttl`)
 
 - **Purpose**: Represents Arch packages, PKGBUILD files, and Pacman repositories
   including AUR
@@ -51,7 +59,7 @@ ontology.
 - **Key Features**: PKGBUILD functions, checksums, build options, package groups
 - **Namespace**: `http://packagegraph.github.io/ontology/archlinux#`
 
-### 5. BSD Ports Ontology (`bsd-package-ontology.ttl`)
+### 6. BSD Ports Ontology (`bsd.ttl`)
 
 - **Purpose**: Represents BSD ports (FreeBSD, OpenBSD, NetBSD), Makefiles, and
   ports trees
@@ -61,7 +69,7 @@ ontology.
   flavors
 - **Namespace**: `http://packagegraph.github.io/ontology/bsd#`
 
-### 6. Chocolatey Ontology (`chocolatey-package-ontology.ttl`)
+### 7. Chocolatey Ontology (`chocolatey.ttl`)
 
 - **Purpose**: Represents Chocolatey packages, NuGet format, and
   Windows-specific metadata
@@ -71,7 +79,7 @@ ontology.
   Windows-specific properties
 - **Namespace**: `http://packagegraph.github.io/ontology/chocolatey#`
 
-### 7. Homebrew Ontology (`homebrew-package-ontology.ttl`)
+### 8. Homebrew Ontology (`homebrew.ttl`)
 
 - **Purpose**: Represents Homebrew formulas, casks, taps, and macOS-specific
   packaging
@@ -81,7 +89,7 @@ ontology.
   artifacts, bottles
 - **Namespace**: `http://packagegraph.github.io/ontology/homebrew#`
 
-### 8. Nix Ontology (`nix-package-ontology.ttl`)
+### 9. Nix Ontology (`nix.ttl`)
 
 - **Purpose**: Represents Nix derivations, expressions, Nixpkgs, and functional
   package management
@@ -125,6 +133,14 @@ Each ontology captures unique features of its package management system:
 - **Consistent Naming**: Follows RDF/OWL best practices and naming conventions
 - **Cross-References**: Enables linking packages across different systems
 
+### OWL 2 Compliance and Cardinality Constraints
+
+- **Functional Properties**: Unique identifiers, checksums, and URLs marked as functional
+- **Cardinality Restrictions**: Mandatory properties with exact cardinality constraints
+- **Qualified Cardinality**: Complex constraints using owl:onClass restrictions
+- **Property Equivalencies**: Cross-format property mappings for interoperability
+- **Protégé Compatible**: All ontologies load successfully in Protégé ontology editor
+
 ## Usage Examples
 
 The `package-examples.ttl` file demonstrates how to represent real packages
@@ -158,16 +174,16 @@ ex:hello-nix a nix:StdenvMkDerivation ;
 ## File Structure
 
 ```
-├── core-package-ontology.ttl      # Base ontology (8 classes, 18 properties)
-├── debian-package-ontology.ttl    # Debian/APT (8 classes, 35 properties)  
-├── rpm-package-ontology.ttl       # RPM/YUM/DNF (8 classes, 45 properties)
-├── arch-package-ontology.ttl      # Arch Linux (7 classes, 40 properties)
-├── bsd-package-ontology.ttl       # BSD Ports (13 classes, 55 properties)
-├── chocolatey-package-ontology.ttl # Chocolatey (8 classes, 38 properties)
-├── homebrew-package-ontology.ttl  # Homebrew (23 classes, 65 properties)
-├── nix-package-ontology.ttl       # Nix (15 classes, 75 properties)
-├── package-examples.ttl           # Example instances
-├── package-ontologies.ttl         # Combined consolidated file
+├── core.ttl                       # Base ontology (25+ classes, 40+ properties)
+├── vcs.ttl                        # Version control integration
+├── debian.ttl                     # Debian/APT (8 classes, 35+ properties)  
+├── rpm.ttl                        # RPM/YUM/DNF (8 classes, 45+ properties)
+├── arch.ttl                       # Arch Linux (7 classes, 40+ properties)
+├── bsd.ttl                        # BSD Ports (13 classes, 55+ properties)
+├── chocolatey.ttl                 # Chocolatey (8 classes, 38+ properties)
+├── homebrew.ttl                   # Homebrew (23 classes, 65+ properties)
+├── nix.ttl                        # Nix (15 classes, 75+ properties)
+├── examples.ttl                   # Example instances
 └── README.md                      # This documentation
 ```
 
@@ -215,7 +231,11 @@ These ontologies enable various applications:
 - **Class Hierarchies**: Inheritance relationships between package types
 - **Property Hierarchies**: Specialization of dependency and relationship types
 - **Domain/Range Restrictions**: Type safety for properties
-- **Annotation Properties**: Metadata about the ontologies themselves
+- **Functional Properties**: Ensures uniqueness of key identifiers and checksums
+- **Cardinality Restrictions**: Enforces mandatory and optional property constraints
+- **Qualified Cardinality**: Complex restrictions on property values with class constraints
+- **Property Equivalencies**: Cross-format mappings for interoperability
+- **Annotation Properties**: Metadata about the ontologies themselves including IAO definitions
 - **Named Individuals**: Common instances (licenses, architectures, etc.)
 
 ### Namespace Management
@@ -223,6 +243,7 @@ These ontologies enable various applications:
 Each ontology uses its own namespace to avoid conflicts:
 
 - Core: `http://packagegraph.github.io/ontology/core#`
+- VCS: `http://packagegraph.github.io/ontology/vcs#`
 - Debian: `http://packagegraph.github.io/ontology/debian#`
 - RPM: `http://packagegraph.github.io/ontology/rpm#`
 - Arch: `http://packagegraph.github.io/ontology/archlinux#`
@@ -233,12 +254,19 @@ Each ontology uses its own namespace to avoid conflicts:
 
 ## Validation and Quality
 
+### OWL 2 Compliance
+
+- **OWL 2 DL Compliant**: All ontologies conform to OWL 2 DL profile
+- **Cardinality Constraints**: Comprehensive use of functional properties and cardinality restrictions
+- **Protégé Validated**: All files load successfully in Protégé ontology editor
+- **Cross-Format Equivalencies**: Property mappings enable package format interoperability
+
 ### Schema Validation
 
-- OWL 2 DL compliant ontologies
 - No circular dependencies between imports
-- Consistent use of datatypes and object properties
-- Comprehensive documentation with rdfs:label and rdfs:comment
+- Consistent use of datatypes and object properties  
+- Comprehensive IAO_0000115 definitions for all terms
+- Proper namespace management and relative imports
 
 ### Coverage Analysis
 
@@ -252,6 +280,23 @@ The ontologies cover the major metadata elements found in each package format:
 - **Homebrew**: Formula DSL, cask artifacts, dependency specifications
 - **Nix**: Derivation attributes, build phases, store paths
 
+## Development and Validation
+
+### Build System
+
+The project includes a Makefile for validation and testing:
+
+```bash
+make lint           # Validate all TTL files for syntax errors
+make lint-combined  # Validate the combined ontology file
+```
+
+### Import Structure
+
+All ontologies use relative imports for better portability:
+- `owl:imports <core.ttl>` instead of web URLs
+- Enables local development and Protégé compatibility
+
 ## Contributing
 
 To extend or modify these ontologies:
@@ -263,6 +308,7 @@ To extend or modify these ontologies:
 1. **Document Changes**: Add rdfs:label and rdfs:comment for all new terms
 1. **Test Compatibility**: Ensure changes don't break existing instances
 1. **Update Examples**: Add examples demonstrating new features
+1. **Validate Changes**: Run `make lint` to ensure OWL 2 compliance
 
 ## License
 
