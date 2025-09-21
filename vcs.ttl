@@ -7,7 +7,6 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
@@ -25,7 +24,7 @@
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports <core.ttl> , foaf: , prov: .
+    owl:imports <core.ttl> .
 
 # VCS Classes
 vcs:Repository a owl:Class ;

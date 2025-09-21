@@ -25,7 +25,7 @@
     dcterms:description "A comprehensive ontology for modeling RPM packages, YUM/DNF repositories, NEVR identifiers, and RPM-specific metadata including build information, changelogs, and file attributes." ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     owl:versionInfo "1.0.0" ;
-    owl:imports <core.ttl> .
+    owl:imports <core.ttl> , <vcs.ttl> .
 
 # RPM-specific Classes
 rpm:RPMPackage a owl:Class ;
