@@ -184,6 +184,8 @@ ex:hello-nix a nix:StdenvMkDerivation ;
 ├── homebrew.ttl                   # Homebrew (23 classes, 65+ properties)
 ├── nix.ttl                        # Nix (15 classes, 75+ properties)
 ├── examples.ttl                   # Example instances
+├── main.py                        # ETL tool for repository data collection
+├── packagegraph/                  # Python package for data collection
 └── README.md                      # This documentation
 ```
 
@@ -216,6 +218,13 @@ These ontologies enable various applications:
 - CI/CD pipeline package tracking
 - Software bill of materials (SBOM) generation
 - Package provenance and attestation
+
+### 5. Data Collection and ETL
+
+- **Repository Harvesting**: Automated extraction of package metadata from APT and RPM repositories
+- **Knowledge Graph Construction**: Builds comprehensive linked data graphs from package ecosystems
+- **Data Pipeline Integration**: Supports batch and incremental data processing workflows
+- **Multi-format Export**: Converts semantic data to various RDF serializations for different use cases
 
 ## Technical Details
 
@@ -297,6 +306,52 @@ All ontologies use relative imports for better portability:
 - `owl:imports <core.ttl>` instead of web URLs
 - Enables local development and Protégé compatibility
 
+### ETL Tool (`main.py`)
+
+The project includes a comprehensive Python CLI tool for Extract, Transform, Load (ETL) operations with package repositories:
+
+#### Features
+
+- **Multi-format Support**: Collects package metadata from Debian APT and RPM repositories
+- **Parallel Processing**: Configurable parallel processing with worker pools and chunking
+- **Incremental Loading**: Can append to existing RDF graphs for incremental updates
+- **Performance Profiling**: Built-in timing profiler for optimization analysis
+- **Graph Conversion**: Consolidates multiple TTL files into N-Triples format for bulk loading
+
+#### Usage Examples
+
+```bash
+# Collect Debian packages from repository
+python main.py collect http://deb.debian.org/debian \
+  --repo-type debian \
+  --distribution bookworm \
+  --component main \
+  --output-file debian_packages.ttl
+
+# Collect RPM packages with parallel processing
+python main.py collect http://mirror.centos.org/centos/8/BaseOS/x86_64/os/ \
+  --repo-type rpm \
+  --parallel \
+  --workers 8 \
+  --chunk-size 500 \
+  --output-file rpm_packages.ttl
+
+# Convert TTL ontologies to N-Triples for database loading
+python main.py convert \
+  --input-dir . \
+  --output-file package_graph.nt
+
+# Run ontology validation suite
+python main.py check
+```
+
+#### Data Pipeline
+
+1. **Extract**: Downloads package metadata from repository indexes
+2. **Transform**: Converts package data to RDF using appropriate ontology terms
+3. **Load**: Serializes results to Turtle (TTL) or N-Triples (NT) formats
+4. **Validate**: Ensures ontological consistency and completeness
+
 ## Contributing
 
 To extend or modify these ontologies:
@@ -319,14 +374,26 @@ modification, and distribution.
 
 Potential extensions and improvements:
 
+### Ontology Extensions
 - Container image ontologies (Docker, OCI)
 - Language-specific package managers (npm, pip, cargo, gem)
 - Mobile app stores (Google Play, App Store)
 - Enterprise package management (SCCM, Jamf)
 - Package security and vulnerability metadata
 - Build system integration (Maven, Gradle, CMake)
+
+### ETL Tool Enhancements
+- Additional repository format support (Arch AUR, Homebrew taps, Nix channels)
+- Real-time streaming data collection
+- Graph database integration (Neo4j, Amazon Neptune)
+- Machine learning pipeline integration for package analysis
+- Distributed processing with Apache Spark
+
+### Advanced Features
 - Reproducible build attestation
 - Software supply chain provenance
+- Automated vulnerability scanning integration
+- Package ecosystem health metrics
 
 ## Contact
 
