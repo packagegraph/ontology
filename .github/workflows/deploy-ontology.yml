@@ -108,54 +108,54 @@ jobs:
                 echo "WIDOCO failed for $ttl_file, creating basic HTML documentation"
 
                 # Create a basic HTML page if WIDOCO fails
-                cat > "docs/ontology/$base_name/index-en.html" << EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>$base_name Ontology Documentation</title>
-</head>
-<body>
-    <h1>$base_name Ontology</h1>
-    <p>Automated documentation generation failed. Please refer to the source files:</p>
-    <ul>
-        <li><a href="../../downloads/$base_name.ttl">Turtle format</a></li>
-        <li><a href="../../downloads/$base_name.owl">OWL/RDF format</a></li>
-    </ul>
-</body>
-</html>
-EOF
+                {
+                  echo '<!DOCTYPE html>'
+                  echo '<html>'
+                  echo '<head>'
+                  echo "    <title>$base_name Ontology Documentation</title>"
+                  echo '</head>'
+                  echo '<body>'
+                  echo "    <h1>$base_name Ontology</h1>"
+                  echo '    <p>Automated documentation generation failed. Please refer to the source files:</p>'
+                  echo '    <ul>'
+                  echo "        <li><a href=\"../../downloads/$base_name.ttl\">Turtle format</a></li>"
+                  echo "        <li><a href=\"../../downloads/$base_name.owl\">OWL/RDF format</a></li>"
+                  echo '    </ul>'
+                  echo '</body>'
+                  echo '</html>'
+                } > "docs/ontology/$base_name/index-en.html"
               }
             fi
           done
       - name: Create main index page
         run: |
-          cat > docs/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Package Management Ontologies</title>
-              <style>
-                  body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-                  .container { max-width: 1200px; margin: 0 auto; }
-                  .ontology-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
-                  .ontology-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #f9f9f9; }
-                  .format-links { margin-top: 15px; }
-                  .format-links a { margin-right: 10px; padding: 5px 10px; background: #007cba; color: white; text-decoration: none; border-radius: 3px; font-size: 0.9em; }
-                  .format-links a:hover { background: #005a87; }
-                  h1, h2 { color: #333; }
-                  .namespace { font-family: monospace; background: #f0f0f0; padding: 2px 6px; border-radius: 3px; }
-              </style>
-          </head>
-          <body>
-              <div class="container">
-                  <h1>Package Management RDF Ontologies</h1>
-                  <p>A comprehensive collection of RDF/OWL ontologies for representing software packages, repositories, and metadata across major package management systems.</p>
-
-                  <h2>Available Ontologies</h2>
-                  <div class="ontology-grid">
-          EOF
+          {
+            echo '<!DOCTYPE html>'
+            echo '<html lang="en">'
+            echo '<head>'
+            echo '    <meta charset="UTF-8">'
+            echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">'
+            echo '    <title>Package Management Ontologies</title>'
+            echo '    <style>'
+            echo '        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }'
+            echo '        .container { max-width: 1200px; margin: 0 auto; }'
+            echo '        .ontology-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }'
+            echo '        .ontology-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #f9f9f9; }'
+            echo '        .format-links { margin-top: 15px; }'
+            echo '        .format-links a { margin-right: 10px; padding: 5px 10px; background: #007cba; color: white; text-decoration: none; border-radius: 3px; font-size: 0.9em; }'
+            echo '        .format-links a:hover { background: #005a87; }'
+            echo '        h1, h2 { color: #333; }'
+            echo '        .namespace { font-family: monospace; background: #f0f0f0; padding: 2px 6px; border-radius: 3px; }'
+            echo '    </style>'
+            echo '</head>'
+            echo '<body>'
+            echo '    <div class="container">'
+            echo '        <h1>Package Management RDF Ontologies</h1>'
+            echo '        <p>A comprehensive collection of RDF/OWL ontologies for representing software packages, repositories, and metadata across major package management systems.</p>'
+            echo ''
+            echo '        <h2>Available Ontologies</h2>'
+            echo '        <div class="ontology-grid">'
+          } > docs/index.html
 
           # Add cards for each ontology
           for ttl_file in *.ttl; do
@@ -177,77 +177,73 @@ EOF
               # Extract namespace
               namespace=$(grep -m1 "@prefix.*: <http.*>" "$ttl_file" | sed 's/.*<\([^>]*\)>.*/\1/' | head -1)
 
-              cat >> docs/index.html << EOF
-                      <div class="ontology-card">
-                          <h3>$title</h3>
-                          <p>$description</p>
-                          <p><strong>Namespace:</strong> <span class="namespace">$namespace</span></p>
-                          <div class="format-links">
-                              <a href="ontology/$base_name/index-en.html">Documentation</a>
-                              <a href="downloads/$base_name.ttl">Turtle</a>
-                              <a href="downloads/$base_name.owl">RDF/XML</a>
-                              <a href="downloads/$base_name.jsonld">JSON-LD</a>
-                              <a href="downloads/$base_name.nt">N-Triples</a>
-                          </div>
-                      </div>
-          EOF
+              {
+                echo '                      <div class="ontology-card">'
+                echo "                          <h3>$title</h3>"
+                echo "                          <p>$description</p>"
+                echo "                          <p><strong>Namespace:</strong> <span class=\"namespace\">$namespace</span></p>"
+                echo '                          <div class="format-links">'
+                echo "                              <a href=\"ontology/$base_name/index-en.html\">Documentation</a>"
+                echo "                              <a href=\"downloads/$base_name.ttl\">Turtle</a>"
+                echo "                              <a href=\"downloads/$base_name.owl\">RDF/XML</a>"
+                echo "                              <a href=\"downloads/$base_name.jsonld\">JSON-LD</a>"
+                echo "                              <a href=\"downloads/$base_name.nt\">N-Triples</a>"
+                echo '                          </div>'
+                echo '                      </div>'
+              } >> docs/index.html
             fi
           done
-          cat >> docs/index.html << 'EOF'
-                  </div>
-
-                  <h2>Content Negotiation</h2>
-                  <p>The ontologies support content negotiation. You can request different formats using the Accept header:</p>
-                  <ul>
-                      <li><code>text/turtle</code> - Turtle format</li>
-                      <li><code>application/rdf+xml</code> - RDF/XML format</li>
-                      <li><code>application/ld+json</code> - JSON-LD format</li>
-                      <li><code>application/n-triples</code> - N-Triples format</li>
-                      <li><code>text/html</code> - HTML documentation</li>
-                  </ul>
-
-                  <h2>Usage Examples</h2>
-                  <pre><code># Get Turtle representation
-          curl -H "Accept: text/turtle" https://packagegraph.github.io/ontology/core
-
-          # Get JSON-LD representation
-          curl -H "Accept: application/ld+json" https://packagegraph.github.io/ontology/debian
-
-          # Get HTML documentation (default)
-          curl -H "Accept: text/html" https://packagegraph.github.io/ontology/rpm</code></pre>
-              </div>
-          </body>
-          </html>
-          EOF
+          {
+            echo '        </div>'
+            echo ''
+            echo '        <h2>Content Negotiation</h2>'
+            echo '        <p>The ontologies support content negotiation. You can request different formats using the Accept header:</p>'
+            echo '        <ul>'
+            echo '            <li><code>text/turtle</code> - Turtle format</li>'
+            echo '            <li><code>application/rdf+xml</code> - RDF/XML format</li>'
+            echo '            <li><code>application/ld+json</code> - JSON-LD format</li>'
+            echo '            <li><code>application/n-triples</code> - N-Triples format</li>'
+            echo '            <li><code>text/html</code> - HTML documentation</li>'
+            echo '        </ul>'
+            echo ''
+            echo '        <h2>Usage Examples</h2>'
+            echo '        <pre><code># Get Turtle representation'
+            echo 'curl -H "Accept: text/turtle" https://packagegraph.github.io/ontology/core'
+            echo ''
+            echo '# Get JSON-LD representation'
+            echo 'curl -H "Accept: application/ld+json" https://packagegraph.github.io/ontology/debian'
+            echo ''
+            echo '# Get HTML documentation (default)'
+            echo 'curl -H "Accept: text/html" https://packagegraph.github.io/ontology/rpm</code></pre>'
+            echo '    </div>'
+            echo '</body>'
+            echo '</html>'
+          } >> docs/index.html
       - name: Create Jekyll configuration for GitHub Pages
         run: |
-          cat > docs/_config.yml << 'EOF'
-          # Jekyll configuration for GitHub Pages
-          plugins:
-            - jekyll-redirect-from
-
-          # Content negotiation through Jekyll
-          collections:
-            ontologies:
-              output: true
-
-          defaults:
-            - scope:
-                path: "downloads"
-              values:
-                layout: null
-
-          # MIME type mappings
-          plugins:
-            - jekyll-redirect-from
-
-          # Enable safe mode for GitHub Pages
-          safe: true
-
-          # Set base URL for GitHub Pages
-          baseurl: "/ontology"
-          url: "https://packagegraph.github.io"
-          EOF
+          {
+            echo '# Jekyll configuration for GitHub Pages'
+            echo 'plugins:'
+            echo '  - jekyll-redirect-from'
+            echo ''
+            echo '# Content negotiation through Jekyll'
+            echo 'collections:'
+            echo '  ontologies:'
+            echo '    output: true'
+            echo ''
+            echo 'defaults:'
+            echo '  - scope:'
+            echo '      path: "downloads"'
+            echo '    values:'
+            echo '      layout: null'
+            echo ''
+            echo '# Enable safe mode for GitHub Pages'
+            echo 'safe: true'
+            echo ''
+            echo '# Set base URL for GitHub Pages'
+            echo 'baseurl: "/ontology"'
+            echo 'url: "https://packagegraph.github.io"'
+          } > docs/_config.yml
       - name: Create content negotiation redirects
         run: |
           echo "Creating content negotiation setup..."
@@ -259,71 +255,71 @@ EOF
 
               mkdir -p "docs/$base_name"
 
-              cat > "docs/$base_name/index.html" << EOF
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>$base_name Ontology</title>
-              <link rel="alternate" type="text/turtle" href="../downloads/$base_name.ttl" />
-              <link rel="alternate" type="application/rdf+xml" href="../downloads/$base_name.owl" />
-              <link rel="alternate" type="application/ld+json" href="../downloads/$base_name.jsonld" />
-              <link rel="alternate" type="application/n-triples" href="../downloads/$base_name.nt" />
-              <script>
-                  // Simple content negotiation via JavaScript for GitHub Pages
-                  (function() {
-                      var accept = getAcceptHeader();
-                      var baseUrl = '../downloads/$base_name';
-
-                      if (accept.includes('text/turtle') || accept.includes('text/plain')) {
-                          window.location.href = baseUrl + '.ttl';
-                      } else if (accept.includes('application/rdf+xml') || accept.includes('application/xml')) {
-                          window.location.href = baseUrl + '.owl';
-                      } else if (accept.includes('application/ld+json') || accept.includes('application/json')) {
-                          window.location.href = baseUrl + '.jsonld';
-                      } else if (accept.includes('application/n-triples')) {
-                          window.location.href = baseUrl + '.nt';
-                      } else if (!accept.includes('text/html')) {
-                          // Default to HTML documentation for browsers
-                          window.location.href = '../ontology/$base_name/index-en.html';
-                      }
-
-                      function getAcceptHeader() {
-                          // GitHub Pages doesn't give us access to request headers
-                          // This is a limitation - users need to use direct links
-                          return 'text/html';
-                      }
-                  })();
-              </script>
-          </head>
-          <body>
-              <h1>$base_name Ontology</h1>
-              <p>This is the $base_name ontology. Choose your preferred format:</p>
-              <ul>
-                  <li><a href="../ontology/$base_name/index-en.html">HTML Documentation</a></li>
-                  <li><a href="../downloads/$base_name.ttl">Turtle (.ttl)</a></li>
-                  <li><a href="../downloads/$base_name.owl">RDF/XML (.owl)</a></li>
-                  <li><a href="../downloads/$base_name.jsonld">JSON-LD (.jsonld)</a></li>
-                  <li><a href="../downloads/$base_name.nt">N-Triples (.nt)</a></li>
-              </ul>
-
-              <h2>Programmatic Access</h2>
-              <p>For programmatic access, use these direct URLs:</p>
-              <pre><code># Turtle format
-          wget https://packagegraph.github.io/ontology/downloads/$base_name.ttl
-
-          # RDF/XML format
-          wget https://packagegraph.github.io/ontology/downloads/$base_name.owl
-
-          # JSON-LD format
-          wget https://packagegraph.github.io/ontology/downloads/$base_name.jsonld
-
-          # N-Triples format
-          wget https://packagegraph.github.io/ontology/downloads/$base_name.nt</code></pre>
-          </body>
-          </html>
-          EOF
+              {
+                echo '<!DOCTYPE html>'
+                echo '<html lang="en">'
+                echo '<head>'
+                echo '    <meta charset="UTF-8">'
+                echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">'
+                echo "    <title>$base_name Ontology</title>"
+                echo "    <link rel=\"alternate\" type=\"text/turtle\" href=\"../downloads/$base_name.ttl\" />"
+                echo "    <link rel=\"alternate\" type=\"application/rdf+xml\" href=\"../downloads/$base_name.owl\" />"
+                echo "    <link rel=\"alternate\" type=\"application/ld+json\" href=\"../downloads/$base_name.jsonld\" />"
+                echo "    <link rel=\"alternate\" type=\"application/n-triples\" href=\"../downloads/$base_name.nt\" />"
+                echo '    <script>'
+                echo '        // Simple content negotiation via JavaScript for GitHub Pages'
+                echo '        (function() {'
+                echo '            var accept = getAcceptHeader();'
+                echo "            var baseUrl = '../downloads/$base_name';"
+                echo ''
+                echo "            if (accept.includes('text/turtle') || accept.includes('text/plain')) {"
+                echo "                window.location.href = baseUrl + '.ttl';"
+                echo "            } else if (accept.includes('application/rdf+xml') || accept.includes('application/xml')) {"
+                echo "                window.location.href = baseUrl + '.owl';"
+                echo "            } else if (accept.includes('application/ld+json') || accept.includes('application/json')) {"
+                echo "                window.location.href = baseUrl + '.jsonld';"
+                echo "            } else if (accept.includes('application/n-triples')) {"
+                echo "                window.location.href = baseUrl + '.nt';"
+                echo "            } else if (!accept.includes('text/html')) {"
+                echo '                // Default to HTML documentation for browsers'
+                echo "                window.location.href = '../ontology/$base_name/index-en.html';"
+                echo '            }'
+                echo ''
+                echo '            function getAcceptHeader() {'
+                echo '                // GitHub Pages doesn'\''t give us access to request headers'
+                echo '                // This is a limitation - users need to use direct links'
+                echo "                return 'text/html';"
+                echo '            }'
+                echo '        })();'
+                echo '    </script>'
+                echo '</head>'
+                echo '<body>'
+                echo "    <h1>$base_name Ontology</h1>"
+                echo "    <p>This is the $base_name ontology. Choose your preferred format:</p>"
+                echo '    <ul>'
+                echo "        <li><a href=\"../ontology/$base_name/index-en.html\">HTML Documentation</a></li>"
+                echo "        <li><a href=\"../downloads/$base_name.ttl\">Turtle (.ttl)</a></li>"
+                echo "        <li><a href=\"../downloads/$base_name.owl\">RDF/XML (.owl)</a></li>"
+                echo "        <li><a href=\"../downloads/$base_name.jsonld\">JSON-LD (.jsonld)</a></li>"
+                echo "        <li><a href=\"../downloads/$base_name.nt\">N-Triples (.nt)</a></li>"
+                echo '    </ul>'
+                echo ''
+                echo '    <h2>Programmatic Access</h2>'
+                echo '    <p>For programmatic access, use these direct URLs:</p>'
+                echo '    <pre><code># Turtle format'
+                echo "wget https://packagegraph.github.io/ontology/downloads/$base_name.ttl"
+                echo ''
+                echo '# RDF/XML format'
+                echo "wget https://packagegraph.github.io/ontology/downloads/$base_name.owl"
+                echo ''
+                echo '# JSON-LD format'
+                echo "wget https://packagegraph.github.io/ontology/downloads/$base_name.jsonld"
+                echo ''
+                echo '# N-Triples format'
+                echo "wget https://packagegraph.github.io/ontology/downloads/$base_name.nt</code></pre>"
+                echo '</body>'
+                echo '</html>'
+              } > "docs/$base_name/index.html"
             fi
           done
       - name: Setup GitHub Pages
