@@ -352,25 +352,28 @@ create-index: create-dirs
 	@{ \
 		echo '        </div>'; \
 		echo ''; \
-		echo '        <h2>Content Negotiation</h2>'; \
-		echo '        <p>The ontologies support content negotiation. You can request different formats using the Accept header:</p>'; \
+		echo '        <h2>Direct Access</h2>'; \
+		echo '        <p>Access ontologies directly by their format-specific URLs:</p>'; \
 		echo '        <ul>'; \
-		echo '            <li><code>text/turtle</code> - Turtle format</li>'; \
-		echo '            <li><code>application/rdf+xml</code> - RDF/XML format</li>'; \
-		echo '            <li><code>application/ld+json</code> - JSON-LD format</li>'; \
-		echo '            <li><code>application/n-triples</code> - N-Triples format</li>'; \
-		echo '            <li><code>text/html</code> - HTML documentation</li>'; \
+		echo '            <li><strong>Turtle format</strong> - <code>.ttl</code> extension</li>'; \
+		echo '            <li><strong>RDF/XML format</strong> - <code>.owl</code> extension</li>'; \
+		echo '            <li><strong>JSON-LD format</strong> - <code>.jsonld</code> extension</li>'; \
+		echo '            <li><strong>N-Triples format</strong> - <code>.nt</code> extension</li>'; \
+		echo '            <li><strong>HTML documentation</strong> - Browse via web interface</li>'; \
 		echo '        </ul>'; \
 		echo ''; \
 		echo '        <h2>Usage Examples</h2>'; \
 		echo '        <pre><code># Get Turtle representation'; \
-		echo 'curl -H "Accept: text/turtle" https://packagegraph.github.io/ontology/core'; \
+		echo 'curl https://packagegraph.github.io/ontology/downloads/core.ttl'; \
 		echo ''; \
 		echo '# Get JSON-LD representation'; \
-		echo 'curl -H "Accept: application/ld+json" https://packagegraph.github.io/ontology/debian'; \
+		echo 'curl https://packagegraph.github.io/ontology/downloads/debian.jsonld'; \
 		echo ''; \
-		echo '# Get HTML documentation (default)'; \
-		echo 'curl -H "Accept: text/html" https://packagegraph.github.io/ontology/rpm</code></pre>'; \
+		echo '# Get RDF/XML representation'; \
+		echo 'curl https://packagegraph.github.io/ontology/downloads/rpm.owl'; \
+		echo ''; \
+		echo '# Get N-Triples representation'; \
+		echo 'curl https://packagegraph.github.io/ontology/downloads/arch.nt</code></pre>'; \
 		echo '    </div>'; \
 		echo '</body>'; \
 		echo '</html>'; \
@@ -449,32 +452,7 @@ create-negotiation: create-dirs
 				echo "    <link rel=\"alternate\" type=\"application/rdf+xml\" href=\"../downloads/$$base_name.owl\" />"; \
 				echo "    <link rel=\"alternate\" type=\"application/ld+json\" href=\"../downloads/$$base_name.jsonld\" />"; \
 				echo "    <link rel=\"alternate\" type=\"application/n-triples\" href=\"../downloads/$$base_name.nt\" />"; \
-				echo '    <script>'; \
-				echo '        // Simple content negotiation via JavaScript for GitHub Pages'; \
-				echo '        (function() {'; \
-				echo '            var accept = getAcceptHeader();'; \
-				echo "            var baseUrl = '../downloads/$$base_name';"; \
-				echo ''; \
-				echo "            if (accept.includes('text/turtle') || accept.includes('text/plain')) {"; \
-				echo "                window.location.href = baseUrl + '.ttl';"; \
-				echo "            } else if (accept.includes('application/rdf+xml') || accept.includes('application/xml')) {"; \
-				echo "                window.location.href = baseUrl + '.owl';"; \
-				echo "            } else if (accept.includes('application/ld+json') || accept.includes('application/json')) {"; \
-				echo "                window.location.href = baseUrl + '.jsonld';"; \
-				echo "            } else if (accept.includes('application/n-triples')) {"; \
-				echo "                window.location.href = baseUrl + '.nt';"; \
-				echo "            } else if (!accept.includes('text/html')) {"; \
-				echo '                // Default to HTML documentation for browsers'; \
-				echo "                window.location.href = '../ontology/$$base_name/index-en.html';"; \
-				echo '            }'; \
-				echo ''; \
-				echo '            function getAcceptHeader() {'; \
-				echo '                // GitHub Pages doesn'\''t give us access to request headers'; \
-				echo '                // This is a limitation - users need to use direct links'; \
-				echo "                return 'text/html';"; \
-				echo '            }'; \
-				echo '        })();'; \
-				echo '    </script>'; \
+ \
 				echo '</head>'; \
 				echo '<body>'; \
 				echo "    <h1>$$base_name Ontology</h1>"; \
