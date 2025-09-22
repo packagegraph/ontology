@@ -23,11 +23,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: '17'
       - name: Setup Python for ROBOT
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.12'
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
