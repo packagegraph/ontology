@@ -211,6 +211,7 @@ deb:buildsFrom a owl:ObjectProperty ;
     IAO:0000115 "Indicates the source package from which this binary package was compiled and built." .
 
 deb:buildDepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "build depends" ;
     rdfs:comment "Build-time dependency relationship" ;
     rdfs:domain deb:SourcePackage ;

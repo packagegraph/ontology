@@ -84,16 +84,18 @@ rpm:Dependency a owl:Class ;
 
 # RPM-specific Properties
 rpm:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:subPropertyOf pkg:epoch ;
     rdfs:label "epoch" ;
     rdfs:comment "The epoch version number (optional, defaults to 0)" ;
-    rdfs:domain rpm:RPMPackage ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:int ;
     IAO:0000115 "An optional integer that allows package maintainers to force a version ordering when the normal version comparison would be incorrect." .
 
 rpm:release a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:subPropertyOf pkg:release ;
     rdfs:label "release" ;
     rdfs:comment "The release number of the package" ;
-    rdfs:domain rpm:RPMPackage ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:string ;
     IAO:0000115 "Specifies the release number of the package, used to distinguish between different builds of the same version." .
 
@@ -355,6 +357,7 @@ rpm:conflicts a owl:ObjectProperty ;
     IAO:0000115 "Indicates that this RPM package conflicts with another package and they cannot be installed simultaneously." .
 
 rpm:buildRequires a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "build requires" ;
     rdfs:comment "Build-time dependency relationship" ;
     rdfs:domain rpm:SourceRPM ;

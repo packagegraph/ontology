@@ -164,9 +164,10 @@ nix:pname a owl:DatatypeProperty ;
     IAO:0000115 "The base name of a package without version information, used as the primary identifier for the software." .
 
 nix:version a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:versionString ;
     rdfs:label "package version" ;
     rdfs:comment "The version of the package" ;
-    rdfs:domain nix:Derivation ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:string ;
     IAO:0000115 "The version string of a package, indicating the specific release or revision of the software." .
 
@@ -478,6 +479,7 @@ nix:hasOverlay a owl:ObjectProperty ;
 
 # Dependency Properties
 nix:buildInputs a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
     rdfs:label "build inputs" ;
     rdfs:comment "Runtime dependencies" ;
     rdfs:domain nix:StdenvMkDerivation ;
@@ -485,6 +487,7 @@ nix:buildInputs a owl:ObjectProperty ;
     IAO:0000115 "Runtime dependencies that are needed when the built package is executed." .
 
 nix:nativeBuildInputs a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "native build inputs" ;
     rdfs:comment "Build-time dependencies for the build platform" ;
     rdfs:domain nix:StdenvMkDerivation ;

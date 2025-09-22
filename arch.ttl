@@ -77,27 +77,31 @@ arch:pkgbase a owl:DatatypeProperty ;
     IAO:0000115 "The base name used to identify a group of split packages that are built from the same PKGBUILD." .
 
 arch:pkgver a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:versionString ;
     rdfs:label "package version" ;
     rdfs:comment "The upstream version of the package" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:string ;
     IAO:0000115 "The version number of the upstream software as provided by the original developers." .
 
 arch:pkgrel a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:subPropertyOf pkg:release ;
     rdfs:label "package release" ;
     rdfs:comment "The Arch-specific package release number" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:int ;
     IAO:0000115 "The Arch Linux specific release number that increments when the PKGBUILD is updated without changing the upstream version." .
 
 arch:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:subPropertyOf pkg:epoch ;
     rdfs:label "epoch" ;
     rdfs:comment "The epoch version number for version comparison override" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:int ;
     IAO:0000115 "A version epoch used to override normal version comparison when upstream versioning schemes change or become incompatible." .
 
 arch:pkgdesc a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:description ;
     rdfs:label "package description" ;
     rdfs:comment "A brief description of the package" ;
     rdfs:domain arch:ArchPackage ;
@@ -105,6 +109,7 @@ arch:pkgdesc a owl:DatatypeProperty ;
     IAO:0000115 "A short textual description of what the package contains and its primary purpose." .
 
 arch:url a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:homepage ;
     rdfs:label "upstream URL" ;
     rdfs:comment "The upstream project URL" ;
     rdfs:domain arch:ArchPackage ;
@@ -381,6 +386,7 @@ arch:depends a owl:ObjectProperty ;
     IAO:0000115 "A runtime dependency that must be installed for the package to function correctly." .
 
 arch:makedepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "make depends" ;
     rdfs:comment "Build-time dependency" ;
     rdfs:domain arch:PKGBUILD ;

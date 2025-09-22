@@ -127,27 +127,31 @@ bsd:portname a owl:DatatypeProperty ;
     IAO:0000115 "The unique name identifier of the port within its category in the ports tree." .
 
 bsd:portversion a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:versionString ;
     rdfs:label "port version" ;
     rdfs:comment "The version of the port" ;
-    rdfs:domain bsd:Port ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:string ;
     IAO:0000115 "The version string of the upstream software that this port packages." .
 
 bsd:portrevision a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:revision ;
     rdfs:label "port revision" ;
     rdfs:comment "The port revision number" ;
-    rdfs:domain bsd:Port ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:int ;
     IAO:0000115 "An integer incremented when the port is updated without changing the upstream software version." .
 
 bsd:portepoch a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:epoch ;
     rdfs:label "port epoch" ;
     rdfs:comment "The port epoch for version ordering" ;
-    rdfs:domain bsd:Port ;
+    rdfs:domain pkg:Version ;
     rdfs:range xsd:int ;
     IAO:0000115 "An integer used to override normal version comparison when the version numbering scheme changes significantly." .
 
 bsd:comment a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:description ;
     rdfs:label "comment" ;
     rdfs:comment "One-line description of the port" ;
     rdfs:domain bsd:Port ;
@@ -155,6 +159,7 @@ bsd:comment a owl:DatatypeProperty ;
     IAO:0000115 "A brief one-line description of the port's purpose and functionality, displayed in package listings and searches." .
 
 bsd:wwwSite a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:homepage ;
     rdfs:label "WWW site" ;
     rdfs:comment "The upstream website URL" ;
     rdfs:domain bsd:Port ;
@@ -196,12 +201,13 @@ bsd:worksrc a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "Specifies the subdirectory within the work directory where the source code is extracted and compilation occurs." .
 
-bsd:maintainer a owl:DatatypeProperty ;
+bsd:maintainer a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:maintainedBy ;
     rdfs:label "maintainer" ;
-    rdfs:comment "The email address of the port maintainer" ;
+    rdfs:comment "The person or entity who maintains the port" ;
     rdfs:domain bsd:Port ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The email address of the person or entity responsible for maintaining and updating this port." .
+    rdfs:range pkg:Maintainer ;
+    IAO:0000115 "The person or entity responsible for maintaining and updating this port." .
 
 bsd:inCategory a owl:ObjectProperty ;
     rdfs:label "in category" ;
@@ -404,6 +410,7 @@ bsd:libDepends a owl:ObjectProperty ;
     IAO:0000115 "Specifies ports that provide shared libraries required by this port at both build and runtime." .
 
 bsd:buildDepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "build depends" ;
     rdfs:comment "Build-time dependency" ;
     rdfs:domain bsd:Port ;
@@ -411,6 +418,7 @@ bsd:buildDepends a owl:ObjectProperty ;
     IAO:0000115 "Specifies ports that must be installed to provide tools, libraries, or other resources needed during the build process." .
 
 bsd:runDepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
     rdfs:label "run depends" ;
     rdfs:comment "Runtime dependency" ;
     rdfs:domain bsd:Port ;
