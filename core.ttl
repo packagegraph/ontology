@@ -8,7 +8,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 # 
 # 
@@ -314,6 +314,8 @@ xsd:duration a rdfs:Datatype .
 
 :debDepends a owl:ObjectProperty;
   owl:equivalentProperty :dependsOn;
+  rdfs:domain :Package;
+  rdfs:range :Package;
   rdfs:comment "Cross-format equivalence for Debian depends relationships";
   rdfs:label "equivalent to Debian depends";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package dependency relationships, allowing unified queries across different package management systems." .
@@ -919,4 +921,6 @@ _:genid9 a owl:Restriction;
   rdfs:subClassOf :Package;
   <http://purl.obolibrary.org/obo/IAO_0000115> "An abstract package name that represents a functionality or interface that can be satisfied by multiple concrete package implementations.";
   rdfs:comment "A package name that represents a capability provided by one or more real packages";
+  rdfs:label "Virtual Package" .
+ty provided by one or more real packages";
   rdfs:label "Virtual Package" .
