@@ -23,7 +23,7 @@
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Chocolatey Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Chocolatey packages, NuGet packages, PowerShell scripts, and Windows software management including installation scripts, dependencies, and package metadata." ;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports <core.ttl> .
 

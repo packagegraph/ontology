@@ -21,7 +21,7 @@
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Arch Linux Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Arch Linux packages, PKGBUILD files, AUR packages, and Pacman repositories including build dependencies, split packages, and package groups." ;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 

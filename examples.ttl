@@ -20,7 +20,7 @@
 <https://packagegraph.github.io/ontology/examples#> a owl:Ontology ;
   dc:title "Package Graph Examples Ontology" ;
   dc:description "Example package instances demonstrating how to represent real packages using the Package Graph ontologies across different package management systems including Debian, RPM, Arch Linux, BSD Ports, Chocolatey, Homebrew, and Nix." ;
-  dct:license <https://creativecommons.org/licenses/by/4.0/> .
+  dct:license <https://creativecommons.org/publicdomain/zero/1.0/> .
 
 ################################################################
 # Debian (3)

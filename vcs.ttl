@@ -22,7 +22,7 @@
     dcterms:creator "PackageGraph Project" ;
     dcterms:title "Version Control System Ontology" ;
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports <core.ttl> .
 

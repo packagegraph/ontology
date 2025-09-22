@@ -249,7 +249,7 @@
   dcterms:created "2025-09-05"^^xsd:date;
   dcterms:creator "Package Management Ontology Project";
   dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems.";
-  dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+  dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/>;
   dcterms:title "Package Management Core Ontology";
   rdfs:comment "Core ontology for representing software packages and repositories across different package management systems";
   rdfs:label "Package Management Core Ontology";

@@ -23,7 +23,7 @@
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Homebrew Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Homebrew packages, formulae, casks, taps, and macOS application management including bottles, dependencies, and build specifications." ;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     owl:versionInfo "1.0.0" ;
     owl:imports <core.ttl> .
 
