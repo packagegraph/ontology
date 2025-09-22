@@ -47,8 +47,23 @@ jobs:
         run: |
           if [ ! -f ~/widoco.jar ]; then
             echo "Downloading WIDOCO..."
-            curl -L -o ~/widoco.jar https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies.jar
-            echo "WIDOCO download complete. File size: $(ls -lh ~/widoco.jar)"
+            # Try primary download
+            if curl -L -o ~/widoco.jar https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar; then
+              echo "WIDOCO download complete. File size: $(ls -lh ~/widoco.jar)"
+            else
+              echo "Primary download failed, trying alternative..."
+              # Alternative: try a different version or source
+              curl -L -o ~/widoco.jar https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar || true
+            fi
+            
+            # Verify the jar file is valid
+            if [ ! -s ~/widoco.jar ]; then
+              echo "WIDOCO download failed, file is empty"
+              rm -f ~/widoco.jar
+            elif [ "$(stat -f%z ~/widoco.jar 2>/dev/null || stat -c%s ~/widoco.jar)" -lt 1000 ]; then
+              echo "WIDOCO jar too small, likely failed download"
+              rm -f ~/widoco.jar
+            fi
           fi
       - name: Validate ontology files with ROBOT
         run: |
@@ -65,6 +80,10 @@ jobs:
           mkdir -p docs/ontology
           mkdir -p docs/reports
           mkdir -p docs/downloads
+          # Copy validation reports if they exist
+          if [ -d reports ]; then
+            cp reports/*.tsv docs/reports/ 2>/dev/null || true
+          fi
       - name: Generate different RDF serializations
         run: |
           echo "Converting Turtle files to other RDF formats..."
@@ -80,7 +99,7 @@ jobs:
               echo '{"@context": {"@vocab": "http://www.w3.org/2002/07/owl#"}, "@id": "placeholder", "@type": "Ontology", "rdfs:comment": "JSON-LD format not supported by ROBOT. Please use RDF/XML or Turtle formats."}' > "docs/downloads/${base_name}.jsonld"
 
               # Convert to N-Triples
-              java -jar ~/robot.jar convert --input "$ttl_file" --format nt --output "docs/downloads/${base_name}.nt" || true
+              java -jar ~/robot.jar convert --input "$ttl_file" --format ntriples --output "docs/downloads/${base_name}.nt" || true
 
               # Copy original Turtle
               cp "$ttl_file" "docs/downloads/${base_name}.ttl"
@@ -324,6 +343,8 @@ jobs:
           done
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
