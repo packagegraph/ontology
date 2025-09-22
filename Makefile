@@ -4,9 +4,13 @@
 # Variables
 ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl examples.ttl
 COMBINED_FILE = x.ttl
-PYTHON = uv run python
-ROBOT_JAR = robot.jar
-WIDOCO_JAR = widoco.jar
+# Use plain python in GitHub Actions, uv run python locally
+PYTHON = $(if $(GITHUB_ACTIONS),python,uv run python)
+# Use home directory paths for local, working directory for GitHub Actions
+ROBOT_JAR = $(if $(GITHUB_ACTIONS),robot.jar,robot.jar)
+WIDOCO_JAR = $(if $(GITHUB_ACTIONS),widoco.jar,widoco.jar)
+ROBOT_PATH = $(if $(GITHUB_ACTIONS),$(HOME)/robot.jar,$(ROBOT_JAR))
+WIDOCO_PATH = $(if $(GITHUB_ACTIONS),$(HOME)/widoco.jar,$(WIDOCO_JAR))
 DOCS_DIR = docs
 DOWNLOADS_DIR = $(DOCS_DIR)/downloads
 ONTOLOGY_DOCS_DIR = $(DOCS_DIR)/ontology
@@ -160,18 +164,18 @@ install-deps:
 .PHONY: setup-tools
 setup-tools:
 	@echo "Setting up required tools..."
-	@if [ ! -f $(ROBOT_JAR) ]; then \
+	@if [ ! -f $(ROBOT_PATH) ]; then \
 		echo "Downloading ROBOT..."; \
-		curl -L https://github.com/ontodev/robot/releases/latest/download/robot.jar -o $(ROBOT_JAR); \
+		curl -L https://github.com/ontodev/robot/releases/latest/download/robot.jar -o $(ROBOT_PATH); \
 	else \
 		echo "ROBOT already available"; \
 	fi
-	@if [ ! -f $(WIDOCO_JAR) ]; then \
+	@if [ ! -f $(WIDOCO_PATH) ]; then \
 		echo "Downloading WIDOCO..."; \
-		curl -L -o $(WIDOCO_JAR) https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar || true; \
-		if [ ! -s $(WIDOCO_JAR) ] || [ "$$(stat -f%z $(WIDOCO_JAR) 2>/dev/null || stat -c%s $(WIDOCO_JAR))" -lt 1000 ]; then \
+		curl -L -o $(WIDOCO_PATH) https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar || true; \
+		if [ ! -s $(WIDOCO_PATH) ] || [ "$$(stat -f%z $(WIDOCO_PATH) 2>/dev/null || stat -c%s $(WIDOCO_PATH))" -lt 1000 ]; then \
 			echo "WIDOCO download failed or file too small"; \
-			rm -f $(WIDOCO_JAR); \
+			rm -f $(WIDOCO_PATH); \
 		fi; \
 	else \
 		echo "WIDOCO already available"; \
@@ -185,7 +189,7 @@ validate-robot: setup-tools
 	@for ttl_file in $(ONTOLOGY_FILES); do \
 		if [ -f "$$ttl_file" ]; then \
 			echo "Validating $$ttl_file"; \
-			java -jar $(ROBOT_JAR) report --input "$$ttl_file" --output "reports/$${ttl_file%.ttl}-report.tsv" || true; \
+			java -jar $(ROBOT_PATH) report --input "$$ttl_file" --output "reports/$${ttl_file%.ttl}-report.tsv" || true; \
 		fi; \
 	done
 
@@ -209,7 +213,7 @@ generate-formats: setup-tools create-dirs
 			base_name="$${ttl_file%.ttl}"; \
 			echo "Converting $$ttl_file to multiple formats..."; \
 			\
-			java -jar $(ROBOT_JAR) convert --input "$$ttl_file" --format owl --output "$(DOWNLOADS_DIR)/$${base_name}.owl" || true; \
+			java -jar $(ROBOT_PATH) convert --input "$$ttl_file" --format owl --output "$(DOWNLOADS_DIR)/$${base_name}.owl" || true; \
 			\
 			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$ttl_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.jsonld', format='json-ld'); print('Successfully converted $$ttl_file to JSON-LD')" 2>/dev/null || echo '{"error": "JSON-LD conversion failed"}' > "$(DOWNLOADS_DIR)/$${base_name}.jsonld"; \
 			\
@@ -254,7 +258,7 @@ verify-files: generate-formats
 .PHONY: generate-docs
 generate-docs: setup-tools create-dirs
 	@echo "Generating ontology documentation..."
-	@if [ ! -f $(WIDOCO_JAR) ] || [ ! -s $(WIDOCO_JAR) ]; then \
+	@if [ ! -f $(WIDOCO_PATH) ] || [ ! -s $(WIDOCO_PATH) ]; then \
 		echo "WIDOCO jar not found or empty, skipping doc generation"; \
 	else \
 		for ttl_file in $(ONTOLOGY_FILES); do \
@@ -262,7 +266,7 @@ generate-docs: setup-tools create-dirs
 				base_name="$${ttl_file%.ttl}"; \
 				echo "Generating documentation for $$ttl_file..."; \
 				mkdir -p "$(ONTOLOGY_DOCS_DIR)/$$base_name"; \
-				timeout 600 java -Xmx4g -jar $(WIDOCO_JAR) -ontFile "$$ttl_file" -outFolder "$(ONTOLOGY_DOCS_DIR)/$$base_name" -htaccess -webVowl -rewriteAll -getOntologyMetadata || { \
+				timeout 600 java -Xmx4g -jar $(WIDOCO_PATH) -ontFile "$$ttl_file" -outFolder "$(ONTOLOGY_DOCS_DIR)/$$base_name" -htaccess -webVowl -rewriteAll -getOntologyMetadata || { \
 					echo "WIDOCO failed for $$ttl_file, creating basic HTML doc"; \
 					{ \
 						echo '<!DOCTYPE html>'; \
@@ -323,7 +327,7 @@ create-index: create-dirs
 			if [ -z "$$title" ]; then title="$$base_name"; fi; \
 			description=$$(grep -m1 "rdfs:comment\|dc:description\|dct:description" "$$ttl_file" | sed 's/.*"\([^"]*\)".*/\1/' | head -1); \
 			if [ -z "$$description" ]; then description="Ontology for $$base_name package management system"; fi; \
-			namespace=$$(grep -m1 "@prefix.*: <http.*>" "$$ttl_file" | sed 's/.*<\([^>]*\)>.*/\1/' | head -1); \
+			namespace=$$(grep -m1 "@prefix.*:.*<http.*>" "$$ttl_file" | sed 's/.*<\([^>]*\)>.*/\1/' | head -1); \
 			{ \
 				echo '                      <div class="ontology-card">'; \
 				echo "                          <h3>$$title</h3>"; \
@@ -503,7 +507,7 @@ clean-deploy:
 	@echo "Cleaning deployment files..."
 	@rm -rf $(DOCS_DIR)
 	@rm -rf reports
-	@rm -f $(ROBOT_JAR) $(WIDOCO_JAR)
+	@rm -f $(ROBOT_PATH) $(WIDOCO_PATH)
 	@echo "Deployment files cleaned!"
 
 # Quick deployment (without WIDOCO documentation generation)
