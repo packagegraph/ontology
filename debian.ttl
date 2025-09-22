@@ -24,7 +24,7 @@
     dcterms:title "Debian Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Debian packages, APT repositories, package dependencies, and Debian-specific metadata including suites, components, sections, and priorities." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "1.0.0" ;
+    owl:versionInfo "0.2.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Debian-specific Classes

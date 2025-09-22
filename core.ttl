@@ -253,7 +253,7 @@
   dcterms:title "Package Management Core Ontology";
   rdfs:comment "Core ontology for representing software packages and repositories across different package management systems";
   rdfs:label "Package Management Core Ontology";
-  owl:versionInfo "1.0.0" .
+  owl:versionInfo "0.2.0" .
 
 <http://purl.obolibrary.org/obo/IAO_0000115> a owl:AnnotationProperty .
 

@@ -23,7 +23,7 @@
     dcterms:title "BSD Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling BSD packages, ports systems, package databases, and BSD-specific metadata including origins, flavors, and port dependencies." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "1.0.0" ;
+    owl:versionInfo "0.2.0" ;
     owl:imports <core.ttl> .
 
 # BSD-specific Classes

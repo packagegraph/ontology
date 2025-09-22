@@ -23,7 +23,7 @@
     dcterms:title "Nix Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Nix packages, derivations, expressions, flakes, and the Nix package management ecosystem including store paths, build phases, and language-specific builders." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "1.0.0" ;
+    owl:versionInfo "0.2.0" ;
     owl:imports <core.ttl> .
 
 # Nix-specific Classes
