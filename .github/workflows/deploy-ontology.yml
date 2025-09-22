@@ -18,20 +18,21 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Java for WIDOCO
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
       - name: Setup Python for ROBOT
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+          cache: pip
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install rdflib
+          python -m pip install rdflib
       - name: Cache ROBOT JAR
         uses: actions/cache@v4
         with:
@@ -106,7 +107,7 @@ jobs:
                 --format owl --output "docs/downloads/${base_name}.owl" || true
 
               # Convert to JSON-LD using Python rdflib
-              python3 -c "
+              python -c "
               import rdflib
               try:
                   g = rdflib.Graph()
