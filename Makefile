@@ -213,13 +213,18 @@ generate-formats: setup-tools create-dirs
 			base_name="$${ttl_file%.ttl}"; \
 			echo "Converting $$ttl_file to multiple formats..."; \
 			\
-			java -jar $(ROBOT_PATH) convert --input "$$ttl_file" --format owl --output "$(DOWNLOADS_DIR)/$${base_name}.owl" || true; \
+			temp_file="/tmp/$${base_name}_web.ttl"; \
+			sed -e 's|<\([^/>]*\)\.ttl>|<https://packagegraph.github.io/ontology/\1>|g' \
+			    "$$ttl_file" > "$$temp_file"; \
 			\
-			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$ttl_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.jsonld', format='json-ld'); print('Successfully converted $$ttl_file to JSON-LD')" 2>/dev/null || echo '{"error": "JSON-LD conversion failed"}' > "$(DOWNLOADS_DIR)/$${base_name}.jsonld"; \
+			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$temp_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.owl', format='xml'); print('Successfully converted $$ttl_file to RDF/XML')" 2>/dev/null || echo '<!-- RDF/XML conversion failed -->' > "$(DOWNLOADS_DIR)/$${base_name}.owl"; \
 			\
-			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$ttl_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.nt', format='nt'); print('Successfully converted $$ttl_file to N-Triples')" 2>/dev/null || echo '# N-Triples conversion failed' > "$(DOWNLOADS_DIR)/$${base_name}.nt"; \
+			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$temp_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.jsonld', format='json-ld'); print('Successfully converted $$ttl_file to JSON-LD')" 2>/dev/null || echo '{"error": "JSON-LD conversion failed"}' > "$(DOWNLOADS_DIR)/$${base_name}.jsonld"; \
 			\
-			cp "$$ttl_file" "$(DOWNLOADS_DIR)/$${base_name}.ttl"; \
+			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$temp_file', format='turtle'); g.serialize('$(DOWNLOADS_DIR)/$${base_name}.nt', format='nt'); print('Successfully converted $$ttl_file to N-Triples')" 2>/dev/null || echo '# N-Triples conversion failed' > "$(DOWNLOADS_DIR)/$${base_name}.nt"; \
+			\
+			cp "$$temp_file" "$(DOWNLOADS_DIR)/$${base_name}.ttl"; \
+			rm -f "$$temp_file"; \
 		fi; \
 	done
 
