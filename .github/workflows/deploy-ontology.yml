@@ -98,8 +98,8 @@ jobs:
               # Create JSON-LD placeholder (ROBOT doesn't support JSON-LD directly)
               echo '{"@context": {"@vocab": "http://www.w3.org/2002/07/owl#"}, "@id": "placeholder", "@type": "Ontology", "rdfs:comment": "JSON-LD format not supported by ROBOT. Please use RDF/XML or Turtle formats."}' > "docs/downloads/${base_name}.jsonld"
 
-              # Convert to N-Triples
-              java -jar ~/robot.jar convert --input "$ttl_file" --format ntriples --output "docs/downloads/${base_name}.nt" || true
+              # Convert to N-Triples (ROBOT uses 'nt' format internally)
+              java -jar ~/robot.jar convert --input "$ttl_file" --output "docs/downloads/${base_name}.nt" || true
 
               # Copy original Turtle
               cp "$ttl_file" "docs/downloads/${base_name}.ttl"
