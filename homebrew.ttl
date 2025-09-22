@@ -491,22 +491,26 @@ brew:homebrew-cask-fonts a brew:Tap ;
 brew:BuildDependency a owl:Class ;
     rdfs:subClassOf brew:Dependency ;
     rdfs:label "Build Dependency" ;
-    rdfs:comment "Dependency needed only at build time" .
+    rdfs:comment "Dependency needed only at build time" ;
+    IAO:0000115 "A dependency that is required only during the build process of a Homebrew formula and is not needed at runtime." .
 
 brew:OptionalDependency a owl:Class ;
     rdfs:subClassOf brew:Dependency ;
     rdfs:label "Optional Dependency" ;
-    rdfs:comment "Optional dependency that adds extra functionality" .
+    rdfs:comment "Optional dependency that adds extra functionality" ;
+    IAO:0000115 "A dependency that provides additional features or functionality but is not required for basic operation of a Homebrew formula." .
 
 brew:RecommendedDependency a owl:Class ;
     rdfs:subClassOf brew:Dependency ;
     rdfs:label "Recommended Dependency" ;
-    rdfs:comment "Recommended dependency (deprecated)" .
+    rdfs:comment "Recommended dependency (deprecated)" ;
+    IAO:0000115 "A dependency that was previously recommended for optimal functionality but is now deprecated in favor of other dependency types." .
 
 brew:RuntimeDependency a owl:Class ;
     rdfs:subClassOf brew:Dependency ;
     rdfs:label "Runtime Dependency" ;
-    rdfs:comment "Dependency needed at runtime" .
+    rdfs:comment "Dependency needed at runtime" ;
+    IAO:0000115 "A dependency that is required for the proper execution and operation of a Homebrew formula after installation." .
 
 # Cardinality Restrictions for Homebrew Classes
 brew:Formula rdfs:subClassOf [

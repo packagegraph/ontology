@@ -388,13 +388,6 @@ bsd:hasOption a owl:ObjectProperty ;
     rdfs:range bsd:Option ;
     IAO:0000115 "Associates a port with its configurable build options that can be enabled or disabled by users." .
 
-bsd:inCategory a owl:ObjectProperty ;
-    rdfs:label "in category" ;
-    rdfs:comment "Links a port to its category" ;
-    rdfs:domain bsd:Port ;
-    rdfs:range bsd:Category ;
-    IAO:0000115 "Associates a port with the functional category it belongs to in the ports tree hierarchy." .
-
 bsd:hasFlavor a owl:ObjectProperty ;
     rdfs:label "has flavor" ;
     rdfs:comment "Links a port to its flavors" ;

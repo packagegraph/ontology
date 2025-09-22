@@ -274,12 +274,14 @@ xsd:duration a rdfs:Datatype .
 :archConflicts a owl:ObjectProperty;
   owl:equivalentProperty :conflicts;
   rdfs:comment "Cross-format equivalence for Arch Linux conflicts relationships";
-  rdfs:label "equivalent to Arch conflicts" .
+  rdfs:label "equivalent to Arch conflicts";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package conflict relationships, allowing unified queries across different package management systems." .
 
 :archDepends a owl:ObjectProperty;
   owl:equivalentProperty :dependsOn;
   rdfs:comment "Cross-format equivalence for Arch Linux depends relationships";
-  rdfs:label "equivalent to Arch depends" .
+  rdfs:label "equivalent to Arch depends";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package dependency relationships, allowing unified queries across different package management systems." .
 
 :conflicts a owl:ObjectProperty;
   owl:equivalentProperty :debConflicts, :rpmConflicts;
@@ -307,17 +309,20 @@ xsd:duration a rdfs:Datatype .
 
 :debConflicts a owl:ObjectProperty;
   rdfs:comment "Cross-format equivalence for Debian conflicts relationships";
-  rdfs:label "equivalent to Debian conflicts" .
+  rdfs:label "equivalent to Debian conflicts";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package conflict relationships, allowing unified queries across different package management systems." .
 
 :debDepends a owl:ObjectProperty;
   owl:equivalentProperty :dependsOn;
   rdfs:comment "Cross-format equivalence for Debian depends relationships";
-  rdfs:label "equivalent to Debian depends" .
+  rdfs:label "equivalent to Debian depends";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package dependency relationships, allowing unified queries across different package management systems." .
 
 :debProvides a owl:ObjectProperty;
   owl:equivalentProperty :provides;
   rdfs:comment "Cross-format equivalence for Debian provides relationships";
-  rdfs:label "equivalent to Debian provides" .
+  rdfs:label "equivalent to Debian provides";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package provision relationships, allowing unified queries across different package management systems." .
 
 :dependsOn a owl:ObjectProperty;
   owl:equivalentProperty :rpmRequires;
@@ -490,15 +495,18 @@ xsd:duration a rdfs:Datatype .
 
 :rpmConflicts a owl:ObjectProperty;
   rdfs:comment "Cross-format equivalence for RPM conflicts relationships";
-  rdfs:label "equivalent to RPM conflicts" .
+  rdfs:label "equivalent to RPM conflicts";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package conflict relationships, allowing unified queries across different package management systems." .
 
 :rpmProvides a owl:ObjectProperty;
   rdfs:comment "Cross-format equivalence for RPM provides relationships";
-  rdfs:label "equivalent to RPM provides" .
+  rdfs:label "equivalent to RPM provides";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package provision relationships, allowing unified queries across different package management systems." .
 
 :rpmRequires a owl:ObjectProperty;
   rdfs:comment "Cross-format equivalence for RPM requires relationships";
-  rdfs:label "equivalent to RPM requires" .
+  rdfs:label "equivalent to RPM requires";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package dependency relationships, allowing unified queries across different package management systems." .
 
 :targetArchitecture a owl:ObjectProperty;
   rdfs:domain :Package;

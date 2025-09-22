@@ -89,8 +89,10 @@ choco:ChocolateyFeature a owl:Class ;
     IAO:0000115 "A configurable feature in Chocolatey that controls specific behaviors or capabilities of the package management system." .
 
 choco:InstallerType a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Installer Type" ;
-    rdfs:comment "A type of installer for a Chocolatey package" .
+    rdfs:comment "A type of installer for a Chocolatey package" ;
+    IAO:0000115 "A classification that identifies the specific type of installer or packaging format used for a Chocolatey package, such as MSI, EXE, ZIP, or portable applications." .
 
 # NuGet/Chocolatey Properties
 choco:packageId a owl:DatatypeProperty, owl:FunctionalProperty ;
