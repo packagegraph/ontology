@@ -22,7 +22,7 @@ all: lint concat
 
 # Deploy target - runs the full deployment pipeline locally
 .PHONY: deploy
-deploy: setup-tools validate-robot create-dirs generate-formats verify-files generate-docs create-index create-negotiation
+deploy: setup-tools validate-robot validate-shacl create-dirs generate-formats verify-files generate-docs create-index create-negotiation
 	@echo "Local deployment complete! Check the $(DOCS_DIR) directory."
 
 # Lint individual ontology files for syntax validation
@@ -187,9 +187,20 @@ validate-robot: setup-tools
 	@echo "Validating ontology files with ROBOT..."
 	@mkdir -p reports
 	@for ttl_file in $(ONTOLOGY_FILES); do \
-		if [ -f "$$ttl_file" ]; then \
-			echo "Validating $$ttl_file"; \
-			java -jar $(ROBOT_PATH) report --input "$$ttl_file" --output "reports/$${ttl_file%.ttl}-report.tsv" || true; \
+		if [ -f "$ttl_file" ]; then \
+			echo "Validating $ttl_file"; \
+			java -jar $(ROBOT_PATH) report --input "$ttl_file" --output "reports/${ttl_file%.ttl}-report.tsv" || true; \
+		fi; \
+		done
+# Validate ontology data with SHACL
+.PHONY: validate-shacl
+validate-shacl: setup-tools
+	@echo "Validating ontology data with SHACL..."
+	@mkdir -p reports
+	@for ttl_file in $(ONTOLOGY_FILES); do \
+		if [ -f "$ttl_file" ]; then \
+			echo "Validating $ttl_file with shacl.ttl"; \
+			java -jar $(ROBOT_PATH) verify --input "$ttl_file" --shacl shacl.ttl --output "reports/${ttl_file%.ttl}-shacl-report.tsv" || true; \
 		fi; \
 	done
 
@@ -542,6 +553,15 @@ help:
 	@echo "  verify-files     - Verify all generated files exist and are valid"
 	@echo "  generate-docs    - Generate HTML documentation with WIDOCO"
 	@echo "  create-index     - Create main index.html page"
+	@echo "  create-negotiation - Setup content negotiation pages"
+	@echo "  serve            - Serve documentation locally at :8000"
+	@echo "  clean-deploy     - Clean all deployment files and tools"
+	@echo ""
+	@echo "  help             - Show this help message"
+	@echo ""
+	@echo "Files processed: $(ONTOLOGY_FILES)"
+	@echo "Combined output:  $(COMBINED_FILE)"
+	@echo "Documentation:   $(DOCS_DIR)/".html page"
 	@echo "  create-negotiation - Setup content negotiation pages"
 	@echo "  serve            - Serve documentation locally at :8000"
 	@echo "  clean-deploy     - Clean all deployment files and tools"

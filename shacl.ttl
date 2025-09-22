@@ -1,0 +1,70 @@
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix pkg:   <https://packagegraph.github.io/ontology/core#> .
+
+<https://packagegraph.github.io/ontology/shacl#>
+  a owl:Ontology ;
+  rdfs:label "SHACL shapes for the PackageGraph Ontology" ;
+  rdfs:comment "Provides data validation rules for the PackageGraph ontology suite." .
+
+# Shape for core:Package
+pkg:PackageShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:Package ;
+  sh:property [
+    sh:path pkg:hasVersion ;
+    sh:minCount 1 ;
+    sh:message "A package must have at least one version."
+  ] ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:maxCount 1 ;
+    sh:message "A package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path pkg:homepage ;
+    sh:maxCount 1 ;
+    sh:message "A package can have at most one homepage."
+  ] ;
+  sh:property [
+    sh:path pkg:downloadURL ;
+    sh:maxCount 1 ;
+    sh:message "A package can have at most one download URL."
+  ] ;
+  sh:property [
+    sh:path pkg:checksum ;
+    sh:maxCount 1 ;
+    sh:message "A package can have at most one checksum."
+  ] ;
+  sh:property [
+    sh:path pkg:maintainedBy ;
+    sh:class pkg:Maintainer ;
+    sh:message "The value of pkg:maintainedBy must be a pkg:Maintainer."
+  ] .
+
+# Shape for core:Version
+pkg:VersionShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:Version ;
+  sh:property [
+    sh:path pkg:versionString ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A version must have exactly one version string."
+  ] .
+
+# Shape for core:Maintainer
+pkg:MaintainerShape
+    a sh:NodeShape ;
+    sh:targetClass pkg:Maintainer ;
+    sh:property [
+        sh:path <http://xmlns.com/foaf/0.1/name> ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A maintainer must have exactly one foaf:name."
+    ] .
