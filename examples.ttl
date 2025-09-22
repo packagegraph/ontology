@@ -36,7 +36,7 @@ ex:glibc-deb a deb:BinaryPackage ;
   doap:repository [ a doap:GitRepository ;
     doap:location <https://sourceware.org/git/glibc.git> ;
     doap:browse   <https://sourceware.org/glibc/sources.html>
-  ] ;
+  ] .
 
 # wget (Debian packaging on Salsa)
 ex:wget-deb a deb:BinaryPackage ;
