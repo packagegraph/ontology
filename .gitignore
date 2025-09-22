@@ -1,0 +1,6 @@
+.python-version
+*.jar
+*.lock
+docs/
+reports/
+package_data/
