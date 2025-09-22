@@ -333,6 +333,14 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Indicates that a package requires another package to function";
   rdfs:label "depends on" .
 
+:buildDependsOn a owl:ObjectProperty;
+  rdfs:subPropertyOf :dependsOn;
+  rdfs:domain :Package;
+  rdfs:range :Package;
+  rdfs:comment "Indicates a build-time dependency that is required to build the package from source but not needed at runtime.";
+  rdfs:label "build depends on";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is required to compile or build another package from its source code, but is not required for the final built package to function." .
+
 :derivedFrom a owl:ObjectProperty;
   rdfs:domain :Distribution;
   rdfs:range :Distribution;
@@ -716,6 +724,27 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A textual representation of a package version, typically following semantic versioning or other versioning schemes to indicate the release sequence and compatibility.";
   rdfs:comment "The version identifier of a package";
   rdfs:label "version string" .
+
+:epoch a owl:DatatypeProperty;
+  rdfs:domain :Version;
+  rdfs:range xsd:integer;
+  rdfs:comment "The epoch of the version, used in some systems to manage version comparison across different numbering schemes.";
+  rdfs:label "epoch";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A version component used to differentiate between incompatible versioning schemes or to correct mistakes in version ordering." .
+
+:release a owl:DatatypeProperty;
+  rdfs:domain :Version;
+  rdfs:range xsd:string;
+  rdfs:comment "The release number of the package, often indicating a packaging-specific update.";
+  rdfs:label "release";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "An identifier for the packaging release of a specific version of the upstream software." .
+
+:revision a owl:DatatypeProperty;
+  rdfs:domain :Version;
+  rdfs:range xsd:string;
+  rdfs:comment "The revision of the package, often indicating a minor packaging update or a source control revision.";
+  rdfs:label "revision";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A version component that specifies a minor update or packaging-specific revision." .
 
 :ABI a owl:Class;
   rdfs:subClassOf owl:Thing;

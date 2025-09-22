@@ -211,19 +211,14 @@ brew:formulaName a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The name of the Homebrew formula" .
 
-brew:license a owl:DatatypeProperty ;
+brew:license a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:hasLicense ;
     rdfs:label "license" ;
     rdfs:comment "The software license" ;
     rdfs:domain brew:Formula ;
-    rdfs:range xsd:string ;
+    rdfs:range pkg:License ;
     IAO:0000115 "The software license" .
 
-brew:revision a owl:DatatypeProperty ;
-    rdfs:label "revision" ;
-    rdfs:comment "The formula revision number" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:int ;
-    IAO:0000115 "The formula revision number" .
 
 brew:versionScheme a owl:DatatypeProperty ;
     rdfs:label "version scheme" ;

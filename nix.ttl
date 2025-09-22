@@ -481,18 +481,18 @@ nix:hasOverlay a owl:ObjectProperty ;
 nix:buildInputs a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:dependsOn ;
     rdfs:label "build inputs" ;
-    rdfs:comment "Runtime dependencies" ;
+    rdfs:comment "Runtime dependencies available to the package. In Nix, these are dependencies for the target platform." ;
     rdfs:domain nix:StdenvMkDerivation ;
     rdfs:range nix:Derivation ;
-    IAO:0000115 "Runtime dependencies that are needed when the built package is executed." .
+    IAO:0000115 "Runtime dependencies that are needed when the built package is executed. This maps to the general concept of a runtime dependency in the core ontology." .
 
 nix:nativeBuildInputs a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "native build inputs" ;
-    rdfs:comment "Build-time dependencies for the build platform" ;
+    rdfs:comment "Build-time dependencies for the build platform. In Nix, these are dependencies that run on the build host." ;
     rdfs:domain nix:StdenvMkDerivation ;
     rdfs:range nix:Derivation ;
-    IAO:0000115 "Build-time dependencies that run on the build platform and are used during compilation." .
+    IAO:0000115 "Build-time dependencies that run on the build platform and are used during compilation. This maps to the core build-time dependency concept." .
 
 nix:propagatedBuildInputs a owl:ObjectProperty ;
     rdfs:label "propagated build inputs" ;

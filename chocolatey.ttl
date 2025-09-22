@@ -102,12 +102,6 @@ choco:packageId a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "A unique string identifier that distinguishes this package from all other packages in the Chocolatey ecosystem." .
 
-choco:version a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "version" ;
-    rdfs:comment "The semantic version of the package" ;
-    rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The version identifier of the Chocolatey package following semantic versioning conventions." .
 
 choco:title a owl:DatatypeProperty ;
     rdfs:label "title" ;
@@ -116,32 +110,35 @@ choco:title a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "A human-readable title or display name for the package that may be more descriptive than the package ID." .
 
-choco:authors a owl:DatatypeProperty ;
+choco:authors a owl:ObjectProperty ;
     rdfs:label "authors" ;
     rdfs:comment "The authors of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string ;
+    rdfs:range pkg:Contributor ;
     IAO:0000115 "Specifies the original authors or creators of the software contained in the Chocolatey package." .
 
-choco:owners a owl:DatatypeProperty ;
+choco:owners a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:maintainedBy ;
     rdfs:label "owners" ;
     rdfs:comment "The owners of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:string ;
+    rdfs:range pkg:Maintainer ;
     IAO:0000115 "Specifies the individuals or organizations who own and maintain the Chocolatey package." .
 
 choco:projectUrl a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:homepage ;
     rdfs:label "project URL" ;
     rdfs:comment "The URL of the project homepage" ;
     rdfs:domain choco:ChocolateyPackage ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "The URL of the official homepage or main website for the software project." .
 
-choco:licenseUrl a owl:DatatypeProperty ;
+choco:licenseUrl a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:hasLicense ;
     rdfs:label "license URL" ;
     rdfs:comment "The URL of the license text" ;
     rdfs:domain choco:ChocolateyPackage ;
-    rdfs:range xsd:anyURI ;
+    rdfs:range pkg:License ;
     IAO:0000115 "The URL where the full text of the software license can be found and reviewed." .
 
 choco:iconUrl a owl:DatatypeProperty ;
@@ -159,6 +156,7 @@ choco:requireLicenseAcceptance a owl:DatatypeProperty ;
     IAO:0000115 "Indicates whether users must explicitly accept the software license before installation can proceed." .
 
 choco:summary a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:description ;
     rdfs:label "summary" ;
     rdfs:comment "A short summary of the package" ;
     rdfs:domain choco:ChocolateyPackage ;
@@ -410,7 +408,7 @@ choco:ChocolateyPackage rdfs:subClassOf [
 
 choco:ChocolateyPackage rdfs:subClassOf [
     a owl:Restriction ;
-    owl:onProperty choco:version ;
+    owl:onProperty pkg:hasVersion ;
     owl:cardinality 1
 ] .
 
