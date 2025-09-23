@@ -922,5 +922,3 @@ _:genid9 a owl:Restriction;
   <http://purl.obolibrary.org/obo/IAO_0000115> "An abstract package name that represents a functionality or interface that can be satisfied by multiple concrete package implementations.";
   rdfs:comment "A package name that represents a capability provided by one or more real packages";
   rdfs:label "Virtual Package" .
-ty provided by one or more real packages";
-  rdfs:label "Virtual Package" .

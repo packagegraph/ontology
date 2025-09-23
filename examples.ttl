@@ -16,7 +16,8 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-@prefix spdx: <http://spdx.org/licenses/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
 
 # Ontology metadata
 <https://packagegraph.github.io/ontology/examples#> a owl:Ontology ;
@@ -26,6 +27,20 @@
   owl:versionInfo "0.2.0" ;
   dct:created "2025-09-05"^^xsd:date ;
   dct:creator "Package Management Ontology Project" .
+
+# License Individuals
+spdxl:LGPL-2.1-only a spdx:ListedLicense ;
+  rdfs:label "LGPL-2.1-only" .
+spdxl:GPL-3.0-or-later a spdx:ListedLicense ;
+  rdfs:label "GPL-3.0-or-later" .
+spdxl:GPL-2.0-only a spdx:ListedLicense ;
+  rdfs:label "GPL-2.0-only" .
+
+# Placeholder Maintainer
+ex:placeholder-maintainer a pkg:Maintainer ;
+  rdfs:label "Placeholder Maintainer" ;
+  foaf:name "Placeholder Maintainer" ;
+  foaf:mbox <mailto:placeholder@example.com> .
 
 ################################################################
 # Debian (3)
@@ -39,7 +54,7 @@ ex:glibc-deb a deb:BinaryPackage ;
   pkg:homepage <https://sourceware.org/glibc/sources.html> ;
   pkg:downloadURL <https://salsa.debian.org/glibc-team/glibc> ;
   pkg:maintainedBy ex:glibc-deb-maintainer ;
-  pkg:hasLicense spdx:LGPL-2.1-only ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (Debian binary package: libc6)" ;
   doap:repository [ a doap:GitRepository ;
     doap:location <https://sourceware.org/git/glibc.git> ;
@@ -47,11 +62,13 @@ ex:glibc-deb a deb:BinaryPackage ;
   ] .
 
 ex:glibc-deb-version a pkg:Version ;
+  rdfs:label "Version 2.31-13+deb11u3 for glibc-deb" ;
   pkg:versionString "2.31-13+deb11u3" .
 
 ex:glibc-deb-maintainer a pkg:Maintainer ;
+  rdfs:label "GNU C Library Debian Maintainers" ;
   foaf:name "GNU C Library Debian Maintainers" ;
-  foaf:mbox "debian-glibc@lists.debian.org" .
+  foaf:mbox <mailto:debian-glibc@lists.debian.org> .
 
 # wget (Debian packaging on Salsa)
 ex:wget-deb a deb:BinaryPackage ;
@@ -60,13 +77,15 @@ ex:wget-deb a deb:BinaryPackage ;
   pkg:description "Internet file retriever - Debian binary package" ;
   pkg:downloadURL <https://salsa.debian.org/debian/wget> ;
   pkg:maintainedBy ex:wget-deb-maintainer ;
-  pkg:hasLicense spdx:GPL-3.0-or-later ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Debian binary package)" .
 
 ex:wget-deb-version a pkg:Version ;
+    rdfs:label "Version 1.21.1-1+deb11u1 for wget-deb" ;
     pkg:versionString "1.21.1-1+deb11u1" .
 
 ex:wget-deb-maintainer a pkg:Maintainer ;
+    rdfs:label "Noel Torres" ;
     foaf:name "Noel Torres" ;
     foaf:mbox <mailto:ntorres@debian.org> .
 
@@ -76,9 +95,12 @@ ex:git-deb a deb:BinaryPackage ;
   pkg:hasVersion ex:git-deb-version ;
   pkg:description "Fast, scalable, distributed revision control system - Debian binary package" ;
   pkg:downloadURL <https://salsa.debian.org/debian/git> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git version control (Debian binary package)" .
 
 ex:git-deb-version a pkg:Version ;
+    rdfs:label "Version 1:2.30.2-1 for git-deb" ;
     pkg:versionString "1:2.30.2-1" .
 
 ################################################################
@@ -92,6 +114,8 @@ ex:glibc-rpm a rpm:BinaryRPM ;
   pkg:description "GNU C Library - standard C library (RPM package)" ;
   pkg:homepage <https://sourceware.org/glibc/sources.html> ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/glibc> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (RPM package)" ;
   doap:repository [ a doap:GitRepository ;
     doap:location <https://sourceware.org/git/glibc.git> ;
@@ -99,6 +123,7 @@ ex:glibc-rpm a rpm:BinaryRPM ;
   ] .
 
 ex:glibc-rpm-version a pkg:Version ;
+    rdfs:label "Version 2.34-28.fc35 for glibc-rpm" ;
     pkg:versionString "2.34-28.fc35" .
 
 # wget (RPM packaging in dist-git)
@@ -107,9 +132,12 @@ ex:wget-rpm a rpm:BinaryRPM ;
   pkg:hasVersion ex:wget-rpm-version ;
   pkg:description "Internet file retriever utility (RPM package)" ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/wget> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (RPM package)" .
 
 ex:wget-rpm-version a pkg:Version ;
+    rdfs:label "Version 1.21.1-3.fc35 for wget-rpm" ;
     pkg:versionString "1.21.1-3.fc35" .
 
 # bash (RPM packaging in dist-git)
@@ -118,9 +146,12 @@ ex:bash-rpm a rpm:BinaryRPM ;
   pkg:hasVersion ex:bash-rpm-version ;
   pkg:description "GNU Bourne Again Shell (RPM package)" ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/bash> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Bash (RPM package)" .
 
 ex:bash-rpm-version a pkg:Version ;
+    rdfs:label "Version 5.1.8-2.fc35 for bash-rpm" ;
     pkg:versionString "5.1.8-2.fc35" .
 
 ################################################################
@@ -133,9 +164,12 @@ ex:glibc-arch a arch:ArchPackage ;
   pkg:hasVersion ex:glibc-arch-version ;
   pkg:description "GNU C Library - standard C library (Arch package)" ;
   pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/glibc> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (Arch package)" .
 
 ex:glibc-arch-version a pkg:Version ;
+    rdfs:label "Version 2.35-2 for glibc-arch" ;
     pkg:versionString "2.35-2" .
 
 # wget (Arch packaging on GitLab)
@@ -144,9 +178,12 @@ ex:wget-arch a arch:ArchPackage ;
   pkg:hasVersion ex:wget-arch-version ;
   pkg:description "Internet file retriever utility (Arch package)" ;
   pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/wget> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Arch package)" .
 
 ex:wget-arch-version a pkg:Version ;
+    rdfs:label "Version 1.21.2-1 for wget-arch" ;
     pkg:versionString "1.21.2-1" .
 
 # bash (Arch packaging; standard pattern)
@@ -155,9 +192,12 @@ ex:bash-arch a arch:ArchPackage ;
   pkg:hasVersion ex:bash-arch-version ;
   pkg:description "GNU Bourne Again Shell (Arch package)" ;
   pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/bash> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Bash (Arch package)" .
 
 ex:bash-arch-version a pkg:Version ;
+    rdfs:label "Version 5.1.016-1 for bash-arch" ;
     pkg:versionString "5.1.016-1" .
 
 ################################################################
@@ -170,9 +210,12 @@ ex:bash-bsd a bsd:Port ;
   pkg:hasVersion ex:bash-bsd-version ;
   pkg:description "GNU Bourne Again Shell (FreeBSD port shells/bash)" ;
   pkg:downloadURL <https://cgit.freebsd.org/ports/tree/shells/bash/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Bash (FreeBSD port shells/bash)" .
 
 ex:bash-bsd-version a pkg:Version ;
+    rdfs:label "Version 5.1.16 for bash-bsd" ;
     pkg:versionString "5.1.16" .
 
 # wget (FreeBSD ports cgit)
@@ -181,9 +224,12 @@ ex:wget-bsd a bsd:Port ;
   pkg:hasVersion ex:wget-bsd-version ;
   pkg:description "Internet file retriever utility (FreeBSD port ftp/wget)" ;
   pkg:downloadURL <https://cgit.freebsd.org/ports/tree/ftp/wget/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (FreeBSD port ftp/wget)" .
 
 ex:wget-bsd-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-bsd" ;
     pkg:versionString "1.21.2" .
 
 # git (FreeBSD ports cgit)
@@ -192,9 +238,12 @@ ex:git-bsd a bsd:Port ;
   pkg:hasVersion ex:git-bsd-version ;
   pkg:description "Fast, scalable, distributed revision control system (FreeBSD port devel/git)" ;
   pkg:downloadURL <https://cgit.freebsd.org/ports/tree/devel/git/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git (FreeBSD port devel/git)" .
 
 ex:git-bsd-version a pkg:Version ;
+    rdfs:label "Version 2.35.1 for git-bsd" ;
     pkg:versionString "2.35.1" .
 
 ################################################################
@@ -208,9 +257,12 @@ ex:cygwin-choco a choco:ChocolateyPackage ;
   pkg:description "Unix-like environment and command-line interface for Windows (Chocolatey package)" ;
   pkg:downloadURL <https://community.chocolatey.org/packages/Cygwin> ;
   pkg:isMetaPackage true ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "Cygwin (Chocolatey package)" .
 
 ex:cygwin-choco-version a pkg:Version ;
+    rdfs:label "Version 3.3.4 for cygwin-choco" ;
     pkg:versionString "3.3.4" .
 
 # wget (Chocolatey package page)
@@ -219,9 +271,12 @@ ex:wget-choco a choco:ChocolateyPackage ;
   pkg:hasVersion ex:wget-choco-version ;
   pkg:description "Internet file retriever utility (Chocolatey package)" ;
   pkg:downloadURL <https://community.chocolatey.org/packages/wget> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Chocolatey package)" .
 
 ex:wget-choco-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-choco" ;
     pkg:versionString "1.21.2" .
 
 # git (Chocolatey package page)
@@ -230,9 +285,12 @@ ex:git-choco a choco:ChocolateyPackage ;
   pkg:hasVersion ex:git-choco-version ;
   pkg:description "Fast, scalable, distributed revision control system for Windows (Chocolatey package)" ;
   pkg:downloadURL <https://community.chocolatey.org/packages/git> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git (Chocolatey package)" .
 
 ex:git-choco-version a pkg:Version ;
+    rdfs:label "Version 2.35.1.2 for git-choco" ;
     pkg:versionString "2.35.1.2" .
 
 ################################################################
@@ -246,12 +304,15 @@ ex:glibc-brew a brew:Formula ;
   pkg:description "GNU C Library - standard C library (Homebrew formula, Linux-only)" ;
   pkg:homepage <https://formulae.brew.sh/formula/glibc> ;
   pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/glibc.rb> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (Homebrew formula, Linux-only)" ;
   doap:repository [ a doap:GitRepository ;
     doap:browse <https://formulae.brew.sh/formula/glibc>
   ] .
 
 ex:glibc-brew-version a pkg:Version ;
+    rdfs:label "Version 2.35 for glibc-brew" ;
     pkg:versionString "2.35" .
 
 # wget (Homebrew formula)
@@ -260,9 +321,12 @@ ex:wget-brew a brew:Formula ;
   pkg:hasVersion ex:wget-brew-version ;
   pkg:description "Internet file retriever utility (Homebrew formula)" ;
   pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/w/wget.rb> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Homebrew formula)" .
 
 ex:wget-brew-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-brew" ;
     pkg:versionString "1.21.2" .
 
 # git (Homebrew formula)
@@ -271,9 +335,12 @@ ex:git-brew a brew:Formula ;
   pkg:hasVersion ex:git-brew-version ;
   pkg:description "Fast, scalable, distributed revision control system (Homebrew formula)" ;
   pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/git.rb> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git (Homebrew formula)" .
 
 ex:git-brew-version a pkg:Version ;
+    rdfs:label "Version 2.35.1 for git-brew" ;
     pkg:versionString "2.35.1" .
 
 ################################################################
@@ -286,9 +353,12 @@ ex:glibc-nix a nix:StdenvMkDerivation ;
   pkg:hasVersion ex:glibc-nix-version ;
   pkg:description "GNU C Library - standard C library (Nixpkgs derivation)" ;
   pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (Nixpkgs derivation)" .
 
 ex:glibc-nix-version a pkg:Version ;
+    rdfs:label "Version 2.34-21 for glibc-nix" ;
     pkg:versionString "2.34-21" .
 
 # wget (Nixpkgs)
@@ -297,9 +367,12 @@ ex:wget-nix a nix:StdenvMkDerivation ;
   pkg:hasVersion ex:wget-nix-version ;
   pkg:description "Internet file retriever utility (Nixpkgs derivation)" ;
   pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Nixpkgs derivation)" .
 
 ex:wget-nix-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-nix" ;
     pkg:versionString "1.21.2" .
 
 # git (Nixpkgs)
@@ -308,7 +381,10 @@ ex:git-nix a nix:StdenvMkDerivation ;
   pkg:hasVersion ex:git-nix-version ;
   pkg:description "Fast, scalable, distributed revision control system (Nixpkgs derivation)" ;
   pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git (Nixpkgs derivation)" .
 
 ex:git-nix-version a pkg:Version ;
+    rdfs:label "Version 2.33.1 for git-nix" ;
     pkg:versionString "2.33.1" .
