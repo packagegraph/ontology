@@ -304,6 +304,12 @@ generate-docs: setup-tools create-dirs
 			fi; \
 		done; \
 	fi
+	@echo "Post-processing WIDOCO output..."
+	@for dir in $(ONTOLOGY_DOCS_DIR)/*/provenance; do \
+		if [ -f "$$dir/provenance-en.html" ]; then \
+			sed -i.bak 's|href="\.\.\\|href="../|g' "$$dir/provenance-en.html" && rm -f "$$dir/provenance-en.html.bak"; \
+		fi; \
+	done
 
 # Create main index page
 .PHONY: create-index
@@ -463,11 +469,29 @@ create-negotiation: create-dirs
 				echo "    <link rel=\"alternate\" type=\"application/rdf+xml\" href=\"../downloads/$$base_name.owl\" />"; \
 				echo "    <link rel=\"alternate\" type=\"application/ld+json\" href=\"../downloads/$$base_name.jsonld\" />"; \
 				echo "    <link rel=\"alternate\" type=\"application/n-triples\" href=\"../downloads/$$base_name.nt\" />"; \
- \
+				echo '    <script>'; \
+				echo '        // Content negotiation via JavaScript for GitHub Pages'; \
+				echo '        (function() {'; \
+				echo "            var baseUrl = '../downloads/$$base_name';"; \
+				echo '            var accept = (function() { return '"'"'text/html'"'"'; })();'; \
+				echo '            if (accept.includes('"'"'text/turtle'"'"') || accept.includes('"'"'text/plain'"'"')) {'; \
+				echo '                window.location.href = baseUrl + '"'"'.ttl'"'"';'; \
+				echo '            } else if (accept.includes('"'"'application/rdf+xml'"'"') || accept.includes('"'"'application/xml'"'"')) {'; \
+				echo '                window.location.href = baseUrl + '"'"'.owl'"'"';'; \
+				echo '            } else if (accept.includes('"'"'application/ld+json'"'"') || accept.includes('"'"'application/json'"'"')) {'; \
+				echo '                window.location.href = baseUrl + '"'"'.jsonld'"'"';'; \
+				echo '            } else if (accept.includes('"'"'application/n-triples'"'"')) {'; \
+				echo '                window.location.href = baseUrl + '"'"'.nt'"'"';'; \
+				echo '            } else {'; \
+				echo "                window.location.replace('../ontology/$$base_name/index-en.html' + window.location.hash);"; \
+				echo '            }'; \
+				echo '        })();'; \
+				echo '    </script>'; \
 				echo '</head>'; \
 				echo '<body>'; \
 				echo "    <h1>$$base_name Ontology</h1>"; \
-				echo "    <p>This is the $$base_name ontology. Choose your preferred format:</p>"; \
+				echo "    <p>Redirecting to <a href=\"../ontology/$$base_name/index-en.html\">documentation</a>...</p>"; \
+				echo "    <p>If not redirected automatically, choose your preferred format:</p>"; \
 				echo '    <ul>'; \
 				echo "        <li><a href=\"../ontology/$$base_name/index-en.html\">HTML Documentation</a></li>"; \
 				echo "        <li><a href=\"../downloads/$$base_name.ttl\">Turtle (.ttl)</a></li>"; \
@@ -475,25 +499,35 @@ create-negotiation: create-dirs
 				echo "        <li><a href=\"../downloads/$$base_name.jsonld\">JSON-LD (.jsonld)</a></li>"; \
 				echo "        <li><a href=\"../downloads/$$base_name.nt\">N-Triples (.nt)</a></li>"; \
 				echo '    </ul>'; \
-				echo ''; \
-				echo '    <h2>Programmatic Access</h2>'; \
-				echo '    <p>For programmatic access, use these direct URLs:</p>'; \
-				echo '    <pre><code># Turtle format'; \
-				echo "wget https://packagegraph.github.io/ontology/downloads/$$base_name.ttl"; \
-				echo ''; \
-				echo '# RDF/XML format'; \
-				echo "wget https://packagegraph.github.io/ontology/downloads/$$base_name.owl"; \
-				echo ''; \
-				echo '# JSON-LD format'; \
-				echo "wget https://packagegraph.github.io/ontology/downloads/$$base_name.jsonld"; \
-				echo ''; \
-				echo '# N-Triples format'; \
-				echo "wget https://packagegraph.github.io/ontology/downloads/$$base_name.nt</code></pre>"; \
 				echo '</body>'; \
 				echo '</html>'; \
 			} > "$(DOCS_DIR)/$$base_name/index.html"; \
 		fi; \
 	done
+	@echo "Creating namespace alias for archlinux -> arch..."
+	@mkdir -p "$(DOCS_DIR)/archlinux"
+	@{ \
+		echo '<!DOCTYPE html>'; \
+		echo '<html lang="en">'; \
+		echo '<head>'; \
+		echo '    <meta charset="UTF-8">'; \
+		echo '    <title>Arch Linux Package Ontology</title>'; \
+		echo '    <link rel="alternate" type="text/turtle" href="../downloads/arch.ttl" />'; \
+		echo '    <link rel="alternate" type="application/rdf+xml" href="../downloads/arch.owl" />'; \
+		echo '    <link rel="alternate" type="application/ld+json" href="../downloads/arch.jsonld" />'; \
+		echo '    <link rel="alternate" type="application/n-triples" href="../downloads/arch.nt" />'; \
+		echo '    <script>'; \
+		echo '        (function() {'; \
+		echo "            window.location.replace('../ontology/arch/index-en.html' + window.location.hash);"; \
+		echo '        })();'; \
+		echo '    </script>'; \
+		echo '</head>'; \
+		echo '<body>'; \
+		echo '    <h1>Arch Linux Package Ontology</h1>'; \
+		echo '    <p>Redirecting to <a href="../ontology/arch/index-en.html">documentation</a>...</p>'; \
+		echo '</body>'; \
+		echo '</html>'; \
+	} > "$(DOCS_DIR)/archlinux/index.html"
 
 # Clean deployment files
 .PHONY: clean-deploy
