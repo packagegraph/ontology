@@ -23,7 +23,7 @@
     dcterms:title "Version Control System Ontology" ;
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.2.0" ;
+    owl:versionInfo "0.3.0" ;
     owl:imports <core.ttl> .
 
 # VCS Classes
@@ -513,6 +513,98 @@ vcs:contributorCount a owl:DatatypeProperty ;
     rdfs:domain vcs:Repository ;
     rdfs:range xsd:int ;
     IAO:0000115 "The total number of unique contributors who have made commits to the repository." .
+
+# Upstream activity and popularity metrics
+vcs:stargazerCount a owl:DatatypeProperty ;
+    rdfs:label "stargazer count" ;
+    rdfs:comment "Number of users who have starred the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of users who have starred or bookmarked the repository, indicating community interest." .
+
+vcs:forkCount a owl:DatatypeProperty ;
+    rdfs:label "fork count" ;
+    rdfs:comment "Number of forks created from the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of forks created from the repository, indicating derivative development activity." .
+
+vcs:subscriberCount a owl:DatatypeProperty ;
+    rdfs:label "subscriber count" ;
+    rdfs:comment "Number of users watching or subscribed to the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of users watching or subscribed to the repository for notifications." .
+
+vcs:openIssueCount a owl:DatatypeProperty ;
+    rdfs:label "open issue count" ;
+    rdfs:comment "Current number of open issues" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The current number of open issues in the repository." .
+
+vcs:firstCommitDate a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "first commit date" ;
+    rdfs:comment "Date of the earliest commit in the repository" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:dateTime ;
+    IAO:0000115 "The date of the earliest commit in the repository, establishing the project's age." .
+
+vcs:issuesOpenedLastMonth a owl:DatatypeProperty ;
+    rdfs:label "issues opened last month" ;
+    rdfs:comment "Number of issues opened during the last calendar month" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of issues opened in the repository during the last calendar month." .
+
+vcs:issuesClosedLastMonth a owl:DatatypeProperty ;
+    rdfs:label "issues closed last month" ;
+    rdfs:comment "Number of issues closed during the last calendar month" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of issues closed in the repository during the last calendar month." .
+
+vcs:issuesOpenedLastYear a owl:DatatypeProperty ;
+    rdfs:label "issues opened last year" ;
+    rdfs:comment "Number of issues opened during the last calendar year" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of issues opened in the repository during the last calendar year." .
+
+vcs:issuesClosedLastYear a owl:DatatypeProperty ;
+    rdfs:label "issues closed last year" ;
+    rdfs:comment "Number of issues closed during the last calendar year" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of issues closed in the repository during the last calendar year." .
+
+vcs:prsOpenedLastMonth a owl:DatatypeProperty ;
+    rdfs:label "PRs opened last month" ;
+    rdfs:comment "Number of pull requests opened during the last calendar month" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of pull requests opened in the repository during the last calendar month." .
+
+vcs:prsClosedLastMonth a owl:DatatypeProperty ;
+    rdfs:label "PRs closed last month" ;
+    rdfs:comment "Number of pull requests closed or merged during the last calendar month" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of pull requests closed or merged in the repository during the last calendar month." .
+
+vcs:prsOpenedLastYear a owl:DatatypeProperty ;
+    rdfs:label "PRs opened last year" ;
+    rdfs:comment "Number of pull requests opened during the last calendar year" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of pull requests opened in the repository during the last calendar year." .
+
+vcs:prsClosedLastYear a owl:DatatypeProperty ;
+    rdfs:label "PRs closed last year" ;
+    rdfs:comment "Number of pull requests closed or merged during the last calendar year" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "The number of pull requests closed or merged in the repository during the last calendar year." .
 
 # VCS Types
 vcs:Git a owl:NamedIndividual ;
