@@ -18,13 +18,17 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix spdx:  <http://spdx.org/rdf/terms#> .
 @prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://packagegraph.github.io/ontology/security#> .
+@prefix met:   <https://packagegraph.github.io/ontology/metrics#> .
+@prefix rh:    <https://packagegraph.github.io/ontology/redhat#> .
 
 # Ontology metadata
 <https://packagegraph.github.io/ontology/examples#> a owl:Ontology ;
   dc:title "Package Graph Examples Ontology" ;
   dc:description "Example package instances demonstrating how to represent real packages using the Package Graph ontologies across different package management systems including Debian, RPM, Arch Linux, BSD Ports, Chocolatey, Homebrew, and Nix." ;
   dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-  owl:versionInfo "0.2.0" ;
+  owl:versionInfo "0.3.0" ;
   dct:created "2025-09-05"^^xsd:date ;
   dct:creator "Package Management Ontology Project" .
 
@@ -388,3 +392,122 @@ ex:git-nix a nix:StdenvMkDerivation ;
 ex:git-nix-version a pkg:Version ;
     rdfs:label "Version 2.33.1 for git-nix" ;
     pkg:versionString "2.33.1" .
+
+################################################################
+# Security (CVE and Advisory examples)
+################################################################
+
+# A critical vulnerability affecting glibc
+ex:cve-2024-1234 a sec:Vulnerability ;
+  sec:cveId "CVE-2024-1234" ;
+  sec:cvssScore "9.8"^^xsd:float ;
+  sec:severity "critical" ;
+  sec:summary "Buffer overflow in glibc iconv module allows remote code execution" ;
+  sec:cweId "CWE-119" ;
+  sec:publishedDate "2024-03-15T00:00:00"^^xsd:dateTime ;
+  sec:accessVector "network" ;
+  sec:accessComplexity "low" ;
+  sec:impactConfidentiality "high" ;
+  sec:impactIntegrity "high" ;
+  sec:impactAvailability "high" ;
+  sec:exploitabilityScore "3.9"^^xsd:float ;
+  sec:impactScore "5.9"^^xsd:float ;
+  sec:affectsVersion ex:glibc-rpm-version ;
+  rdfs:label "CVE-2024-1234" .
+
+# Advisory addressing the vulnerability
+ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
+  sec:advisoryId "RHSA-2024:5678" ;
+  sec:advisorySeverity "critical" ;
+  sec:advisoryDate "2024-03-20T00:00:00"^^xsd:dateTime ;
+  sec:advisoryType "security" ;
+  sec:addressesVulnerability ex:cve-2024-1234 ;
+  sec:advisoryForPackage ex:glibc-rpm ;
+  rdfs:label "RHSA-2024:5678" .
+
+################################################################
+# Code Metrics and Language examples
+################################################################
+
+# glibc is implemented in C and Assembly
+ex:glibc-rpm met:implementedIn met:C, met:Assembly .
+
+# Code metrics for the glibc RPM version
+ex:glibc-rpm-version met:hasCodeMetrics ex:glibc-rpm-version-metrics .
+
+ex:glibc-rpm-version-metrics a met:CodeMetrics ;
+  met:totalLinesOfCode 1500000 ;
+  met:totalFiles 4200 ;
+  met:totalBlankLines 180000 ;
+  met:totalCommentLines 250000 ;
+  met:analysisDate "2024-06-01T00:00:00"^^xsd:dateTime ;
+  met:hasLanguageMetrics ex:glibc-rpm-c-metrics, ex:glibc-rpm-asm-metrics ;
+  rdfs:label "Code metrics for glibc 2.34-28.fc35" .
+
+ex:glibc-rpm-c-metrics a met:LanguageMetrics ;
+  met:language met:C ;
+  met:linesOfCode 1200000 ;
+  met:filesCount 3400 ;
+  met:blankLines 140000 ;
+  met:commentLines 200000 ;
+  met:cyclomaticComplexity "15.2"^^xsd:float ;
+  met:languageProportion "0.80"^^xsd:float ;
+  rdfs:label "C language metrics for glibc" .
+
+ex:glibc-rpm-asm-metrics a met:LanguageMetrics ;
+  met:language met:Assembly ;
+  met:linesOfCode 250000 ;
+  met:filesCount 600 ;
+  met:blankLines 30000 ;
+  met:commentLines 40000 ;
+  met:cyclomaticComplexity "8.5"^^xsd:float ;
+  met:languageProportion "0.17"^^xsd:float ;
+  rdfs:label "Assembly language metrics for glibc" .
+
+################################################################
+# Package Set and Vendor Extension examples
+################################################################
+
+# glibc is in RHEL BaseOS and is NOT vendor-originated (community project)
+ex:glibc-rpm pkg:memberOfPackageSet rh:RHELBaseOS ;
+  pkg:isVendorOriginated false .
+
+# insights-client IS vendor-originated (Red Hat project)
+ex:insights-client-rpm a rpm:BinaryRPM ;
+  pkg:packageName "insights-client" ;
+  pkg:hasVersion ex:insights-client-version ;
+  pkg:description "Red Hat Insights client for system analysis and recommendations" ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  pkg:isVendorOriginated true ;
+  pkg:memberOfPackageSet rh:RHELBaseOS ;
+  rdfs:label "Red Hat Insights Client (RPM package)" .
+
+ex:insights-client-version a pkg:Version ;
+  rdfs:label "Version 3.2.0-1.el9 for insights-client" ;
+  pkg:versionString "3.2.0-1.el9" .
+
+################################################################
+# Patch examples (SRPM with distro patches)
+################################################################
+
+ex:glibc-srpm a rpm:SourceRPM ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-rpm-version ;
+  pkg:maintainedBy ex:placeholder-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rpm:patchCount 45 ;
+  rpm:hasPatch ex:glibc-patch-1, ex:glibc-patch-2 ;
+  rdfs:label "glibc source RPM" .
+
+ex:glibc-patch-1 a rpm:Patch ;
+  rpm:patchName "glibc-rh-2139875.patch" ;
+  rpm:patchDescription "Fix memory corruption in iconv module for Red Hat specific locale handling" ;
+  rpm:upstreamStatus "vendorSpecific" ;
+  rdfs:label "glibc-rh-2139875.patch" .
+
+ex:glibc-patch-2 a rpm:Patch ;
+  rpm:patchName "glibc-upstream-backport-malloc.patch" ;
+  rpm:patchDescription "Backport malloc performance improvement from glibc 2.36" ;
+  rpm:upstreamStatus "backport" ;
+  rdfs:label "glibc-upstream-backport-malloc.patch" .
