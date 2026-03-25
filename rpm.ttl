@@ -24,7 +24,7 @@
     dcterms:title "RPM Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling RPM packages, YUM/DNF repositories, NEVR identifiers, and RPM-specific metadata including build information, changelogs, and file attributes." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.2.0" ;
+    owl:versionInfo "0.3.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # RPM-specific Classes
@@ -81,6 +81,12 @@ rpm:Dependency a owl:Class ;
     rdfs:label "RPM Dependency" ;
     rdfs:comment "A dependency relationship in RPM, potentially with version constraints" ;
     IAO:0000115 "Represents a dependency relationship between RPM packages, which can include version constraints and flags." .
+
+rpm:Patch a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Patch" ;
+    rdfs:comment "A distro-specific patch applied to upstream source in an SRPM" ;
+    IAO:0000115 "An individual patch file applied on top of upstream source code in an SRPM, representing a distro-specific modification such as a backport, configuration change, or vendor-specific customization." .
 
 # RPM-specific Properties
 rpm:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
@@ -211,6 +217,34 @@ rpm:changelogTime a owl:DatatypeProperty ;
     rdfs:range xsd:dateTime ;
     IAO:0000115 "Records the date and time when a changelog entry was created or when the associated changes were made." .
 
+rpm:patchName a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "patch name" ;
+    rdfs:comment "The filename of the patch" ;
+    rdfs:domain rpm:Patch ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The filename of the patch as it appears in the SRPM and spec file." .
+
+rpm:patchDescription a owl:DatatypeProperty ;
+    rdfs:label "patch description" ;
+    rdfs:comment "Description of what the patch does" ;
+    rdfs:domain rpm:Patch ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A human-readable description of what the patch modifies and why." .
+
+rpm:upstreamStatus a owl:DatatypeProperty ;
+    rdfs:label "upstream status" ;
+    rdfs:comment "Status of the patch relative to upstream (backport, forwardPort, vendorSpecific, upstreamAccepted, upstreamRejected)" ;
+    rdfs:domain rpm:Patch ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The status of the patch relative to the upstream project, indicating whether it is a backport from a newer version, a forward port, a vendor-specific change, or has been accepted or rejected upstream. Valid values: backport, forwardPort, vendorSpecific, upstreamAccepted, upstreamRejected." .
+
+rpm:patchCount a owl:DatatypeProperty ;
+    rdfs:label "patch count" ;
+    rdfs:comment "Total number of patches in the SRPM" ;
+    rdfs:domain rpm:SourceRPM ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "The total number of patch files contained in the source RPM package, providing a quick measure of divergence from the upstream source." .
+
 # Object Properties
 rpm:inGroup a owl:ObjectProperty ;
     rdfs:label "in group" ;
@@ -239,6 +273,13 @@ rpm:hasTag a owl:ObjectProperty ;
     rdfs:domain rpm:RPMPackage ;
     rdfs:range rpm:RPMTag ;
     IAO:0000115 "Associates an RPM package with its metadata tags stored in the package header." .
+
+rpm:hasPatch a owl:ObjectProperty ;
+    rdfs:label "has patch" ;
+    rdfs:comment "Links an SRPM to a patch it contains" ;
+    rdfs:domain rpm:SourceRPM ;
+    rdfs:range rpm:Patch ;
+    IAO:0000115 "Associates a source RPM with an individual patch file it contains." .
 
 # Cross-format property equivalences are declared within property definitions below
 
