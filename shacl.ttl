@@ -4,6 +4,9 @@
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix pkg:   <https://packagegraph.github.io/ontology/core#> .
+@prefix sec:   <https://packagegraph.github.io/ontology/security#> .
+@prefix met:   <https://packagegraph.github.io/ontology/metrics#> .
+@prefix rpm:   <https://packagegraph.github.io/ontology/rpm#> .
 
 <https://packagegraph.github.io/ontology/shacl#>
   a owl:Ontology ;
@@ -68,3 +71,84 @@ pkg:MaintainerShape
         sh:datatype xsd:string ;
         sh:message "A maintainer must have exactly one foaf:name."
     ] .
+
+# Shape for security:Vulnerability
+sec:VulnerabilityShape
+  a sh:NodeShape ;
+  sh:targetClass sec:Vulnerability ;
+  sh:property [
+    sh:path sec:cveId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A vulnerability must have exactly one CVE identifier."
+  ] ;
+  sh:property [
+    sh:path sec:cvssScore ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:float ;
+    sh:message "A vulnerability can have at most one CVSS score."
+  ] .
+
+# Shape for security:SecurityAdvisory
+sec:SecurityAdvisoryShape
+  a sh:NodeShape ;
+  sh:targetClass sec:SecurityAdvisory ;
+  sh:property [
+    sh:path sec:advisoryId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A security advisory must have exactly one advisory identifier."
+  ] .
+
+# Shape for metrics:ProgrammingLanguage
+met:ProgrammingLanguageShape
+  a sh:NodeShape ;
+  sh:targetClass met:ProgrammingLanguage ;
+  sh:property [
+    sh:path met:languageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A programming language must have exactly one language name."
+  ] ;
+  sh:property [
+    sh:path met:isMemorySafe ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A programming language can have at most one memory safety indicator."
+  ] .
+
+# Shape for metrics:CodeMetrics
+met:CodeMetricsShape
+  a sh:NodeShape ;
+  sh:targetClass met:CodeMetrics ;
+  sh:property [
+    sh:path met:hasLanguageMetrics ;
+    sh:minCount 1 ;
+    sh:message "Code metrics must have at least one language metrics breakdown."
+  ] .
+
+# Shape for rpm:Patch
+rpm:PatchShape
+  a sh:NodeShape ;
+  sh:targetClass rpm:Patch ;
+  sh:property [
+    sh:path rpm:patchName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A patch must have exactly one patch name."
+  ] .
+
+# Shape for core:PackageSet
+pkg:PackageSetShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:PackageSet ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A package set must have at least one label."
+  ] .
