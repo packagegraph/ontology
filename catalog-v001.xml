@@ -9,4 +9,7 @@
     <uri name="http://packagegraph.github.io/ontology/archlinux#" uri="arch.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/homebrew#" uri="homebrew.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/chocolatey#" uri="chocolatey.ttl"/>
+    <uri name="https://packagegraph.github.io/ontology/security#" uri="security.ttl"/>
+    <uri name="https://packagegraph.github.io/ontology/metrics#" uri="metrics.ttl"/>
+    <uri name="https://packagegraph.github.io/ontology/redhat#" uri="redhat.ttl"/>
 </catalog>

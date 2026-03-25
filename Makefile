@@ -2,7 +2,8 @@
 # This Makefile provides utilities for validating, combining, and managing ontology files
 
 # Variables
-ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl examples.ttl
+ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl security.ttl metrics.ttl examples.ttl
+VENDOR_FILES = redhat.ttl
 COMBINED_FILE = x.ttl
 # Use plain python in GitHub Actions, uv run python locally
 PYTHON = $(if $(GITHUB_ACTIONS),python,uv run python)
@@ -35,6 +36,12 @@ lint:
 			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$file', format='turtle'); print('✓ $$file parses correctly')" || exit 1; \
 		else \
 			echo "⚠ Warning: $$file not found, skipping"; \
+		fi; \
+	done
+	@for file in $(VENDOR_FILES); do \
+		if [ -f "$$file" ]; then \
+			echo "Checking vendor extension $$file..."; \
+			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$file', format='turtle'); print('✓ $$file parses correctly')" || exit 1; \
 		fi; \
 	done
 	@echo "All ontology files validated successfully!"
