@@ -62,7 +62,9 @@
 # https://packagegraph.github.io/ontology/core#containedIn
 # 
 # https://packagegraph.github.io/ontology/core#contains
-# 
+#
+# https://packagegraph.github.io/ontology/core#contributorOrganization
+#
 # https://packagegraph.github.io/ontology/core#debConflicts
 # 
 # https://packagegraph.github.io/ontology/core#debDepends
@@ -106,7 +108,9 @@
 # https://packagegraph.github.io/ontology/core#managedBy
 # 
 # https://packagegraph.github.io/ontology/core#manages
-# 
+#
+# https://packagegraph.github.io/ontology/core#memberOfPackageSet
+#
 # https://packagegraph.github.io/ontology/core#partOfDistribution
 # 
 # https://packagegraph.github.io/ontology/core#partOfEcosystem
@@ -171,7 +175,9 @@
 # https://packagegraph.github.io/ontology/core#installSize
 # 
 # https://packagegraph.github.io/ontology/core#isMetaPackage
-# 
+#
+# https://packagegraph.github.io/ontology/core#isVendorOriginated
+#
 # https://packagegraph.github.io/ontology/core#isaSpecificCode
 # 
 # https://packagegraph.github.io/ontology/core#maintainerSince
@@ -228,7 +234,9 @@
 # https://packagegraph.github.io/ontology/core#Package
 # 
 # https://packagegraph.github.io/ontology/core#PackageManager
-# 
+#
+# https://packagegraph.github.io/ontology/core#PackageSet
+#
 # https://packagegraph.github.io/ontology/core#PackagingActivity
 # 
 # https://packagegraph.github.io/ontology/core#PublishingActivity
@@ -253,7 +261,7 @@
   dcterms:title "Package Management Core Ontology";
   rdfs:comment "Core ontology for representing software packages and repositories across different package management systems";
   rdfs:label "Package Management Core Ontology";
-  owl:versionInfo "0.2.0" .
+  owl:versionInfo "0.3.0" .
 
 <http://purl.obolibrary.org/obo/IAO_0000115> a owl:AnnotationProperty .
 
@@ -306,6 +314,13 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a repository with the packages it hosts and makes available for distribution.";
   rdfs:comment "Links a repository to the packages it contains";
   rdfs:label "contains" .
+
+:contributorOrganization a owl:ObjectProperty;
+  rdfs:domain :Contributor;
+  rdfs:range foaf:Organization;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a contributor with the organization they are affiliated with, enabling analysis of contributor diversity and organizational representation in package maintenance.";
+  rdfs:comment "Links a contributor to their affiliated organization";
+  rdfs:label "contributor organization" .
 
 :debConflicts a owl:ObjectProperty;
   rdfs:comment "Cross-format equivalence for Debian conflicts relationships";
@@ -474,6 +489,13 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a package manager with the repositories it controls and provides access to.";
   rdfs:comment "Links a package manager to the repositories it manages";
   rdfs:label "manages" .
+
+:memberOfPackageSet a owl:ObjectProperty;
+  rdfs:domain :Package;
+  rdfs:range :PackageSet;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a named package set that it belongs to, enabling classification of packages into product-specific or distribution-specific groupings.";
+  rdfs:comment "Links a package to a package set it belongs to";
+  rdfs:label "member of package set" .
 
 :partOfDistribution a owl:ObjectProperty;
   rdfs:range :Distribution;
@@ -670,6 +692,13 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether a package serves primarily as a meta-package that groups other packages through dependencies.";
   rdfs:comment "Indicates whether this is a meta package";
   rdfs:label "is meta package" .
+
+:isVendorOriginated a owl:DatatypeProperty;
+  rdfs:domain :Package;
+  rdfs:range xsd:boolean;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether the upstream project was originated by the same organization that packages and distributes it, as opposed to being an independent community project.";
+  rdfs:comment "Whether the upstream project was created by the packaging vendor";
+  rdfs:label "is vendor originated" .
 
 :isaSpecificCode a owl:DatatypeProperty;
   rdfs:domain :Package;
@@ -872,6 +901,12 @@ _:genid7 a owl:Restriction;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A software application or system that automates the process of installing, upgrading, configuring, and removing software packages, including dependency resolution and conflict management.";
   rdfs:comment "A software tool that manages the installation, updating, and removal of packages";
   rdfs:label "Package Manager" .
+
+:PackageSet a owl:Class;
+  rdfs:subClassOf owl:Thing;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A named collection of packages within a distribution or product, used to define subsets such as base systems, application streams, or product-specific package sets.";
+  rdfs:comment "A named subset of packages within a distribution or product";
+  rdfs:label "Package Set" .
 
 :PackagingActivity a owl:Class;
   rdfs:subClassOf prov:Activity;
