@@ -4,6 +4,7 @@
 # Variables
 ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl security.ttl metrics.ttl examples.ttl
 VENDOR_FILES = redhat.ttl
+ALL_TTL_FILES = $(ONTOLOGY_FILES) $(VENDOR_FILES)
 COMBINED_FILE = x.ttl
 # Use plain python in GitHub Actions, uv run python locally
 PYTHON = $(if $(GITHUB_ACTIONS),python,uv run python)
@@ -12,7 +13,7 @@ ROBOT_JAR = $(if $(GITHUB_ACTIONS),robot.jar,robot.jar)
 WIDOCO_JAR = $(if $(GITHUB_ACTIONS),widoco.jar,widoco.jar)
 ROBOT_PATH = $(if $(GITHUB_ACTIONS),$(HOME)/robot.jar,$(ROBOT_JAR))
 WIDOCO_PATH = $(if $(GITHUB_ACTIONS),$(HOME)/widoco.jar,$(WIDOCO_JAR))
-DOCS_DIR = docs
+DOCS_DIR = _site
 DOWNLOADS_DIR = $(DOCS_DIR)/downloads
 ONTOLOGY_DOCS_DIR = $(DOCS_DIR)/ontology
 REPORTS_DIR = $(DOCS_DIR)/reports
@@ -117,14 +118,14 @@ format:
 .PHONY: docs
 docs:
 	@echo "Generating ontology documentation..."
-	@mkdir -p docs
-	@for file in $(ONTOLOGY_FILES); do \
+	@mkdir -p $(DOCS_DIR)
+	@for file in $(ALL_TTL_FILES); do \
 		if [ -f "$$file" ]; then \
 			echo "Documenting $$file..."; \
-			$(PYTHON) -c "import rdflib; from rdflib.namespace import RDF, RDFS, OWL; g = rdflib.Graph(); g.parse('$$file', format='turtle'); classes = list(g.subjects(RDF.type, OWL.Class)); properties = list(g.subjects(RDF.type, OWL.ObjectProperty)) + list(g.subjects(RDF.type, OWL.DatatypeProperty)); print(f'Classes: {len(classes)}, Properties: {len(properties)}')" > docs/$$file.stats; \
+			$(PYTHON) -c "import rdflib; from rdflib.namespace import RDF, RDFS, OWL; g = rdflib.Graph(); g.parse('$$file', format='turtle'); classes = list(g.subjects(RDF.type, OWL.Class)); properties = list(g.subjects(RDF.type, OWL.ObjectProperty)) + list(g.subjects(RDF.type, OWL.DatatypeProperty)); print(f'Classes: {len(classes)}, Properties: {len(properties)}')" > $(DOCS_DIR)/$$file.stats; \
 		fi; \
 	done
-	@echo "Documentation generated in docs/ directory"
+	@echo "Documentation generated in $(DOCS_DIR)/ directory"
 
 # Validate with external tools (if available)
 .PHONY: validate-external
@@ -193,7 +194,7 @@ setup-tools:
 validate-robot: setup-tools
 	@echo "Validating ontology files with ROBOT..."
 	@mkdir -p reports
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$ttl_file" ]; then \
 			echo "Validating $ttl_file"; \
 			java -jar $(ROBOT_PATH) report --input "$ttl_file" --output "reports/${ttl_file%.ttl}-report.tsv" || true; \
@@ -204,7 +205,7 @@ validate-robot: setup-tools
 validate-shacl: setup-tools
 	@echo "Validating ontology data with SHACL..."
 	@mkdir -p reports
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$ttl_file" ]; then \
 			echo "Validating $ttl_file with shacl.ttl"; \
 			java -jar $(ROBOT_PATH) verify --input "$ttl_file" --shacl shacl.ttl --output "reports/${ttl_file%.ttl}-shacl-report.tsv" || true; \
@@ -226,7 +227,7 @@ create-dirs:
 .PHONY: generate-formats
 generate-formats: setup-tools create-dirs
 	@echo "Converting Turtle files to other RDF formats..."
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$$ttl_file" ]; then \
 			base_name="$${ttl_file%.ttl}"; \
 			echo "Converting $$ttl_file to multiple formats..."; \
@@ -250,7 +251,7 @@ generate-formats: setup-tools create-dirs
 .PHONY: verify-files
 verify-files: generate-formats
 	@echo "Verifying generated files..."
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$$ttl_file" ]; then \
 			base_name="$${ttl_file%.ttl}"; \
 			echo "Checking files for $$base_name:"; \
@@ -284,7 +285,7 @@ generate-docs: setup-tools create-dirs
 	@if [ ! -f $(WIDOCO_PATH) ] || [ ! -s $(WIDOCO_PATH) ]; then \
 		echo "WIDOCO jar not found or empty, skipping doc generation"; \
 	else \
-		for ttl_file in $(ONTOLOGY_FILES); do \
+		for ttl_file in $(ALL_TTL_FILES); do \
 			if [ -f "$$ttl_file" ]; then \
 				base_name="$${ttl_file%.ttl}"; \
 				echo "Generating documentation for $$ttl_file..."; \
@@ -349,7 +350,7 @@ create-index: create-dirs
 		echo '        <h2>Available Ontologies</h2>'; \
 		echo '        <div class="ontology-grid">'; \
 	} > $(DOCS_DIR)/index.html
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$$ttl_file" ]; then \
 			base_name="$${ttl_file%.ttl}"; \
 			title=$$(grep -m1 "rdfs:label\|dc:title\|dct:title" "$$ttl_file" | sed 's/.*"\([^"]*\)".*/\1/' | head -1); \
@@ -461,7 +462,7 @@ create-negotiation: create-dirs
 		echo '  Content-Type: application/ld+json'; \
 	} > $(DOCS_DIR)/_headers
 	@echo "Creating content negotiation setup..."
-	@for ttl_file in $(ONTOLOGY_FILES); do \
+	@for ttl_file in $(ALL_TTL_FILES); do \
 		if [ -f "$$ttl_file" ]; then \
 			base_name="$${ttl_file%.ttl}"; \
 			mkdir -p "$(DOCS_DIR)/$$base_name"; \
@@ -601,14 +602,6 @@ help:
 	@echo "  help             - Show this help message"
 	@echo ""
 	@echo "Files processed: $(ONTOLOGY_FILES)"
-	@echo "Combined output:  $(COMBINED_FILE)"
-	@echo "Documentation:   $(DOCS_DIR)/".html page"
-	@echo "  create-negotiation - Setup content negotiation pages"
-	@echo "  serve            - Serve documentation locally at :8000"
-	@echo "  clean-deploy     - Clean all deployment files and tools"
-	@echo ""
-	@echo "  help             - Show this help message"
-	@echo ""
-	@echo "Files processed: $(ONTOLOGY_FILES)"
-	@echo "Combined output:  $(COMBINED_FILE)"
+	@echo "Vendor files:    $(VENDOR_FILES)"
+	@echo "Combined output: $(COMBINED_FILE)"
 	@echo "Documentation:   $(DOCS_DIR)/"
