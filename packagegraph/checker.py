@@ -1,3 +1,6 @@
+# Ontology validation utilities.
+# ETL collectors (debian, rpm) have moved to https://github.com/packagegraph/platform
+
 from pathlib import Path
 from rdflib import Graph
 
