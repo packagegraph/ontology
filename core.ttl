@@ -261,7 +261,7 @@
   dcterms:title "Package Management Core Ontology";
   rdfs:comment "Core ontology for representing software packages and repositories across different package management systems";
   rdfs:label "Package Management Core Ontology";
-  owl:versionInfo "0.3.0" .
+  owl:versionInfo "0.4.0" .
 
 <http://purl.obolibrary.org/obo/IAO_0000115> a owl:AnnotationProperty .
 
@@ -352,11 +352,11 @@ xsd:duration a rdfs:Datatype .
 
 :buildDependsOn a owl:ObjectProperty;
   rdfs:subPropertyOf :dependsOn;
-  rdfs:domain :Package;
+  rdfs:domain :SourcePackage;
   rdfs:range :Package;
-  rdfs:comment "Indicates a build-time dependency that is required to build the package from source but not needed at runtime.";
+  rdfs:comment "Indicates a build-time dependency that is required to build the source package but not needed at runtime.";
   rdfs:label "build depends on";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is required to compile or build another package from its source code, but is not required for the final built package to function." .
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is required to compile or build a source package from its source code, but is not required for the resulting binary packages to function." .
 
 :derivedFrom a owl:ObjectProperty;
   rdfs:domain :Distribution;
@@ -593,6 +593,76 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a package to the publishing activity that made it available";
   rdfs:label "was published by" .
 
+:builtFromSource a owl:ObjectProperty;
+  owl:inverseOf :producedBinary;
+  rdfs:domain :BinaryPackage;
+  rdfs:range :SourcePackage;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a binary package with the source package from which it was compiled, enabling grouping of related binary outputs.";
+  rdfs:comment "Links a binary package to the source package it was built from";
+  rdfs:label "built from source" .
+
+:producedBinary a owl:ObjectProperty;
+  rdfs:domain :SourcePackage;
+  rdfs:range :BinaryPackage;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with the binary packages produced by building it.";
+  rdfs:comment "Links a source package to binary packages it produces";
+  rdfs:label "produced binary" .
+
+:hasUpstreamProject a owl:ObjectProperty;
+  rdfs:domain :SourcePackage;
+  rdfs:range :UpstreamProject;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with the upstream open source project that it packages for distribution.";
+  rdfs:comment "Links a source package to the upstream project it packages";
+  rdfs:label "has upstream project" .
+
+:hasDependency a owl:ObjectProperty;
+  rdfs:domain :Package;
+  rdfs:range :Dependency;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a structured dependency that captures the target package, version constraints, and dependency type.";
+  rdfs:comment "Links a package to a reified dependency relationship with version constraints";
+  rdfs:label "has dependency" .
+
+:dependencyTarget a owl:ObjectProperty;
+  rdfs:domain :Dependency;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the specific package that satisfies a dependency, linking the reified Dependency to its target Package.";
+  rdfs:comment "The package that a dependency relationship targets";
+  rdfs:label "dependency target" .
+
+:hasRelease a owl:ObjectProperty;
+  rdfs:domain :Distribution;
+  rdfs:range :DistributionRelease;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a distribution with a specific versioned release, such as Debian 12 or Fedora 41.";
+  rdfs:comment "Links a distribution to one of its releases";
+  rdfs:label "has release" .
+
+:partOfRelease a owl:ObjectProperty;
+  rdfs:range :DistributionRelease;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages, repositories, or other components with a specific versioned release of a distribution.";
+  rdfs:comment "Links packages or repositories to a specific distribution release";
+  rdfs:label "part of release" .
+
+:hasAccount a owl:ObjectProperty;
+  rdfs:domain :Contributor;
+  rdfs:range :ContributorAccount;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a contributor with an account or identity on a specific platform such as GitHub, Debian, or Fedora, enabling cross-platform contributor identification.";
+  rdfs:comment "Links a contributor to an identity on a specific platform";
+  rdfs:label "has account" .
+
+:installsFile a owl:ObjectProperty;
+  rdfs:domain :BinaryPackage;
+  rdfs:range :InstalledFile;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a binary package with a file it installs on the target filesystem.";
+  rdfs:comment "Links a binary package to a file it installs on the system";
+  rdfs:label "installs file" .
+
+:supportedArchitecture a owl:ObjectProperty;
+  rdfs:domain :SourcePackage;
+  rdfs:range :Architecture;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with an architecture it declares support for building, as declared in the source package control file.";
+  rdfs:comment "An architecture that the source package can be built for";
+  rdfs:label "supported architecture" .
+
 :activeContributor a owl:DatatypeProperty;
   rdfs:domain :Contributor;
   rdfs:range xsd:boolean;
@@ -728,12 +798,8 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "The size of the package file";
   rdfs:label "package size" .
 
-:upstreamProject a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the upstream software project that this package is based on, enabling cross-distribution analysis of the same upstream software.";
-  rdfs:comment "The upstream project name this package is based on";
-  rdfs:label "upstream project" .
+## upstreamProject DatatypeProperty removed in 0.4.0
+## Superseded by hasUpstreamProject ObjectProperty (Package → UpstreamProject)
 
 :versionConstraintOperator a owl:DatatypeProperty;
   rdfs:domain :Dependency;
@@ -776,6 +842,83 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "The revision of the package, often indicating a minor packaging update or a source control revision.";
   rdfs:label "revision";
   <http://purl.obolibrary.org/obo/IAO_0000115> "A version component that specifies a minor update or packaging-specific revision." .
+
+:dependencyType a owl:DatatypeProperty;
+  rdfs:domain :Dependency;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Classifies the nature of a dependency relationship, such as runtime, build-time, recommended, suggested, or conflicting.";
+  rdfs:comment "The type of dependency relationship (runtime, build, recommends, suggests, conflicts)";
+  rdfs:label "dependency type" .
+
+:releaseVersion a owl:DatatypeProperty;
+  rdfs:domain :DistributionRelease;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The version identifier of a distribution release, such as '12' for Debian 12 or '41' for Fedora 41.";
+  rdfs:comment "The version number of the distribution release";
+  rdfs:label "release version" .
+
+:releaseCodename a owl:DatatypeProperty;
+  rdfs:domain :DistributionRelease;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The informal name or codename of a distribution release, such as 'bookworm' for Debian 12 or 'noble' for Ubuntu 24.04.";
+  rdfs:comment "The codename of the distribution release";
+  rdfs:label "release codename" .
+
+:releaseDate a owl:DatatypeProperty;
+  rdfs:domain :DistributionRelease;
+  rdfs:range xsd:date;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The date when a distribution release was officially published or made available.";
+  rdfs:comment "The date the distribution release was published";
+  rdfs:label "release date" .
+
+:endOfLifeDate a owl:DatatypeProperty;
+  rdfs:domain :DistributionRelease;
+  rdfs:range xsd:date;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The date when a distribution release ceases to receive security updates and support.";
+  rdfs:comment "The date when the distribution release reaches end of life";
+  rdfs:label "end of life date" .
+
+:accountPlatform a owl:DatatypeProperty;
+  rdfs:domain :ContributorAccount;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the platform or service where a contributor account is registered, such as GitHub, Debian, Fedora, or GitLab.";
+  rdfs:comment "The platform or service where the account exists";
+  rdfs:label "account platform" .
+
+:accountUsername a owl:DatatypeProperty;
+  rdfs:domain :ContributorAccount;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The username, login, or unique identifier of a contributor on a specific platform.";
+  rdfs:comment "The username or identifier on the platform";
+  rdfs:label "account username" .
+
+:accountUrl a owl:DatatypeProperty;
+  rdfs:domain :ContributorAccount;
+  rdfs:range xsd:anyURI;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The web URL of a contributor's profile page on a specific platform.";
+  rdfs:comment "The URL of the contributor's profile on the platform";
+  rdfs:label "account URL" .
+
+:installedFilePath a owl:DatatypeProperty;
+  rdfs:domain :InstalledFile;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The absolute filesystem path where a file is installed on the target system, such as /usr/bin/gcc or /usr/lib/libssl.so.3.";
+  rdfs:comment "The filesystem path where the file is installed";
+  rdfs:label "installed file path" .
+
+:projectName a owl:DatatypeProperty;
+  rdfs:domain :UpstreamProject;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical or commonly used name of an upstream open source project, such as 'openssl' or 'gcc'.";
+  rdfs:comment "The canonical name of the upstream project";
+  rdfs:label "project name" .
+
+:projectUrl a owl:DatatypeProperty;
+  rdfs:domain :UpstreamProject;
+  rdfs:range xsd:anyURI;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The primary website or homepage URL for an upstream open source project.";
+  rdfs:comment "The primary URL for the upstream project";
+  rdfs:label "project URL" .
 
 :ABI a owl:Class;
   rdfs:subClassOf owl:Thing;
@@ -957,3 +1100,47 @@ _:genid9 a owl:Restriction;
   <http://purl.obolibrary.org/obo/IAO_0000115> "An abstract package name that represents a functionality or interface that can be satisfied by multiple concrete package implementations.";
   rdfs:comment "A package name that represents a capability provided by one or more real packages";
   rdfs:label "Virtual Package" .
+
+:SourcePackage a owl:Class;
+  rdfs:subClassOf :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A source package containing the original source code, build scripts, and packaging metadata required to produce one or more binary packages for distribution.";
+  rdfs:comment "A package containing source code that can be built into one or more binary packages";
+  rdfs:label "Source Package" .
+
+:BinaryPackage a owl:Class;
+  rdfs:subClassOf :Package, _:genid10;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A binary package containing compiled executables, libraries, or architecture-independent files, ready for installation on a target system.";
+  rdfs:comment "A compiled, installable package produced from a source package";
+  rdfs:label "Binary Package" .
+
+_:genid10 a owl:Restriction;
+  owl:cardinality "1"^^xsd:nonNegativeInteger;
+  owl:onProperty :builtFromSource .
+
+:UpstreamProject a owl:Class;
+  rdfs:subClassOf owl:Thing, _:genid11;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "An upstream software project that serves as the origin for packages across multiple distributions, enabling cross-distribution analysis through a shared identity.";
+  rdfs:comment "An upstream open source project that is packaged by one or more distributions";
+  rdfs:label "Upstream Project" .
+
+_:genid11 a owl:Restriction;
+  owl:cardinality "1"^^xsd:nonNegativeInteger;
+  owl:onProperty :projectName .
+
+:DistributionRelease a owl:Class;
+  rdfs:subClassOf owl:Thing;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A specific versioned release of a Linux distribution, such as Debian 12 (bookworm) or Fedora 41, containing a defined set of packages.";
+  rdfs:comment "A specific versioned release of a distribution";
+  rdfs:label "Distribution Release" .
+
+:ContributorAccount a owl:Class;
+  rdfs:subClassOf owl:Thing;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A platform-specific identity for a contributor, such as a GitHub username, Debian maintainer email, or Fedora Account System login, enabling cross-platform contributor identification.";
+  rdfs:comment "An identity or account for a contributor on a specific platform";
+  rdfs:label "Contributor Account" .
+
+:InstalledFile a owl:Class;
+  rdfs:subClassOf owl:Thing;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A file that is installed on the target filesystem when a binary package is installed, including executables, libraries, configuration files, and documentation.";
+  rdfs:comment "A file installed on the system by a binary package";
+  rdfs:label "Installed File" .

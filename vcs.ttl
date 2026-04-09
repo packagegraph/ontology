@@ -23,12 +23,12 @@
     dcterms:title "Version Control System Ontology" ;
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> .
 
 # VCS Classes
 vcs:Repository a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
+    rdfs:subClassOf owl:Thing ;
     rdfs:label "Source Code Repository" ;
     rdfs:comment "A version control repository containing source code" ;
     IAO:0000115 "A version control repository that stores and tracks changes to source code and related project files over time." .
@@ -396,9 +396,9 @@ vcs:correspondingPackageVersion a owl:ObjectProperty ;
 
 vcs:hasUpstreamRepository a owl:ObjectProperty ;
     rdfs:label "has upstream repository" ;
-    rdfs:comment "Links a package to its upstream source repository" ;
+    rdfs:comment "Links an upstream project or package to its source repository" ;
     rdfs:range vcs:Repository ;
-    IAO:0000115 "Associates a package with the upstream version control repository where its source code is maintained." .
+    IAO:0000115 "Associates an upstream project or package with the version control repository where its source code is maintained." .
 
 vcs:packagedFromTag a owl:ObjectProperty ;
     rdfs:label "packaged from tag" ;

@@ -22,7 +22,7 @@
     dcterms:title "Arch Linux Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Arch Linux packages, PKGBUILD files, AUR packages, and Pacman repositories including build dependencies, split packages, and package groups." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Arch-specific Classes
@@ -33,7 +33,7 @@ arch:ArchPackage a owl:Class ;
     IAO:0000115 "A compiled software package in Arch Linux format (.pkg.tar.xz or .pkg.tar.zst) that can be installed using the pacman package manager." .
 
 arch:PKGBUILD a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
+    rdfs:subClassOf pkg:SourcePackage ;
     rdfs:label "PKGBUILD" ;
     rdfs:comment "A PKGBUILD file containing package build instructions" ;
     IAO:0000115 "A shell script containing build instructions and metadata for creating an Arch Linux package, following the PKGBUILD format specification." .

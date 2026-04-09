@@ -19,7 +19,7 @@
     dcterms:title "Package Metrics Ontology" ;
     dcterms:description "A comprehensive ontology for modeling programming languages, code analysis metrics, and per-language breakdowns including lines of code, complexity measures, and language characteristics." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> .
 
 

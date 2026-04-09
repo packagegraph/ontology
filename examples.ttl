@@ -28,7 +28,7 @@
   dc:title "Package Graph Examples Ontology" ;
   dc:description "Example package instances demonstrating how to represent real packages using the Package Graph ontologies across different package management systems including Debian, RPM, Arch Linux, BSD Ports, Chocolatey, Homebrew, and Nix." ;
   dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-  owl:versionInfo "0.3.0" ;
+  owl:versionInfo "0.4.0" ;
   dct:created "2025-09-05"^^xsd:date ;
   dct:creator "Package Management Ontology Project" .
 

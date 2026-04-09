@@ -19,7 +19,7 @@
     dcterms:title "Package Security Ontology" ;
     dcterms:description "A comprehensive ontology for modeling security vulnerabilities (CVEs), vendor security advisories (RHSA, DSA, GLSA), severity scoring, and their relationships to affected and fixed package versions." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> .
 
 

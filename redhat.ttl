@@ -20,7 +20,7 @@
     dcterms:title "Red Hat Vendor Extension Ontology" ;
     dcterms:description "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> , <rpm.ttl> .
 
 

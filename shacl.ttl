@@ -11,7 +11,8 @@
 <https://packagegraph.github.io/ontology/shacl#>
   a owl:Ontology ;
   rdfs:label "SHACL shapes for the PackageGraph Ontology" ;
-  rdfs:comment "Provides data validation rules for the PackageGraph ontology suite." .
+  rdfs:comment "Provides data validation rules for the PackageGraph ontology suite." ;
+  owl:versionInfo "0.4.0" .
 
 # Shape for core:Package
 pkg:PackageShape
@@ -151,4 +152,75 @@ pkg:PackageSetShape
     sh:minCount 1 ;
     sh:datatype xsd:string ;
     sh:message "A package set must have at least one label."
+  ] .
+
+# Shape for core:SourcePackage
+pkg:SourcePackageShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:SourcePackage .
+
+# Shape for core:BinaryPackage
+pkg:BinaryPackageShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:BinaryPackage ;
+  sh:property [
+    sh:path pkg:builtFromSource ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class pkg:SourcePackage ;
+    sh:message "A binary package must be built from exactly one source package."
+  ] .
+
+# Shape for core:UpstreamProject
+pkg:UpstreamProjectShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:UpstreamProject ;
+  sh:property [
+    sh:path pkg:projectName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An upstream project must have exactly one project name."
+  ] .
+
+# Shape for core:DistributionRelease
+pkg:DistributionReleaseShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:DistributionRelease ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A distribution release must have at least one label."
+  ] .
+
+# Shape for core:ContributorAccount
+pkg:ContributorAccountShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:ContributorAccount ;
+  sh:property [
+    sh:path pkg:accountPlatform ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A contributor account must have exactly one platform."
+  ] ;
+  sh:property [
+    sh:path pkg:accountUsername ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A contributor account must have exactly one username."
+  ] .
+
+# Shape for core:InstalledFile
+pkg:InstalledFileShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:InstalledFile ;
+  sh:property [
+    sh:path pkg:installedFilePath ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An installed file must have exactly one file path."
   ] .

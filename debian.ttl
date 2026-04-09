@@ -24,7 +24,7 @@
     dcterms:title "Debian Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Debian packages, APT repositories, package dependencies, and Debian-specific metadata including suites, components, sections, and priorities." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Debian-specific Classes
@@ -35,13 +35,13 @@ deb:DebianPackage a owl:Class ;
     IAO:0000115 "A software package in Debian format (.deb) that can be managed by the Debian package management system including APT and dpkg." .
 
 deb:SourcePackage a owl:Class ;
-    rdfs:subClassOf deb:DebianPackage ;
+    rdfs:subClassOf deb:DebianPackage, pkg:SourcePackage ;
     rdfs:label "Source Package" ;
     rdfs:comment "A Debian source package containing source code and build instructions" ;
     IAO:0000115 "A Debian package containing source code, patches, and build instructions (debian/ directory) used to create one or more binary packages." .
 
 deb:BinaryPackage a owl:Class ;
-    rdfs:subClassOf deb:DebianPackage ;
+    rdfs:subClassOf deb:DebianPackage, pkg:BinaryPackage ;
     rdfs:label "Binary Package" ;
     rdfs:comment "A Debian binary package containing compiled software" ;
     IAO:0000115 "A compiled Debian package in .deb format containing executable binaries, libraries, configuration files, and metadata that can be installed using APT or dpkg." .

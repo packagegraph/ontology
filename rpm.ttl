@@ -24,7 +24,7 @@
     dcterms:title "RPM Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling RPM packages, YUM/DNF repositories, NEVR identifiers, and RPM-specific metadata including build information, changelogs, and file attributes." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.3.0" ;
+    owl:versionInfo "0.4.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # RPM-specific Classes
@@ -35,13 +35,13 @@ rpm:RPMPackage a owl:Class ;
     IAO:0000115 "A software package in Red Hat Package Manager (RPM) format that can be managed by RPM-based package managers like YUM, DNF, or Zypper." .
 
 rpm:SourceRPM a owl:Class ;
-    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:subClassOf rpm:RPMPackage, pkg:SourcePackage ;
     rdfs:label "Source RPM" ;
     rdfs:comment "An RPM source package (SRPM) containing source code and spec file" ;
     IAO:0000115 "An RPM source package containing source code, patches, and a spec file with build instructions used to create one or more binary RPM packages." .
 
 rpm:BinaryRPM a owl:Class ;
-    rdfs:subClassOf rpm:RPMPackage ;
+    rdfs:subClassOf rpm:RPMPackage, pkg:BinaryPackage ;
     rdfs:label "Binary RPM" ;
     rdfs:comment "A binary RPM package containing compiled software" ;
     IAO:0000115 "A compiled RPM package containing executable binaries, libraries, configuration files, and metadata that can be installed using YUM, DNF, or rpm command." .
