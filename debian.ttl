@@ -19,12 +19,13 @@
 <https://packagegraph.github.io/ontology/debian#> a owl:Ontology ;
     rdfs:label "Debian Package Ontology" ;
     rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories" ;
+    dcterms:abstract "The Debian extension specializes PackageGraph Core for the Debian and Ubuntu ecosystem. It adds classes for suites (stable, testing, unstable), components (main, contrib, non-free), sections, and priorities, and models Debian-specific dependency types (Depends, Pre-Depends, Recommends, Suggests, Conflicts, Breaks, Enhances, Provides). Instances are dual-typed as both pkg:BinaryPackage and deb:BinaryPackage for cross-distribution interoperability." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Debian Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Debian packages, APT repositories, package dependencies, and Debian-specific metadata including suites, components, sections, and priorities." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Debian-specific Classes

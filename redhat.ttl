@@ -15,12 +15,13 @@
 <https://packagegraph.github.io/ontology/redhat#> a owl:Ontology ;
     rdfs:label "Red Hat Vendor Extension Ontology" ;
     rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications" ;
+    dcterms:abstract "The Red Hat vendor extension adds RHEL and RHIVOS package set classifications to RPM packages. It models the Application Compatibility Guide (AppCompat) lifecycle tiers, enabling queries that distinguish between packages in the BaseOS, AppStream, and optional repositories, and their support lifecycle status." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Red Hat Vendor Extension Ontology" ;
     dcterms:description "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> , <rpm.ttl> .
 
 

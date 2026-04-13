@@ -17,12 +17,13 @@
 <https://packagegraph.github.io/ontology/archlinux#> a owl:Ontology ;
     rdfs:label "Arch Linux Package Ontology" ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
+    dcterms:abstract "The Arch Linux extension models Pacman packages, PKGBUILD build scripts, split packages, package groups, and the Arch User Repository (AUR). It captures Arch-specific metadata such as build options, checksums, packager signatures, and repository tiers (core, extra, multilib)." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Arch Linux Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Arch Linux packages, PKGBUILD files, AUR packages, and Pacman repositories including build dependencies, split packages, and package groups." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Arch-specific Classes

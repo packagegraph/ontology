@@ -18,12 +18,13 @@
 <https://packagegraph.github.io/ontology/vcs#> a owl:Ontology ;
     rdfs:label "Version Control System Ontology" ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata" ;
+    dcterms:abstract "The VCS ontology extends PackageGraph Core to link packages to their upstream source code repositories. It models Git repositories, commits, branches, and tags, enabling queries that trace a binary package back through its source package to the upstream project repository, commit history, and contributors." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
     dcterms:title "Version Control System Ontology" ;
     dcterms:description "A comprehensive ontology for modeling version control systems, source code repositories, commits, branches, tags, and related metadata including file changes, authorship, and repository hosting platforms." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> .
 
 # VCS Classes

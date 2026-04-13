@@ -18,12 +18,13 @@
 <https://packagegraph.github.io/ontology/bsd#> a owl:Ontology ;
     rdfs:label "BSD Ports Package Ontology" ;
     rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)" ;
+    dcterms:abstract "The BSD extension models the FreeBSD, OpenBSD, and NetBSD ports systems. It captures ports tree structure, Makefile build configuration, distinfo checksums, build options, flavors, and categories. Port dependencies, master sites, and patch metadata are represented to support cross-BSD and BSD-to-Linux package comparisons." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "BSD Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling BSD packages, ports systems, package databases, and BSD-specific metadata including origins, flavors, and port dependencies." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> .
 
 # BSD-specific Classes

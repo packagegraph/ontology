@@ -19,12 +19,13 @@
 <https://packagegraph.github.io/ontology/chocolatey#> a owl:Ontology ;
     rdfs:label "Chocolatey Package Ontology" ;
     rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows" ;
+    dcterms:abstract "The Chocolatey extension models Windows package management through Chocolatey and NuGet. It captures NuSpec metadata, PowerShell install/uninstall scripts, installer types (MSI, EXE, InnoSetup), registry keys, and shim generation, enabling cross-platform package comparisons between Windows and Linux ecosystems." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Chocolatey Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Chocolatey packages, NuGet packages, PowerShell scripts, and Windows software management including installation scripts, dependencies, and package metadata." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> .
 
 # Chocolatey-specific Classes

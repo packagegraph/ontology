@@ -7,12 +7,19 @@
 @prefix sec:   <https://packagegraph.github.io/ontology/security#> .
 @prefix met:   <https://packagegraph.github.io/ontology/metrics#> .
 @prefix rpm:   <https://packagegraph.github.io/ontology/rpm#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
 <https://packagegraph.github.io/ontology/shacl#>
   a owl:Ontology ;
-  rdfs:label "SHACL shapes for the PackageGraph Ontology" ;
+  rdfs:label "PackageGraph SHACL Validation Shapes" ;
   rdfs:comment "Provides data validation rules for the PackageGraph ontology suite." ;
-  owl:versionInfo "0.4.0" .
+  dcterms:abstract "SHACL (Shapes Constraint Language) shapes for validating PackageGraph RDF data. These shapes enforce required properties, cardinality constraints, and value types on package, version, dependency, and maintainer instances, catching data quality issues before they reach the SPARQL endpoint." ;
+  dcterms:created "2025-09-05"^^xsd:date ;
+  dcterms:creator "Package Management Ontology Project" ;
+  dcterms:title "PackageGraph SHACL Validation Shapes" ;
+  dcterms:description "SHACL shapes for validating data conformance to the PackageGraph ontology, including required property checks, cardinality constraints, and datatype validation." ;
+  dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+  owl:versionInfo "0.5.0" .
 
 # Shape for core:Package
 pkg:PackageShape

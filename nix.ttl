@@ -18,12 +18,13 @@
 <https://packagegraph.github.io/ontology/nix#> a owl:Ontology ;
     rdfs:label "Nix Package Ontology" ;
     rdfs:comment "Ontology for representing Nix packages, derivations, and expressions" ;
+    dcterms:abstract "The Nix extension models the purely functional Nix package management ecosystem. It captures Nix derivations, store paths, flakes, build phases (configure, build, install, check), and language-specific builders (stdenv.mkDerivation, buildPythonPackage, buildGoModule). The ontology represents Nix's content-addressable store and reproducible build model." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
     dcterms:title "Nix Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Nix packages, derivations, expressions, flakes, and the Nix package management ecosystem including store paths, build phases, and language-specific builders." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> .
 
 # Nix-specific Classes

@@ -14,12 +14,13 @@
 <https://packagegraph.github.io/ontology/metrics#> a owl:Ontology ;
     rdfs:label "Package Metrics Ontology" ;
     rdfs:comment "Ontology for representing programming languages, code metrics, and per-language analysis breakdowns for software packages" ;
+    dcterms:abstract "The Metrics ontology captures quantitative code analysis data for packages, including lines of code, cyclomatic complexity, and per-language breakdowns. It enables queries that correlate package size and complexity with dependency counts, maintainer activity, or vulnerability exposure across distributions." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
     dcterms:title "Package Metrics Ontology" ;
     dcterms:description "A comprehensive ontology for modeling programming languages, code analysis metrics, and per-language breakdowns including lines of code, complexity measures, and language characteristics." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.4.0" ;
+    owl:versionInfo "0.5.0" ;
     owl:imports <core.ttl> .
 
 
