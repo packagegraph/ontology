@@ -62,7 +62,7 @@ ex:maintainer-fedora a pkg:Maintainer ;
 ################################################################
 
 # glibc (Debian packaging repo on Salsa; upstream on Sourceware)
-ex:glibc-deb a deb:BinaryPackage ;
+ex:glibc-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:packageName "libc6" ;
   pkg:hasVersion ex:glibc-deb-version ;
   pkg:description "GNU C Library (Debian binary package: libc6)" ;
@@ -86,7 +86,7 @@ ex:glibc-deb-maintainer a pkg:Maintainer ;
   foaf:mbox <mailto:debian-glibc@lists.debian.org> .
 
 # wget (Debian packaging on Salsa)
-ex:wget-deb a deb:BinaryPackage ;
+ex:wget-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:packageName "wget" ;
   pkg:hasVersion ex:wget-deb-version ;
   pkg:description "Internet file retriever - Debian binary package" ;
@@ -105,7 +105,7 @@ ex:wget-deb-maintainer a pkg:Maintainer ;
     foaf:mbox <mailto:ntorres@debian.org> .
 
 # git (Debian packaging on Salsa)
-ex:git-deb a deb:BinaryPackage ;
+ex:git-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:packageName "git" ;
   pkg:hasVersion ex:git-deb-version ;
   pkg:description "Fast, scalable, distributed revision control system - Debian binary package" ;
@@ -123,7 +123,7 @@ ex:git-deb-version a pkg:Version ;
 ################################################################
 
 # glibc (RPM packaging in dist-git; upstream Sourceware)
-ex:glibc-rpm a rpm:BinaryRPM ;
+ex:glibc-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:packageName "glibc" ;
   pkg:hasVersion ex:glibc-rpm-version ;
   pkg:description "GNU C Library - standard C library (RPM package)" ;
@@ -142,7 +142,7 @@ ex:glibc-rpm-version a pkg:Version ;
     pkg:versionString "2.34-28.fc35" .
 
 # wget (RPM packaging in dist-git)
-ex:wget-rpm a rpm:BinaryRPM ;
+ex:wget-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:packageName "wget" ;
   pkg:hasVersion ex:wget-rpm-version ;
   pkg:description "Internet file retriever utility (RPM package)" ;
@@ -156,7 +156,7 @@ ex:wget-rpm-version a pkg:Version ;
     pkg:versionString "1.21.1-3.fc35" .
 
 # bash (RPM packaging in dist-git)
-ex:bash-rpm a rpm:BinaryRPM ;
+ex:bash-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:packageName "bash" ;
   pkg:hasVersion ex:bash-rpm-version ;
   pkg:description "GNU Bourne Again Shell (RPM package)" ;
@@ -484,7 +484,7 @@ ex:glibc-rpm pkg:memberOfPackageSet rh:RHELBaseOS ;
   pkg:isVendorOriginated false .
 
 # insights-client IS vendor-originated (Red Hat project)
-ex:insights-client-rpm a rpm:BinaryRPM ;
+ex:insights-client-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:packageName "insights-client" ;
   pkg:hasVersion ex:insights-client-version ;
   pkg:description "Red Hat Insights client for system analysis and recommendations" ;
