@@ -20,7 +20,7 @@ ONTOLOGY_MODULES = [
     ("debian", "debian.ttl"),
     ("rpm", "rpm.ttl"),
     ("archlinux", "arch.ttl"),
-    ("bsd", "bsd.ttl"),
+    ("freebsd", "freebsd.ttl"),
     ("chocolatey", "chocolatey.ttl"),
     ("homebrew", "homebrew.ttl"),
     ("nix", "nix.ttl"),

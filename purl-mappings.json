@@ -1,0 +1,24 @@
+{
+  "purl_domain": "/packagegraph",
+  "purl_base": "https://purl.org/packagegraph",
+  "target_base": "https://packagegraph.github.io/ontology/downloads",
+  "generated": "2026-04-14T04:10:01Z",
+  "mappings": [
+    {"purl_path":"/packagegraph","purl_url":"https://purl.org/packagegraph","target_url":"https://packagegraph.github.io/ontology/","namespace_uri":null,"ttl_file":null,"type":"302"},
+    {"purl_path":"/packagegraph/ontology/archlinux","purl_url":"https://purl.org/packagegraph/ontology/archlinux","target_url":"https://packagegraph.github.io/ontology/downloads/arch.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/archlinux#","ttl_file":"arch.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/chocolatey","purl_url":"https://purl.org/packagegraph/ontology/chocolatey","target_url":"https://packagegraph.github.io/ontology/downloads/chocolatey.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/chocolatey#","ttl_file":"chocolatey.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/core","purl_url":"https://purl.org/packagegraph/ontology/core","target_url":"https://packagegraph.github.io/ontology/downloads/core.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/core#","ttl_file":"core.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/debian","purl_url":"https://purl.org/packagegraph/ontology/debian","target_url":"https://packagegraph.github.io/ontology/downloads/debian.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/debian#","ttl_file":"debian.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/examples","purl_url":"https://purl.org/packagegraph/ontology/examples","target_url":"https://packagegraph.github.io/ontology/downloads/examples.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/examples#","ttl_file":"examples.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/freebsd","purl_url":"https://purl.org/packagegraph/ontology/freebsd","target_url":"https://packagegraph.github.io/ontology/downloads/freebsd.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/freebsd#","ttl_file":"freebsd.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/homebrew","purl_url":"https://purl.org/packagegraph/ontology/homebrew","target_url":"https://packagegraph.github.io/ontology/downloads/homebrew.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/homebrew#","ttl_file":"homebrew.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/metrics","purl_url":"https://purl.org/packagegraph/ontology/metrics","target_url":"https://packagegraph.github.io/ontology/downloads/metrics.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/metrics#","ttl_file":"metrics.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/nix","purl_url":"https://purl.org/packagegraph/ontology/nix","target_url":"https://packagegraph.github.io/ontology/downloads/nix.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/nix#","ttl_file":"nix.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/redhat","purl_url":"https://purl.org/packagegraph/ontology/redhat","target_url":"https://packagegraph.github.io/ontology/downloads/redhat.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/redhat#","ttl_file":"redhat.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/rpm","purl_url":"https://purl.org/packagegraph/ontology/rpm","target_url":"https://packagegraph.github.io/ontology/downloads/rpm.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/rpm#","ttl_file":"rpm.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/security","purl_url":"https://purl.org/packagegraph/ontology/security","target_url":"https://packagegraph.github.io/ontology/downloads/security.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/security#","ttl_file":"security.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/shacl","purl_url":"https://purl.org/packagegraph/ontology/shacl","target_url":"https://packagegraph.github.io/ontology/downloads/shacl.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/shacl#","ttl_file":"shacl.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/slsa","purl_url":"https://purl.org/packagegraph/ontology/slsa","target_url":"https://packagegraph.github.io/ontology/downloads/slsa.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/slsa#","ttl_file":"slsa.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/vcs","purl_url":"https://purl.org/packagegraph/ontology/vcs","target_url":"https://packagegraph.github.io/ontology/downloads/vcs.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/vcs#","ttl_file":"vcs.ttl","type":"302"}
+  ]
+}
