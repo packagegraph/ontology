@@ -1,4 +1,4 @@
-@prefix : <https://packagegraph.github.io/ontology/core#> .
+@prefix : <https://purl.org/packagegraph/ontology/core#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -53,91 +53,91 @@
 # #################################################################
 # 
 # 
-# https://packagegraph.github.io/ontology/core#archConflicts
+# https://purl.org/packagegraph/ontology/core#archConflicts
 # 
-# https://packagegraph.github.io/ontology/core#archDepends
+# https://purl.org/packagegraph/ontology/core#archDepends
 # 
-# https://packagegraph.github.io/ontology/core#conflicts
+# https://purl.org/packagegraph/ontology/core#conflicts
 # 
-# https://packagegraph.github.io/ontology/core#containedIn
+# https://purl.org/packagegraph/ontology/core#containedIn
 # 
-# https://packagegraph.github.io/ontology/core#contains
+# https://purl.org/packagegraph/ontology/core#contains
 #
-# https://packagegraph.github.io/ontology/core#contributorOrganization
+# https://purl.org/packagegraph/ontology/core#contributorOrganization
 #
-# https://packagegraph.github.io/ontology/core#debConflicts
+# https://purl.org/packagegraph/ontology/core#debConflicts
 # 
-# https://packagegraph.github.io/ontology/core#debDepends
+# https://purl.org/packagegraph/ontology/core#debDepends
 # 
-# https://packagegraph.github.io/ontology/core#debProvides
+# https://purl.org/packagegraph/ontology/core#debProvides
 # 
-# https://packagegraph.github.io/ontology/core#dependsOn
+# https://purl.org/packagegraph/ontology/core#dependsOn
 # 
-# https://packagegraph.github.io/ontology/core#derivedFrom
+# https://purl.org/packagegraph/ontology/core#derivedFrom
 # 
-# https://packagegraph.github.io/ontology/core#directlyConflictsWith
+# https://purl.org/packagegraph/ontology/core#directlyConflictsWith
 # 
-# https://packagegraph.github.io/ontology/core#directlyDependsOn
+# https://purl.org/packagegraph/ontology/core#directlyDependsOn
 # 
-# https://packagegraph.github.io/ontology/core#directlyProvides
+# https://purl.org/packagegraph/ontology/core#directlyProvides
 # 
-# https://packagegraph.github.io/ontology/core#equivalentInDistribution
+# https://purl.org/packagegraph/ontology/core#equivalentInDistribution
 # 
-# https://packagegraph.github.io/ontology/core#hasABI
+# https://purl.org/packagegraph/ontology/core#hasABI
 # 
-# https://packagegraph.github.io/ontology/core#hasISA
+# https://purl.org/packagegraph/ontology/core#hasISA
 # 
-# https://packagegraph.github.io/ontology/core#hasLicense
+# https://purl.org/packagegraph/ontology/core#hasLicense
 # 
-# https://packagegraph.github.io/ontology/core#hasMaintainerRole
+# https://purl.org/packagegraph/ontology/core#hasMaintainerRole
 # 
-# https://packagegraph.github.io/ontology/core#hasVersion
+# https://purl.org/packagegraph/ontology/core#hasVersion
 # 
-# https://packagegraph.github.io/ontology/core#hasVersionConstraint
+# https://purl.org/packagegraph/ontology/core#hasVersionConstraint
 # 
-# https://packagegraph.github.io/ontology/core#isConflictWith
+# https://purl.org/packagegraph/ontology/core#isConflictWith
 # 
-# https://packagegraph.github.io/ontology/core#isDependencyOf
+# https://purl.org/packagegraph/ontology/core#isDependencyOf
 # 
-# https://packagegraph.github.io/ontology/core#isProvidedBy
+# https://purl.org/packagegraph/ontology/core#isProvidedBy
 # 
-# https://packagegraph.github.io/ontology/core#isReplacedBy
+# https://purl.org/packagegraph/ontology/core#isReplacedBy
 # 
-# https://packagegraph.github.io/ontology/core#maintainedBy
+# https://purl.org/packagegraph/ontology/core#maintainedBy
 # 
-# https://packagegraph.github.io/ontology/core#managedBy
+# https://purl.org/packagegraph/ontology/core#managedBy
 # 
-# https://packagegraph.github.io/ontology/core#manages
+# https://purl.org/packagegraph/ontology/core#manages
 #
-# https://packagegraph.github.io/ontology/core#memberOfPackageSet
+# https://purl.org/packagegraph/ontology/core#memberOfPackageSet
 #
-# https://packagegraph.github.io/ontology/core#partOfDistribution
+# https://purl.org/packagegraph/ontology/core#partOfDistribution
 # 
-# https://packagegraph.github.io/ontology/core#partOfEcosystem
+# https://purl.org/packagegraph/ontology/core#partOfEcosystem
 # 
-# https://packagegraph.github.io/ontology/core#provides
+# https://purl.org/packagegraph/ontology/core#provides
 # 
-# https://packagegraph.github.io/ontology/core#replaces
+# https://purl.org/packagegraph/ontology/core#replaces
 # 
-# https://packagegraph.github.io/ontology/core#rpmConflicts
+# https://purl.org/packagegraph/ontology/core#rpmConflicts
 # 
-# https://packagegraph.github.io/ontology/core#rpmProvides
+# https://purl.org/packagegraph/ontology/core#rpmProvides
 # 
-# https://packagegraph.github.io/ontology/core#rpmRequires
+# https://purl.org/packagegraph/ontology/core#rpmRequires
 # 
-# https://packagegraph.github.io/ontology/core#targetArchitecture
+# https://purl.org/packagegraph/ontology/core#targetArchitecture
 # 
-# https://packagegraph.github.io/ontology/core#testedBy
+# https://purl.org/packagegraph/ontology/core#testedBy
 # 
-# https://packagegraph.github.io/ontology/core#usedDependency
+# https://purl.org/packagegraph/ontology/core#usedDependency
 # 
-# https://packagegraph.github.io/ontology/core#usedSource
+# https://purl.org/packagegraph/ontology/core#usedSource
 # 
-# https://packagegraph.github.io/ontology/core#wasBuiltBy
+# https://purl.org/packagegraph/ontology/core#wasBuiltBy
 # 
-# https://packagegraph.github.io/ontology/core#wasPackagedBy
+# https://purl.org/packagegraph/ontology/core#wasPackagedBy
 # 
-# https://packagegraph.github.io/ontology/core#wasPublishedBy
+# https://purl.org/packagegraph/ontology/core#wasPublishedBy
 # 
 # 
 # 
@@ -148,51 +148,51 @@
 # #################################################################
 # 
 # 
-# https://packagegraph.github.io/ontology/core#activeContributor
+# https://purl.org/packagegraph/ontology/core#activeContributor
 # 
-# https://packagegraph.github.io/ontology/core#activityDuration
+# https://purl.org/packagegraph/ontology/core#activityDuration
 # 
-# https://packagegraph.github.io/ontology/core#activityEndTime
+# https://purl.org/packagegraph/ontology/core#activityEndTime
 # 
-# https://packagegraph.github.io/ontology/core#activityLogOutput
+# https://purl.org/packagegraph/ontology/core#activityLogOutput
 # 
-# https://packagegraph.github.io/ontology/core#activityStartTime
+# https://purl.org/packagegraph/ontology/core#activityStartTime
 # 
-# https://packagegraph.github.io/ontology/core#checksum
+# https://purl.org/packagegraph/ontology/core#checksum
 # 
-# https://packagegraph.github.io/ontology/core#checksumType
+# https://purl.org/packagegraph/ontology/core#checksumType
 # 
-# https://packagegraph.github.io/ontology/core#dependencyWeight
+# https://purl.org/packagegraph/ontology/core#dependencyWeight
 # 
-# https://packagegraph.github.io/ontology/core#description
+# https://purl.org/packagegraph/ontology/core#description
 # 
-# https://packagegraph.github.io/ontology/core#downloadURL
+# https://purl.org/packagegraph/ontology/core#downloadURL
 # 
-# https://packagegraph.github.io/ontology/core#exitCode
+# https://purl.org/packagegraph/ontology/core#exitCode
 # 
-# https://packagegraph.github.io/ontology/core#homepage
+# https://purl.org/packagegraph/ontology/core#homepage
 # 
-# https://packagegraph.github.io/ontology/core#installSize
+# https://purl.org/packagegraph/ontology/core#installSize
 # 
-# https://packagegraph.github.io/ontology/core#isMetaPackage
+# https://purl.org/packagegraph/ontology/core#isMetaPackage
 #
-# https://packagegraph.github.io/ontology/core#isVendorOriginated
+# https://purl.org/packagegraph/ontology/core#isVendorOriginated
 #
-# https://packagegraph.github.io/ontology/core#isaSpecificCode
+# https://purl.org/packagegraph/ontology/core#isaSpecificCode
 # 
-# https://packagegraph.github.io/ontology/core#maintainerSince
+# https://purl.org/packagegraph/ontology/core#maintainerSince
 # 
-# https://packagegraph.github.io/ontology/core#packageName
+# https://purl.org/packagegraph/ontology/core#packageName
 # 
-# https://packagegraph.github.io/ontology/core#packageSize
+# https://purl.org/packagegraph/ontology/core#packageSize
 # 
-# https://packagegraph.github.io/ontology/core#upstreamProject
+# https://purl.org/packagegraph/ontology/core#upstreamProject
 # 
-# https://packagegraph.github.io/ontology/core#versionConstraintOperator
+# https://purl.org/packagegraph/ontology/core#versionConstraintOperator
 # 
-# https://packagegraph.github.io/ontology/core#versionConstraintValue
+# https://purl.org/packagegraph/ontology/core#versionConstraintValue
 # 
-# https://packagegraph.github.io/ontology/core#versionString
+# https://purl.org/packagegraph/ontology/core#versionString
 # 
 # 
 # 
@@ -203,57 +203,57 @@
 # #################################################################
 # 
 # 
-# https://packagegraph.github.io/ontology/core#ABI
+# https://purl.org/packagegraph/ontology/core#ABI
 # 
-# https://packagegraph.github.io/ontology/core#Architecture
+# https://purl.org/packagegraph/ontology/core#Architecture
 # 
-# https://packagegraph.github.io/ontology/core#BuildActivity
+# https://purl.org/packagegraph/ontology/core#BuildActivity
 # 
-# https://packagegraph.github.io/ontology/core#ContributionType
+# https://purl.org/packagegraph/ontology/core#ContributionType
 # 
-# https://packagegraph.github.io/ontology/core#Contributor
+# https://purl.org/packagegraph/ontology/core#Contributor
 # 
-# https://packagegraph.github.io/ontology/core#Dependency
+# https://purl.org/packagegraph/ontology/core#Dependency
 # 
-# https://packagegraph.github.io/ontology/core#Distribution
+# https://purl.org/packagegraph/ontology/core#Distribution
 # 
-# https://packagegraph.github.io/ontology/core#Ecosystem
+# https://purl.org/packagegraph/ontology/core#Ecosystem
 # 
-# https://packagegraph.github.io/ontology/core#InstallationActivity
+# https://purl.org/packagegraph/ontology/core#InstallationActivity
 # 
-# https://packagegraph.github.io/ontology/core#InstructionSetArchitecture
+# https://purl.org/packagegraph/ontology/core#InstructionSetArchitecture
 # 
-# https://packagegraph.github.io/ontology/core#License
+# https://purl.org/packagegraph/ontology/core#License
 # 
-# https://packagegraph.github.io/ontology/core#Maintainer
+# https://purl.org/packagegraph/ontology/core#Maintainer
 # 
-# https://packagegraph.github.io/ontology/core#MaintainerRole
+# https://purl.org/packagegraph/ontology/core#MaintainerRole
 # 
-# https://packagegraph.github.io/ontology/core#MetaPackage
+# https://purl.org/packagegraph/ontology/core#MetaPackage
 # 
-# https://packagegraph.github.io/ontology/core#Package
+# https://purl.org/packagegraph/ontology/core#Package
 # 
-# https://packagegraph.github.io/ontology/core#PackageManager
+# https://purl.org/packagegraph/ontology/core#PackageManager
 #
-# https://packagegraph.github.io/ontology/core#PackageSet
+# https://purl.org/packagegraph/ontology/core#PackageSet
 #
-# https://packagegraph.github.io/ontology/core#PackagingActivity
+# https://purl.org/packagegraph/ontology/core#PackagingActivity
 # 
-# https://packagegraph.github.io/ontology/core#PublishingActivity
+# https://purl.org/packagegraph/ontology/core#PublishingActivity
 # 
-# https://packagegraph.github.io/ontology/core#Repository
+# https://purl.org/packagegraph/ontology/core#Repository
 # 
-# https://packagegraph.github.io/ontology/core#TestActivity
+# https://purl.org/packagegraph/ontology/core#TestActivity
 # 
-# https://packagegraph.github.io/ontology/core#Version
+# https://purl.org/packagegraph/ontology/core#Version
 # 
-# https://packagegraph.github.io/ontology/core#VersionConstraint
+# https://purl.org/packagegraph/ontology/core#VersionConstraint
 # 
-# https://packagegraph.github.io/ontology/core#VirtualPackage
+# https://purl.org/packagegraph/ontology/core#VirtualPackage
 # 
 # Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
 
-<https://packagegraph.github.io/ontology/core#> a owl:Ontology;
+<https://purl.org/packagegraph/ontology/core#> a owl:Ontology;
   dcterms:abstract "PackageGraph Core defines the foundational classes and properties for representing software packages across Linux distributions and other package ecosystems. It models binary and source packages, versioned dependencies with constraints, maintainers, architectures, and distribution releases as a connected RDF graph. The ontology serves as the shared schema that distribution-specific extensions (Debian, RPM, Arch, etc.) specialize, enabling cross-distribution queries over a unified SPARQL endpoint.";
   dcterms:created "2025-09-05"^^xsd:date;
   dcterms:creator "Package Management Ontology Project";
@@ -1156,30 +1156,30 @@ _:genid11 a owl:Restriction;
   rdfs:comment "A file installed on the system by a binary package";
   rdfs:label "Installed File" .
 
-###  https://packagegraph.github.io/ontology/core#upstreamRepository
+###  https://purl.org/packagegraph/ontology/core#upstreamRepository
 :upstreamRepository a owl:ObjectProperty ;
     rdfs:domain :PackageIdentity ;
-    rdfs:range <https://packagegraph.github.io/ontology/vcs#Repository> ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
     rdfs:label "upstream repository" ;
     rdfs:comment "The upstream VCS repository this package is built from. Derived from Homepage/URL when it points to a known forge, or from dist-git spec files." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package identity with the canonical upstream source code repository. This is the primary cross-distribution identity anchor — packages from different distros that share the same upstream repository are the same software, regardless of package name." .
 
-###  https://packagegraph.github.io/ontology/core#packagingRepository
+###  https://purl.org/packagegraph/ontology/core#packagingRepository
 :packagingRepository a owl:ObjectProperty ;
     rdfs:domain :PackageIdentity ;
-    rdfs:range <https://packagegraph.github.io/ontology/vcs#Repository> ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
     rdfs:label "packaging repository" ;
     rdfs:comment "The distribution-specific packaging repository (e.g., Debian Salsa, Fedora dist-git). Contains packaging rules, patches, and build configuration." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package identity with the distribution-specific repository that contains the packaging metadata (debian/ directory, spec files, patches). Distinct from the upstream repository — packaging repos are distro-specific while upstream repos are universal." .
 
-###  https://packagegraph.github.io/ontology/core#PackageIdentity
+###  https://purl.org/packagegraph/ontology/core#PackageIdentity
 :PackageIdentity a owl:Class ;
     rdfs:subClassOf owl:Thing ;
     rdfs:label "Package Identity" ;
     rdfs:comment "The version-agnostic identity of a package within a distribution and architecture. Dependency targets point to this instead of versioned instances." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "A stable, version-independent identifier for a package name within a specific distribution, release, and architecture. BinaryPackage instances link to their identity via isVersionOf. Dependencies point to the identity, enabling direct name-based joins without URI parsing." .
 
-###  https://packagegraph.github.io/ontology/core#isVersionOf
+###  https://purl.org/packagegraph/ontology/core#isVersionOf
 :isVersionOf a owl:ObjectProperty ;
     rdfs:domain :BinaryPackage ;
     rdfs:range :PackageIdentity ;
@@ -1187,14 +1187,14 @@ _:genid11 a owl:Restriction;
     rdfs:comment "Links a versioned binary package to its version-agnostic package identity." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package." .
 
-###  https://packagegraph.github.io/ontology/core#DataSnapshot
+###  https://purl.org/packagegraph/ontology/core#DataSnapshot
 :DataSnapshot a owl:Class ;
     rdfs:subClassOf <http://www.w3.org/ns/prov#Entity> ;
     rdfs:label "Data Snapshot" ;
     rdfs:comment "Metadata about a named graph — when it was collected, from what source, whether it is current." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "A record of a data collection or enrichment run, tracking the named graph URI, source identifier, timestamp, and currency status for graph lifecycle management." .
 
-###  https://packagegraph.github.io/ontology/core#snapshotSource
+###  https://purl.org/packagegraph/ontology/core#snapshotSource
 :snapshotSource a owl:DatatypeProperty ;
     rdfs:domain :DataSnapshot ;
     rdfs:range xsd:string ;
@@ -1202,7 +1202,7 @@ _:genid11 a owl:Restriction;
     rdfs:comment "Identifier of the data source that produced this snapshot (e.g., 'pg-collect debian', 'enricher-osv')." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "A string identifying the tool and data source that produced this snapshot." .
 
-###  https://packagegraph.github.io/ontology/core#snapshotTimestamp
+###  https://purl.org/packagegraph/ontology/core#snapshotTimestamp
 :snapshotTimestamp a owl:DatatypeProperty ;
     rdfs:domain :DataSnapshot ;
     rdfs:range xsd:dateTime ;
@@ -1210,7 +1210,7 @@ _:genid11 a owl:Restriction;
     rdfs:comment "When this data snapshot was created." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "The date and time when the data collection or enrichment run completed." .
 
-###  https://packagegraph.github.io/ontology/core#snapshotGraph
+###  https://purl.org/packagegraph/ontology/core#snapshotGraph
 :snapshotGraph a owl:DatatypeProperty ;
     rdfs:domain :DataSnapshot ;
     rdfs:range xsd:anyURI ;
@@ -1218,7 +1218,7 @@ _:genid11 a owl:Restriction;
     rdfs:comment "The named graph URI this snapshot was loaded into." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "The URI of the named graph in Fuseki that contains this snapshot's data." .
 
-###  https://packagegraph.github.io/ontology/core#isCurrent
+###  https://purl.org/packagegraph/ontology/core#isCurrent
 :isCurrent a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:domain :DataSnapshot ;
     rdfs:range xsd:boolean ;

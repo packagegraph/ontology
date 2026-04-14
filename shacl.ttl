@@ -3,13 +3,16 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix pkg:   <https://packagegraph.github.io/ontology/core#> .
-@prefix sec:   <https://packagegraph.github.io/ontology/security#> .
-@prefix met:   <https://packagegraph.github.io/ontology/metrics#> .
-@prefix rpm:   <https://packagegraph.github.io/ontology/rpm#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-<https://packagegraph.github.io/ontology/shacl#>
+<https://purl.org/packagegraph/ontology/shacl#>
   a owl:Ontology ;
   rdfs:label "PackageGraph SHACL Validation Shapes" ;
   rdfs:comment "Provides data validation rules for the PackageGraph ontology suite." ;
@@ -230,4 +233,103 @@ pkg:InstalledFileShape
     sh:maxCount 1 ;
     sh:datatype xsd:string ;
     sh:message "An installed file must have exactly one file path."
+  ] .
+
+# Shape for core:BuildActivity (PROV-O grounding)
+pkg:BuildActivityShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:BuildActivity ;
+  sh:property [
+    sh:path pkg:performedBy ;
+    sh:class prov:Agent ;
+    sh:message "A build activity's performer must be a prov:Agent."
+  ] .
+
+# Shape for slsa:ProvenanceAttestation
+slsa:ProvenanceAttestationShape
+  a sh:NodeShape ;
+  sh:targetClass slsa:ProvenanceAttestation ;
+  sh:property [
+    sh:path slsa:attestsBuildLevel ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class slsa:BuildLevel ;
+    sh:message "A provenance attestation must attest exactly one SLSA build level."
+  ] ;
+  sh:property [
+    sh:path slsa:attestationTimestamp ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime ;
+    sh:message "A provenance attestation must have exactly one timestamp."
+  ] ;
+  sh:property [
+    sh:path slsa:attestationDigest ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A provenance attestation must have at least one artifact digest."
+  ] .
+
+# Shape for slsa:Builder
+slsa:BuilderShape
+  a sh:NodeShape ;
+  sh:targetClass slsa:Builder ;
+  sh:property [
+    sh:path slsa:builderId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:anyURI ;
+    sh:message "A builder must have exactly one builder ID URI."
+  ] .
+
+# Shape for slsa:BuildEnvironment
+slsa:BuildEnvironmentShape
+  a sh:NodeShape ;
+  sh:targetClass slsa:BuildEnvironment ;
+  sh:property [
+    sh:path slsa:isEphemeral ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A build environment can have at most one ephemeral flag."
+  ] ;
+  sh:property [
+    sh:path slsa:isIsolated ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A build environment can have at most one isolated flag."
+  ] .
+
+# Shape for vcs:Commit (PROV-O grounding)
+vcs:CommitShape
+  a sh:NodeShape ;
+  sh:targetClass vcs:Commit ;
+  sh:property [
+    sh:path vcs:commitHash ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A commit must have exactly one commit hash."
+  ] ;
+  sh:property [
+    sh:path vcs:commitTimestamp ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime ;
+    sh:message "A commit must have exactly one timestamp."
+  ] ;
+  sh:property [
+    sh:path vcs:authoredBy ;
+    sh:class pkg:Contributor ;
+    sh:message "A commit's author must be a pkg:Contributor."
+  ] .
+
+# Shape for sec:PatchActivity (supply chain provenance)
+sec:PatchActivityShape
+  a sh:NodeShape ;
+  sh:targetClass sec:PatchActivity ;
+  sh:property [
+    sh:path sec:patchAddresses ;
+    sh:minCount 1 ;
+    sh:class sec:Vulnerability ;
+    sh:message "A patch activity must address at least one vulnerability."
   ] .

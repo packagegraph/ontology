@@ -1,7 +1,7 @@
 # Arch Linux Package Ontology
-@prefix arch: <https://packagegraph.github.io/ontology/archlinux#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
-@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
+@prefix arch: <https://purl.org/packagegraph/ontology/archlinux#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -14,7 +14,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/archlinux#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/archlinux#> a owl:Ontology ;
     rdfs:label "Arch Linux Package Ontology" ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
     dcterms:abstract "The Arch Linux extension models Pacman packages, PKGBUILD build scripts, split packages, package groups, and the Arch User Repository (AUR). It captures Arch-specific metadata such as build options, checksums, packager signatures, and repository tiers (core, extra, multilib)." ;

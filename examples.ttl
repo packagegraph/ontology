@@ -1,15 +1,15 @@
 # Example Package Instances
 # Demonstrating how to represent real packages using the ontologies
 
-@prefix ex:    <https://packagegraph.github.io/ontology/examples#> .
-@prefix pkg:   <https://packagegraph.github.io/ontology/core#> .
-@prefix deb:   <https://packagegraph.github.io/ontology/debian#> .
-@prefix rpm:   <https://packagegraph.github.io/ontology/rpm#> .
-@prefix arch:  <https://packagegraph.github.io/ontology/archlinux#> .
-@prefix bsd:   <https://packagegraph.github.io/ontology/bsd#> .
-@prefix choco: <https://packagegraph.github.io/ontology/chocolatey#> .
-@prefix brew:  <https://packagegraph.github.io/ontology/homebrew#> .
-@prefix nix:   <https://packagegraph.github.io/ontology/nix#> .
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix arch:  <https://purl.org/packagegraph/ontology/archlinux#> .
+@prefix bsd:   <https://purl.org/packagegraph/ontology/bsd#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix dct:   <http://purl.org/dc/terms/> .
 @prefix dc:    <http://purl.org/dc/elements/1.1/> .
@@ -19,12 +19,15 @@
 @prefix spdx:  <http://spdx.org/rdf/terms#> .
 @prefix spdxl: <http://spdx.org/licenses/> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix sec:   <https://packagegraph.github.io/ontology/security#> .
-@prefix met:   <https://packagegraph.github.io/ontology/metrics#> .
-@prefix rh:    <https://packagegraph.github.io/ontology/redhat#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
 
 # Ontology metadata
-<https://packagegraph.github.io/ontology/examples#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/examples#> a owl:Ontology ;
   dc:title "PackageGraph Example Instances" ;
   dc:description "Example package instances demonstrating how to represent real packages using the PackageGraph ontologies across Debian, RPM, Arch Linux, BSD Ports, Chocolatey, Homebrew, and Nix." ;
   dct:abstract "Working examples showing how to instantiate PackageGraph classes for packages from each supported distribution. These examples use real package names and metadata to demonstrate cross-distribution interoperability, dependency modeling, VCS linking, and security vulnerability annotation." ;
@@ -522,3 +525,189 @@ ex:glibc-patch-2 a rpm:Patch ;
   rpm:patchDescription "Backport malloc performance improvement from glibc 2.36" ;
   rpm:upstreamStatus "backport" ;
   rdfs:label "glibc-upstream-backport-malloc.patch" .
+
+################################################################
+# PROV-O Provenance Chain Example
+# Traces: upstream commit -> source package -> build -> binary
+################################################################
+
+# Upstream VCS commit
+ex:openssl-commit-abc123 a vcs:Commit ;
+  vcs:commitHash "abc123def456789" ;
+  vcs:commitMessage "Release OpenSSL 3.2.1" ;
+  vcs:commitTimestamp "2024-01-30T12:00:00Z"^^xsd:dateTime ;
+  vcs:authoredBy ex:openssl-contributor ;
+  rdfs:label "OpenSSL 3.2.1 release commit" .
+
+ex:openssl-contributor a pkg:Contributor ;
+  foaf:name "OpenSSL Release Team" ;
+  rdfs:label "OpenSSL Release Team" .
+
+# VCS tag (derived from commit via prov:wasDerivedFrom through parentCommit pattern)
+ex:openssl-tag-3.2.1 a vcs:Release ;
+  vcs:tagName "openssl-3.2.1" ;
+  vcs:releaseDate "2024-01-30T14:00:00Z"^^xsd:dateTime ;
+  vcs:pointsTo ex:openssl-commit-abc123 ;
+  vcs:releasedBy ex:openssl-contributor ;
+  rdfs:label "OpenSSL 3.2.1 release" .
+
+# Source package derived from VCS tag
+ex:openssl-deb-src a deb:SourcePackage, pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-deb-src-version ;
+  pkg:maintainedBy ex:maintainer-doko ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  vcs:packagedFromTag ex:openssl-tag-3.2.1 ;
+  rdfs:label "openssl Debian source package" .
+
+ex:openssl-deb-src-version a pkg:Version ;
+  pkg:versionString "3.2.1-1" ;
+  rdfs:label "Version 3.2.1-1 for openssl" .
+
+# Build activity with PROV-O linkage
+ex:openssl-build-activity a pkg:BuildActivity ;
+  pkg:performedBy ex:debian-buildd ;
+  pkg:usedSource ex:openssl-deb-src ;
+  pkg:activityStartTime "2024-02-01T10:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-02-01T10:45:00Z"^^xsd:dateTime ;
+  pkg:exitCode 0 ;
+  rdfs:label "openssl build on Debian buildd" .
+
+ex:debian-buildd a slsa:Builder ;
+  slsa:builderId <https://buildd.debian.org> ;
+  slsa:builderVersion "wanna-build 2024.01" ;
+  rdfs:label "Debian buildd" .
+
+# Binary package produced by the build (full PROV-O chain)
+ex:libssl3-deb a deb:BinaryPackage, pkg:BinaryPackage ;
+  pkg:packageName "libssl3" ;
+  pkg:hasVersion ex:libssl3-deb-version ;
+  pkg:maintainedBy ex:maintainer-doko ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  pkg:builtFromSource ex:openssl-deb-src ;
+  pkg:wasBuiltBy ex:openssl-build-activity ;
+  rdfs:label "libssl3 Debian binary package" .
+
+ex:libssl3-deb-version a pkg:Version ;
+  pkg:versionString "3.2.1-1" ;
+  rdfs:label "Version 3.2.1-1 for libssl3" .
+
+spdxl:Apache-2.0 a spdx:ListedLicense ;
+  rdfs:label "Apache-2.0" .
+
+################################################################
+# SLSA Provenance Attestation Example
+################################################################
+
+# SLSA L2 attestation for a Koji-built RPM
+ex:openssl-koji-provenance a slsa:ProvenanceAttestation ;
+  slsa:attestsBuildLevel slsa:L2 ;
+  slsa:attestationTimestamp "2024-02-01T11:30:00Z"^^xsd:dateTime ;
+  slsa:attestationDigest "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" ;
+  slsa:predicateType <https://slsa.dev/provenance/v1> ;
+  slsa:verificationStatus "verified" ;
+  slsa:attestsBuildActivity ex:openssl-koji-build ;
+  slsa:hasSourceAttestation ex:openssl-koji-source-att ;
+  rdfs:label "SLSA L2 provenance for openssl RPM" .
+
+ex:openssl-koji-build a pkg:BuildActivity ;
+  pkg:performedBy ex:koji-builder ;
+  pkg:activityStartTime "2024-02-01T11:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-02-01T11:25:00Z"^^xsd:dateTime ;
+  pkg:exitCode 0 ;
+  slsa:builtBy ex:koji-builder ;
+  slsa:usedBuildEnvironment ex:koji-build-env ;
+  rdfs:label "openssl Koji build" .
+
+ex:koji-builder a slsa:Builder ;
+  slsa:builderId <https://koji.fedoraproject.org> ;
+  slsa:builderVersion "1.34.0" ;
+  rdfs:label "Fedora Koji" .
+
+ex:koji-build-env a slsa:BuildEnvironment ;
+  slsa:buildImage "fedora:39" ;
+  slsa:isEphemeral true ;
+  slsa:isIsolated true ;
+  rdfs:label "Koji mock chroot (Fedora 39)" .
+
+ex:openssl-koji-source-att a slsa:SourceAttestation ;
+  slsa:sourceRepository <https://src.fedoraproject.org/rpms/openssl> ;
+  slsa:sourceRef "f39" ;
+  slsa:sourceDigest "sha256:deadbeef" ;
+  slsa:twoPartyReviewed true ;
+  slsa:hasSourceVcsRepository ex:fedora-openssl-repo ;
+  rdfs:label "Source attestation for openssl Fedora RPM" .
+
+ex:fedora-openssl-repo a vcs:Repository ;
+  vcs:cloneUrl <https://src.fedoraproject.org/rpms/openssl.git> ;
+  vcs:defaultBranch "rawhide" ;
+  rdfs:label "Fedora openssl dist-git" .
+
+# RPM with SLSA provenance link
+ex:openssl-rpm a rpm:BinaryRPM, pkg:BinaryPackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-rpm-version ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  pkg:builtFromSource ex:openssl-fedora-srpm ;
+  pkg:wasBuiltBy ex:openssl-koji-build ;
+  slsa:hasProvenance ex:openssl-koji-provenance ;
+  rdfs:label "openssl Fedora RPM" .
+
+ex:openssl-rpm-version a pkg:Version ;
+  pkg:versionString "3.2.1-1.fc39" ;
+  rdfs:label "Version 3.2.1-1.fc39 for openssl" .
+
+ex:openssl-fedora-srpm a rpm:SourceRPM, pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-rpm-version ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  rdfs:label "openssl Fedora source RPM" .
+
+################################################################
+# Security Patch Provenance Example
+# Shows: unpatched version -> patch activity -> patched version
+################################################################
+
+ex:glibc-version-2.28-225 a pkg:Version ;
+  pkg:versionString "2.28-225.el8" ;
+  rdfs:label "glibc 2.28-225.el8 (unpatched)" .
+
+ex:glibc-version-2.28-236 a pkg:Version ;
+  pkg:versionString "2.28-236.el8_9.13" ;
+  sec:patchedFrom ex:glibc-version-2.28-225 ;
+  sec:patchProducedVersion ex:glibc-patch-activity ;
+  rdfs:label "glibc 2.28-236.el8_9.13 (security patched)" .
+
+ex:glibc-patch-activity a sec:PatchActivity ;
+  pkg:performedBy ex:rhel-errata-team ;
+  pkg:activityStartTime "2024-03-19T00:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-03-20T00:00:00Z"^^xsd:dateTime ;
+  sec:patchAddresses ex:cve-2024-1234 ;
+  rdfs:label "RHSA-2024:5678 patch activity" .
+
+ex:rhel-errata-team a pkg:Contributor ;
+  foaf:name "Red Hat Product Security" ;
+  rdfs:label "Red Hat Product Security" .
+
+ex:cve-2024-1234 a sec:Vulnerability ;
+  sec:cveId "CVE-2024-1234" ;
+  sec:cvssScore 9.8 ;
+  sec:severity "critical" ;
+  sec:summary "Buffer overflow in glibc iconv module" ;
+  sec:publishedDate "2024-03-15T00:00:00Z"^^xsd:dateTime ;
+  sec:affectsVersion ex:glibc-version-2.28-225 ;
+  sec:fixedInVersion ex:glibc-version-2.28-236 ;
+  sec:affectsPackage ex:glibc-rpm ;
+  rdfs:label "CVE-2024-1234" .
+
+# Advisory addressing the vulnerability (updated with PROV-O linkage)
+ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
+  sec:advisoryId "RHSA-2024:5678" ;
+  sec:advisorySeverity "critical" ;
+  sec:advisoryDate "2024-03-20T00:00:00Z"^^xsd:dateTime ;
+  sec:advisoryType "security" ;
+  sec:addressesVulnerability ex:cve-2024-1234 ;
+  sec:advisoryForPackage ex:glibc-rpm ;
+  rdfs:label "RHSA-2024:5678" .

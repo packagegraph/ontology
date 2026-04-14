@@ -1,6 +1,6 @@
 # Version Control System Ontology
-@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/vcs#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/vcs#> a owl:Ontology ;
     rdfs:label "Version Control System Ontology" ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata" ;
     dcterms:abstract "The VCS ontology extends PackageGraph Core to link packages to their upstream source code repositories. It models Git repositories, commits, branches, and tags, enabling queries that trace a binary package back through its source package to the upstream project repository, commit history, and contributors." ;
@@ -242,6 +242,7 @@ vcs:hasFile a owl:ObjectProperty ;
     IAO:0000115 "Associates a commit or repository with the files it contains or affects." .
 
 vcs:parentCommit a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
     rdfs:label "parent commit" ;
     rdfs:comment "Parent commit(s) of this commit" ;
     rdfs:domain vcs:Commit ;
@@ -402,12 +403,14 @@ vcs:hasUpstreamRepository a owl:ObjectProperty ;
     IAO:0000115 "Associates an upstream project or package with the version control repository where its source code is maintained." .
 
 vcs:packagedFromTag a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
     rdfs:label "packaged from tag" ;
     rdfs:comment "Indicates which VCS tag a package was built from" ;
     rdfs:range vcs:Tag ;
     IAO:0000115 "Associates a package with the specific VCS tag or release from which it was built." .
 
 vcs:packagedFromCommit a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
     rdfs:label "packaged from commit" ;
     rdfs:comment "Indicates which commit a package was built from" ;
     rdfs:range vcs:Commit ;
@@ -415,6 +418,7 @@ vcs:packagedFromCommit a owl:ObjectProperty ;
 
 # Release relationship properties
 vcs:previousRelease a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
     rdfs:label "previous release" ;
     rdfs:comment "Links to the previous release in sequence" ;
     rdfs:domain vcs:Release ;
@@ -437,9 +441,11 @@ vcs:hasReleaseNotes a owl:ObjectProperty ;
     IAO:0000115 "Associates a release with its accompanying release notes or changelog documentation." .
 
 vcs:releasedBy a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasAttributedTo ;
     rdfs:label "released by" ;
     rdfs:comment "Person or organization who published the release" ;
     rdfs:domain vcs:Release ;
+    rdfs:range pkg:Contributor ;
     IAO:0000115 "Identifies the person or organization responsible for publishing and announcing the release." .
 
 # Milestone and planning properties

@@ -1,7 +1,7 @@
 # RPM Package Ontology
-@prefix rpm: <https://packagegraph.github.io/ontology/rpm#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
-@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +16,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/rpm#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/rpm#> a owl:Ontology ;
     rdfs:label "RPM Package Ontology" ;
     rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories" ;
     dcterms:abstract "The RPM extension specializes PackageGraph Core for Fedora, RHEL, CentOS, and other RPM-based distributions. It models NEVRA (Name-Epoch-Version-Release-Architecture) identifiers, source RPMs, RPM groups, build changelogs, and file attributes. Packages are dual-typed as both pkg:BinaryPackage and rpm:BinaryRPM, enabling unified queries across RPM and Debian ecosystems." ;

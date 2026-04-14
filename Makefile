@@ -2,7 +2,7 @@
 # This Makefile provides utilities for validating, combining, and managing ontology files
 
 # Variables
-ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl security.ttl metrics.ttl examples.ttl
+ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl bsd.ttl chocolatey.ttl homebrew.ttl nix.ttl security.ttl metrics.ttl slsa.ttl examples.ttl
 VENDOR_FILES = redhat.ttl
 ALL_TTL_FILES = $(ONTOLOGY_FILES) $(VENDOR_FILES)
 COMBINED_FILE = x.ttl

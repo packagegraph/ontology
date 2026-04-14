@@ -99,6 +99,34 @@ ontology.
   dependencies
 - **Namespace**: `http://packagegraph.github.io/ontology/nix#`
 
+### 10. SLSA Supply Chain Security Ontology (`slsa.ttl`)
+
+- **Purpose**: Models SLSA (Supply-chain Levels for Software Artifacts)
+  provenance attestations and build security
+- **Key Classes**: ProvenanceAttestation, BuildLevel, Builder, SourceAttestation,
+  BuildEnvironment
+- **Key Features**: SLSA build levels (L0-L3), cryptographic attestations, build
+  isolation and ephemeral environment tracking, PROV-O grounded
+- **Namespace**: `http://packagegraph.github.io/ontology/slsa#`
+
+### 11. Security Ontology (`security.ttl`)
+
+- **Purpose**: Models CVE vulnerabilities, security advisories, and patch
+  provenance
+- **Key Classes**: Vulnerability, SecurityAdvisory, PatchActivity
+- **Key Features**: CVSS scoring, advisory-to-CVE mapping, affected/fixed version
+  tracking, patch derivation chains
+- **Namespace**: `http://packagegraph.github.io/ontology/security#`
+
+### 12. Code Metrics Ontology (`metrics.ttl`)
+
+- **Purpose**: Represents code analysis metrics and programming language
+  properties
+- **Key Classes**: CodeMetrics, LanguageMetrics, ProgrammingLanguage
+- **Key Features**: Lines of code counts, memory safety flags, garbage collection
+  tracking
+- **Namespace**: `http://packagegraph.github.io/ontology/metrics#`
+
 ## Key Features
 
 ### Comprehensive Metadata Coverage
@@ -176,13 +204,18 @@ ex:hello-nix a nix:StdenvMkDerivation ;
 ```
 ├── core.ttl                       # Base ontology (25+ classes, 40+ properties)
 ├── vcs.ttl                        # Version control integration
-├── debian.ttl                     # Debian/APT (8 classes, 35+ properties)  
+├── security.ttl                   # CVE vulnerabilities and security advisories
+├── metrics.ttl                    # Code metrics and language properties
+├── slsa.ttl                       # SLSA supply chain provenance attestations
+├── debian.ttl                     # Debian/APT (8 classes, 35+ properties)
 ├── rpm.ttl                        # RPM/YUM/DNF (8 classes, 45+ properties)
+├── redhat.ttl                     # Red Hat vendor extensions (RHEL/RHIVOS)
 ├── arch.ttl                       # Arch Linux (7 classes, 40+ properties)
 ├── bsd.ttl                        # BSD Ports (13 classes, 55+ properties)
 ├── chocolatey.ttl                 # Chocolatey (8 classes, 38+ properties)
 ├── homebrew.ttl                   # Homebrew (23 classes, 65+ properties)
 ├── nix.ttl                        # Nix (15 classes, 75+ properties)
+├── shacl.ttl                      # SHACL validation shapes
 ├── examples.ttl                   # Example instances
 ├── main.py                        # ETL tool for repository data collection
 ├── packagegraph/                  # Python package for data collection

@@ -1,6 +1,6 @@
 # Nix Package Ontology
-@prefix nix: <https://packagegraph.github.io/ontology/nix#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix nix: <https://purl.org/packagegraph/ontology/nix#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/nix#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/nix#> a owl:Ontology ;
     rdfs:label "Nix Package Ontology" ;
     rdfs:comment "Ontology for representing Nix packages, derivations, and expressions" ;
     dcterms:abstract "The Nix extension models the purely functional Nix package management ecosystem. It captures Nix derivations, store paths, flakes, build phases (configure, build, install, check), and language-specific builders (stdenv.mkDerivation, buildPythonPackage, buildGoModule). The ontology represents Nix's content-addressable store and reproducible build model." ;

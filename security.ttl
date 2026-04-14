@@ -1,17 +1,18 @@
 # Security Ontology
-@prefix sec: <https://packagegraph.github.io/ontology/security#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/security#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/security#> a owl:Ontology ;
     rdfs:label "Package Security Ontology" ;
     rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages" ;
     dcterms:abstract "The Security ontology models CVE vulnerabilities, vendor security advisories (RHSA, DSA, GLSA), and CVSS severity scores. It links vulnerabilities to affected and fixed package versions, enabling SPARQL queries such as finding all packages in a distribution affected by a given CVE, or listing unpatched vulnerabilities for a release." ;
@@ -242,3 +243,53 @@ sec:SecurityAdvisory rdfs:subClassOf [
     owl:onProperty sec:advisoryId ;
     owl:cardinality 1
 ] .
+
+
+# #################################################################
+# #
+# #    Supply Chain Security Classes
+# #
+# #################################################################
+
+sec:PatchActivity a owl:Class ;
+    rdfs:subClassOf pkg:PackagingActivity ;
+    rdfs:label "Patch Activity" ;
+    rdfs:comment "An activity that applies a security patch to produce a fixed package version" ;
+    IAO:0000115 "A packaging activity that applies one or more security patches to address vulnerabilities, producing a new package version derived from the unpatched version." .
+
+
+# #################################################################
+# #
+# #    Supply Chain Object Properties
+# #
+# #################################################################
+
+sec:patchedFrom a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    rdfs:label "patched from" ;
+    rdfs:comment "Links a patched package version to the unpatched version it was derived from" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range pkg:Version ;
+    IAO:0000115 "Associates a security-patched package version with the prior version from which it was derived, establishing the provenance chain for security updates." .
+
+sec:patchAddresses a owl:ObjectProperty ;
+    rdfs:label "patch addresses" ;
+    rdfs:comment "Links a patch activity to the vulnerabilities it fixes" ;
+    rdfs:domain sec:PatchActivity ;
+    rdfs:range sec:Vulnerability ;
+    IAO:0000115 "Associates a patch activity with the specific vulnerabilities that it addresses." .
+
+sec:patchProducedVersion a owl:ObjectProperty ;
+    rdfs:subPropertyOf prov:wasGeneratedBy ;
+    rdfs:label "patch produced version" ;
+    rdfs:comment "Links a fixed package version to the patch activity that produced it" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range sec:PatchActivity ;
+    IAO:0000115 "Associates a fixed package version with the patch activity that produced it from the prior version." .
+
+sec:affectsPackage a owl:ObjectProperty ;
+    rdfs:label "affects package" ;
+    rdfs:comment "Links a vulnerability to the packages it affects" ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:range pkg:Package ;
+    IAO:0000115 "Associates a vulnerability with the specific packages it affects, complementing affectsVersion for package-level queries." .

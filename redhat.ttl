@@ -1,7 +1,7 @@
 # Red Hat Vendor Extension Ontology
-@prefix rh: <https://packagegraph.github.io/ontology/redhat#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
-@prefix rpm: <https://packagegraph.github.io/ontology/rpm#> .
+@prefix rh: <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,7 +12,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/redhat#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/redhat#> a owl:Ontology ;
     rdfs:label "Red Hat Vendor Extension Ontology" ;
     rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications" ;
     dcterms:abstract "The Red Hat vendor extension adds RHEL and RHIVOS package set classifications to RPM packages. It models the Application Compatibility Guide (AppCompat) lifecycle tiers, enabling queries that distinguish between packages in the BaseOS, AppStream, and optional repositories, and their support lifecycle status." ;

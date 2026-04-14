@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.5.0] - 2026-04-13
+
+### Added
+
+#### New Ontology File (slsa.ttl)
+- **SLSA Supply Chain Security Ontology** — Models SLSA v1.0 provenance attestations, build levels (L0-L3), builder identity, and build environments
+  - 5 classes: `ProvenanceAttestation`, `BuildLevel`, `Builder`, `SourceAttestation`, `BuildEnvironment`
+  - 4 SLSA level individuals: `slsa:L0`, `slsa:L1`, `slsa:L2`, `slsa:L3`
+  - 14 datatype properties (attestationDigest, builderVersion, buildImage, isEphemeral, isIsolated, etc.)
+  - 8 object properties (hasProvenance, attestsBuildLevel, builtBy, usedBuildEnvironment, etc.)
+  - **Namespace**: `https://packagegraph.github.io/ontology/slsa#`
+  - Imports: core.ttl, security.ttl, vcs.ttl
+
+#### PROV-O Grounding (core.ttl)
+- **`pkg:Package` now subclasses `prov:Entity`** — Completes the PROV-O entity layer for packages
+- **`pkg:Repository` now subclasses `prov:Entity`** — Repositories are provenance entities
+- **`pkg:builtFromSource` as `prov:wasDerivedFrom`** — Formalizes binary-to-source derivation semantics
+- **`pkg:maintainedBy` as `prov:wasAttributedTo`** — Package-to-maintainer attribution follows PROV-O
+- **New property `pkg:performedBy`** (subproperty of `prov:wasAssociatedWith`) — Links packaging activities to the agents that performed them
+
+#### PROV-O Grounding (vcs.ttl)
+- **`vcs:parentCommit` as `prov:wasDerivedFrom`** — Commit lineage follows provenance derivation
+- **`vcs:packagedFromTag` as `prov:wasDerivedFrom`** — VCS tag to package derivation
+- **`vcs:packagedFromCommit` as `prov:wasDerivedFrom`** — VCS commit to package derivation
+- **`vcs:previousRelease` as `prov:wasDerivedFrom`** — Release lineage as derivation chain
+- **`vcs:releasedBy` as `prov:wasAttributedTo`** — Release attribution with explicit range
+
+#### Supply Chain Security (security.ttl)
+- **New class `sec:PatchActivity`** (subclass of `pkg:PackagingActivity`) — Models the act of applying security patches
+- **New property `sec:patchedFrom`** (subproperty of `prov:wasDerivedFrom`) — Tracks version-to-version patch derivation
+- **New property `sec:patchProducedVersion`** (subproperty of `prov:wasGeneratedBy`) — Links fixed versions to patch activities
+- **New property `sec:patchAddresses`** — Links patch activities to vulnerabilities they fix
+- **New property `sec:affectsPackage`** — Package-level vulnerability association
+
+#### SHACL Validation Shapes (shacl.ttl)
+- `BuildActivityShape` — Validates PROV-O grounding for build activities
+- `ProvenanceAttestationShape` — Validates SLSA attestation level, timestamp, digest
+- `BuilderShape` — Validates builder ID URI
+- `BuildEnvironmentShape` — Validates ephemeral/isolated flags
+- `CommitShape` — Validates commit hash, timestamp, authorship
+- `PatchActivityShape` — Validates patch activities address vulnerabilities
+
+#### Example Instances (examples.ttl)
+- **PROV-O provenance chain** — Demonstrates upstream commit → VCS tag → source package → build activity → binary package for Debian openssl
+- **SLSA L2 attestation** — Koji-built RPM with full provenance (builder, build environment, source attestation)
+- **Security patch provenance** — Unpatched glibc → patch activity → patched glibc with CVE linkage
+
+### Changed
+- **slsa.ttl registered in build tooling** — Added to `ONTOLOGY_FILES` in Makefile for lint/concat/deploy
+- **Documentation updated** — README.md now lists slsa.ttl as 10th ontology with full description
+
 ## [0.4.0] - 2026-04-09
 
 ### Breaking Changes

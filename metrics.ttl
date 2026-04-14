@@ -1,6 +1,6 @@
 # Metrics Ontology
-@prefix met: <https://packagegraph.github.io/ontology/metrics#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix met: <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -11,7 +11,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/metrics#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/metrics#> a owl:Ontology ;
     rdfs:label "Package Metrics Ontology" ;
     rdfs:comment "Ontology for representing programming languages, code metrics, and per-language analysis breakdowns for software packages" ;
     dcterms:abstract "The Metrics ontology captures quantitative code analysis data for packages, including lines of code, cyclomatic complexity, and per-language breakdowns. It enables queries that correlate package size and complexity with dependency counts, maintainer activity, or vulnerability exposure across distributions." ;

@@ -1,6 +1,6 @@
 # BSD Ports Package Ontology
-@prefix bsd: <https://packagegraph.github.io/ontology/bsd#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix bsd: <https://purl.org/packagegraph/ontology/bsd#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -15,7 +15,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/bsd#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/bsd#> a owl:Ontology ;
     rdfs:label "BSD Ports Package Ontology" ;
     rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)" ;
     dcterms:abstract "The BSD extension models the FreeBSD, OpenBSD, and NetBSD ports systems. It captures ports tree structure, Makefile build configuration, distinfo checksums, build options, flavors, and categories. Port dependencies, master sites, and patch metadata are represented to support cross-BSD and BSD-to-Linux package comparisons." ;

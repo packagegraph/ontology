@@ -1,6 +1,6 @@
 # Homebrew Package Ontology
-@prefix brew: <https://packagegraph.github.io/ontology/homebrew#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
+@prefix brew: <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +16,7 @@
 
 # Ontology Declaration
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/homebrew#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/homebrew#> a owl:Ontology ;
     rdfs:label "Homebrew Package Ontology" ;
     rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux" ;
     dcterms:abstract "The Homebrew extension models macOS and Linuxbrew package management. It distinguishes formulae (source-built CLI tools) from casks (pre-built GUI applications), models taps (third-party repositories), bottles (pre-compiled binaries), and build specifications. Dependency types include build, test, recommended, and optional." ;

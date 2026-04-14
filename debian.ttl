@@ -1,7 +1,7 @@
 # Debian Package Ontology
-@prefix deb: <https://packagegraph.github.io/ontology/debian#> .
-@prefix pkg: <https://packagegraph.github.io/ontology/core#> .
-@prefix vcs: <https://packagegraph.github.io/ontology/vcs#> .
+@prefix deb: <https://purl.org/packagegraph/ontology/debian#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +16,7 @@
 
 
 # Ontology Declaration
-<https://packagegraph.github.io/ontology/debian#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/debian#> a owl:Ontology ;
     rdfs:label "Debian Package Ontology" ;
     rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories" ;
     dcterms:abstract "The Debian extension specializes PackageGraph Core for the Debian and Ubuntu ecosystem. It adds classes for suites (stable, testing, unstable), components (main, contrib, non-free), sections, and priorities, and models Debian-specific dependency types (Depends, Pre-Depends, Recommends, Suggests, Conflicts, Breaks, Enhances, Provides). Instances are dual-typed as both pkg:BinaryPackage and deb:BinaryPackage for cross-distribution interoperability." ;
