@@ -87,9 +87,18 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 | Namespace | Ecosystem | Notes |
 |-----------|-----------|-------|
 | `oci#` | OCI container images | Docker Hub, GHCR, Quay |
-| `helm#` | Helm charts | Kubernetes package manager |
-| `terraform#` | Terraform modules/providers | Infrastructure as code |
+| `helm#` | Helm charts | Kubernetes package manager, Artifact Hub |
+| `olm#` | Operator Lifecycle Manager | Operator bundles, OperatorHub.io, CSVs/CRDs |
+| `kustomize#` | Kustomize | Components, bases, overlays as reusable units |
+| `carvel#` | Carvel | Package/PackageInstall CRDs (kapp, imgpkg, vendir) |
+| `crossplane#` | Crossplane | Compositions, Providers, infrastructure packages |
+| `krew#` | Krew | kubectl plugin manager |
+| `timoni#` | Timoni | CUE-based Kubernetes package manager |
+| `terraform#` | Terraform modules/providers | Infrastructure as code (HCL) |
 | `ansible#` | Ansible collections/roles | Ansible Galaxy, automation playbooks |
+| `pulumi#` | Pulumi packages | Infrastructure as code (multi-language) |
+
+Note: **Artifact Hub** (`artifacthub.io`) is a **registry** that hosts multiple formats (Helm, OLM, Falco, OPA, etc.) — analogous to PyPI for pip. It is not a namespace itself; packages in Artifact Hub are typed by their format's namespace (`helm#`, `olm#`, etc.).
 
 ### Vendor Extensions
 
