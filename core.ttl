@@ -1145,3 +1145,42 @@ _:genid11 a owl:Restriction;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A file that is installed on the target filesystem when a binary package is installed, including executables, libraries, configuration files, and documentation.";
   rdfs:comment "A file installed on the system by a binary package";
   rdfs:label "Installed File" .
+
+###  https://packagegraph.github.io/ontology/core#DataSnapshot
+:DataSnapshot a owl:Class ;
+    rdfs:subClassOf <http://www.w3.org/ns/prov#Entity> ;
+    rdfs:label "Data Snapshot" ;
+    rdfs:comment "Metadata about a named graph — when it was collected, from what source, whether it is current." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "A record of a data collection or enrichment run, tracking the named graph URI, source identifier, timestamp, and currency status for graph lifecycle management." .
+
+###  https://packagegraph.github.io/ontology/core#snapshotSource
+:snapshotSource a owl:DatatypeProperty ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:range xsd:string ;
+    rdfs:label "snapshot source" ;
+    rdfs:comment "Identifier of the data source that produced this snapshot (e.g., 'pg-collect debian', 'enricher-osv')." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "A string identifying the tool and data source that produced this snapshot." .
+
+###  https://packagegraph.github.io/ontology/core#snapshotTimestamp
+:snapshotTimestamp a owl:DatatypeProperty ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "snapshot timestamp" ;
+    rdfs:comment "When this data snapshot was created." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "The date and time when the data collection or enrichment run completed." .
+
+###  https://packagegraph.github.io/ontology/core#snapshotGraph
+:snapshotGraph a owl:DatatypeProperty ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "snapshot graph" ;
+    rdfs:comment "The named graph URI this snapshot was loaded into." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "The URI of the named graph in Fuseki that contains this snapshot's data." .
+
+###  https://packagegraph.github.io/ontology/core#isCurrent
+:isCurrent a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is current" ;
+    rdfs:comment "Whether this snapshot represents the current active data for its source." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "A boolean flag indicating whether this snapshot is the most recent for its data source. Used for tiered storage lifecycle management." .
