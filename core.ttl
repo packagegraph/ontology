@@ -470,6 +470,7 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "is replaced by" .
 
 :maintainedBy a owl:ObjectProperty;
+  rdfs:subPropertyOf prov:wasAttributedTo;
   rdfs:domain :Package;
   rdfs:range :Maintainer;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the person or organization responsible for its ongoing maintenance and development.";
@@ -594,7 +595,16 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a package to the publishing activity that made it available";
   rdfs:label "was published by" .
 
+:performedBy a owl:ObjectProperty;
+  rdfs:subPropertyOf prov:wasAssociatedWith;
+  rdfs:domain :PackagingActivity;
+  rdfs:range prov:Agent;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a packaging activity with the agent (person, organization, or automated system) that performed it.";
+  rdfs:comment "Links a packaging activity to the agent that performed it";
+  rdfs:label "performed by" .
+
 :builtFromSource a owl:ObjectProperty;
+  rdfs:subPropertyOf prov:wasDerivedFrom;
   owl:inverseOf :producedBinary;
   rdfs:domain :BinaryPackage;
   rdfs:range :SourcePackage;
@@ -1006,8 +1016,8 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "Meta Package" .
 
 :Package a owl:Class;
-  rdfs:subClassOf owl:Thing, _:genid1, _:genid2, _:genid3, _:genid4, _:genid5, _:genid6,
-    _:genid7;
+  rdfs:subClassOf owl:Thing, prov:Entity, _:genid1, _:genid2, _:genid3, _:genid4, _:genid5,
+    _:genid6, _:genid7;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A discrete unit of software that can be installed, updated, or removed by a package management system, typically containing executable code, configuration files, documentation, and metadata.";
   rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system";
   rdfs:label "Package" .
@@ -1065,7 +1075,7 @@ _:genid7 a owl:Restriction;
   rdfs:label "Publishing Activity" .
 
 :Repository a owl:Class;
-  rdfs:subClassOf owl:Thing, _:genid8;
+  rdfs:subClassOf owl:Thing, prov:Entity, _:genid8;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A centralized storage location where software packages are hosted and made available for distribution, typically accessible via network protocols and managed by package management systems.";
   rdfs:comment "A storage location for packages, accessible through a package management system";
   rdfs:label "Repository" .
@@ -1145,6 +1155,21 @@ _:genid11 a owl:Restriction;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A file that is installed on the target filesystem when a binary package is installed, including executables, libraries, configuration files, and documentation.";
   rdfs:comment "A file installed on the system by a binary package";
   rdfs:label "Installed File" .
+
+###  https://packagegraph.github.io/ontology/core#PackageIdentity
+:PackageIdentity a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Package Identity" ;
+    rdfs:comment "The version-agnostic identity of a package within a distribution and architecture. Dependency targets point to this instead of versioned instances." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "A stable, version-independent identifier for a package name within a specific distribution, release, and architecture. BinaryPackage instances link to their identity via isVersionOf. Dependencies point to the identity, enabling direct name-based joins without URI parsing." .
+
+###  https://packagegraph.github.io/ontology/core#isVersionOf
+:isVersionOf a owl:ObjectProperty ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:range :PackageIdentity ;
+    rdfs:label "is version of" ;
+    rdfs:comment "Links a versioned binary package to its version-agnostic package identity." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package." .
 
 ###  https://packagegraph.github.io/ontology/core#DataSnapshot
 :DataSnapshot a owl:Class ;
