@@ -71,6 +71,16 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 | `conda#` | Conda | Cross-language scientific computing. NOT `anaconda#`. |
 | `vcpkg#` | vcpkg | C/C++ (Microsoft). |
 | `conan#` | Conan | C/C++ (JFrog). |
+| `swift#` | Swift Package Manager | Apple ecosystem (iOS/macOS/Linux). |
+
+### Scientific/HPC Ecosystems
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `spack#` | Spack | HPC package manager (national labs, supercomputing) |
+| `easybuild#` | EasyBuild | HPC software build framework |
+| `bioconductor#` | Bioconductor | R bioinformatics (distinct from CRAN) |
+| `modules#` | Environment Modules/Lmod | Version-switched software stacks (not packages per se, but models the selection layer) |
 
 ### Embedded/IoT Ecosystems
 
@@ -99,6 +109,81 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 | `pulumi#` | Pulumi packages | Infrastructure as code (multi-language) |
 
 Note: **Artifact Hub** (`artifacthub.io`) is a **registry** that hosts multiple formats (Helm, OLM, Falco, OPA, etc.) — analogous to PyPI for pip. It is not a namespace itself; packages in Artifact Hub are typed by their format's namespace (`helm#`, `olm#`, etc.).
+
+### Configuration Management
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `puppet#` | Puppet Forge | Puppet modules |
+| `chef#` | Chef Supermarket | Chef cookbooks |
+| `salt#` | Salt formulas | SaltStack |
+
+### Editor/IDE Extensions
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `vscode#` | VS Code Marketplace | Extensions for VS Code/Codium |
+| `jetbrains#` | JetBrains Plugin Repository | IntelliJ/PyCharm/GoLand/etc. plugins |
+| `elpa#` | Emacs packages | ELPA, MELPA, GNU ELPA |
+| `vimplugin#` | Vim/Neovim plugins | vim-plug, lazy.nvim, packer, native packages |
+
+### Content Management
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `wordpress#` | WordPress plugins/themes | 55,000+ plugins, own repo format and metadata |
+| `drupal#` | Drupal modules | Drupal.org packaging |
+
+### TeX/Academic
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `ctan#` | CTAN | Comprehensive TeX Archive Network (TeX/LaTeX packages) |
+
+### AI/ML Models
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `huggingface#` | Hugging Face Hub | Models, datasets, spaces. NOT `hf#` (ambiguous). |
+| `ollama#` | Ollama | LLM model library, Modelfile format |
+| `onnx#` | ONNX Model Zoo | Neural network interchange format |
+
+### Firmware
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `fwupd#` | LVFS/fwupd | Linux Vendor Firmware Service — firmware updates as packages |
+
+### Mobile
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `fdroid#` | F-Droid | Open source Android apps, own repo format/metadata |
+
+### WASM/Emerging
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `wasm#` | WebAssembly components | WASI, component model — emerging standard |
+
+### Build System Dependencies
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `bazel#` | Bazel | External dependencies (MODULE.bazel, bzlmod) |
+
+### Enterprise/Legacy UNIX
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `ips#` | Image Packaging System | Solaris/illumos pkg(5) |
+
+### SBOM Formats (Meta-Packaging)
+
+| Namespace | Ecosystem | Notes |
+|-----------|-----------|-------|
+| `cyclonedx#` | CycloneDX | SBOM format — describes packages from other ecosystems |
+| `spdxpkg#` | SPDX package descriptions | Distinct from SPDX license vocabulary already in use as external vocab |
 
 ### Vendor Extensions
 
