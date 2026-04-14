@@ -8,13 +8,13 @@ Date: 2026-04-14
 The ontology uses hash namespaces for term definitions:
 
 ```
-https://packagegraph.github.io/ontology/core#
-https://packagegraph.github.io/ontology/debian#
-https://packagegraph.github.io/ontology/rpm#
-https://packagegraph.github.io/ontology/security#
-https://packagegraph.github.io/ontology/vcs#
-https://packagegraph.github.io/ontology/metrics#
-https://packagegraph.github.io/ontology/slsa#
+https://purl.org/packagegraph/ontology/core#
+https://purl.org/packagegraph/ontology/debian#
+https://purl.org/packagegraph/ontology/rpm#
+https://purl.org/packagegraph/ontology/security#
+https://purl.org/packagegraph/ontology/vcs#
+https://purl.org/packagegraph/ontology/metrics#
+https://purl.org/packagegraph/ontology/slsa#
 ```
 
 These namespace URIs are **permanent**. They will not change. The ontology version is tracked via `owl:versionInfo` and `owl:versionIRI`, not by changing the namespace.
@@ -24,7 +24,7 @@ These namespace URIs are **permanent**. They will not change. The ontology versi
 Data URIs use a shortened base path with hierarchical structure:
 
 ```
-https://packagegraph.github.io/d/{type}/{path...}
+https://purl.org/packagegraph/d/{type}/{path...}
 ```
 
 ### URI Patterns
@@ -87,6 +87,6 @@ All URI path components are percent-encoded using the same rules as Python's `ur
 
 ## Future Considerations
 
-- **PURL registration** (`purl.org/packagegraph/`) is planned for hosting independence
+- **PURL registration** (`purl.org/packagegraph/`) is registered and active for hosting independence
 - **Dereferenceable data URIs** (303 redirect to SPARQL DESCRIBE) planned for pre-1.0
 - **Versioned SPARQL endpoint** (`/v1/packagegraph/sparql`) planned when external consumers exist

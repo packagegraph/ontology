@@ -32,10 +32,15 @@ This project contains a comprehensive collection of RDF/OWL ontologies for repre
 ```
 ├── core.ttl           # Base ontology with common concepts
 ├── vcs.ttl           # Version control system integration
+├── security.ttl      # CVE vulnerabilities and security advisories
+├── metrics.ttl       # Code metrics and language properties
+├── slsa.ttl          # SLSA supply chain provenance attestations
+├── shacl.ttl         # SHACL validation shapes
 ├── debian.ttl        # Debian/APT package management
 ├── rpm.ttl           # RPM/YUM/DNF package management
+├── redhat.ttl        # Red Hat vendor extensions
 ├── arch.ttl          # Arch Linux package management
-├── bsd.ttl           # BSD ports system
+├── freebsd.ttl       # FreeBSD ports system
 ├── chocolatey.ttl    # Windows Chocolatey package management
 ├── homebrew.ttl      # macOS Homebrew package management
 ├── nix.ttl           # Nix functional package management
@@ -56,9 +61,10 @@ packagegraph/
 ### Key Configuration Files
 - `pyproject.toml`: Python project configuration and dependencies
 - `Makefile`: Build automation and validation scripts
-- `main.py`: CLI entry point for data collection and ontology management
 - `catalog-v001.xml`: OWL catalog for ontology imports
 - `.python-version`: Python version specification (3.12)
+
+Note: ETL tools (main.py, packagegraph/ module) have moved to the platform repository.
 
 ### Documentation and Build Output
 - `docs/`: Generated documentation and website files
@@ -85,15 +91,7 @@ make serve             # Serve documentation locally on :8000
 ```
 
 ### CLI Tool Usage
-```bash
-# ETL operations
-python main.py collect <repo-url> --repo-type debian --output-file packages.ttl
-python main.py check   # Run validation suite
-python main.py convert # Convert ontologies to different formats
-
-# Using uv (recommended)
-uv run python main.py collect <repo-url> --repo-type debian
-```
+Note: ETL tools have moved to the platform repository.
 
 ### Ontology Development
 1. **Edit ontologies**: Modify `.ttl` files using Turtle syntax
@@ -170,10 +168,13 @@ uv run python main.py collect <repo-url> --repo-type debian
 ## Namespace Management
 
 Each ontology uses its own namespace:
-- Core: `http://packagegraph.github.io/ontology/core#`
-- VCS: `http://packagegraph.github.io/ontology/vcs#`
-- Debian: `http://packagegraph.github.io/ontology/debian#`
-- RPM: `http://packagegraph.github.io/ontology/rpm#`
+- Core: `https://purl.org/packagegraph/ontology/core#`
+- VCS: `https://purl.org/packagegraph/ontology/vcs#`
+- Debian: `https://purl.org/packagegraph/ontology/debian#`
+- RPM: `https://purl.org/packagegraph/ontology/rpm#`
+- Security: `https://purl.org/packagegraph/ontology/security#`
+- Metrics: `https://purl.org/packagegraph/ontology/metrics#`
+- SLSA: `https://purl.org/packagegraph/ontology/slsa#`
 - And similar patterns for other package systems
 
 ## Current State

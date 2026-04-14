@@ -21,7 +21,7 @@ ontology.
   Maintainer, License, Architecture
 - **Key Properties**: packageName, description, homepage, downloadURL,
   installSize, checksum
-- **Namespace**: `http://packagegraph.github.io/ontology/core#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/core#`
 
 ### 2. VCS Integration Ontology (`vcs.ttl`)
 
@@ -29,7 +29,7 @@ ontology.
   management
 - **Key Classes**: Repository, Commit, Tag, Branch, SourcePackage
 - **Key Features**: Git integration, commit tracking, tag-based packaging
-- **Namespace**: `http://packagegraph.github.io/ontology/vcs#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/vcs#`
 
 ### 3. Debian/APT Ontology (`debian.ttl`)
 
@@ -39,7 +39,7 @@ ontology.
   Component, Section, Priority
 - **Key Features**: Debian control file metadata, dependency types (depends,
   recommends, suggests), maintainer scripts
-- **Namespace**: `http://packagegraph.github.io/ontology/debian#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/debian#`
 
 ### 4. RPM Ontology (`rpm.ttl`)
 
@@ -48,7 +48,7 @@ ontology.
 - **Key Classes**: RPMPackage, SourceRPM, BinaryRPM, RPMGroup, NEVR, Changelog
 - **Key Features**: RPM header tags, build metadata, file information, changelog
   entries
-- **Namespace**: `http://packagegraph.github.io/ontology/rpm#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/rpm#`
 
 ### 5. Arch Linux Ontology (`arch.ttl`)
 
@@ -57,17 +57,17 @@ ontology.
 - **Key Classes**: ArchPackage, PKGBUILD, SplitPackage, AUR, SRCINFO,
   PackageGroup
 - **Key Features**: PKGBUILD functions, checksums, build options, package groups
-- **Namespace**: `http://packagegraph.github.io/ontology/archlinux#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/archlinux#`
 
-### 6. BSD Ports Ontology (`bsd.ttl`)
+### 6. FreeBSD Ports Ontology (`freebsd.ttl`)
 
-- **Purpose**: Represents BSD ports (FreeBSD, OpenBSD, NetBSD), Makefiles, and
+- **Purpose**: Represents FreeBSD ports (FreeBSD, OpenBSD, NetBSD), Makefiles, and
   ports trees
 - **Key Classes**: Port, PortsTree, Makefile, PortSkeleton, Distinfo, Category,
   Flavor
 - **Key Features**: Port build configuration, patches, options, master sites,
   flavors
-- **Namespace**: `http://packagegraph.github.io/ontology/bsd#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/freebsd#`
 
 ### 7. Chocolatey Ontology (`chocolatey.ttl`)
 
@@ -77,7 +77,7 @@ ontology.
   InstallScript, UninstallScript
 - **Key Features**: PowerShell scripts, installer types, registry keys,
   Windows-specific properties
-- **Namespace**: `http://packagegraph.github.io/ontology/chocolatey#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/chocolatey#`
 
 ### 8. Homebrew Ontology (`homebrew.ttl`)
 
@@ -87,7 +87,7 @@ ontology.
   Fonts, etc.)
 - **Key Features**: Build specifications, dependency types, macOS application
   artifacts, bottles
-- **Namespace**: `http://packagegraph.github.io/ontology/homebrew#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/homebrew#`
 
 ### 9. Nix Ontology (`nix.ttl`)
 
@@ -97,7 +97,7 @@ ontology.
   StdenvMkDerivation
 - **Key Features**: Build phases, store paths, reproducible builds, functional
   dependencies
-- **Namespace**: `http://packagegraph.github.io/ontology/nix#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/nix#`
 
 ### 10. SLSA Supply Chain Security Ontology (`slsa.ttl`)
 
@@ -107,7 +107,7 @@ ontology.
   BuildEnvironment
 - **Key Features**: SLSA build levels (L0-L3), cryptographic attestations, build
   isolation and ephemeral environment tracking, PROV-O grounded
-- **Namespace**: `http://packagegraph.github.io/ontology/slsa#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/slsa#`
 
 ### 11. Security Ontology (`security.ttl`)
 
@@ -116,7 +116,7 @@ ontology.
 - **Key Classes**: Vulnerability, SecurityAdvisory, PatchActivity
 - **Key Features**: CVSS scoring, advisory-to-CVE mapping, affected/fixed version
   tracking, patch derivation chains
-- **Namespace**: `http://packagegraph.github.io/ontology/security#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/security#`
 
 ### 12. Code Metrics Ontology (`metrics.ttl`)
 
@@ -125,7 +125,7 @@ ontology.
 - **Key Classes**: CodeMetrics, LanguageMetrics, ProgrammingLanguage
 - **Key Features**: Lines of code counts, memory safety flags, garbage collection
   tracking
-- **Namespace**: `http://packagegraph.github.io/ontology/metrics#`
+- **Namespace**: `https://purl.org/packagegraph/ontology/metrics#`
 
 ## Key Features
 
@@ -207,19 +207,20 @@ ex:hello-nix a nix:StdenvMkDerivation ;
 ├── security.ttl                   # CVE vulnerabilities and security advisories
 ├── metrics.ttl                    # Code metrics and language properties
 ├── slsa.ttl                       # SLSA supply chain provenance attestations
+├── shacl.ttl                      # SHACL validation shapes
 ├── debian.ttl                     # Debian/APT (8 classes, 35+ properties)
 ├── rpm.ttl                        # RPM/YUM/DNF (8 classes, 45+ properties)
 ├── redhat.ttl                     # Red Hat vendor extensions (RHEL/RHIVOS)
 ├── arch.ttl                       # Arch Linux (7 classes, 40+ properties)
-├── bsd.ttl                        # BSD Ports (13 classes, 55+ properties)
+├── freebsd.ttl                    # FreeBSD Ports (13 classes, 55+ properties)
 ├── chocolatey.ttl                 # Chocolatey (8 classes, 38+ properties)
 ├── homebrew.ttl                   # Homebrew (23 classes, 65+ properties)
 ├── nix.ttl                        # Nix (15 classes, 75+ properties)
-├── shacl.ttl                      # SHACL validation shapes
 ├── examples.ttl                   # Example instances
-├── main.py                        # ETL tool for repository data collection
 ├── packagegraph/                  # Python package for data collection
 └── README.md                      # This documentation
+
+Note: ETL tools have moved to the platform repository.
 ```
 
 ## Applications
@@ -284,15 +285,15 @@ These ontologies enable various applications:
 
 Each ontology uses its own namespace to avoid conflicts:
 
-- Core: `http://packagegraph.github.io/ontology/core#`
-- VCS: `http://packagegraph.github.io/ontology/vcs#`
-- Debian: `http://packagegraph.github.io/ontology/debian#`
-- RPM: `http://packagegraph.github.io/ontology/rpm#`
-- Arch: `http://packagegraph.github.io/ontology/archlinux#`
-- BSD: `http://packagegraph.github.io/ontology/bsd#`
-- Chocolatey: `http://packagegraph.github.io/ontology/chocolatey#`
-- Homebrew: `http://packagegraph.github.io/ontology/homebrew#`
-- Nix: `http://packagegraph.github.io/ontology/nix#`
+- Core: `https://purl.org/packagegraph/ontology/core#`
+- VCS: `https://purl.org/packagegraph/ontology/vcs#`
+- Debian: `https://purl.org/packagegraph/ontology/debian#`
+- RPM: `https://purl.org/packagegraph/ontology/rpm#`
+- Arch: `https://purl.org/packagegraph/ontology/archlinux#`
+- FreeBSD: `https://purl.org/packagegraph/ontology/freebsd#`
+- Chocolatey: `https://purl.org/packagegraph/ontology/chocolatey#`
+- Homebrew: `https://purl.org/packagegraph/ontology/homebrew#`
+- Nix: `https://purl.org/packagegraph/ontology/nix#`
 
 ## Validation and Quality
 
@@ -339,51 +340,17 @@ All ontologies use relative imports for better portability:
 - `owl:imports <core.ttl>` instead of web URLs
 - Enables local development and Protégé compatibility
 
-### ETL Tool (`main.py`)
+### ETL Tools
 
-The project includes a comprehensive Python CLI tool for Extract, Transform, Load (ETL) operations with package repositories:
+ETL (Extract, Transform, Load) tools for package repository data collection have moved to the `platform` repository. The platform repo includes:
 
-#### Features
+- **packagegraph-etl**: Python package for collecting and transforming package metadata
+- **Collectors**: Support for Debian APT and RPM repositories
+- **Parallel Processing**: Configurable worker pools and chunking
+- **Minio Integration**: Content-addressable storage for RDF snapshots
+- **TDB2 Building**: Apache Jena tools for creating indexed SPARQL databases
 
-- **Multi-format Support**: Collects package metadata from Debian APT and RPM repositories
-- **Parallel Processing**: Configurable parallel processing with worker pools and chunking
-- **Incremental Loading**: Can append to existing RDF graphs for incremental updates
-- **Performance Profiling**: Built-in timing profiler for optimization analysis
-- **Graph Conversion**: Consolidates multiple TTL files into N-Triples format for bulk loading
-
-#### Usage Examples
-
-```bash
-# Collect Debian packages from repository
-python main.py collect http://deb.debian.org/debian \
-  --repo-type debian \
-  --distribution bookworm \
-  --component main \
-  --output-file debian_packages.ttl
-
-# Collect RPM packages with parallel processing
-python main.py collect http://mirror.centos.org/centos/8/BaseOS/x86_64/os/ \
-  --repo-type rpm \
-  --parallel \
-  --workers 8 \
-  --chunk-size 500 \
-  --output-file rpm_packages.ttl
-
-# Convert TTL ontologies to N-Triples for database loading
-python main.py convert \
-  --input-dir . \
-  --output-file package_graph.nt
-
-# Run ontology validation suite
-python main.py check
-```
-
-#### Data Pipeline
-
-1. **Extract**: Downloads package metadata from repository indexes
-2. **Transform**: Converts package data to RDF using appropriate ontology terms
-3. **Load**: Serializes results to Turtle (TTL) or N-Triples (NT) formats
-4. **Validate**: Ensures ontological consistency and completeness
+See the `platform` repository for ETL usage and deployment.
 
 ## Contributing
 
