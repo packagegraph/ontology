@@ -2,7 +2,8 @@
 # This Makefile provides utilities for validating, combining, and managing ontology files
 
 # Variables
-ONTOLOGY_FILES = core.ttl vcs.ttl rpm.ttl debian.ttl arch.ttl freebsd.ttl chocolatey.ttl homebrew.ttl nix.ttl security.ttl metrics.ttl slsa.ttl examples.ttl
+ECOSYSTEM_FILES = alpine.ttl arch.ttl cargo.ttl chocolatey.ttl conda.ttl cpan.ttl cran.ttl debian.ttl flatpak.ttl gentoo.ttl gomod.ttl hackage.ttl hex.ttl homebrew.ttl maven.ttl nix.ttl npm.ttl nuget.ttl pypi.ttl rubygems.ttl snap.ttl void.ttl
+ONTOLOGY_FILES = core.ttl vcs.ttl security.ttl metrics.ttl slsa.ttl $(ECOSYSTEM_FILES) examples.ttl
 VENDOR_FILES = redhat.ttl
 ALL_TTL_FILES = $(ONTOLOGY_FILES) $(VENDOR_FILES)
 COMBINED_FILE = x.ttl
@@ -30,22 +31,8 @@ deploy: setup-tools validate-robot validate-shacl create-dirs generate-formats v
 # Lint individual ontology files for syntax validation
 .PHONY: lint
 lint:
-	@echo "Validating ontology files..."
-	@for file in $(ONTOLOGY_FILES); do \
-		if [ -f "$$file" ]; then \
-			echo "Checking $$file..."; \
-			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$file', format='turtle'); print('✓ $$file parses correctly')" || exit 1; \
-		else \
-			echo "⚠ Warning: $$file not found, skipping"; \
-		fi; \
-	done
-	@for file in $(VENDOR_FILES); do \
-		if [ -f "$$file" ]; then \
-			echo "Checking vendor extension $$file..."; \
-			$(PYTHON) -c "import rdflib; g = rdflib.Graph(); g.parse('$$file', format='turtle'); print('✓ $$file parses correctly')" || exit 1; \
-		fi; \
-	done
-	@echo "All ontology files validated successfully!"
+	@echo "Validating ontology files using packagegraph.checker..."
+	@$(PYTHON) packagegraph/checker.py
 
 # Concatenate all ontology files into a single combined file
 .PHONY: concat
@@ -195,22 +182,16 @@ validate-robot: setup-tools
 	@echo "Validating ontology files with ROBOT..."
 	@mkdir -p reports
 	@for ttl_file in $(ALL_TTL_FILES); do \
-		if [ -f "$ttl_file" ]; then \
-			echo "Validating $ttl_file"; \
-			java -jar $(ROBOT_PATH) report --input "$ttl_file" --output "reports/${ttl_file%.ttl}-report.tsv" || true; \
+		if [ -f "$$ttl_file" ]; then \
+			echo "Validating $$ttl_file"; \
+			java -jar $(ROBOT_PATH) report --input "$$ttl_file" --output "reports/$${ttl_file%.ttl}-report.tsv" || true; \
 		fi; \
 		done
 # Validate ontology data with SHACL
 .PHONY: validate-shacl
 validate-shacl: setup-tools
-	@echo "Validating ontology data with SHACL..."
-	@mkdir -p reports
-	@for ttl_file in $(ALL_TTL_FILES); do \
-		if [ -f "$ttl_file" ]; then \
-			echo "Validating $ttl_file with shacl.ttl"; \
-			java -jar $(ROBOT_PATH) verify --input "$ttl_file" --shacl shacl.ttl --output "reports/${ttl_file%.ttl}-shacl-report.tsv" || true; \
-		fi; \
-	done
+	@echo "Validating ontology data with SHACL using packagegraph.checker..."
+	@$(PYTHON) packagegraph/checker.py
 
 # Create directory structure for documentation
 .PHONY: create-dirs
