@@ -32,17 +32,17 @@
 # #################################################################
 
 rh:RHIVOSCore a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHIVOS Core RPM Set" ;
+    rdfs:label "RHIVOS Core RPM Set"^^xsd:string ;
     rdfs:comment "The core package set for Red Hat In-Vehicle Operating System, containing the essential RPMs required for automotive deployments" ;
     IAO:0000115 "The curated set of RPM packages that form the core of the Red Hat In-Vehicle Operating System (RHIVOS), representing the minimal package footprint for automotive and embedded deployments." .
 
 rh:RHELBaseOS a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHEL BaseOS" ;
+    rdfs:label "RHEL BaseOS"^^xsd:string ;
     rdfs:comment "The base operating system package set providing the core OS functionality for Red Hat Enterprise Linux" ;
     IAO:0000115 "The set of packages that provides the core operating system foundation for Red Hat Enterprise Linux, including the kernel, system libraries, and essential utilities." .
 
 rh:RHELAppStream a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHEL AppStream" ;
+    rdfs:label "RHEL AppStream"^^xsd:string ;
     rdfs:comment "The application stream package set providing user-space applications and development tools for Red Hat Enterprise Linux" ;
     IAO:0000115 "The set of packages providing user-space applications, programming languages, development tools, and database servers for Red Hat Enterprise Linux, with independent lifecycle management." .
 

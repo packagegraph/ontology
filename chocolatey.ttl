@@ -381,6 +381,7 @@ choco:scriptFile a owl:DatatypeProperty ;
 choco:community a choco:ChocolateyRepository ;
     rdfs:label "Chocolatey Community Repository" ;
     rdfs:comment "The main community repository for Chocolatey packages" ;
+    pkg:hasVersion [ a pkg:Version ; pkg:versionString "v2" ] ;
     pkg:homepage "https://community.chocolatey.org/" .
 
 # Common installer types

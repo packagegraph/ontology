@@ -754,7 +754,6 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "exit code" .
 
 :homepage a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Package;
   rdfs:range xsd:anyURI;
   <http://purl.obolibrary.org/obo/IAO_0000115> "The web address of the main website or homepage associated with the software package or its development project.";
   rdfs:comment "The homepage URL of the package or project";
