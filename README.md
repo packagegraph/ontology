@@ -127,6 +127,86 @@ ontology.
   tracking
 - **Namespace**: `https://purl.org/packagegraph/ontology/metrics#`
 
+### 13. NPM Package Ontology (`npm.ttl`)
+
+- **Purpose**: Represents NPM packages and the Node.js ecosystem
+- **Key Classes**: NpmPackage, Scope, Script, Workspace, NpmRegistry
+- **Key Features**: Scoped packages, lifecycle scripts, peer/optional/bundled
+  dependencies, integrity hashes, workspaces
+- **Namespace**: `https://purl.org/packagegraph/ontology/npm#`
+
+### 14. PyPI Package Ontology (`pypi.ttl`)
+
+- **Purpose**: Represents Python packages distributed through PyPI
+- **Key Classes**: PythonPackage, Wheel, Sdist, Classifier, Extra, EntryPoint
+- **Key Features**: Wheels vs sdists, trove classifiers, extras_require, entry
+  points, PEP 517 build backends, yanked versions
+- **Namespace**: `https://purl.org/packagegraph/ontology/pypi#`
+
+### 15. Conda/Anaconda Package Ontology (`conda.ttl`)
+
+- **Purpose**: Represents Conda packages, channels, and environments
+- **Key Classes**: CondaPackage, Channel, Environment, Recipe, Feedstock
+- **Key Features**: Channels (defaults, conda-forge), build strings, noarch
+  packages, environments, feedstock CI
+- **Namespace**: `https://purl.org/packagegraph/ontology/conda#`
+
+### 16. Cargo/crates.io Package Ontology (`cargo.ttl`)
+
+- **Purpose**: Represents Rust crates from crates.io
+- **Key Classes**: Crate, Feature, Target, CrateCategory
+- **Key Features**: Feature flags, Rust editions, build targets (lib/bin),
+  build scripts, crate categories
+- **Namespace**: `https://purl.org/packagegraph/ontology/cargo#`
+
+### 17. Go Modules Ontology (`gomod.ttl`)
+
+- **Purpose**: Represents Go modules and packages
+- **Key Classes**: GoModule, GoPackage, GoProxy, ReplaceDirective
+- **Key Features**: Module paths, semantic import versioning, go.sum integrity
+  hashes, replace/exclude directives, retracted versions
+- **Namespace**: `https://purl.org/packagegraph/ontology/gomod#`
+
+### 18. Flatpak Application Ontology (`flatpak.ttl`)
+
+- **Purpose**: Represents Flatpak applications, runtimes, and remotes
+- **Key Classes**: FlatpakApp, Runtime, Extension, Remote, Permission
+- **Key Features**: Application IDs, sandbox permissions (finish-args), runtimes,
+  OSTree commits, Flathub distribution
+- **Namespace**: `https://purl.org/packagegraph/ontology/flatpak#`
+
+### 19. Snap Package Ontology (`snap.ttl`)
+
+- **Purpose**: Represents Snap packages and the Snap Store
+- **Key Classes**: SnapPackage, SnapChannel, Interface, SnapBase, SnapApp
+- **Key Features**: Confinement levels, interfaces (plugs/slots), channels/tracks,
+  bases, store revision tracking
+- **Namespace**: `https://purl.org/packagegraph/ontology/snap#`
+
+### 20. Alpine APK Package Ontology (`alpine.ttl`)
+
+- **Purpose**: Represents Alpine Linux packages and apk-tools
+- **Key Classes**: AlpinePackage, ApkRepository, AbuildScript, AlpineBranch
+- **Key Features**: APKINDEX format, musl libc, install-if triggers, provider
+  priorities, aports build system
+- **Namespace**: `https://purl.org/packagegraph/ontology/alpine#`
+
+### 21. Gentoo Portage Ontology (`gentoo.ttl`)
+
+- **Purpose**: Represents Gentoo packages, ebuilds, and the Portage system
+- **Key Classes**: GentooPackage, Ebuild, UseFlag, Overlay, Eclass, Slot
+- **Key Features**: USE flags, slots/subslots, EAPI versions, keyword masking,
+  eclasses, source-based compilation, overlays
+- **Namespace**: `https://purl.org/packagegraph/ontology/gentoo#`
+
+### 22. Void Linux XBPS Package Ontology (`void.ttl`)
+
+- **Purpose**: Represents Void Linux packages and XBPS package manager
+- **Key Classes**: VoidPackage, VoidTemplate, VoidRepository, Alternative
+- **Key Features**: Build styles, musl/glibc variants, alternatives system,
+  void-packages templates
+- **Namespace**: `https://purl.org/packagegraph/ontology/void#`
+
 ## Key Features
 
 ### Comprehensive Metadata Coverage
@@ -148,10 +228,19 @@ Each ontology captures unique features of its package management system:
 - **RPM**: NEVR versioning, spec files, RPM tags, build environments
 - **Arch**: PKGBUILD structure, AUR integration, split packages
 - **BSD**: Ports tree organization, build options, master sites, flavors
-- **Chocolatey**: PowerShell integration, Windows installer types, registry
-  handling
+- **Chocolatey**: PowerShell integration, Windows installer types, registry handling
 - **Homebrew**: Formula/cask distinction, tap system, bottle distribution
 - **Nix**: Functional derivations, store paths, reproducible builds, flakes
+- **NPM**: Scoped packages, lifecycle scripts, peer dependencies, workspaces
+- **PyPI**: Wheels/sdists, trove classifiers, extras, entry points
+- **Conda**: Channels, environments, feedstocks, noarch packages
+- **Cargo**: Feature flags, Rust editions, build targets
+- **Go**: Module paths, integrity hashes, replace directives
+- **Flatpak**: Sandbox permissions, runtimes, OSTree distribution
+- **Snap**: Confinement levels, interfaces (plugs/slots), channels
+- **Alpine**: musl libc, APKINDEX, install-if triggers
+- **Gentoo**: USE flags, slots/subslots, eclasses, source compilation
+- **Void**: XBPS, musl/glibc variants, build styles, alternatives
 
 ### Interoperability Design
 
@@ -202,25 +291,43 @@ ex:hello-nix a nix:StdenvMkDerivation ;
 ## File Structure
 
 ```
-├── core.ttl                       # Base ontology (25+ classes, 40+ properties)
-├── vcs.ttl                        # Version control integration
-├── security.ttl                   # CVE vulnerabilities and security advisories
-├── metrics.ttl                    # Code metrics and language properties
-├── slsa.ttl                       # SLSA supply chain provenance attestations
+# Core + cross-cutting
+├── core.ttl                       # Base ontology (32 classes, 98 properties)
+├── vcs.ttl                        # Version control (13 classes, 67 properties)
+├── security.ttl                   # CVE/advisories (3 classes, 27 properties)
+├── metrics.ttl                    # Code metrics (3 classes, 19 properties)
+├── slsa.ttl                       # SLSA provenance (5 classes, 23 properties)
 ├── shacl.ttl                      # SHACL validation shapes
-├── debian.ttl                     # Debian/APT (8 classes, 35+ properties)
-├── rpm.ttl                        # RPM/YUM/DNF (8 classes, 45+ properties)
-├── redhat.ttl                     # Red Hat vendor extensions (RHEL/RHIVOS)
-├── arch.ttl                       # Arch Linux (7 classes, 40+ properties)
-├── freebsd.ttl                    # FreeBSD Ports (13 classes, 55+ properties)
-├── chocolatey.ttl                 # Chocolatey (8 classes, 38+ properties)
-├── homebrew.ttl                   # Homebrew (23 classes, 65+ properties)
-├── nix.ttl                        # Nix (15 classes, 75+ properties)
 ├── examples.ttl                   # Example instances
-├── packagegraph/                  # Python package for data collection
-└── README.md                      # This documentation
+│
+# Linux distributions
+├── debian.ttl                     # Debian/APT (10 classes, 33 properties)
+├── rpm.ttl                        # RPM/YUM/DNF (13 classes, 53 properties)
+├── redhat.ttl                     # Red Hat vendor extensions
+├── arch.ttl                       # Arch Linux (7 classes, 47 properties)
+├── alpine.ttl                     # Alpine APK (4 classes, 12 properties)
+├── gentoo.ttl                     # Gentoo Portage (6 classes, 18 properties)
+├── void.ttl                       # Void Linux XBPS (4 classes, 14 properties)
+├── freebsd.ttl                    # FreeBSD Ports (15 classes, 45 properties)
+├── nix.ttl                        # Nix (20 classes, 52 properties)
+│
+# Application packaging
+├── homebrew.ttl                   # Homebrew (33 classes, 37 properties)
+├── chocolatey.ttl                 # Chocolatey (11 classes, 39 properties)
+├── flatpak.ttl                    # Flatpak (5 classes, 12 properties)
+├── snap.ttl                       # Snap (5 classes, 15 properties)
+│
+# Language ecosystems
+├── npm.ttl                        # NPM/Node.js (5 classes, 20 properties)
+├── pypi.ttl                       # PyPI/Python (6 classes, 16 properties)
+├── conda.ttl                      # Conda/Anaconda (5 classes, 15 properties)
+├── cargo.ttl                      # Cargo/crates.io (4 classes, 17 properties)
+├── gomod.ttl                      # Go modules (4 classes, 13 properties)
+│
+└── README.md
 
-Note: ETL tools have moved to the platform repository.
+Note: ETL tools live in the platform repository.
+Total: 24 modules, 213 classes, 694 properties.
 ```
 
 ## Applications
