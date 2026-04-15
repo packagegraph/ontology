@@ -31,6 +31,13 @@ Ontology modules with TTL files and registered PURLs.
 | `metrics#` | `metrics.ttl` | `/packagegraph/ontology/metrics` | Code metrics and analysis |
 | `redhat#` | `redhat.ttl` | `/packagegraph/ontology/redhat` | Red Hat vendor extension (AppCompat, RHEL sets) |
 | `shacl#` | `shacl.ttl` | `/packagegraph/ontology/shacl` | SHACL validation shapes |
+| `rubygems#` | `rubygems.ttl` | `/packagegraph/ontology/rubygems` | RubyGems (Ruby packages) |
+| `maven#` | `maven.ttl` | `/packagegraph/ontology/maven` | Maven Central (Java/JVM artifacts) |
+| `cpan#` | `cpan.ttl` | `/packagegraph/ontology/cpan` | CPAN (Perl distributions) |
+| `cran#` | `cran.ttl` | `/packagegraph/ontology/cran` | CRAN (R packages) |
+| `hackage#` | `hackage.ttl` | `/packagegraph/ontology/hackage` | Hackage (Haskell packages) |
+| `nuget#` | `nuget.ttl` | `/packagegraph/ontology/nuget` | NuGet (.NET packages) |
+| `hex#` | `hex.ttl` | `/packagegraph/ontology/hex` | Hex.pm (Elixir/Erlang packages) |
 
 ## Reserved Namespaces
 
@@ -57,16 +64,9 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 | `npm#` | npm/yarn/pnpm | JavaScript/TypeScript registry. NOT `nodejs#`. |
 | `pypi#` | pip/PyPI | Python registry. NOT `pip#` or `python#`. |
 | `crates#` | crates.io/cargo | Rust registry. |
-| `maven#` | Maven Central | Java/Kotlin/Scala. |
-| `nuget#` | NuGet | .NET. Note: Chocolatey is a layer on NuGet. |
-| `rubygems#` | RubyGems | Ruby. |
 | `gomod#` | Go modules | NOT `go#` (overloaded — board game). |
-| `hackage#` | Hackage | Haskell. |
-| `cran#` | CRAN | R. |
-| `cpan#` | CPAN | Perl. |
 | `cocoapods#` | CocoaPods | iOS/macOS Swift/Objective-C. |
 | `pub#` | pub.dev | Dart/Flutter. |
-| `hex#` | Hex.pm | Elixir/Erlang. |
 | `opam#` | opam | OCaml. |
 | `conda#` | Conda | Cross-language scientific computing. NOT `anaconda#`. |
 | `vcpkg#` | vcpkg | C/C++ (Microsoft). |

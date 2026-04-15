@@ -1,5 +1,48 @@
 # Changelog
 
+## [Unreleased] - 2026-04-15
+
+### Added
+
+#### New Ontology Files
+- **RubyGems Package Ontology** (`rubygems.ttl`) — Models RubyGems registry packages including gem platforms, Ruby version requirements, prerelease versions, SHA-256 checksums, and gem dependencies
+- **Maven Package Ontology** (`maven.ttl`) — Models Maven Central artifacts including groupId:artifactId:version coordinates, POM metadata, dependency scopes (compile, provided, runtime, test), classifiers, and repository structure
+- **CPAN Package Ontology** (`cpan.ttl`) — Models CPAN distributions including PAUSE author IDs, maturity levels (released/developer), modules, and MetaCPAN metadata
+- **CRAN Package Ontology** (`cran.ttl`) — Models CRAN (R package archive) including compilation requirements, system dependencies, priority levels (base/recommended), Bioconductor views, and R dependency types (Depends, Imports, Suggests, LinkingTo, Enhances)
+- **Hackage Package Ontology** (`hackage.ttl`) — Models Hackage packages including Cabal file metadata, GHC version compatibility (tested-with), categories, stability levels, and build-depends relationships
+- **NuGet Package Ontology** (`nuget.ttl`) — Models NuGet Gallery packages including target frameworks, prerelease versions, icon URLs, tags, listed status, and framework-specific dependencies
+- **Hex Package Ontology** (`hex.ttl`) — Models Hex.pm packages including Elixir/Erlang version requirements, build tools (mix/rebar3), retirement status, and package checksums
+
+#### NAMESPACES.md Updates
+- Moved 7 namespaces from Reserved to Current: `rubygems#`, `maven#`, `cpan#`, `cran#`, `hackage#`, `nuget#`, `hex#`
+- All 7 now have TTL files and collectors
+
+## [0.5.1] - 2026-04-14
+
+### Added
+
+#### New Ontology File (dq.ttl)
+- **Data Quality Ontology** — Provides a structured way to record and query data quality issues discovered during ETL collection and enrichment
+  - 1 class: `dq:DataQualityIssue`
+  - 1 object property: `dq:hasQualityIssue` (links any resource to its quality issues)
+  - 6 datatype properties: `dq:issueType`, `dq:field`, `dq:rawValue`, `dq:detectedBy`, `dq:detectedAt`, `dq:severity`
+  - Issue type taxonomy: `dead-repo`, `malformed-email`, `invalid-homepage`, `missing-field`, `stale-data`, `encoding-error`
+  - **Namespace**: `https://purl.org/packagegraph/ontology/dq#`
+  - Imports: core.ttl
+
+#### VCS Ontology Additions (vcs.ttl)
+- **7 new properties** used by the `enrich-github-vcs` enricher but previously missing from the ontology:
+  - `vcs:repositoryURL` — Canonical web URL of the repository
+  - `vcs:repositoryDescription` — Short description as set by repository owner
+  - `vcs:repositoryStatus` — Availability status (e.g., `not-found` for HTTP 404, indicating deleted/private/moved repos)
+  - `vcs:statusCheckedAt` — Timestamp when repository status was last verified via API
+  - `vcs:starCount` — Star count (declared `owl:equivalentProperty` of `vcs:stargazerCount`)
+  - `vcs:commitDate` — Commit authored date (declared `owl:equivalentProperty` of `vcs:authorTimestamp`)
+  - `vcs:releaseName` — Human-readable release display name (distinct from tag name)
+
+### Documentation
+- **`docs/data-quality.md`** (platform) — Complete guide to the data quality system: SPARQL query cookbook, issue type taxonomy, ontology reference, environment variables
+
 ## [0.5.0] - 2026-04-13
 
 ### Added
