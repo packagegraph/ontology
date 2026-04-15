@@ -1,0 +1,131 @@
+# Void Linux XBPS Package Ontology
+@prefix void: <https://purl.org/packagegraph/ontology/void#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/void#> a owl:Ontology ;
+    rdfs:label "Void Linux XBPS Package Ontology" ;
+    rdfs:comment "Ontology for representing Void Linux packages and the XBPS package manager" ;
+    dcterms:abstract "Models Void Linux packages managed by XBPS (X Binary Package System), including void-packages templates, build styles, musl/glibc variants, and the alternatives system. Void is an independent rolling-release distribution with runit as its init system." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <core.ttl> .
+
+# Classes
+
+void:VoidPackage a owl:Class ;
+    rdfs:subClassOf pkg:BinaryPackage ;
+    rdfs:label "Void Package" ;
+    rdfs:comment "A binary package for Void Linux" ;
+    IAO:0000115 "A binary package in XBPS format for Void Linux, available in both musl and glibc variants." .
+
+void:VoidTemplate a owl:Class ;
+    rdfs:label "Void Template" ;
+    rdfs:comment "A void-packages build template" ;
+    IAO:0000115 "A build template in the void-packages repository defining how to build a package from source, using xbps-src and a declared build_style." .
+
+void:VoidRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Void Repository" ;
+    rdfs:comment "A Void Linux package repository" ;
+    IAO:0000115 "A binary package repository for Void Linux, indexed by XBPS and mirrored across multiple tier-1 and tier-2 mirrors." .
+
+void:Alternative a owl:Class ;
+    rdfs:label "Alternative" ;
+    rdfs:comment "An XBPS alternatives group entry" ;
+    IAO:0000115 "An entry in the XBPS alternatives system allowing multiple packages to provide the same file (e.g., different vi implementations providing /usr/bin/vi)." .
+
+# Datatype Properties
+
+void:buildStyle a owl:DatatypeProperty ;
+    rdfs:label "build style" ;
+    rdfs:domain void:VoidTemplate ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The xbps-src build style (e.g., 'gnu-configure', 'cmake', 'cargo', 'python3-pep517', 'meson', 'go')." .
+
+void:libcVariant a owl:DatatypeProperty ;
+    rdfs:label "libc variant" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The C library variant: 'glibc' or 'musl'. Void uniquely supports both as first-class variants." .
+
+void:xbpsRevision a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "The XBPS package revision number, incremented when the template changes without a version bump." .
+
+void:shortDesc a owl:DatatypeProperty ;
+    rdfs:label "short description" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "One-line package description from the template." .
+
+void:filePatterns a owl:DatatypeProperty ;
+    rdfs:label "file patterns" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Glob patterns defining which files from the build output are included in this subpackage." .
+
+void:confFiles a owl:DatatypeProperty ;
+    rdfs:label "configuration files" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "List of configuration files that are preserved across package updates." .
+
+void:alternativesGroup a owl:DatatypeProperty ;
+    rdfs:label "alternatives group" ;
+    rdfs:domain void:Alternative ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The alternatives group name (e.g., 'vi', 'cc', 'awk')." .
+
+void:alternativesTarget a owl:DatatypeProperty ;
+    rdfs:label "alternatives target" ;
+    rdfs:domain void:Alternative ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The symlink target this package provides for the alternatives group." .
+
+void:hostmakedepends a owl:DatatypeProperty ;
+    rdfs:label "hostmakedepends" ;
+    rdfs:domain void:VoidTemplate ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Build dependencies that run on the host (not cross-compiled), needed during the build process." .
+
+void:makedepends a owl:DatatypeProperty ;
+    rdfs:label "makedepends" ;
+    rdfs:domain void:VoidTemplate ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Build dependencies installed for the target architecture during cross-compilation." .
+
+void:sha256sum a owl:DatatypeProperty ;
+    rdfs:label "sha256 checksum" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "SHA-256 hash of the source tarball declared in the template for integrity verification." .
+
+# Object Properties
+
+void:inRepository a owl:ObjectProperty ;
+    rdfs:label "in repository" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range void:VoidRepository ;
+    IAO:0000115 "Associates a package with the Void repository it is distributed through." .
+
+void:builtFromTemplate a owl:ObjectProperty ;
+    rdfs:label "built from template" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range void:VoidTemplate ;
+    IAO:0000115 "Associates a package with the void-packages template that produced it." .
+
+void:hasAlternative a owl:ObjectProperty ;
+    rdfs:label "has alternative" ;
+    rdfs:domain void:VoidPackage ;
+    rdfs:range void:Alternative ;
+    IAO:0000115 "Associates a package with an alternatives group entry it provides." .

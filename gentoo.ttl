@@ -1,0 +1,165 @@
+# Gentoo Portage Ontology
+@prefix gentoo: <https://purl.org/packagegraph/ontology/gentoo#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/gentoo#> a owl:Ontology ;
+    rdfs:label "Gentoo Portage Ontology" ;
+    rdfs:comment "Ontology for representing Gentoo packages, ebuilds, and the Portage system" ;
+    dcterms:abstract "Models Gentoo's source-based packaging system including ebuilds, USE flags, slots/subslots, keyword masking, EAPI versions, eclasses, and overlays. Gentoo's compile-from-source model with granular USE flag customization is unique among Linux distributions." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <core.ttl> .
+
+# Classes
+
+gentoo:GentooPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Gentoo Package" ;
+    rdfs:comment "A package in the Gentoo Portage tree" ;
+    IAO:0000115 "A package in the Gentoo ebuild repository, identified by category/name (e.g., dev-libs/openssl), compiled from source with USE flag customization." .
+
+gentoo:Ebuild a owl:Class ;
+    rdfs:label "Ebuild" ;
+    rdfs:comment "An ebuild script defining how to build a specific version" ;
+    IAO:0000115 "A bash script following the EAPI specification that defines how to fetch, configure, compile, install, and test a specific version of a Gentoo package." .
+
+gentoo:UseFlag a owl:Class ;
+    rdfs:label "USE Flag" ;
+    rdfs:comment "A compile-time feature toggle" ;
+    IAO:0000115 "A named flag that enables or disables optional functionality at compile time, affecting which dependencies are pulled in and how the software is configured." .
+
+gentoo:Overlay a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Overlay" ;
+    rdfs:comment "An overlay repository (additional ebuild repository)" ;
+    IAO:0000115 "A supplementary ebuild repository that overlays or extends the main Gentoo repository, providing additional or modified packages." .
+
+gentoo:Eclass a owl:Class ;
+    rdfs:label "Eclass" ;
+    rdfs:comment "A shared ebuild class providing reusable functionality" ;
+    IAO:0000115 "A bash library inherited by ebuilds to provide common build patterns (e.g., cmake.eclass, python-single-r1.eclass, rust.eclass)." .
+
+gentoo:Slot a owl:Class ;
+    rdfs:label "Slot" ;
+    rdfs:comment "A package slot for parallel installation" ;
+    IAO:0000115 "A slot identifier allowing multiple versions of a package to be installed simultaneously (e.g., Python 3.11 and 3.12 in separate slots)." .
+
+# Datatype Properties
+
+gentoo:category a owl:DatatypeProperty ;
+    rdfs:label "category" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Gentoo package category (e.g., 'dev-libs', 'sys-apps', 'www-client')." .
+
+gentoo:slot a owl:DatatypeProperty ;
+    rdfs:label "slot" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The SLOT value (e.g., '0', '3.12', '0/1.2.3') allowing parallel installation of different versions." .
+
+gentoo:subslot a owl:DatatypeProperty ;
+    rdfs:label "subslot" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The SUBSLOT value (after the /) reflecting the ABI version — changes trigger rebuilds of dependent packages." .
+
+gentoo:eapi a owl:DatatypeProperty ;
+    rdfs:label "EAPI" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Ebuild API version (e.g., '8') determining which functions and features are available in the ebuild." .
+
+gentoo:keywords a owl:DatatypeProperty ;
+    rdfs:label "keywords" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Architecture keywords (e.g., 'amd64', '~amd64', '-amd64') indicating stability status. ~ prefix means testing, - means explicitly unsupported." .
+
+gentoo:iuse a owl:DatatypeProperty ;
+    rdfs:label "IUSE" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The list of USE flags relevant to this ebuild, with + prefix for default-enabled flags." .
+
+gentoo:requiredUse a owl:DatatypeProperty ;
+    rdfs:label "REQUIRED_USE" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Boolean expression constraining valid USE flag combinations (e.g., 'exactly-one-of( python_targets_python3_11 python_targets_python3_12 )')." .
+
+gentoo:restrict a owl:DatatypeProperty ;
+    rdfs:label "restrict" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Restrictions on the ebuild (e.g., 'mirror' prevents redistribution, 'fetch' requires manual download, 'test' skips test phase)." .
+
+gentoo:srcUri a owl:DatatypeProperty ;
+    rdfs:label "SRC_URI" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The source download URI(s) for the package, potentially conditional on USE flags." .
+
+gentoo:useFlagName a owl:DatatypeProperty ;
+    rdfs:label "flag name" ;
+    rdfs:domain gentoo:UseFlag ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The USE flag name (e.g., 'ssl', 'X', 'systemd', 'doc')." .
+
+gentoo:useFlagDescription a owl:DatatypeProperty ;
+    rdfs:label "flag description" ;
+    rdfs:domain gentoo:UseFlag ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Human-readable description of what the USE flag enables." .
+
+gentoo:isGlobal a owl:DatatypeProperty ;
+    rdfs:label "is global" ;
+    rdfs:domain gentoo:UseFlag ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether the USE flag is global (defined in profiles/use.desc) vs local (per-package in metadata.xml)." .
+
+gentoo:eclassName a owl:DatatypeProperty ;
+    rdfs:label "eclass name" ;
+    rdfs:domain gentoo:Eclass ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the eclass (e.g., 'cmake', 'python-single-r1')." .
+
+# Object Properties
+
+gentoo:hasEbuild a owl:ObjectProperty ;
+    rdfs:label "has ebuild" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range gentoo:Ebuild ;
+    IAO:0000115 "Associates a package with an ebuild for a specific version." .
+
+gentoo:hasUseFlag a owl:ObjectProperty ;
+    rdfs:label "has USE flag" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range gentoo:UseFlag ;
+    IAO:0000115 "Associates an ebuild with a USE flag it supports." .
+
+gentoo:inOverlay a owl:ObjectProperty ;
+    rdfs:label "in overlay" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range gentoo:Overlay ;
+    IAO:0000115 "Associates a package with the overlay repository it comes from." .
+
+gentoo:inheritsEclass a owl:ObjectProperty ;
+    rdfs:label "inherits eclass" ;
+    rdfs:domain gentoo:Ebuild ;
+    rdfs:range gentoo:Eclass ;
+    IAO:0000115 "Associates an ebuild with an eclass it inherits." .
+
+gentoo:inSlot a owl:ObjectProperty ;
+    rdfs:label "in slot" ;
+    rdfs:domain gentoo:GentooPackage ;
+    rdfs:range gentoo:Slot ;
+    IAO:0000115 "Associates a package version with its installation slot." .

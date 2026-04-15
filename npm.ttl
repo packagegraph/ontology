@@ -1,0 +1,175 @@
+# NPM Package Ontology
+@prefix npm: <https://purl.org/packagegraph/ontology/npm#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/npm#> a owl:Ontology ;
+    rdfs:label "NPM Package Ontology" ;
+    rdfs:comment "Ontology for representing NPM packages and the Node.js ecosystem" ;
+    dcterms:abstract "Models NPM registry packages including scoped packages, semantic version ranges, scripts, peer dependencies, workspaces, and the package-lock.json dependency tree. Instances are dual-typed as both pkg:Package and npm:NpmPackage." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <core.ttl> .
+
+# Classes
+
+npm:NpmPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "NPM Package" ;
+    rdfs:comment "A package published to an NPM registry" ;
+    IAO:0000115 "A JavaScript/TypeScript package distributed through the NPM registry, described by a package.json manifest." .
+
+npm:Scope a owl:Class ;
+    rdfs:label "Scope" ;
+    rdfs:comment "An NPM scope (@org/package)" ;
+    IAO:0000115 "A namespace prefix for NPM packages (e.g., @babel, @types) that groups related packages under an organization or project." .
+
+npm:Script a owl:Class ;
+    rdfs:label "Script" ;
+    rdfs:comment "A lifecycle script defined in package.json" ;
+    IAO:0000115 "A named shell command defined in the scripts field of package.json, executed during lifecycle events (install, test, build) or via npm run." .
+
+npm:Workspace a owl:Class ;
+    rdfs:label "Workspace" ;
+    rdfs:comment "A workspace within an NPM monorepo" ;
+    IAO:0000115 "A sub-package within an NPM monorepo workspace, sharing a single root node_modules and lockfile." .
+
+npm:NpmRegistry a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "NPM Registry" ;
+    rdfs:comment "An NPM package registry (npmjs.com or private)" ;
+    IAO:0000115 "A package registry serving NPM packages, such as the public npmjs.com registry or a private Verdaccio/Artifactory instance." .
+
+# Datatype Properties
+
+npm:scope a owl:DatatypeProperty ;
+    rdfs:label "scope" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The NPM scope (organization prefix) of the package, e.g., '@babel' for @babel/core." .
+
+npm:main a owl:DatatypeProperty ;
+    rdfs:label "main" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The main entry point module when the package is required via require() in CommonJS." .
+
+npm:module a owl:DatatypeProperty ;
+    rdfs:label "module" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The ESM entry point module for bundlers that support the 'module' field." .
+
+npm:types a owl:DatatypeProperty ;
+    rdfs:label "types" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Path to the TypeScript type declaration file (.d.ts) bundled with the package." .
+
+npm:engines a owl:DatatypeProperty ;
+    rdfs:label "engines" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Node.js and npm version constraints required to run the package, e.g., '>=18.0.0'." .
+
+npm:funding a owl:DatatypeProperty ;
+    rdfs:label "funding" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "URL or object describing how the package maintainer accepts funding." .
+
+npm:deprecated a owl:DatatypeProperty ;
+    rdfs:label "deprecated" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Deprecation message displayed when users install this package version." .
+
+npm:unpacked a owl:DatatypeProperty ;
+    rdfs:label "unpacked size" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "The unpacked size of the package tarball in bytes." .
+
+npm:fileCount a owl:DatatypeProperty ;
+    rdfs:label "file count" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "The number of files in the published package tarball." .
+
+npm:shasum a owl:DatatypeProperty ;
+    rdfs:label "shasum" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "SHA-1 hash of the published package tarball, used for integrity verification." .
+
+npm:integrity a owl:DatatypeProperty ;
+    rdfs:label "integrity" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Subresource Integrity hash (typically sha512) of the package tarball, used by npm ci." .
+
+npm:scriptName a owl:DatatypeProperty ;
+    rdfs:label "script name" ;
+    rdfs:domain npm:Script ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the lifecycle script (e.g., test, build, preinstall, postinstall)." .
+
+npm:scriptCommand a owl:DatatypeProperty ;
+    rdfs:label "script command" ;
+    rdfs:domain npm:Script ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The shell command executed when the script is invoked." .
+
+# Object Properties
+
+npm:inScope a owl:ObjectProperty ;
+    rdfs:label "in scope" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:Scope ;
+    IAO:0000115 "Associates a scoped package with its NPM scope/organization." .
+
+npm:hasScript a owl:ObjectProperty ;
+    rdfs:label "has script" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:Script ;
+    IAO:0000115 "Associates a package with a lifecycle script defined in its package.json." .
+
+npm:peerDependsOn a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "peer depends on" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:NpmPackage ;
+    IAO:0000115 "A peer dependency — the host package must provide this dependency rather than installing it." .
+
+npm:optionalDependsOn a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "optional depends on" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:NpmPackage ;
+    IAO:0000115 "An optional dependency that is installed if available but does not cause failure if missing." .
+
+npm:bundledDependency a owl:ObjectProperty ;
+    rdfs:label "bundled dependency" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:NpmPackage ;
+    IAO:0000115 "A dependency that is bundled inside the package tarball rather than installed separately." .
+
+npm:inWorkspace a owl:ObjectProperty ;
+    rdfs:label "in workspace" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:Workspace ;
+    IAO:0000115 "Associates a package with the monorepo workspace it belongs to." .
+
+npm:publishedTo a owl:ObjectProperty ;
+    rdfs:label "published to" ;
+    rdfs:domain npm:NpmPackage ;
+    rdfs:range npm:NpmRegistry ;
+    IAO:0000115 "Associates a package with the NPM registry it was published to." .
