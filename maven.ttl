@@ -1,0 +1,135 @@
+# Maven Package Ontology
+@prefix maven: <https://purl.org/packagegraph/ontology/maven#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/maven#> a owl:Ontology ;
+    rdfs:label "Maven Package Ontology" ;
+    rdfs:comment "Ontology for representing Maven artifacts and the Java/JVM ecosystem" ;
+    dcterms:abstract "Models Maven Central artifacts including groupId:artifactId:version coordinates, POM metadata, dependency scopes, classifiers, and repository structure. Instances are dual-typed as both pkg:Package and maven:MavenArtifact." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.1" ;
+    owl:imports <core.ttl> .
+
+# Classes
+
+maven:MavenArtifact a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Maven Artifact" ;
+    rdfs:comment "A package published to a Maven repository" ;
+    IAO:0000115 "A Java/JVM library or application distributed through Maven Central or other Maven repositories, described by a POM (Project Object Model) file." .
+
+maven:POM a owl:Class ;
+    rdfs:label "POM" ;
+    rdfs:comment "A Maven Project Object Model file" ;
+    IAO:0000115 "An XML file (pom.xml) that describes a Maven project's metadata, dependencies, build configuration, and plugins." .
+
+maven:MavenRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Maven Repository" ;
+    rdfs:comment "A Maven artifact repository (Central, JCenter, or private)" ;
+    IAO:0000115 "A repository serving Maven artifacts, such as Maven Central, JCenter, or a private Nexus/Artifactory instance." .
+
+maven:DependencyScope a owl:Class ;
+    rdfs:label "Dependency Scope" ;
+    rdfs:comment "A Maven dependency scope (compile, provided, runtime, test, system)" ;
+    IAO:0000115 "Defines when a dependency is available on the classpath: compile (all phases), provided (compile but not packaged), runtime (execution only), test (testing only), or system (explicit path)." .
+
+# Datatype Properties
+
+maven:groupId a owl:DatatypeProperty ;
+    rdfs:label "group ID" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Maven groupId — typically a reversed domain name identifying the organization (e.g., 'org.apache.commons')." .
+
+maven:artifactId a owl:DatatypeProperty ;
+    rdfs:label "artifact ID" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Maven artifactId — the project/library name within the group (e.g., 'commons-lang3')." .
+
+maven:packaging a owl:DatatypeProperty ;
+    rdfs:label "packaging" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The artifact packaging type (e.g., 'jar', 'war', 'pom', 'maven-plugin', 'aar')." .
+
+maven:classifier a owl:DatatypeProperty ;
+    rdfs:label "classifier" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Optional classifier distinguishing artifacts with the same groupId:artifactId:version (e.g., 'javadoc', 'sources', 'tests')." .
+
+maven:scope a owl:DatatypeProperty ;
+    rdfs:label "scope" ;
+    rdfs:domain pkg:Dependency ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Maven dependency scope (compile, provided, runtime, test, system)." .
+
+maven:optional a owl:DatatypeProperty ;
+    rdfs:label "optional" ;
+    rdfs:domain pkg:Dependency ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether this dependency is optional (not transitively inherited by dependents)." .
+
+maven:pomUrl a owl:DatatypeProperty ;
+    rdfs:label "POM URL" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The URL to the artifact's POM file in the repository." .
+
+maven:organization a owl:DatatypeProperty ;
+    rdfs:label "organization" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The organization name from the POM <organization> element." .
+
+maven:inceptionYear a owl:DatatypeProperty ;
+    rdfs:label "inception year" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range xsd:gYear ;
+    IAO:0000115 "The year the project was started, from the POM <inceptionYear> element." .
+
+# Object Properties
+
+maven:compileDependency a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "compile dependency" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range maven:MavenArtifact ;
+    IAO:0000115 "A compile-scope dependency available during compilation, testing, and runtime." .
+
+maven:providedDependency a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "provided dependency" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range maven:MavenArtifact ;
+    IAO:0000115 "A provided-scope dependency expected to be provided by the runtime environment (e.g., servlet-api by a web container)." .
+
+maven:runtimeDependency a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "runtime dependency" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range maven:MavenArtifact ;
+    IAO:0000115 "A runtime-scope dependency required during execution but not compilation." .
+
+maven:testDependency a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "test dependency" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range maven:MavenArtifact ;
+    IAO:0000115 "A test-scope dependency required only for compiling and running tests." .
+
+maven:publishedTo a owl:ObjectProperty ;
+    rdfs:label "published to" ;
+    rdfs:domain maven:MavenArtifact ;
+    rdfs:range maven:MavenRepository ;
+    IAO:0000115 "Associates an artifact with the Maven repository it was published to." .
