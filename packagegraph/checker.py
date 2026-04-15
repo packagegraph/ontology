@@ -46,7 +46,45 @@ def run_check():
     click.echo("\n" + "=" * 50)
     if all_valid:
         click.echo("🎉 All individual files are valid.")
-        return True
     else:
         click.echo("❌ Some files failed validation.")
-        return False
+
+    # SHACL Validation
+    if Path('shacl.ttl').exists():
+        click.echo("\n🔍 Running SHACL Validation (using shacl.ttl)")
+        try:
+            from pyshacl import validate
+            combined_g = Graph()
+            for file_path in ttl_files:
+                if file_path.name not in ['shacl.ttl', 'x.ttl']:
+                    combined_g.parse(file_path, format='turtle')
+            
+            shacl_g = Graph()
+            shacl_g.parse('shacl.ttl', format='turtle')
+            
+            conforms, results_graph, results_text = validate(
+                combined_g,
+                shacl_graph=shacl_g,
+                inference='rdfs',
+                serialize_report_graph=False
+            )
+            
+            if conforms:
+                click.echo("✅ SHACL validation successful! Data conforms to shapes.")
+            else:
+                click.echo("❌ SHACL validation failed!")
+                click.echo(results_text)
+                all_valid = False
+        except ImportError:
+            click.echo("⚠ pyshacl not installed, skipping SHACL validation.")
+            click.echo("  Install with: uv add pyshacl")
+        except Exception as e:
+            click.echo(f"🚨 SHACL validation error: {str(e)}")
+            all_valid = False
+
+    return all_valid
+
+if __name__ == "__main__":
+    import sys
+    if not run_check():
+        sys.exit(1)
