@@ -11,6 +11,29 @@
 @prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix prov:  <http://www.w3.org/ns/prov#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix debian: <https://purl.org/packagegraph/ontology/debian#> .
+@prefix alpine: <https://purl.org/packagegraph/ontology/alpine#> .
+@prefix arch:  <https://purl.org/packagegraph/ontology/archlinux#> .
+@prefix homebrew: <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix npm:   <https://purl.org/packagegraph/ontology/npm#> .
+@prefix pypi:  <https://purl.org/packagegraph/ontology/pypi#> .
+@prefix cargo: <https://purl.org/packagegraph/ontology/cargo#> .
+@prefix gomod: <https://purl.org/packagegraph/ontology/gomod#> .
+@prefix conda: <https://purl.org/packagegraph/ontology/conda#> .
+@prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
+@prefix snap:  <https://purl.org/packagegraph/ontology/snap#> .
+@prefix gentoo: <https://purl.org/packagegraph/ontology/gentoo#> .
+@prefix void:  <https://purl.org/packagegraph/ontology/void#> .
+@prefix rubygems: <https://purl.org/packagegraph/ontology/rubygems#> .
+@prefix maven: <https://purl.org/packagegraph/ontology/maven#> .
+@prefix cpan:  <https://purl.org/packagegraph/ontology/cpan#> .
+@prefix cran:  <https://purl.org/packagegraph/ontology/cran#> .
+@prefix hackage: <https://purl.org/packagegraph/ontology/hackage#> .
+@prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
+@prefix hex:   <https://purl.org/packagegraph/ontology/hex#> .
+@prefix freebsd: <https://purl.org/packagegraph/ontology/freebsd#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
 
 <https://purl.org/packagegraph/ontology/shacl#>
   a owl:Ontology ;
@@ -332,4 +355,327 @@ sec:PatchActivityShape
     sh:minCount 1 ;
     sh:class sec:Vulnerability ;
     sh:message "A patch activity must address at least one vulnerability."
+  ] .
+
+# Ecosystem-Specific Package Shapes
+
+# Debian
+debian:DebianPackageShape
+  a sh:NodeShape ;
+  sh:targetClass debian:DebianPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Debian package must have exactly one package name."
+  ] .
+
+# Alpine
+alpine:AlpinePackageShape
+  a sh:NodeShape ;
+  sh:targetClass alpine:AlpinePackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An Alpine package must have exactly one package name."
+  ] .
+
+# Arch Linux
+arch:ArchPackageShape
+  a sh:NodeShape ;
+  sh:targetClass arch:ArchPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An Arch Linux package must have exactly one package name."
+  ] .
+
+# Homebrew
+homebrew:FormulaShape
+  a sh:NodeShape ;
+  sh:targetClass homebrew:Formula ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Homebrew formula must have exactly one package name."
+  ] .
+
+# NPM
+npm:NpmPackageShape
+  a sh:NodeShape ;
+  sh:targetClass npm:NpmPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An NPM package must have exactly one package name."
+  ] .
+
+# PyPI
+pypi:PypiPackageShape
+  a sh:NodeShape ;
+  sh:targetClass pypi:PypiPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A PyPI package must have exactly one package name."
+  ] .
+
+# Cargo
+cargo:CrateShape
+  a sh:NodeShape ;
+  sh:targetClass cargo:Crate ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Cargo crate must have exactly one package name."
+  ] .
+
+# Go modules
+gomod:GoModuleShape
+  a sh:NodeShape ;
+  sh:targetClass gomod:GoModule ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Go module must have exactly one module path."
+  ] .
+
+# Conda
+conda:CondaPackageShape
+  a sh:NodeShape ;
+  sh:targetClass conda:CondaPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Conda package must have exactly one package name."
+  ] .
+
+# Flatpak
+flatpak:FlatpakAppShape
+  a sh:NodeShape ;
+  sh:targetClass flatpak:FlatpakApp ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Flatpak app must have exactly one app ID."
+  ] .
+
+# Snap
+snap:SnapPackageShape
+  a sh:NodeShape ;
+  sh:targetClass snap:SnapPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Snap package must have exactly one snap name."
+  ] .
+
+# Gentoo
+gentoo:EbuildShape
+  a sh:NodeShape ;
+  sh:targetClass gentoo:Ebuild ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Gentoo ebuild must have exactly one package name."
+  ] .
+
+# Void
+void:VoidPackageShape
+  a sh:NodeShape ;
+  sh:targetClass void:VoidPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Void package must have exactly one package name."
+  ] .
+
+# RubyGems
+rubygems:GemShape
+  a sh:NodeShape ;
+  sh:targetClass rubygems:Gem ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A RubyGem must have exactly one gem name."
+  ] ;
+  sh:property [
+    sh:path rubygems:platform ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A RubyGem can have at most one platform."
+  ] .
+
+# Maven
+maven:MavenArtifactShape
+  a sh:NodeShape ;
+  sh:targetClass maven:MavenArtifact ;
+  sh:property [
+    sh:path maven:groupId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Maven artifact must have exactly one groupId."
+  ] ;
+  sh:property [
+    sh:path maven:artifactId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Maven artifact must have exactly one artifactId."
+  ] .
+
+# CPAN
+cpan:DistributionShape
+  a sh:NodeShape ;
+  sh:targetClass cpan:Distribution ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A CPAN distribution must have exactly one distribution name."
+  ] ;
+  sh:property [
+    sh:path cpan:authorPAUSEID ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A CPAN distribution must have exactly one PAUSE ID."
+  ] .
+
+# CRAN
+cran:CranPackageShape
+  a sh:NodeShape ;
+  sh:targetClass cran:CranPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A CRAN package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path cran:needsCompilation ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A CRAN package can have at most one needs compilation flag."
+  ] .
+
+# Hackage
+hackage:HackagePackageShape
+  a sh:NodeShape ;
+  sh:targetClass hackage:HackagePackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Hackage package must have exactly one package name."
+  ] .
+
+# NuGet
+nuget:NuGetPackageShape
+  a sh:NodeShape ;
+  sh:targetClass nuget:NuGetPackage ;
+  sh:property [
+    sh:path nuget:packageId ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A NuGet package must have exactly one package ID."
+  ] ;
+  sh:property [
+    sh:path nuget:isPrerelease ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A NuGet package can have at most one prerelease flag."
+  ] .
+
+# Hex
+hex:HexPackageShape
+  a sh:NodeShape ;
+  sh:targetClass hex:HexPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Hex package must have exactly one package name."
+  ] .
+
+# FreeBSD
+freebsd:BinaryPackageShape
+  a sh:NodeShape ;
+  sh:targetClass freebsd:BinaryPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A FreeBSD package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path freebsd:origin ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A FreeBSD package can have at most one origin."
+  ] .
+
+# Nix
+nix:NixPackageShape
+  a sh:NodeShape ;
+  sh:targetClass nix:NixPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Nix package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path nix:attrPath ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Nix package must have exactly one attribute path."
+  ] .
+
+# Chocolatey
+choco:ChocolateyPackageShape
+  a sh:NodeShape ;
+  sh:targetClass choco:ChocolateyPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Chocolatey package must have exactly one package ID."
   ] .
