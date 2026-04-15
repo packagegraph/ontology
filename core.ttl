@@ -760,6 +760,27 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "The homepage URL of the package or project";
   rdfs:label "homepage" .
 
+:licenseName a owl:DatatypeProperty;
+  rdfs:domain :Package;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A string representation of the package's license, typically using SPDX license expression syntax. This is the direct collector output; for structured license objects, see hasLicense.";
+  rdfs:comment "The SPDX license expression or license name string for the package";
+  rdfs:label "license name" .
+
+:upstreamPackageName a owl:DatatypeProperty;
+  rdfs:domain :Package;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking.";
+  rdfs:comment "The name of the package in its upstream ecosystem (e.g., crate name, PyPI name)";
+  rdfs:label "upstream package name" .
+
+:upstreamEcosystem a owl:DatatypeProperty;
+  rdfs:domain :Package;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the upstream software ecosystem that the package originates from, such as cargo (Rust crates), pypi (Python packages), npm (Node.js), or gomod (Go modules).";
+  rdfs:comment "The upstream package ecosystem (e.g., cargo, pypi, npm, gomod)";
+  rdfs:label "upstream ecosystem" .
+
 :installSize a owl:DatatypeProperty;
   rdfs:domain :Package;
   rdfs:range xsd:long;
