@@ -665,6 +665,20 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a source package to the upstream project it packages";
   rdfs:label "has upstream project" .
 
+:projectRepository a owl:ObjectProperty;
+  rdfs:domain :UpstreamProject;
+  rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository>;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Links an upstream project to its primary source code repository. Makes UpstreamProject the central hub for cross-ecosystem identity - connect all ecosystem packages to the project, then to the shared repository.";
+  rdfs:comment "Links an upstream project to its VCS repository";
+  rdfs:label "project repository" .
+
+:ecosystemPackage a owl:ObjectProperty;
+  rdfs:domain :UpstreamProject;
+  rdfs:range :PackageIdentity;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Links an upstream project to package identities in various ecosystems (PyPI, npm, Cargo, etc.). Enables queries like 'what packages from different ecosystems come from the same project'.";
+  rdfs:comment "Links an upstream project to a package identity in a specific ecosystem";
+  rdfs:label "ecosystem package" .
+
 :hasDependency a owl:ObjectProperty;
   rdfs:domain :Package;
   rdfs:range :Dependency;
@@ -815,9 +829,23 @@ xsd:duration a rdfs:Datatype .
 :upstreamPackageName a owl:DatatypeProperty;
   rdfs:domain :Package;
   rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking.";
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking. Retained for backward compatibility - prefer upstreamPackageIdentity for new data.";
   rdfs:comment "The name of the package in its upstream ecosystem (e.g., crate name, PyPI name)";
   rdfs:label "upstream package name" .
+
+:upstreamPackageIdentity a owl:ObjectProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range :PackageIdentity;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Links a distribution package identity to the upstream package identity in the native ecosystem (e.g., Debian python3-requests → PyPI requests). Replaces dead-end upstreamPackageName literal with a traversable object property - critical for supply chain analysis.";
+  rdfs:comment "Links to the upstream package identity in its native ecosystem";
+  rdfs:label "upstream package identity" .
+
+:upstreamEquivalent a owl:ObjectProperty, owl:SymmetricProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range :PackageIdentity;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Symmetric relationship between package identities from different ecosystems that represent the same software (e.g., Debian python3-requests ↔ PyPI requests). Enables bidirectional cross-ecosystem identity queries.";
+  rdfs:comment "This package identity is equivalent to another package identity from a different ecosystem";
+  rdfs:label "upstream equivalent" .
 
 :upstreamEcosystem a owl:DatatypeProperty;
   rdfs:domain :Package;

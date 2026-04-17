@@ -847,3 +847,44 @@ ex:glibc-deb pkg:providesCapability ex:cap-libc-so-6 .
 # If libssl.so.3 has a vulnerability, all packages requiring it are affected
 # Query: SELECT ?pkg WHERE { ?pkg pkg:requiresCapability ex:cap-libssl-so-3 }
 # Result: ex:wget-deb (and any other packages requiring libssl.so.3)
+
+# ============================================================
+# Cross-Ecosystem Identity Linking (Task 3)
+# Demonstrating Debian → PyPI → GitHub traversal
+# ============================================================
+
+# Upstream project: Requests (HTTP library)
+ex:requests-project a pkg:UpstreamProject ;
+  pkg:projectName "requests" ;
+  pkg:projectRepository ex:requests-github-repo ;
+  pkg:ecosystemPackage ex:requests-pypi-identity, ex:requests-debian-identity ;
+  rdfs:label "Requests upstream project" ;
+  rdfs:comment "HTTP library for humans" .
+
+# GitHub repository
+ex:requests-github-repo a vcs:Repository ;
+  vcs:repositoryURL "https://github.com/psf/requests.git" ;
+  rdfs:label "Requests GitHub repository" .
+
+# PyPI package identity
+ex:requests-pypi-identity a pkg:PackageIdentity ;
+  pkg:packageName "requests" ;
+  pkg:upstreamRepository ex:requests-github-repo ;
+  pkg:upstreamEquivalent ex:requests-debian-identity ;
+  rdfs:label "requests (PyPI)" ;
+  rdfs:comment "PyPI package identity" .
+
+# Debian package identity
+ex:requests-debian-identity a pkg:PackageIdentity ;
+  pkg:packageName "python3-requests" ;
+  pkg:upstreamRepository ex:requests-github-repo ;
+  pkg:upstreamPackageIdentity ex:requests-pypi-identity ;
+  pkg:upstreamEquivalent ex:requests-pypi-identity ;
+  rdfs:label "python3-requests (Debian)" ;
+  rdfs:comment "Debian package identity" .
+
+# Traversal demonstration:
+# 1. Debian → PyPI: ex:requests-debian-identity pkg:upstreamPackageIdentity ex:requests-pypi-identity
+# 2. Bidirectional: ex:requests-debian-identity pkg:upstreamEquivalent ex:requests-pypi-identity
+# 3. Both → GitHub: both have pkg:upstreamRepository pointing to ex:requests-github-repo
+# 4. Via UpstreamProject hub: ex:requests-project pkg:ecosystemPackage links both identities
