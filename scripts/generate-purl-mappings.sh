@@ -52,7 +52,11 @@ first=true
 mappings="$mappings{\"purl_path\":\"$PURL_DOMAIN\",\"purl_url\":\"$PURL_BASE\",\"target_url\":\"https://packagegraph.github.io/ontology/\",\"namespace_uri\":null,\"ttl_file\":null,\"type\":\"302\"}"
 first=false
 
-for ttl_file in "$ONTOLOGY_DIR"/*.ttl; do
+for ttl_file in "$ONTOLOGY_DIR"/core/*.ttl "$ONTOLOGY_DIR"/extensions/*/*.ttl "$ONTOLOGY_DIR"/ecosystems/*/*.ttl; do
+    # Skip .shacl.ttl and .examples.ttl files
+    [[ "$ttl_file" == *.shacl.ttl ]] && continue
+    [[ "$ttl_file" == *.examples.ttl ]] && continue
+    [[ ! -f "$ttl_file" ]] && continue
     filename=$(basename "$ttl_file")
 
     # Extract ontology namespace URI from near the owl:Ontology declaration
@@ -89,7 +93,11 @@ if [[ "$CHECK_MODE" == "true" ]]; then
     errors=0
     total=0
 
-    for ttl_file in "$ONTOLOGY_DIR"/*.ttl; do
+    for ttl_file in "$ONTOLOGY_DIR"/core/*.ttl "$ONTOLOGY_DIR"/extensions/*/*.ttl "$ONTOLOGY_DIR"/ecosystems/*/*.ttl; do
+        # Skip .shacl.ttl and .examples.ttl files
+        [[ "$ttl_file" == *.shacl.ttl ]] && continue
+        [[ "$ttl_file" == *.examples.ttl ]] && continue
+        [[ ! -f "$ttl_file" ]] && continue
         filename=$(basename "$ttl_file")
         ns_uri=$(grep -oE 'https://purl\.org/packagegraph/ontology/[^#]+#' "$ttl_file" | head -1 || true)
         [[ -z "$ns_uri" ]] && continue
