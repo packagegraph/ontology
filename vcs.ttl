@@ -235,6 +235,14 @@ vcs:hasTag a owl:ObjectProperty ;
     rdfs:range vcs:Tag ;
     IAO:0000115 "Associates a repository with the tags it contains." .
 
+vcs:hasPackage a owl:ObjectProperty ;
+    owl:inverseOf pkg:upstreamRepository ;
+    rdfs:label "has package" ;
+    rdfs:comment "Links a repository to the packages that are built from it" ;
+    rdfs:domain vcs:Repository ;
+    rdfs:range pkg:PackageIdentity ;
+    IAO:0000115 "The inverse relationship of pkg:upstreamRepository, linking a VCS repository to the package identities that use it as their upstream source. Enables efficient 'what packages come from this repository' queries." .
+
 vcs:hasFile a owl:ObjectProperty ;
     rdfs:label "has file" ;
     rdfs:comment "Links commit or repository to files" ;

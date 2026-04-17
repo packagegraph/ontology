@@ -376,11 +376,20 @@ xsd:duration a rdfs:Datatype .
 
 :directlyDependsOn a owl:ObjectProperty;
   rdfs:subPropertyOf :dependsOn;
+  owl:inverseOf :isDirectDependencyOf;
   rdfs:domain :Package;
   rdfs:range :Package;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A direct dependency relationship between packages, providing an efficient query path that bypasses the detailed dependency metadata structure.";
   rdfs:comment "Direct dependency relationship between packages for efficient querying";
   rdfs:label "directly depends on" .
+
+:isDirectDependencyOf a owl:ObjectProperty;
+  rdfs:subPropertyOf :isDependencyOf;
+  rdfs:domain :Package;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of directlyDependsOn, indicating that this package is a direct dependency of another package. Critical for blast radius analysis - enables efficient queries for 'what directly depends on this package'.";
+  rdfs:comment "Indicates that this package is a direct dependency of another package";
+  rdfs:label "is direct dependency of" .
 
 :directlyProvides a owl:ObjectProperty;
   rdfs:subPropertyOf :provides;
@@ -426,11 +435,19 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "has maintainer role" .
 
 :hasVersion a owl:ObjectProperty;
+  owl:inverseOf :versionOf;
   rdfs:domain :Package;
   rdfs:range :Version;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with a specific version or release of that package.";
   rdfs:comment "Links a package to one of its versions";
   rdfs:label "has version" .
+
+:versionOf a owl:ObjectProperty;
+  rdfs:domain :Version;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of hasVersion, linking a version back to the package it belongs to. Critical for security queries that start from an affected version and need to find the package.";
+  rdfs:comment "Links a version to the package it belongs to";
+  rdfs:label "version of" .
 
 :hasVersionConstraint a owl:ObjectProperty;
   rdfs:domain :Dependency;
@@ -471,11 +488,19 @@ xsd:duration a rdfs:Datatype .
 
 :maintainedBy a owl:ObjectProperty;
   rdfs:subPropertyOf prov:wasAttributedTo;
+  owl:inverseOf :maintains;
   rdfs:domain :Package;
   rdfs:range :Maintainer;
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the person or organization responsible for its ongoing maintenance and development.";
   rdfs:comment "Links a package to its maintainer";
   rdfs:label "maintained by" .
+
+:maintains a owl:ObjectProperty;
+  rdfs:domain :Maintainer;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of maintainedBy, linking a maintainer to the packages they maintain. Enables efficient 'what does this maintainer maintain' queries.";
+  rdfs:comment "Links a maintainer to the packages they maintain";
+  rdfs:label "maintains" .
 
 :managedBy a owl:ObjectProperty;
   owl:inverseOf :manages;
@@ -1178,6 +1203,7 @@ _:genid11 a owl:Restriction;
 
 ###  https://purl.org/packagegraph/ontology/core#upstreamRepository
 :upstreamRepository a owl:ObjectProperty ;
+    owl:inverseOf <https://purl.org/packagegraph/ontology/vcs#hasPackage> ;
     rdfs:domain :PackageIdentity ;
     rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
     rdfs:label "upstream repository" ;
@@ -1201,11 +1227,20 @@ _:genid11 a owl:Restriction;
 
 ###  https://purl.org/packagegraph/ontology/core#isVersionOf
 :isVersionOf a owl:ObjectProperty ;
+    owl:inverseOf :hasPackage ;
     rdfs:domain :BinaryPackage ;
     rdfs:range :PackageIdentity ;
     rdfs:label "is version of" ;
     rdfs:comment "Links a versioned binary package to its version-agnostic package identity." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package." .
+
+###  https://purl.org/packagegraph/ontology/core#hasPackage
+:hasPackage a owl:ObjectProperty ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:range :BinaryPackage ;
+    rdfs:label "has package" ;
+    rdfs:comment "Links a package identity to its versioned binary package instances." ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of isVersionOf, linking a package identity to all versioned binary packages that belong to it. Enables efficient 'list all versions of package X' queries from the identity node." .
 
 ###  https://purl.org/packagegraph/ontology/core#DataSnapshot
 :DataSnapshot a owl:Class ;

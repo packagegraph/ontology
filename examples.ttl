@@ -164,7 +164,7 @@ ex:glibc-rpm-version a pkg:Version ;
     pkg:versionString "2.34-28.fc35" .
 
 # wget (RPM packaging in dist-git)
-ex:wget-srpm a rpm:SourceRPM ;
+ex:wget-srpm a rpm:SourceRPM, pkg:SourcePackage ;
   pkg:packageName "wget" ;
   pkg:hasVersion ex:wget-rpm-version ;
   rdfs:label "GNU Wget (source RPM)" .
@@ -522,7 +522,7 @@ ex:insights-client-rpm-version a pkg:Version ;
     pkg:versionString "3.1.0-1.el8" .
 
 # insights-client IS vendor-originated (Red Hat project)
-ex:insights-client-srpm a rpm:SourceRPM ;
+ex:insights-client-srpm a rpm:SourceRPM, pkg:SourcePackage ;
   pkg:packageName "insights-client" ;
   pkg:hasVersion ex:insights-client-rpm-version ;
   rdfs:label "Red Hat Insights Client (source RPM)" .
@@ -547,7 +547,7 @@ ex:insights-client-version a pkg:Version ;
 # Patch examples (SRPM with distro patches)
 ################################################################
 
-ex:glibc-srpm a rpm:SourceRPM ;
+ex:glibc-srpm a rpm:SourceRPM, pkg:SourcePackage ;
   pkg:packageName "glibc" ;
   pkg:hasVersion ex:glibc-rpm-version ;
   pkg:maintainedBy ex:maintainer-fedora ;
@@ -753,3 +753,49 @@ ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
   sec:addressesVulnerability ex:cve-2024-1234 ;
   sec:advisoryForPackage ex:glibc-rpm ;
   rdfs:label "RHSA-2024:5678" .
+
+# ============================================================
+# Inverse Property Examples (Task 1)
+# Demonstrating the newly added inverse properties
+# ============================================================
+
+# 1. versionOf (inverse of hasVersion)
+# From the existing assertion: ex:glibc-deb pkg:hasVersion ex:glibc-deb-version
+# The inverse:
+ex:glibc-deb-version pkg:versionOf ex:glibc-deb .
+
+# 2. isDirectDependencyOf (inverse of directlyDependsOn)
+# Create example: wget depends on libc6
+ex:wget-deb pkg:directlyDependsOn ex:glibc-deb .
+# The inverse:
+ex:glibc-deb pkg:isDirectDependencyOf ex:wget-deb .
+
+# 3. hasPackage (inverse of isVersionOf)
+# Assuming there's a PackageIdentity for glibc
+ex:glibc-identity a pkg:PackageIdentity ;
+  pkg:packageName "glibc" ;
+  rdfs:label "glibc Package Identity" .
+
+ex:glibc-deb pkg:isVersionOf ex:glibc-identity .
+# The inverse:
+ex:glibc-identity pkg:hasPackage ex:glibc-deb .
+
+# 4. maintains (inverse of maintainedBy)
+# From the existing assertion: ex:glibc-deb pkg:maintainedBy ex:glibc-deb-maintainer
+# The inverse:
+ex:glibc-deb-maintainer pkg:maintains ex:glibc-deb .
+
+# 5. vcs:hasPackage (inverse of pkg:upstreamRepository)
+# Create example repository
+ex:glibc-upstream-repo a vcs:Repository ;
+  vcs:repositoryURL "https://sourceware.org/git/glibc.git" ;
+  rdfs:label "GNU C Library upstream repository" .
+
+ex:glibc-identity pkg:upstreamRepository ex:glibc-upstream-repo .
+# The inverse:
+ex:glibc-upstream-repo vcs:hasPackage ex:glibc-identity .
+
+# 6. sec:vulnerableIn (inverse of sec:affectsVersion)
+# From the existing assertion: ex:cve-2024-1234 sec:affectsVersion ex:glibc-version-2.28-225
+# The inverse:
+ex:glibc-version-2.28-225 sec:vulnerableIn ex:cve-2024-1234 .

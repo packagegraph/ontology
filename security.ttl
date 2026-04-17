@@ -198,11 +198,19 @@ sec:advisoryType a owl:DatatypeProperty ;
 # #################################################################
 
 sec:affectsVersion a owl:ObjectProperty ;
+    owl:inverseOf sec:vulnerableIn ;
     rdfs:label "affects version" ;
     rdfs:comment "Links a vulnerability to the package versions it affects" ;
     rdfs:domain sec:Vulnerability ;
     rdfs:range pkg:Version ;
     IAO:0000115 "Associates a vulnerability with the package versions it affects." .
+
+sec:vulnerableIn a owl:ObjectProperty ;
+    rdfs:label "vulnerable in" ;
+    rdfs:comment "Links a package version to the vulnerabilities that affect it" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range sec:Vulnerability ;
+    IAO:0000115 "The inverse relationship of affectsVersion, linking a package version to the vulnerabilities it is affected by. Enables efficient 'what CVEs affect this version' queries without scanning all vulnerabilities." .
 
 sec:fixedInVersion a owl:ObjectProperty ;
     rdfs:label "fixed in version" ;
