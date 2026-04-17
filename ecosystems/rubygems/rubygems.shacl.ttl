@@ -1,0 +1,17 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rubygems: <https://purl.org/packagegraph/ontology/rubygems#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+rubygems:GemShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A RubyGem must have exactly one gem name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A RubyGem can have at most one platform." ;
+            sh:path rubygems:platform ] ;
+    sh:targetClass rubygems:Gem .
+

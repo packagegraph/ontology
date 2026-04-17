@@ -1,0 +1,13 @@
+@prefix gomod: <https://purl.org/packagegraph/ontology/gomod#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+gomod:GoModuleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Go module must have exactly one module path." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass gomod:GoModule .
+

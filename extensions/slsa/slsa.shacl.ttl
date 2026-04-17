@@ -1,0 +1,40 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix slsa: <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+slsa:BuildEnvironmentShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A build environment can have at most one ephemeral flag." ;
+            sh:path slsa:isEphemeral ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A build environment can have at most one isolated flag." ;
+            sh:path slsa:isIsolated ] ;
+    sh:targetClass slsa:BuildEnvironment .
+
+slsa:BuilderShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A builder must have exactly one builder ID URI." ;
+            sh:minCount 1 ;
+            sh:path slsa:builderId ] ;
+    sh:targetClass slsa:Builder .
+
+slsa:ProvenanceAttestationShape a sh:NodeShape ;
+    sh:property [ sh:class slsa:BuildLevel ;
+            sh:maxCount 1 ;
+            sh:message "A provenance attestation must attest exactly one SLSA build level." ;
+            sh:minCount 1 ;
+            sh:path slsa:attestsBuildLevel ],
+        [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:message "A provenance attestation must have exactly one timestamp." ;
+            sh:minCount 1 ;
+            sh:path slsa:attestationTimestamp ],
+        [ sh:datatype xsd:string ;
+            sh:message "A provenance attestation must have at least one artifact digest." ;
+            sh:minCount 1 ;
+            sh:path slsa:attestationDigest ] ;
+    sh:targetClass slsa:ProvenanceAttestation .
+

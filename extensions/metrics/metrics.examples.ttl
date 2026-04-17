@@ -1,0 +1,64 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Code Metrics and Language examples
+# ============================================================
+
+# glibc is implemented in C and Assembly
+ex:glibc-rpm met:implementedIn met:C, met:Assembly .
+
+# Code metrics for the glibc RPM version
+ex:glibc-rpm-version met:hasCodeMetrics ex:glibc-rpm-version-metrics .
+
+ex:glibc-rpm-version-metrics a met:CodeMetrics ;
+  met:totalLinesOfCode 1500000 ;
+  met:totalFiles 4200 ;
+  met:totalBlankLines 180000 ;
+  met:totalCommentLines 250000 ;
+  met:analysisDate "2024-06-01T00:00:00"^^xsd:dateTime ;
+  met:hasLanguageMetrics ex:glibc-rpm-c-metrics, ex:glibc-rpm-asm-metrics ;
+  rdfs:label "Code metrics for glibc 2.34-28.fc35" .
+
+ex:glibc-rpm-c-metrics a met:LanguageMetrics ;
+  met:language met:C ;
+  met:linesOfCode 1200000 ;
+  met:filesCount 3400 ;
+  met:blankLines 140000 ;
+  met:commentLines 200000 ;
+  met:cyclomaticComplexity "15.2"^^xsd:float ;
+  met:languageProportion "0.80"^^xsd:float ;
+  rdfs:label "C language metrics for glibc" .
+
+ex:glibc-rpm-asm-metrics a met:LanguageMetrics ;
+  met:language met:Assembly ;
+  met:linesOfCode 250000 ;
+  met:filesCount 600 ;
+  met:blankLines 30000 ;
+  met:commentLines 40000 ;
+  met:cyclomaticComplexity "8.5"^^xsd:float ;
+  met:languageProportion "0.17"^^xsd:float ;
+  rdfs:label "Assembly language metrics for glibc" .

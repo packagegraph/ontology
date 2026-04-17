@@ -1,0 +1,68 @@
+@prefix opkg: <https://purl.org/packagegraph/ontology/opkg#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+opkg:DeviceProfileShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A device profile must have exactly one profile name." ;
+            sh:minCount 1 ;
+            sh:path opkg:profileName ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "A device profile can have at most one flash size." ;
+            sh:path opkg:flashSize ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "A device profile can have at most one RAM size." ;
+            sh:path opkg:ramSize ] ;
+    sh:targetClass opkg:DeviceProfile .
+
+opkg:FeedShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:message "A feed must have at least one label." ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass opkg:Feed .
+
+opkg:KernelModuleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A kernel module can have at most one autoload configuration." ;
+            sh:path opkg:autoload ] ;
+    sh:targetClass opkg:KernelModule .
+
+opkg:OpkgPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "An OpenWRT package must have exactly one package name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "An OpenWRT package can belong to at most one feed." ;
+            sh:path opkg:feed ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "An OpenWRT package can have at most one category." ;
+            sh:path opkg:category ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "An OpenWRT package can have at most one title." ;
+            sh:path opkg:title ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "An OpenWRT package can have at most one default-enabled flag." ;
+            sh:path opkg:defaultEnabled ] ;
+    sh:targetClass opkg:OpkgPackage .
+
+opkg:TargetShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A target must have exactly one target name." ;
+            sh:minCount 1 ;
+            sh:path opkg:targetName ] ;
+    sh:targetClass opkg:Target .
+

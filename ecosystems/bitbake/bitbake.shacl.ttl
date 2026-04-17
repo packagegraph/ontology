@@ -1,0 +1,61 @@
+@prefix bitbake: <https://purl.org/packagegraph/ontology/bitbake#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bitbake:BitBakeClassShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A BitBake class must have exactly one class name." ;
+            sh:minCount 1 ;
+            sh:path bitbake:className ] ;
+    sh:targetClass bitbake:BitBakeClass .
+
+bitbake:BitBakeRecipeShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto recipe must have exactly one package name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto recipe must belong to exactly one layer." ;
+            sh:minCount 1 ;
+            sh:path bitbake:layer ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto recipe can have at most one PV (version)." ;
+            sh:path bitbake:pv ],
+        [ sh:datatype xsd:string ;
+            sh:message "LIC_FILES_CHKSUM must be a string." ;
+            sh:path bitbake:licFilesChksum ] ;
+    sh:targetClass bitbake:BitBakeRecipe .
+
+bitbake:ImageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto image must have exactly one image name." ;
+            sh:minCount 1 ;
+            sh:path bitbake:imageName ] ;
+    sh:targetClass bitbake:Image .
+
+bitbake:LayerShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto layer must have exactly one layer name." ;
+            sh:minCount 1 ;
+            sh:path bitbake:layerName ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto layer can have at most one priority." ;
+            sh:path bitbake:layerPriority ] ;
+    sh:targetClass bitbake:Layer .
+
+bitbake:MachineShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Yocto machine must have exactly one machine name." ;
+            sh:minCount 1 ;
+            sh:path bitbake:machineName ] ;
+    sh:targetClass bitbake:Machine .
+

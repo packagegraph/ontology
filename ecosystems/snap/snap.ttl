@@ -1,0 +1,141 @@
+# Snap Package Ontology
+@prefix snap: <https://purl.org/packagegraph/ontology/snap#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/snap#> a owl:Ontology ;
+    rdfs:label "Snap Package Ontology" ;
+    rdfs:comment "Ontology for representing Snap packages and the Snap Store" ;
+    dcterms:abstract "Models the Snap ecosystem including confinement levels, interfaces (plugs and slots), channels/tracks, bases, and the Snap Store. Captures the security model and automatic update mechanism unique to Snaps." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+
+# Classes
+
+snap:SnapPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Snap Package" ;
+    rdfs:comment "A snap package (.snap)" ;
+    IAO:0000115 "A self-contained application package in Snap format, distributed through the Snap Store, with built-in sandboxing via AppArmor and seccomp." .
+
+snap:SnapChannel a owl:Class ;
+    rdfs:label "Snap Channel" ;
+    rdfs:comment "A release channel (track/risk/branch)" ;
+    IAO:0000115 "A channel in the Snap Store's track/risk/branch hierarchy (e.g., 'latest/stable', '3.x/beta'), controlling which version users receive." .
+
+snap:Interface a owl:Class ;
+    rdfs:label "Interface" ;
+    rdfs:comment "A snap interface connecting plugs and slots" ;
+    IAO:0000115 "A security policy interface that mediates access between snaps, connecting a plug (consumer) to a slot (provider) for a specific resource (e.g., network, camera, home)." .
+
+snap:SnapBase a owl:Class ;
+    rdfs:label "Snap Base" ;
+    rdfs:comment "A base snap providing the root filesystem" ;
+    IAO:0000115 "A special snap providing the root filesystem and core libraries for other snaps (e.g., core22 based on Ubuntu 22.04)." .
+
+snap:SnapApp a owl:Class ;
+    rdfs:label "Snap App" ;
+    rdfs:comment "An application exposed by a snap" ;
+    IAO:0000115 "A named application or daemon exposed by the snap, with its own command, environment, and interface connections." .
+
+# Datatype Properties
+
+snap:confinement a owl:DatatypeProperty ;
+    rdfs:label "confinement" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The sandboxing level: 'strict' (full confinement), 'devmode' (non-enforcing), or 'classic' (traditional access)." .
+
+snap:grade a owl:DatatypeProperty ;
+    rdfs:label "grade" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The quality grade: 'stable' (release-ready) or 'devel' (not for production channels)." .
+
+snap:track a owl:DatatypeProperty ;
+    rdfs:label "track" ;
+    rdfs:domain snap:SnapChannel ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The track name (e.g., 'latest', '1.0', 'lts'), representing a major version or release line." .
+
+snap:risk a owl:DatatypeProperty ;
+    rdfs:label "risk" ;
+    rdfs:domain snap:SnapChannel ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The risk level: 'stable', 'candidate', 'beta', or 'edge'." .
+
+snap:revision a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "The store-assigned revision number, incremented on each upload. The snap revision is the store's notion of version identity." .
+
+snap:snapId a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "snap ID" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The globally unique identifier assigned by the Snap Store to this snap name." .
+
+snap:interfaceName a owl:DatatypeProperty ;
+    rdfs:label "interface name" ;
+    rdfs:domain snap:Interface ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the interface type (e.g., 'network', 'home', 'camera', 'x11')." .
+
+snap:isAutoConnect a owl:DatatypeProperty ;
+    rdfs:label "auto-connect" ;
+    rdfs:domain snap:Interface ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether the interface is automatically connected on install (vs requiring manual connection)." .
+
+snap:appCommand a owl:DatatypeProperty ;
+    rdfs:label "app command" ;
+    rdfs:domain snap:SnapApp ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The command executed when the snap application is launched." .
+
+snap:isDaemon a owl:DatatypeProperty ;
+    rdfs:label "is daemon" ;
+    rdfs:domain snap:SnapApp ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether the app runs as a system daemon (service) rather than a user-facing application." .
+
+# Object Properties
+
+snap:inChannel a owl:ObjectProperty ;
+    rdfs:label "in channel" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range snap:SnapChannel ;
+    IAO:0000115 "Associates a snap with the channel it is published to." .
+
+snap:usesBase a owl:ObjectProperty ;
+    rdfs:label "uses base" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range snap:SnapBase ;
+    IAO:0000115 "Associates a snap with the base snap providing its root filesystem." .
+
+snap:plugsInterface a owl:ObjectProperty ;
+    rdfs:label "plugs interface" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range snap:Interface ;
+    IAO:0000115 "The snap consumes (plugs) this interface, requesting access to a resource." .
+
+snap:slotsInterface a owl:ObjectProperty ;
+    rdfs:label "slots interface" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range snap:Interface ;
+    IAO:0000115 "The snap provides (slots) this interface, offering a resource to other snaps." .
+
+snap:exposesApp a owl:ObjectProperty ;
+    rdfs:label "exposes app" ;
+    rdfs:domain snap:SnapPackage ;
+    rdfs:range snap:SnapApp ;
+    IAO:0000115 "Associates a snap with an application or daemon it exposes." .

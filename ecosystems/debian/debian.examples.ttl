@@ -1,0 +1,104 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Debian (3)
+# ============================================================
+
+# glibc (Debian packaging repo on Salsa; upstream on Sourceware)
+ex:glibc-source-deb a pkg:SourcePackage ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-deb-version ;
+  rdfs:label "GNU C Library (Debian source package)" .
+
+ex:glibc-deb a pkg:BinaryPackage, deb:BinaryPackage ;
+  pkg:packageName "libc6" ;
+  pkg:builtFromSource ex:glibc-source-deb ;
+  pkg:hasVersion ex:glibc-deb-version ;
+  pkg:description "GNU C Library (Debian binary package: libc6)" ;
+  pkg:homepage <https://sourceware.org/glibc/sources.html> ;
+  pkg:downloadURL <https://salsa.debian.org/glibc-team/glibc> ;
+  pkg:maintainedBy ex:glibc-deb-maintainer ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rdfs:label "GNU C Library (Debian binary package: libc6)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:location <https://sourceware.org/git/glibc.git> ;
+    doap:browse   <https://sourceware.org/glibc/sources.html>
+  ] .
+
+ex:glibc-deb-version a pkg:Version ;
+  rdfs:label "Version 2.31-13+deb11u3 for glibc-deb" ;
+  pkg:versionString "2.31-13+deb11u3" .
+
+ex:glibc-deb-maintainer a pkg:Maintainer ;
+  rdfs:label "GNU C Library Debian Maintainers" ;
+  foaf:name "GNU C Library Debian Maintainers" ;
+  foaf:mbox <mailto:debian-glibc@lists.debian.org> .
+
+# wget (Debian packaging on Salsa)
+ex:wget-source-deb a pkg:SourcePackage ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-deb-version ;
+  rdfs:label "GNU Wget (Debian source package)" .
+
+ex:wget-deb a pkg:BinaryPackage, deb:BinaryPackage ;
+  pkg:packageName "wget" ;
+  pkg:builtFromSource ex:wget-source-deb ;
+  pkg:hasVersion ex:wget-deb-version ;
+  pkg:description "Internet file retriever - Debian binary package" ;
+  pkg:downloadURL <https://salsa.debian.org/debian/wget> ;
+  pkg:maintainedBy ex:wget-deb-maintainer ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (Debian binary package)" .
+
+ex:wget-deb-version a pkg:Version ;
+    rdfs:label "Version 1.21.1-1+deb11u1 for wget-deb" ;
+    pkg:versionString "1.21.1-1+deb11u1" .
+
+ex:wget-deb-maintainer a pkg:Maintainer ;
+    rdfs:label "Noel Torres" ;
+    foaf:name "Noel Torres" ;
+    foaf:mbox <mailto:ntorres@debian.org> .
+
+# git (Debian packaging on Salsa)
+ex:git-source-deb a pkg:SourcePackage ;
+  pkg:packageName "git" ;
+  pkg:hasVersion ex:git-deb-version ;
+  rdfs:label "Git (Debian source package)" .
+
+ex:git-deb a pkg:BinaryPackage, deb:BinaryPackage ;
+  pkg:packageName "git" ;
+  pkg:builtFromSource ex:git-source-deb ;
+  pkg:hasVersion ex:git-deb-version ;
+  pkg:description "Fast, scalable, distributed revision control system - Debian binary package" ;
+  pkg:downloadURL <https://salsa.debian.org/debian/git> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  rdfs:label "Git version control (Debian binary package)" .
+
+ex:git-deb-version a pkg:Version ;
+    rdfs:label "Version 1:2.30.2-1 for git-deb" ;
+    pkg:versionString "1:2.30.2-1" .

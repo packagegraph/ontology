@@ -1,0 +1,95 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# SLSA Provenance Attestation Example
+# ============================================================
+
+# SLSA L2 attestation for a Koji-built RPM
+ex:openssl-koji-provenance a slsa:ProvenanceAttestation ;
+  slsa:attestsBuildLevel slsa:L2 ;
+  slsa:attestationTimestamp "2024-02-01T11:30:00Z"^^xsd:dateTime ;
+  slsa:attestationDigest "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" ;
+  slsa:predicateType <https://slsa.dev/provenance/v1> ;
+  slsa:verificationStatus "verified" ;
+  slsa:attestsBuildActivity ex:openssl-koji-build ;
+  slsa:hasSourceAttestation ex:openssl-koji-source-att ;
+  rdfs:label "SLSA L2 provenance for openssl RPM" .
+
+ex:openssl-koji-build a pkg:BuildActivity ;
+  pkg:performedBy ex:koji-builder ;
+  pkg:activityStartTime "2024-02-01T11:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-02-01T11:25:00Z"^^xsd:dateTime ;
+  pkg:exitCode 0 ;
+  slsa:builtBy ex:koji-builder ;
+  slsa:usedBuildEnvironment ex:koji-build-env ;
+  rdfs:label "openssl Koji build" .
+
+ex:koji-builder a slsa:Builder ;
+  slsa:builderId "https://koji.fedoraproject.org"^^xsd:anyURI ;
+  slsa:builderVersion "1.34.0" ;
+  rdfs:label "Fedora Koji" .
+
+ex:koji-build-env a slsa:BuildEnvironment ;
+  slsa:buildImage "fedora:39" ;
+  slsa:isEphemeral true ;
+  slsa:isIsolated true ;
+  rdfs:label "Koji mock chroot (Fedora 39)" .
+
+ex:openssl-koji-source-att a slsa:SourceAttestation ;
+  slsa:sourceRepository <https://src.fedoraproject.org/rpms/openssl> ;
+  slsa:sourceRef "f39" ;
+  slsa:sourceDigest "sha256:deadbeef" ;
+  slsa:twoPartyReviewed true ;
+  slsa:hasSourceVcsRepository ex:fedora-openssl-repo ;
+  rdfs:label "Source attestation for openssl Fedora RPM" .
+
+ex:fedora-openssl-repo a vcs:Repository ;
+  vcs:cloneUrl <https://src.fedoraproject.org/rpms/openssl.git> ;
+  vcs:defaultBranch "rawhide" ;
+  rdfs:label "Fedora openssl dist-git" .
+
+# RPM with SLSA provenance link
+ex:openssl-rpm a rpm:BinaryRPM, pkg:BinaryPackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-rpm-version ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  pkg:builtFromSource ex:openssl-fedora-srpm ;
+  pkg:wasBuiltBy ex:openssl-koji-build ;
+  slsa:hasProvenance ex:openssl-koji-provenance ;
+  rdfs:label "openssl Fedora RPM" .
+
+ex:openssl-rpm-version a pkg:Version ;
+  pkg:versionString "3.2.1-1.fc39" ;
+  rdfs:label "Version 3.2.1-1.fc39 for openssl" .
+
+ex:openssl-fedora-srpm a rpm:SourceRPM, pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-rpm-version ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  rdfs:label "openssl Fedora source RPM" .

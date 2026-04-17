@@ -1,0 +1,21 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+vcs:CommitShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A commit must have exactly one commit hash." ;
+            sh:minCount 1 ;
+            sh:path vcs:commitHash ],
+        [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:message "A commit must have exactly one timestamp." ;
+            sh:minCount 1 ;
+            sh:path vcs:commitTimestamp ],
+        [ sh:class pkg:Contributor ;
+            sh:message "A commit's author must be a pkg:Contributor." ;
+            sh:path vcs:authoredBy ] ;
+    sh:targetClass vcs:Commit .
+

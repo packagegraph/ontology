@@ -1,0 +1,71 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# BSD Ports (3)
+# ============================================================
+
+# bash (FreeBSD ports cgit)
+ex:bash-bsd a bsdpkg:Port ;
+  pkg:packageName "bash" ;
+  pkg:hasVersion ex:bash-bsd-version ;
+  pkg:description "GNU Bourne Again Shell (FreeBSD port shells/bash)" ;
+  pkg:downloadURL <https://cgit.freebsd.org/ports/tree/shells/bash/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Bash (FreeBSD port shells/bash)" .
+
+ex:bash-bsd-version a pkg:Version ;
+    rdfs:label "Version 5.1.16 for bash-bsd" ;
+    pkg:versionString "5.1.16" .
+
+# wget (FreeBSD ports cgit)
+ex:wget-bsd a bsdpkg:Port ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-bsd-version ;
+  pkg:description "Internet file retriever utility (FreeBSD port ftp/wget)" ;
+  pkg:downloadURL <https://cgit.freebsd.org/ports/tree/ftp/wget/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (FreeBSD port ftp/wget)" .
+
+ex:wget-bsd-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-bsd" ;
+    pkg:versionString "1.21.2" .
+
+# git (FreeBSD ports cgit)
+ex:git-bsd a bsdpkg:Port ;
+  pkg:packageName "git" ;
+  pkg:hasVersion ex:git-bsd-version ;
+  pkg:description "Fast, scalable, distributed revision control system (FreeBSD port devel/git)" ;
+  pkg:downloadURL <https://cgit.freebsd.org/ports/tree/devel/git/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  rdfs:label "Git (FreeBSD port devel/git)" .
+
+ex:git-bsd-version a pkg:Version ;
+    rdfs:label "Version 2.35.1 for git-bsd" ;
+    pkg:versionString "2.35.1" .

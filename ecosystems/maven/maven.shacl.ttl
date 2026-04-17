@@ -1,0 +1,17 @@
+@prefix maven: <https://purl.org/packagegraph/ontology/maven#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+maven:MavenArtifactShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Maven artifact must have exactly one groupId." ;
+            sh:minCount 1 ;
+            sh:path maven:groupId ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Maven artifact must have exactly one artifactId." ;
+            sh:minCount 1 ;
+            sh:path maven:artifactId ] ;
+    sh:targetClass maven:MavenArtifact .
+

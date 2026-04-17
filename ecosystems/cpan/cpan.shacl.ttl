@@ -1,0 +1,18 @@
+@prefix cpan: <https://purl.org/packagegraph/ontology/cpan#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+cpan:DistributionShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A CPAN distribution must have exactly one distribution name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A CPAN distribution must have exactly one PAUSE ID." ;
+            sh:minCount 1 ;
+            sh:path cpan:authorPAUSEID ] ;
+    sh:targetClass cpan:Distribution .
+

@@ -1,0 +1,71 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Nix (3)
+# ============================================================
+
+# glibc (Nixpkgs)
+ex:glibc-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-nix-version ;
+  pkg:description "GNU C Library - standard C library (Nixpkgs derivation)" ;
+  pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rdfs:label "GNU C Library (Nixpkgs derivation)" .
+
+ex:glibc-nix-version a pkg:Version ;
+    rdfs:label "Version 2.34-21 for glibc-nix" ;
+    pkg:versionString "2.34-21" .
+
+# wget (Nixpkgs)
+ex:wget-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-nix-version ;
+  pkg:description "Internet file retriever utility (Nixpkgs derivation)" ;
+  pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (Nixpkgs derivation)" .
+
+ex:wget-nix-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-nix" ;
+    pkg:versionString "1.21.2" .
+
+# git (Nixpkgs)
+ex:git-nix a nix:StdenvMkDerivation ;
+  pkg:packageName "git" ;
+  pkg:hasVersion ex:git-nix-version ;
+  pkg:description "Fast, scalable, distributed revision control system (Nixpkgs derivation)" ;
+  pkg:downloadURL <https://github.com/NixOS/nixpkgs/> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  rdfs:label "Git (Nixpkgs derivation)" .
+
+ex:git-nix-version a pkg:Version ;
+    rdfs:label "Version 2.33.1 for git-nix" ;
+    pkg:versionString "2.33.1" .

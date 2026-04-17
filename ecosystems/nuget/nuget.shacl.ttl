@@ -1,0 +1,16 @@
+@prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+nuget:NuGetPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A NuGet package must have exactly one package ID." ;
+            sh:minCount 1 ;
+            sh:path nuget:packageId ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A NuGet package can have at most one prerelease flag." ;
+            sh:path nuget:isPrerelease ] ;
+    sh:targetClass nuget:NuGetPackage .
+

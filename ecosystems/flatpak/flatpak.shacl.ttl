@@ -1,0 +1,13 @@
+@prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+flatpak:FlatpakAppShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Flatpak app must have exactly one app ID." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass flatpak:FlatpakApp .
+

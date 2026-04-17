@@ -1,0 +1,13 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix snap: <https://purl.org/packagegraph/ontology/snap#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+snap:SnapPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Snap package must have exactly one snap name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass snap:SnapPackage .
+

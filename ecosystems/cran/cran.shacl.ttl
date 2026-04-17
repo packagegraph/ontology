@@ -1,0 +1,17 @@
+@prefix cran: <https://purl.org/packagegraph/ontology/cran#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+cran:CranPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A CRAN package must have exactly one package name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A CRAN package can have at most one needs compilation flag." ;
+            sh:path cran:needsCompilation ] ;
+    sh:targetClass cran:CranPackage .
+

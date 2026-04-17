@@ -1,0 +1,115 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# RPM (3)
+# ============================================================
+
+# glibc (RPM packaging in dist-git; upstream Sourceware)
+ex:glibc-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
+  pkg:packageName "glibc" ;
+  pkg:builtFromSource ex:glibc-srpm ;
+  pkg:hasVersion ex:glibc-rpm-version ;
+  pkg:description "GNU C Library - standard C library (RPM package)" ;
+  pkg:homepage <https://sourceware.org/glibc/sources.html> ;
+  pkg:downloadURL <https://src.fedoraproject.org/rpms/glibc> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rdfs:label "GNU C Library (RPM package)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:location <https://sourceware.org/git/glibc.git> ;
+    doap:browse   <https://sourceware.org/glibc/sources.html>
+  ] .
+
+ex:glibc-rpm-version a pkg:Version ;
+    rdfs:label "Version 2.34-28.fc35 for glibc-rpm" ;
+    pkg:versionString "2.34-28.fc35" .
+
+# wget (RPM packaging in dist-git)
+ex:wget-srpm a rpm:SourceRPM, pkg:SourcePackage ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-rpm-version ;
+  rdfs:label "GNU Wget (source RPM)" .
+
+ex:wget-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
+  pkg:packageName "wget" ;
+  pkg:builtFromSource ex:wget-srpm ;
+  pkg:hasVersion ex:wget-rpm-version ;
+  pkg:description "Internet file retriever utility (RPM package)" ;
+  pkg:downloadURL <https://src.fedoraproject.org/rpms/wget> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (RPM package)" .
+
+ex:wget-rpm-version a pkg:Version ;
+    rdfs:label "Version 1.21.1-3.fc35 for wget-rpm" ;
+    pkg:versionString "1.21.1-3.fc35" .
+
+# bash (RPM packaging in dist-git)
+ex:bash-source-rpm a pkg:SourcePackage ;
+  pkg:packageName "bash" ;
+  pkg:hasVersion ex:bash-rpm-version ;
+  rdfs:label "GNU Bash (RPM source package)" .
+
+ex:bash-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
+  pkg:packageName "bash" ;
+  pkg:builtFromSource ex:bash-source-rpm ;
+  pkg:hasVersion ex:bash-rpm-version ;
+  pkg:description "GNU Bourne Again Shell (RPM package)" ;
+  pkg:downloadURL <https://src.fedoraproject.org/rpms/bash> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Bash (RPM package)" .
+
+ex:bash-rpm-version a pkg:Version ;
+    rdfs:label "Version 5.1.8-2.fc35 for bash-rpm" ;
+    pkg:versionString "5.1.8-2.fc35" .
+
+
+# ============================================================
+# Patch examples (SRPM with distro patches)
+# ============================================================
+
+ex:glibc-srpm a rpm:SourceRPM, pkg:SourcePackage ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-rpm-version ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rpm:patchCount 45 ;
+  rpm:hasPatch ex:glibc-patch-1, ex:glibc-patch-2 ;
+  rdfs:label "glibc source RPM" .
+
+ex:glibc-patch-1 a rpm:Patch ;
+  rpm:patchName "glibc-rh-2139875.patch" ;
+  rpm:patchDescription "Fix memory corruption in iconv module for Red Hat specific locale handling" ;
+  rpm:upstreamStatus "vendorSpecific" ;
+  rdfs:label "glibc-rh-2139875.patch" .
+
+ex:glibc-patch-2 a rpm:Patch ;
+  rpm:patchName "glibc-upstream-backport-malloc.patch" ;
+  rpm:patchDescription "Backport malloc performance improvement from glibc 2.36" ;
+  rpm:upstreamStatus "backport" ;
+  rdfs:label "glibc-upstream-backport-malloc.patch" .

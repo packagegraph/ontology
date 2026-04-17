@@ -1,0 +1,106 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Security (CVE and Advisory examples)
+# ============================================================
+
+# A critical vulnerability affecting glibc
+ex:cve-2024-1234 a sec:Vulnerability ;
+  sec:cveId "CVE-2024-1234" ;
+  sec:cvssScore "9.8"^^xsd:float ;
+  sec:severity "critical" ;
+  sec:summary "Buffer overflow in glibc iconv module allows remote code execution" ;
+  sec:cweId "CWE-119" ;
+  sec:publishedDate "2024-03-15T00:00:00"^^xsd:dateTime ;
+  sec:accessVector "network" ;
+  sec:accessComplexity "low" ;
+  sec:impactConfidentiality "high" ;
+  sec:impactIntegrity "high" ;
+  sec:impactAvailability "high" ;
+  sec:exploitabilityScore "3.9"^^xsd:float ;
+  sec:impactScore "5.9"^^xsd:float ;
+  sec:affectsVersion ex:glibc-rpm-version ;
+  rdfs:label "CVE-2024-1234" .
+
+# Advisory addressing the vulnerability
+ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
+  sec:advisoryId "RHSA-2024:5678" ;
+  sec:advisorySeverity "critical" ;
+  sec:advisoryDate "2024-03-20T00:00:00"^^xsd:dateTime ;
+  sec:advisoryType "security" ;
+  sec:addressesVulnerability ex:cve-2024-1234 ;
+  sec:advisoryForPackage ex:glibc-rpm ;
+  rdfs:label "RHSA-2024:5678" .
+
+
+# ============================================================
+# Security Patch Provenance Example
+# ============================================================
+# Shows: unpatched version -> patch activity -> patched version
+################################################################
+
+ex:glibc-version-2.28-225 a pkg:Version ;
+  pkg:versionString "2.28-225.el8" ;
+  rdfs:label "glibc 2.28-225.el8 (unpatched)" .
+
+ex:glibc-version-2.28-236 a pkg:Version ;
+  pkg:versionString "2.28-236.el8_9.13" ;
+  sec:patchedFrom ex:glibc-version-2.28-225 ;
+  sec:patchProducedVersion ex:glibc-patch-activity ;
+  rdfs:label "glibc 2.28-236.el8_9.13 (security patched)" .
+
+ex:glibc-patch-activity a sec:PatchActivity ;
+  pkg:performedBy ex:rhel-errata-team ;
+  pkg:activityStartTime "2024-03-19T00:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-03-20T00:00:00Z"^^xsd:dateTime ;
+  sec:patchAddresses ex:cve-2024-1234 ;
+  rdfs:label "RHSA-2024:5678 patch activity" .
+
+ex:rhel-errata-team a pkg:Contributor ;
+  foaf:name "Red Hat Product Security" ;
+  rdfs:label "Red Hat Product Security" .
+
+ex:cve-2024-1234 a sec:Vulnerability ;
+  sec:cveId "CVE-2024-1234" ;
+  sec:cvssScore "9.8"^^xsd:float ;
+  sec:severity "critical" ;
+  sec:summary "Buffer overflow in glibc iconv module" ;
+  sec:publishedDate "2024-03-15T00:00:00Z"^^xsd:dateTime ;
+  sec:affectsVersion ex:glibc-version-2.28-225 ;
+  sec:fixedInVersion ex:glibc-version-2.28-236 ;
+  sec:affectsPackage ex:glibc-rpm ;
+  rdfs:label "CVE-2024-1234" .
+
+# Advisory addressing the vulnerability (updated with PROV-O linkage)
+ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
+  sec:advisoryId "RHSA-2024:5678" ;
+  sec:advisorySeverity "critical" ;
+  sec:advisoryDate "2024-03-20T00:00:00Z"^^xsd:dateTime ;
+  sec:advisoryType "security" ;
+  sec:addressesVulnerability ex:cve-2024-1234 ;
+  sec:advisoryForPackage ex:glibc-rpm ;
+  rdfs:label "RHSA-2024:5678" .

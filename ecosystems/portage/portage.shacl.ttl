@@ -1,0 +1,13 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix portage: <https://purl.org/packagegraph/ontology/portage#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+portage:EbuildShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Gentoo ebuild must have exactly one package name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass portage:Ebuild .
+

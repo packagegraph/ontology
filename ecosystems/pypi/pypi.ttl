@@ -1,0 +1,155 @@
+# PyPI Package Ontology
+@prefix pypi: <https://purl.org/packagegraph/ontology/pypi#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/pypi#> a owl:Ontology ;
+    rdfs:label "PyPI Package Ontology" ;
+    rdfs:comment "Ontology for representing Python packages distributed through PyPI" ;
+    dcterms:abstract "Models PyPI packages including wheels, sdists, classifiers, extras, entry points, and PEP 517 build backends. Captures the Python-specific packaging metadata from pyproject.toml, setup.py, and PKG-INFO." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+
+# Classes
+
+pypi:PythonPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Python Package" ;
+    rdfs:comment "A package published to PyPI" ;
+    IAO:0000115 "A Python package distributed through the Python Package Index, described by pyproject.toml or setup.py metadata." .
+
+pypi:Wheel a owl:Class ;
+    rdfs:subClassOf pypi:PythonPackage ;
+    rdfs:label "Wheel" ;
+    rdfs:comment "A built distribution in wheel (.whl) format" ;
+    IAO:0000115 "A pre-built Python distribution in PEP 427 wheel format, containing compiled extensions and ready-to-install files." .
+
+pypi:Sdist a owl:Class ;
+    rdfs:subClassOf pypi:PythonPackage ;
+    rdfs:label "Source Distribution" ;
+    rdfs:comment "A source distribution (.tar.gz)" ;
+    IAO:0000115 "A Python source distribution containing the raw source code and build instructions, requiring a build step before installation." .
+
+pypi:Classifier a owl:Class ;
+    rdfs:label "Trove Classifier" ;
+    rdfs:comment "A PyPI trove classifier categorizing the package" ;
+    IAO:0000115 "A hierarchical classification string from the PyPI trove system describing the package's maturity, license, topic, or Python version compatibility." .
+
+pypi:Extra a owl:Class ;
+    rdfs:label "Extra" ;
+    rdfs:comment "An optional feature group with additional dependencies" ;
+    IAO:0000115 "A named group of optional dependencies (extras_require) that can be installed with pip install package[extra]." .
+
+pypi:EntryPoint a owl:Class ;
+    rdfs:label "Entry Point" ;
+    rdfs:comment "A console script or plugin entry point" ;
+    IAO:0000115 "A named reference to a Python callable exposed via the entry_points mechanism, used for CLI scripts and plugin systems." .
+
+# Datatype Properties
+
+pypi:requiresPython a owl:DatatypeProperty ;
+    rdfs:label "requires python" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Python version constraint specifier (PEP 440), e.g., '>=3.8' or '>=3.10,<4'." .
+
+pypi:classifierString a owl:DatatypeProperty ;
+    rdfs:label "classifier string" ;
+    rdfs:domain pypi:Classifier ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The full trove classifier string, e.g., 'Development Status :: 5 - Production/Stable'." .
+
+pypi:wheelTag a owl:DatatypeProperty ;
+    rdfs:label "wheel tag" ;
+    rdfs:domain pypi:Wheel ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The compatibility tag of the wheel (python-abi-platform), e.g., 'cp312-cp312-manylinux_2_17_x86_64'." .
+
+pypi:buildBackend a owl:DatatypeProperty ;
+    rdfs:label "build backend" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The PEP 517 build backend used to build the package, e.g., 'setuptools.build_meta', 'hatchling', 'flit_core'." .
+
+pypi:authorEmail a owl:DatatypeProperty ;
+    rdfs:label "author email" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Email address of the package author from PKG-INFO or pyproject.toml metadata." .
+
+pypi:projectUrl a owl:DatatypeProperty ;
+    rdfs:label "project URL" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A labeled project URL from the project-urls metadata (e.g., Documentation, Changelog, Bug Tracker)." .
+
+pypi:yanked a owl:DatatypeProperty ;
+    rdfs:label "yanked" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether this version has been yanked from PyPI (hidden from default resolution but still installable)." .
+
+pypi:yankedReason a owl:DatatypeProperty ;
+    rdfs:label "yanked reason" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The reason provided for yanking this version from PyPI." .
+
+pypi:sha256Digest a owl:DatatypeProperty ;
+    rdfs:label "SHA-256 digest" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "SHA-256 hash of the distribution file, used for integrity verification by pip." .
+
+pypi:entryPointName a owl:DatatypeProperty ;
+    rdfs:label "entry point name" ;
+    rdfs:domain pypi:EntryPoint ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the entry point (e.g., the CLI command name for console_scripts)." .
+
+pypi:entryPointTarget a owl:DatatypeProperty ;
+    rdfs:label "entry point target" ;
+    rdfs:domain pypi:EntryPoint ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The Python module:callable target of the entry point, e.g., 'mypackage.cli:main'." .
+
+pypi:extraName a owl:DatatypeProperty ;
+    rdfs:label "extra name" ;
+    rdfs:domain pypi:Extra ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The name of the optional feature group (extras_require key)." .
+
+# Object Properties
+
+pypi:hasClassifier a owl:ObjectProperty ;
+    rdfs:label "has classifier" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range pypi:Classifier ;
+    IAO:0000115 "Associates a package with a trove classifier." .
+
+pypi:hasExtra a owl:ObjectProperty ;
+    rdfs:label "has extra" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range pypi:Extra ;
+    IAO:0000115 "Associates a package with an optional feature group." .
+
+pypi:hasEntryPoint a owl:ObjectProperty ;
+    rdfs:label "has entry point" ;
+    rdfs:domain pypi:PythonPackage ;
+    rdfs:range pypi:EntryPoint ;
+    IAO:0000115 "Associates a package with an entry point (console script or plugin)." .
+
+pypi:extraDependsOn a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "extra depends on" ;
+    rdfs:domain pypi:Extra ;
+    rdfs:range pypi:PythonPackage ;
+    IAO:0000115 "A dependency required when a specific extra is installed." .

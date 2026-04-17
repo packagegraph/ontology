@@ -1,0 +1,79 @@
+# Hex Package Ontology
+@prefix hex: <https://purl.org/packagegraph/ontology/hex#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/hex#> a owl:Ontology ;
+    rdfs:label "Hex Package Ontology" ;
+    rdfs:comment "Ontology for representing Hex packages and the Elixir/Erlang ecosystem" ;
+    dcterms:abstract "Models Hex.pm packages including Elixir/Erlang version requirements, build tools, retirement status, and hex-specific metadata. Instances are dual-typed as both pkg:Package and hex:HexPackage." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.1" ;
+    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+
+# Classes
+
+hex:HexPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "Hex Package" ;
+    rdfs:comment "A package published to Hex.pm" ;
+    IAO:0000115 "An Elixir or Erlang library distributed through Hex.pm, described by a mix.exs file." .
+
+hex:HexRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Hex Repository" ;
+    rdfs:comment "The Hex.pm package repository" ;
+    IAO:0000115 "The Hex.pm repository serving Elixir and Erlang packages." .
+
+# Datatype Properties
+
+hex:elixirVersion a owl:DatatypeProperty ;
+    rdfs:label "elixir version" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Elixir version requirement (e.g., '~> 1.14')." .
+
+hex:erlangVersion a owl:DatatypeProperty ;
+    rdfs:label "erlang version" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "OTP/Erlang version requirement." .
+
+hex:buildTools a owl:DatatypeProperty ;
+    rdfs:label "build tools" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Build tool used (mix, rebar3, erlang.mk)." .
+
+hex:retirementReason a owl:DatatypeProperty ;
+    rdfs:label "retirement reason" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Reason for package retirement (deprecated, security, renamed, etc.)." .
+
+hex:checksumAlgorithm a owl:DatatypeProperty ;
+    rdfs:label "checksum algorithm" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Checksum algorithm (typically sha256)." .
+
+hex:downloads a owl:DatatypeProperty ;
+    rdfs:label "downloads" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range xsd:integer ;
+    IAO:0000115 "Total download count for this package version." .
+
+# Object Properties
+
+hex:publishedTo a owl:ObjectProperty ;
+    rdfs:label "published to" ;
+    rdfs:domain hex:HexPackage ;
+    rdfs:range hex:HexRepository ;
+    IAO:0000115 "Associates a package with Hex.pm." .

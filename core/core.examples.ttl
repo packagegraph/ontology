@@ -1,0 +1,316 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# License Individuals
+spdxl:LGPL-2.1-only a spdx:ListedLicense ;
+  rdfs:label "LGPL-2.1-only" .
+spdxl:GPL-3.0-or-later a spdx:ListedLicense ;
+  rdfs:label "GPL-3.0-or-later" .
+spdxl:GPL-2.0-only a spdx:ListedLicense ;
+  rdfs:label "GPL-2.0-only" .
+# Example Maintainers (real maintainer data for demonstration)
+ex:maintainer-doko a pkg:Maintainer ;
+  rdfs:label "Matthias Klose" ;
+  foaf:name "Matthias Klose" ;
+  foaf:mbox <mailto:doko@debian.org> .
+ex:maintainer-git a pkg:Maintainer ;
+  rdfs:label "Jonathan Nieder" ;
+  foaf:name "Jonathan Nieder" ;
+  foaf:mbox <mailto:jrnieder@gmail.com> .
+ex:maintainer-fedora a pkg:Maintainer ;
+  rdfs:label "Fedora Release Engineering" ;
+  foaf:name "Fedora Release Engineering" ;
+  foaf:mbox <mailto:releng@fedoraproject.org> .
+
+# ============================================================
+# Package Set and Vendor Extension examples
+# ============================================================
+
+# glibc is in RHEL BaseOS and is NOT vendor-originated (community project)
+ex:glibc-rpm pkg:memberOfPackageSet rh:RHELBaseOS ;
+  pkg:isVendorOriginated false .
+
+ex:insights-client-rpm-version a pkg:Version ;
+    rdfs:label "Version 3.1.0-1.el8 for insights-client-rpm" ;
+    pkg:versionString "3.1.0-1.el8" .
+
+# insights-client IS vendor-originated (Red Hat project)
+ex:insights-client-srpm a rpm:SourceRPM, pkg:SourcePackage ;
+  pkg:packageName "insights-client" ;
+  pkg:hasVersion ex:insights-client-rpm-version ;
+  rdfs:label "Red Hat Insights Client (source RPM)" .
+
+ex:insights-client-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
+  pkg:packageName "insights-client" ;
+  pkg:builtFromSource ex:insights-client-srpm ;
+  pkg:hasVersion ex:insights-client-rpm-version ;
+
+  pkg:description "Red Hat Insights client for system analysis and recommendations" ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  pkg:isVendorOriginated true ;
+  pkg:memberOfPackageSet rh:RHELBaseOS ;
+  rdfs:label "Red Hat Insights Client (RPM package)" .
+
+ex:insights-client-version a pkg:Version ;
+  rdfs:label "Version 3.2.0-1.el9 for insights-client" ;
+  pkg:versionString "3.2.0-1.el9" .
+
+
+# ============================================================
+# PROV-O Provenance Chain Example
+# ============================================================
+# Traces: upstream commit -> source package -> build -> binary
+################################################################
+
+# Upstream VCS commit
+ex:openssl-commit-abc123 a vcs:Commit ;
+  vcs:commitHash "abc123def456789" ;
+  vcs:commitMessage "Release OpenSSL 3.2.1" ;
+  vcs:commitTimestamp "2024-01-30T12:00:00Z"^^xsd:dateTime ;
+  vcs:authoredBy ex:openssl-contributor ;
+  rdfs:label "OpenSSL 3.2.1 release commit" .
+
+ex:openssl-contributor a pkg:Contributor ;
+  foaf:name "OpenSSL Release Team" ;
+  rdfs:label "OpenSSL Release Team" .
+
+# VCS tag (derived from commit via prov:wasDerivedFrom through parentCommit pattern)
+ex:openssl-tag-3.2.1 a vcs:Release ;
+  vcs:tagName "openssl-3.2.1" ;
+  vcs:releaseDate "2024-01-30T14:00:00Z"^^xsd:dateTime ;
+  vcs:pointsTo ex:openssl-commit-abc123 ;
+  vcs:releasedBy ex:openssl-contributor ;
+  rdfs:label "OpenSSL 3.2.1 release" .
+
+# Source package derived from VCS tag
+ex:openssl-deb-src a deb:SourcePackage, pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-deb-src-version ;
+  pkg:maintainedBy ex:maintainer-doko ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  vcs:packagedFromTag ex:openssl-tag-3.2.1 ;
+  rdfs:label "openssl Debian source package" .
+
+ex:openssl-deb-src-version a pkg:Version ;
+  pkg:versionString "3.2.1-1" ;
+  rdfs:label "Version 3.2.1-1 for openssl" .
+
+# Build activity with PROV-O linkage
+ex:openssl-build-activity a pkg:BuildActivity ;
+  pkg:performedBy ex:debian-buildd ;
+  pkg:usedSource ex:openssl-deb-src ;
+  pkg:activityStartTime "2024-02-01T10:00:00Z"^^xsd:dateTime ;
+  pkg:activityEndTime "2024-02-01T10:45:00Z"^^xsd:dateTime ;
+  pkg:exitCode 0 ;
+  rdfs:label "openssl build on Debian buildd" .
+
+ex:debian-buildd a slsa:Builder ;
+  slsa:builderId "https://buildd.debian.org"^^xsd:anyURI ;
+  slsa:builderVersion "wanna-build 2024.01" ;
+  rdfs:label "Debian buildd" .
+
+# Binary package produced by the build (full PROV-O chain)
+ex:libssl3-deb a deb:BinaryPackage, pkg:BinaryPackage ;
+  pkg:packageName "libssl3" ;
+  pkg:hasVersion ex:libssl3-deb-version ;
+  pkg:maintainedBy ex:maintainer-doko ;
+  pkg:hasLicense spdxl:Apache-2.0 ;
+  pkg:builtFromSource ex:openssl-deb-src ;
+  pkg:wasBuiltBy ex:openssl-build-activity ;
+  rdfs:label "libssl3 Debian binary package" .
+
+ex:libssl3-deb-version a pkg:Version ;
+  pkg:versionString "3.2.1-1" ;
+  rdfs:label "Version 3.2.1-1 for libssl3" .
+
+spdxl:Apache-2.0 a spdx:ListedLicense ;
+  rdfs:label "Apache-2.0" .
+
+
+# ============================================================
+# Inverse Property Examples (Task 1)
+# ============================================================
+# Demonstrating the newly added inverse properties
+# ============================================================
+
+# 1. versionOf (inverse of hasVersion)
+# From the existing assertion: ex:glibc-deb pkg:hasVersion ex:glibc-deb-version
+# The inverse:
+ex:glibc-deb-version pkg:versionOf ex:glibc-deb .
+
+# 2. isDirectDependencyOf (inverse of directlyDependsOn)
+# Create example: wget depends on libc6
+ex:wget-deb pkg:directlyDependsOn ex:glibc-deb .
+# The inverse:
+ex:glibc-deb pkg:isDirectDependencyOf ex:wget-deb .
+
+# 3. hasPackage (inverse of isVersionOf)
+# Assuming there's a PackageIdentity for glibc
+ex:glibc-identity a pkg:PackageIdentity ;
+  pkg:packageName "glibc" ;
+  rdfs:label "glibc Package Identity" .
+
+ex:glibc-deb pkg:isVersionOf ex:glibc-identity .
+# The inverse:
+ex:glibc-identity pkg:hasPackage ex:glibc-deb .
+
+# 4. maintains (inverse of maintainedBy)
+# From the existing assertion: ex:glibc-deb pkg:maintainedBy ex:glibc-deb-maintainer
+# The inverse:
+ex:glibc-deb-maintainer pkg:maintains ex:glibc-deb .
+
+# 5. vcs:hasPackage (inverse of pkg:upstreamRepository)
+# Create example repository
+ex:glibc-upstream-repo a vcs:Repository ;
+  vcs:repositoryURL "https://sourceware.org/git/glibc.git" ;
+  rdfs:label "GNU C Library upstream repository" .
+
+ex:glibc-identity pkg:upstreamRepository ex:glibc-upstream-repo .
+# The inverse:
+ex:glibc-upstream-repo vcs:hasPackage ex:glibc-identity .
+
+# 6. sec:vulnerableIn (inverse of sec:affectsVersion)
+# From the existing assertion: ex:cve-2024-1234 sec:affectsVersion ex:glibc-version-2.28-225
+# The inverse:
+ex:glibc-version-2.28-225 sec:vulnerableIn ex:cve-2024-1234 .
+
+
+# ============================================================
+# Capability Examples (Task 2)
+# ============================================================
+# Demonstrating shared library dependency resolution
+# ============================================================
+
+# Capability: libssl.so.3 (shared library provided by openssl)
+ex:cap-libssl-so-3 a pkg:Capability ;
+  pkg:capabilityName "libssl.so.3" ;
+  rdfs:label "OpenSSL shared library libssl.so.3" ;
+  rdfs:comment "Shared library for SSL/TLS cryptography" .
+
+# Capability: libc.so.6 (provided by glibc)
+ex:cap-libc-so-6 a pkg:Capability ;
+  pkg:capabilityName "libc.so.6(GLIBC_2.34)(64bit)" ;
+  rdfs:label "GNU C Library shared library libc.so.6" ;
+  rdfs:comment "Standard C library" .
+
+# Source package for openssl
+ex:openssl-source-deb a pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-version ;
+  rdfs:label "OpenSSL (Debian source package)" .
+
+# Binary package that provides libssl.so.3
+ex:openssl-deb a pkg:BinaryPackage, deb:DebianPackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-version ;
+  pkg:builtFromSource ex:openssl-source-deb ;
+  pkg:providesCapability ex:cap-libssl-so-3 ;
+  pkg:description "OpenSSL library package" ;
+  rdfs:label "OpenSSL (Debian binary package)" .
+
+ex:openssl-version a pkg:Version ;
+  pkg:versionString "3.0.2-1" ;
+  rdfs:label "OpenSSL version 3.0.2-1" .
+
+# wget requires both capabilities
+ex:wget-deb pkg:requiresCapability ex:cap-libssl-so-3, ex:cap-libc-so-6 ;
+  rdfs:comment "Updated to show capability dependencies" .
+
+# glibc provides libc.so.6
+ex:glibc-deb pkg:providesCapability ex:cap-libc-so-6 .
+
+# CVE blast radius via .so linking
+# If libssl.so.3 has a vulnerability, all packages requiring it are affected
+# Query: SELECT ?pkg WHERE { ?pkg pkg:requiresCapability ex:cap-libssl-so-3 }
+# Result: ex:wget-deb (and any other packages requiring libssl.so.3)
+
+
+# ============================================================
+# Cross-Ecosystem Identity Linking (Task 3)
+# ============================================================
+# Demonstrating Debian → PyPI → GitHub traversal
+# ============================================================
+
+# Upstream project: Requests (HTTP library)
+ex:requests-project a pkg:UpstreamProject ;
+  pkg:projectName "requests" ;
+  pkg:projectRepository ex:requests-github-repo ;
+  pkg:ecosystemPackage ex:requests-pypi-identity, ex:requests-debian-identity ;
+  rdfs:label "Requests upstream project" ;
+  rdfs:comment "HTTP library for humans" .
+
+# GitHub repository
+ex:requests-github-repo a vcs:Repository ;
+  vcs:repositoryURL "https://github.com/psf/requests.git" ;
+  rdfs:label "Requests GitHub repository" .
+
+# PyPI package identity
+ex:requests-pypi-identity a pkg:PackageIdentity ;
+  pkg:packageName "requests" ;
+  pkg:upstreamRepository ex:requests-github-repo ;
+  pkg:upstreamEquivalent ex:requests-debian-identity ;
+  rdfs:label "requests (PyPI)" ;
+  rdfs:comment "PyPI package identity" .
+
+# Debian package identity
+ex:requests-debian-identity a pkg:PackageIdentity ;
+  pkg:packageName "python3-requests" ;
+  pkg:upstreamRepository ex:requests-github-repo ;
+  pkg:upstreamPackageIdentity ex:requests-pypi-identity ;
+  pkg:upstreamEquivalent ex:requests-pypi-identity ;
+  rdfs:label "python3-requests (Debian)" ;
+  rdfs:comment "Debian package identity" .
+
+# Traversal demonstration:
+# 1. Debian → PyPI: ex:requests-debian-identity pkg:upstreamPackageIdentity ex:requests-pypi-identity
+# 2. Bidirectional: ex:requests-debian-identity pkg:upstreamEquivalent ex:requests-pypi-identity
+# 3. Both → GitHub: both have pkg:upstreamRepository pointing to ex:requests-github-repo
+# 4. Via UpstreamProject hub: ex:requests-project pkg:ecosystemPackage links both identities
+
+
+# ============================================================
+# External Identifiers (Task 4)
+# ============================================================
+# Demonstrating PURL and CPE identifiers
+# ============================================================
+
+# Add PURL to existing package identities
+ex:requests-pypi-identity pkg:purl "pkg:pypi/requests@2.28.2"^^xsd:anyURI .
+
+ex:requests-debian-identity pkg:purl "pkg:deb/debian/python3-requests@2.28.2"^^xsd:anyURI ;
+  sec:cpeId "cpe:2.3:a:python-requests:requests:2.28.2:*:*:*:*:*:*:*" .
+
+# OpenSSL package identity with CPE
+ex:openssl-identity a pkg:PackageIdentity ;
+  pkg:packageName "openssl" ;
+  pkg:purl "pkg:deb/debian/openssl@3.0.2"^^xsd:anyURI ;
+  sec:cpeId "cpe:2.3:a:openssl:openssl:3.0.2:*:*:*:*:*:*:*" ;
+  rdfs:label "OpenSSL package identity" .
+
+# Link existing openssl-deb to its identity
+ex:openssl-deb pkg:isVersionOf ex:openssl-identity .
+ex:openssl-identity pkg:hasPackage ex:openssl-deb .

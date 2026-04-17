@@ -1,0 +1,72 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Chocolatey (3)
+# ============================================================
+
+# cygwin (Chocolatey package; likely meta/distribution bootstrapper)
+ex:cygwin-choco a choco:ChocolateyPackage ;
+  pkg:packageName "cygwin" ;
+  pkg:hasVersion ex:cygwin-choco-version ;
+  pkg:description "Unix-like environment and command-line interface for Windows (Chocolatey package)" ;
+  pkg:downloadURL <https://community.chocolatey.org/packages/Cygwin> ;
+  pkg:isMetaPackage true ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "Cygwin (Chocolatey package)" .
+
+ex:cygwin-choco-version a pkg:Version ;
+    rdfs:label "Version 3.3.4 for cygwin-choco" ;
+    pkg:versionString "3.3.4" .
+
+# wget (Chocolatey package page)
+ex:wget-choco a choco:ChocolateyPackage ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-choco-version ;
+  pkg:description "Internet file retriever utility (Chocolatey package)" ;
+  pkg:downloadURL <https://community.chocolatey.org/packages/wget> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (Chocolatey package)" .
+
+ex:wget-choco-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-choco" ;
+    pkg:versionString "1.21.2" .
+
+# git (Chocolatey package page)
+ex:git-choco a choco:ChocolateyPackage ;
+  pkg:packageName "git" ;
+  pkg:hasVersion ex:git-choco-version ;
+  pkg:description "Fast, scalable, distributed revision control system for Windows (Chocolatey package)" ;
+  pkg:downloadURL <https://community.chocolatey.org/packages/git> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  rdfs:label "Git (Chocolatey package)" .
+
+ex:git-choco-version a pkg:Version ;
+    rdfs:label "Version 2.35.1.2 for git-choco" ;
+    pkg:versionString "2.35.1.2" .

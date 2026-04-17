@@ -1,0 +1,54 @@
+@prefix buildroot: <https://purl.org/packagegraph/ontology/buildroot#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+buildroot:BuildInfrastructureShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:message "A build infrastructure must have at least one label." ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass buildroot:BuildInfrastructure .
+
+buildroot:BuildrootPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package must have exactly one package name." ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package can have at most one install-staging flag." ;
+            sh:path buildroot:installStaging ],
+        [ sh:datatype xsd:boolean ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package can have at most one install-target flag." ;
+            sh:path buildroot:installTarget ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package can have at most one CPE vendor." ;
+            sh:path buildroot:cpeVendor ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package can have at most one CPE product." ;
+            sh:path buildroot:cpeProduct ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A Buildroot package can have at most one download site." ;
+            sh:path buildroot:site ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "Buildroot site method must be a known download method (wget, git, svn, hg, bzr, file, local, scp, cvs)." ;
+            sh:path buildroot:siteMethod ;
+            sh:pattern "^(wget|git|svn|hg|bzr|file|local|scp|cvs)$" ] ;
+    sh:targetClass buildroot:BuildrootPackage .
+
+buildroot:DefconfigShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A defconfig must have exactly one name." ;
+            sh:minCount 1 ;
+            sh:path buildroot:defconfigName ] ;
+    sh:targetClass buildroot:Defconfig .
+

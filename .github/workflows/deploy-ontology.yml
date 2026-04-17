@@ -31,7 +31,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install rdflib
+          python -m pip install rdflib pyshacl
       - name: Run deployment using Makefile
         run: make deploy
       - name: Setup GitHub Pages

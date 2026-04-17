@@ -1,0 +1,75 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Homebrew (3)
+# ============================================================
+
+# glibc (Homebrew on Linux; formula in homebrew-core)
+ex:glibc-brew a brew:Formula ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-brew-version ;
+  pkg:description "GNU C Library - standard C library (Homebrew formula, Linux-only)" ;
+  pkg:homepage <https://formulae.brew.sh/formula/glibc> ;
+  pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/glibc.rb> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rdfs:label "GNU C Library (Homebrew formula, Linux-only)" ;
+  doap:repository [ a doap:GitRepository ;
+    doap:browse <https://formulae.brew.sh/formula/glibc>
+  ] .
+
+ex:glibc-brew-version a pkg:Version ;
+    rdfs:label "Version 2.35 for glibc-brew" ;
+    pkg:versionString "2.35" .
+
+# wget (Homebrew formula)
+ex:wget-brew a brew:Formula ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-brew-version ;
+  pkg:description "Internet file retriever utility (Homebrew formula)" ;
+  pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/w/wget.rb> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (Homebrew formula)" .
+
+ex:wget-brew-version a pkg:Version ;
+    rdfs:label "Version 1.21.2 for wget-brew" ;
+    pkg:versionString "1.21.2" .
+
+# git (Homebrew formula)
+ex:git-brew a brew:Formula ;
+  pkg:packageName "git" ;
+  pkg:hasVersion ex:git-brew-version ;
+  pkg:description "Fast, scalable, distributed revision control system (Homebrew formula)" ;
+  pkg:downloadURL <https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/g/git.rb> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-2.0-only ;
+  rdfs:label "Git (Homebrew formula)" .
+
+ex:git-brew-version a pkg:Version ;
+    rdfs:label "Version 2.35.1 for git-brew" ;
+    pkg:versionString "2.35.1" .

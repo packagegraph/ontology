@@ -1,0 +1,119 @@
+# CRAN Package Ontology
+@prefix cran: <https://purl.org/packagegraph/ontology/cran#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+<https://purl.org/packagegraph/ontology/cran#> a owl:Ontology ;
+    rdfs:label "CRAN Package Ontology" ;
+    rdfs:comment "Ontology for representing CRAN packages and the R ecosystem" ;
+    dcterms:abstract "Models CRAN (Comprehensive R Archive Network) packages including compilation requirements, system dependencies, priority levels, Bioconductor views, and R-specific dependency types (Depends, Imports, Suggests, LinkingTo, Enhances). Instances are dual-typed as both pkg:Package and cran:CranPackage." ;
+    dcterms:created "2026-04-14"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.1" ;
+    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+
+# Classes
+
+cran:CranPackage a owl:Class ;
+    rdfs:subClassOf pkg:Package ;
+    rdfs:label "CRAN Package" ;
+    rdfs:comment "A package published to CRAN" ;
+    IAO:0000115 "An R package distributed through the Comprehensive R Archive Network, described by a DESCRIPTION file." .
+
+cran:CranRepository a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "CRAN Repository" ;
+    rdfs:comment "A CRAN mirror or repository" ;
+    IAO:0000115 "A repository serving R packages, such as cran.r-project.org or a local CRAN mirror." .
+
+# Datatype Properties
+
+cran:needsCompilation a owl:DatatypeProperty ;
+    rdfs:label "needs compilation" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Whether the package contains C/C++/Fortran code requiring compilation." .
+
+cran:systemRequirements a owl:DatatypeProperty ;
+    rdfs:label "system requirements" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "External system libraries or tools required (e.g., 'libcurl', 'GNU make')." .
+
+cran:priority a owl:DatatypeProperty ;
+    rdfs:label "priority" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Package priority level: 'base' (part of R distribution), 'recommended' (shipped but separate), or absent for contributed packages." .
+
+cran:biocViews a owl:DatatypeProperty ;
+    rdfs:label "bioconductor views" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Comma-separated Bioconductor topic classifications (for Bioconductor packages hosted on CRAN)." .
+
+cran:title a owl:DatatypeProperty ;
+    rdfs:label "title" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "One-line package title from DESCRIPTION." .
+
+cran:author a owl:DatatypeProperty ;
+    rdfs:label "author" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Package author(s) as specified in the Author field." .
+
+cran:maintainer a owl:DatatypeProperty ;
+    rdfs:label "maintainer" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Current package maintainer (name and email)." .
+
+# Object Properties
+
+cran:depends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "depends" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranPackage ;
+    IAO:0000115 "A Depends dependency — required for the package to load and function." .
+
+cran:imports a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "imports" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranPackage ;
+    IAO:0000115 "An Imports dependency — namespaces imported but not attached to search path." .
+
+cran:suggests a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "suggests" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranPackage ;
+    IAO:0000115 "A Suggests dependency — optional, enhances functionality but not required." .
+
+cran:linkingTo a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "linking to" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranPackage ;
+    IAO:0000115 "A LinkingTo dependency — C/C++ headers needed for compilation." .
+
+cran:enhances a owl:ObjectProperty ;
+    rdfs:label "enhances" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranPackage ;
+    IAO:0000115 "An Enhances relationship — this package enhances another package." .
+
+cran:publishedTo a owl:ObjectProperty ;
+    rdfs:label "published to" ;
+    rdfs:domain cran:CranPackage ;
+    rdfs:range cran:CranRepository ;
+    IAO:0000115 "Associates a package with the CRAN repository it was published to." .

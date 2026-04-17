@@ -1,0 +1,71 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
+@prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix spdx:  <http://spdx.org/rdf/terms#> .
+@prefix spdxl: <http://spdx.org/licenses/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# ============================================================
+# Arch Linux (3)
+# ============================================================
+
+# glibc (Arch packaging on GitLab)
+ex:glibc-arch a pacman:PacmanPackage ;
+  pkg:packageName "glibc" ;
+  pkg:hasVersion ex:glibc-arch-version ;
+  pkg:description "GNU C Library - standard C library (Arch package)" ;
+  pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/glibc> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:LGPL-2.1-only ;
+  rdfs:label "GNU C Library (Arch package)" .
+
+ex:glibc-arch-version a pkg:Version ;
+    rdfs:label "Version 2.35-2 for glibc-arch" ;
+    pkg:versionString "2.35-2" .
+
+# wget (Arch packaging on GitLab)
+ex:wget-arch a pacman:PacmanPackage ;
+  pkg:packageName "wget" ;
+  pkg:hasVersion ex:wget-arch-version ;
+  pkg:description "Internet file retriever utility (Arch package)" ;
+  pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/wget> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Wget (Arch package)" .
+
+ex:wget-arch-version a pkg:Version ;
+    rdfs:label "Version 1.21.2-1 for wget-arch" ;
+    pkg:versionString "1.21.2-1" .
+
+# bash (Arch packaging; standard pattern)
+ex:bash-arch a pacman:PacmanPackage ;
+  pkg:packageName "bash" ;
+  pkg:hasVersion ex:bash-arch-version ;
+  pkg:description "GNU Bourne Again Shell (Arch package)" ;
+  pkg:downloadURL <https://gitlab.archlinux.org/archlinux/packaging/packages/bash> ;
+  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:hasLicense spdxl:GPL-3.0-or-later ;
+  rdfs:label "GNU Bash (Arch package)" .
+
+ex:bash-arch-version a pkg:Version ;
+    rdfs:label "Version 5.1.016-1 for bash-arch" ;
+    pkg:versionString "5.1.016-1" .

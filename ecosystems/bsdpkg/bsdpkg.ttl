@@ -1,0 +1,481 @@
+# BSD Ports Package Ontology
+@prefix bsdpkg: <https://purl.org/packagegraph/ontology/bsdpkg#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+
+
+# Ontology Declaration
+<https://purl.org/packagegraph/ontology/bsdpkg#> a owl:Ontology ;
+    rdfs:label "BSD Ports Package Ontology" ;
+    rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)" ;
+    dcterms:abstract "The BSD extension models the FreeBSD, OpenBSD, and NetBSD ports systems. It captures ports tree structure, Makefile build configuration, distinfo checksums, build options, flavors, and categories. Port dependencies, master sites, and patch metadata are represented to support cross-BSD and BSD-to-Linux package comparisons." ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:title "BSD Package Ontology" ;
+    dcterms:description "A comprehensive ontology for modeling BSD packages, ports systems, package databases, and BSD-specific metadata including origins, flavors, and port dependencies." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    owl:versionInfo "0.5.0" ;
+    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+
+# BSD-specific Classes
+bsdpkg:Port a owl:Class ;
+    rdfs:subClassOf pkg:SourcePackage ;
+    rdfs:label "Port" ;
+    rdfs:comment "A port in the BSD ports system" ;
+    IAO:0000115 "A collection of files and metadata that provides instructions for downloading, compiling, and installing software from source code on BSD systems." .
+
+bsdpkg:PortsTree a owl:Class ;
+    rdfs:subClassOf pkg:Repository ;
+    rdfs:label "Ports Tree" ;
+    rdfs:comment "A collection of ports organized in a directory structure" ;
+    IAO:0000115 "A hierarchical directory structure containing all available ports organized by category, providing the complete collection of software that can be built from source." .
+
+bsdpkg:Makefile a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Port Makefile" ;
+    rdfs:comment "A Makefile containing port build instructions and metadata" ;
+    IAO:0000115 "A BSD make-compatible file that defines variables, dependencies, and build instructions for compiling and installing a port." .
+
+bsdpkg:PortSkeleton a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Port Skeleton" ;
+    rdfs:comment "The complete set of files that define a port" ;
+    IAO:0000115 "The complete directory structure and files that define a BSD port, including Makefile, patches, description files, and other metadata." .
+
+bsdpkg:Distinfo a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Distinfo" ;
+    rdfs:comment "File containing checksums and metadata for distribution files" ;
+    IAO:0000115 "A file containing cryptographic checksums and size information for distribution files, used to verify the integrity of downloaded source archives." .
+
+bsdpkg:PkgDescr a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Package Description" ;
+    rdfs:comment "File containing detailed description of the port" ;
+    IAO:0000115 "A text file containing a detailed description of the port's functionality, purpose, and features, used for documentation and package management." .
+
+bsdpkg:PkgPlist a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Package Plist" ;
+    rdfs:comment "Packing list containing files installed by the port" ;
+    IAO:0000115 "A manifest file listing all files, directories, and other items that will be installed by the port, used for package creation and removal." .
+
+bsdpkg:PkgMessage a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Package Message" ;
+    rdfs:comment "File containing messages displayed during installation" ;
+    IAO:0000115 "A text file containing important information, configuration instructions, or warnings that are displayed to users during package installation or removal." .
+
+bsdpkg:Patch a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Patch" ;
+    rdfs:comment "A patch file applied during port building" ;
+    IAO:0000115 "A file containing modifications to the original source code that are applied during the build process to fix bugs, add features, or adapt the software for BSD systems." .
+
+bsdpkg:Option a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Port Option" ;
+    rdfs:comment "A build option that can be enabled or disabled for a port" ;
+    IAO:0000115 "A configurable build-time option that allows users to enable or disable specific features, dependencies, or functionality when building a BSD port." .
+
+bsdpkg:Category a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Port Category" ;
+    rdfs:comment "A category in the ports tree (e.g., www, devel, games)" ;
+    IAO:0000115 "A hierarchical classification system for organizing BSD ports by functionality or purpose, such as www for web-related software or devel for development tools." .
+
+bsdpkg:Flavor a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Port Flavor" ;
+    rdfs:comment "A variant of a port with different build options or dependencies" ;
+    IAO:0000115 "A build-time variant of a BSD port that provides different features, dependencies, or configurations while sharing the same base source code." .
+
+# BSD System Classes
+bsdpkg:FreeBSDPort a owl:Class ;
+    rdfs:subClassOf bsdpkg:Port ;
+    rdfs:label "FreeBSD Port" ;
+    rdfs:comment "A port in the FreeBSD ports system" ;
+    IAO:0000115 "A software package in the FreeBSD ports collection that provides build instructions and metadata for compiling software from source on FreeBSD systems." .
+
+bsdpkg:OpenBSDPort a owl:Class ;
+    rdfs:subClassOf bsdpkg:Port ;
+    rdfs:label "OpenBSD Port" ;
+    rdfs:comment "A port in the OpenBSD ports system" ;
+    IAO:0000115 "A software package in the OpenBSD ports collection that provides build instructions and metadata for compiling software from source on OpenBSD systems." .
+
+bsdpkg:NetBSDPort a owl:Class ;
+    rdfs:subClassOf bsdpkg:Port ;
+    rdfs:label "NetBSD Port" ;
+    rdfs:comment "A port in the NetBSD pkgsrc system" ;
+    IAO:0000115 "A software package in the NetBSD pkgsrc collection that provides build instructions and metadata for compiling software from source on NetBSD and other supported systems." .
+
+# BSD-specific Properties
+bsdpkg:portname a owl:DatatypeProperty ;
+    rdfs:label "port name" ;
+    rdfs:comment "The name of the port" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The unique name identifier of the port within its category in the ports tree." .
+
+bsdpkg:portversion a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:versionString ;
+    rdfs:label "port version" ;
+    rdfs:comment "The version of the port" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The version string of the upstream software that this port packages." .
+
+bsdpkg:portrevision a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:revision ;
+    rdfs:label "port revision" ;
+    rdfs:comment "The port revision number" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "An integer incremented when the port is updated without changing the upstream software version." .
+
+bsdpkg:portepoch a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:epoch ;
+    rdfs:label "port epoch" ;
+    rdfs:comment "The port epoch for version ordering" ;
+    rdfs:domain pkg:Version ;
+    rdfs:range xsd:int ;
+    IAO:0000115 "An integer used to override normal version comparison when the version numbering scheme changes significantly." .
+
+bsdpkg:comment a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:description ;
+    rdfs:label "comment" ;
+    rdfs:comment "One-line description of the port" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A brief one-line description of the port's purpose and functionality, displayed in package listings and searches." .
+
+bsdpkg:wwwSite a owl:DatatypeProperty ;
+    rdfs:subPropertyOf pkg:homepage ;
+    rdfs:label "WWW site" ;
+    rdfs:comment "The upstream website URL" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "The official website URL of the upstream software project that this port packages." .
+
+bsdpkg:masterSites a owl:DatatypeProperty ;
+    rdfs:label "master sites" ;
+    rdfs:comment "Primary download sites for distribution files" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:anyURI ;
+    IAO:0000115 "Specifies the primary download locations where the source distribution files can be obtained." .
+
+bsdpkg:distname a owl:DatatypeProperty ;
+    rdfs:label "distribution name" ;
+    rdfs:comment "The base name of the distribution file" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The base name of the main source distribution archive, typically without file extension." .
+
+bsdpkg:distfiles a owl:DatatypeProperty ;
+    rdfs:label "distribution files" ;
+    rdfs:comment "The distribution files to download" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the names of source archive files that need to be downloaded to build this port." .
+
+bsdpkg:extractSufx a owl:DatatypeProperty ;
+    rdfs:label "extract suffix" ;
+    rdfs:comment "The file extension for the main distribution file" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The file extension of the main distribution archive, used to determine the appropriate extraction method." .
+
+bsdpkg:worksrc a owl:DatatypeProperty ;
+    rdfs:label "work source" ;
+    rdfs:comment "The directory where sources are extracted and built" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the subdirectory within the work directory where the source code is extracted and compilation occurs." .
+
+bsdpkg:maintainer a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:maintainedBy ;
+    rdfs:label "maintainer" ;
+    rdfs:comment "The person or entity who maintains the port" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range pkg:Maintainer ;
+    IAO:0000115 "The person or entity responsible for maintaining and updating this port." .
+
+bsdpkg:inCategory a owl:ObjectProperty ;
+    rdfs:label "in category" ;
+    rdfs:comment "The categories this port belongs to" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Category ;
+    IAO:0000115 "Lists the functional categories that classify this port, with the first category determining its location in the ports tree." .
+
+bsdpkg:masterPort a owl:DatatypeProperty ;
+    rdfs:label "master port" ;
+    rdfs:comment "The master port for slave ports" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Identifies the master port that this slave port derives its configuration and build instructions from." .
+
+bsdpkg:pkgnamePrefix a owl:DatatypeProperty ;
+    rdfs:label "package name prefix" ;
+    rdfs:comment "Prefix added to the package name" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A string prepended to the package name to distinguish variants or provide additional identification." .
+
+bsdpkg:pkgnameSuffix a owl:DatatypeProperty ;
+    rdfs:label "package name suffix" ;
+    rdfs:comment "Suffix added to the package name" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "A string appended to the package name to distinguish variants or provide additional identification." .
+
+# Build Configuration Properties
+bsdpkg:usesLibc a owl:DatatypeProperty ;
+    rdfs:label "uses libc" ;
+    rdfs:comment "The C library dependency" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the C library implementation or version required by this port." .
+
+bsdpkg:usesAutotools a owl:DatatypeProperty ;
+    rdfs:label "uses autotools" ;
+    rdfs:comment "Whether the port uses GNU autotools" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates that this port uses GNU autotools (autoconf, automake, libtool) for its build system configuration." .
+
+bsdpkg:usesGmake a owl:DatatypeProperty ;
+    rdfs:label "uses gmake" ;
+    rdfs:comment "Whether the port requires GNU make" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates that this port requires GNU make instead of the system's default make implementation." .
+
+bsdpkg:usesPerl a owl:DatatypeProperty ;
+    rdfs:label "uses perl" ;
+    rdfs:comment "The Perl dependency requirement" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the Perl interpreter version or modules required by this port for building or runtime." .
+
+bsdpkg:usesPython a owl:DatatypeProperty ;
+    rdfs:label "uses python" ;
+    rdfs:comment "The Python dependency requirement" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies the Python interpreter version or modules required by this port for building or runtime." .
+
+bsdpkg:noArch a owl:DatatypeProperty ;
+    rdfs:label "no arch" ;
+    rdfs:comment "Whether the port is architecture-independent" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:boolean ;
+    IAO:0000115 "Indicates that this port produces architecture-independent packages that can be used on any supported platform." .
+
+bsdpkg:onlyForArchs a owl:DatatypeProperty ;
+    rdfs:label "only for archs" ;
+    rdfs:comment "Architectures this port can be built on" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Restricts this port to only be built on the specified architectures or platforms." .
+
+bsdpkg:notForArchs a owl:DatatypeProperty ;
+    rdfs:label "not for archs" ;
+    rdfs:comment "Architectures this port cannot be built on" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Lists architectures or platforms where this port cannot be built due to incompatibilities or limitations." .
+
+bsdpkg:brokenOn a owl:DatatypeProperty ;
+    rdfs:label "broken on" ;
+    rdfs:comment "Platforms where this port is known to be broken" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Specifies platforms, architectures, or system versions where this port is known to have build or runtime issues." .
+
+bsdpkg:forbidden a owl:DatatypeProperty ;
+    rdfs:label "forbidden" ;
+    rdfs:comment "Reason why the port is forbidden" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Explains why this port is forbidden from being built or distributed, typically due to legal or security concerns." .
+
+bsdpkg:restricted a owl:DatatypeProperty ;
+    rdfs:label "restricted" ;
+    rdfs:comment "Reason why the port has distribution restrictions" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Explains why this port has restrictions on redistribution, typically due to licensing constraints." .
+
+bsdpkg:noPackage a owl:DatatypeProperty ;
+    rdfs:label "no package" ;
+    rdfs:comment "Reason why binary packages are not built" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Explains why binary packages are not created for this port, requiring users to build from source." .
+
+# Checksum Properties
+bsdpkg:checksumMd5 a owl:DatatypeProperty ;
+    rdfs:label "MD5 checksum" ;
+    rdfs:comment "MD5 checksum of distribution files" ;
+    rdfs:domain bsdpkg:Distinfo ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The MD5 cryptographic hash of distribution files used to verify file integrity during download." .
+
+bsdpkg:checksumSha256 a owl:DatatypeProperty ;
+    rdfs:label "SHA256 checksum" ;
+    rdfs:comment "SHA256 checksum of distribution files" ;
+    rdfs:domain bsdpkg:Distinfo ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "The SHA256 cryptographic hash of distribution files used to verify file integrity during download." .
+
+bsdpkg:checksumSize a owl:DatatypeProperty ;
+    rdfs:label "checksum size" ;
+    rdfs:comment "Size of distribution files" ;
+    rdfs:domain bsdpkg:Distinfo ;
+    rdfs:range xsd:long ;
+    IAO:0000115 "The size in bytes of distribution files, used to verify complete download and file integrity." .
+
+# Object Properties
+bsdpkg:hasMakefile a owl:ObjectProperty ;
+    rdfs:label "has Makefile" ;
+    rdfs:comment "Links a port to its Makefile" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Makefile ;
+    IAO:0000115 "Associates a port with its Makefile containing build instructions and configuration variables." .
+
+bsdpkg:hasDistinfo a owl:ObjectProperty ;
+    rdfs:label "has distinfo" ;
+    rdfs:comment "Links a port to its distinfo file" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Distinfo ;
+    IAO:0000115 "Associates a port with its distinfo file containing checksums and metadata for distribution files." .
+
+bsdpkg:hasPkgDescr a owl:ObjectProperty ;
+    rdfs:label "has pkg-descr" ;
+    rdfs:comment "Links a port to its package description" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:PkgDescr ;
+    IAO:0000115 "Associates a port with its detailed description file explaining the software's purpose and features." .
+
+bsdpkg:hasPkgPlist a owl:ObjectProperty ;
+    rdfs:label "has pkg-plist" ;
+    rdfs:comment "Links a port to its package plist" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:PkgPlist ;
+    IAO:0000115 "Associates a port with its packing list file that specifies all files and directories to be installed." .
+
+bsdpkg:hasPkgMessage a owl:ObjectProperty ;
+    rdfs:label "has pkg-message" ;
+    rdfs:comment "Links a port to its package message" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:PkgMessage ;
+    IAO:0000115 "Associates a port with its message file containing important information displayed during installation." .
+
+bsdpkg:hasPatch a owl:ObjectProperty ;
+    rdfs:label "has patch" ;
+    rdfs:comment "Links a port to its patches" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Patch ;
+    IAO:0000115 "Associates a port with patch files that modify the original source code during the build process." .
+
+bsdpkg:hasOption a owl:ObjectProperty ;
+    rdfs:label "has option" ;
+    rdfs:comment "Links a port to its build options" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Option ;
+    IAO:0000115 "Associates a port with its configurable build options that can be enabled or disabled by users." .
+
+bsdpkg:hasFlavor a owl:ObjectProperty ;
+    rdfs:label "has flavor" ;
+    rdfs:comment "Links a port to its flavors" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Flavor ;
+    IAO:0000115 "Associates a port with its available build variants or flavors that provide different feature sets." .
+
+# Dependency Properties
+bsdpkg:libDepends a owl:ObjectProperty ;
+    rdfs:label "library depends" ;
+    rdfs:comment "Shared library dependency" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that provide shared libraries required by this port at both build and runtime." .
+
+bsdpkg:buildDepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:buildDependsOn ;
+    rdfs:label "build depends" ;
+    rdfs:comment "Build-time dependency" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that must be installed to provide tools, libraries, or other resources needed during the build process." .
+
+bsdpkg:runDepends a owl:ObjectProperty ;
+    rdfs:subPropertyOf pkg:dependsOn ;
+    rdfs:label "run depends" ;
+    rdfs:comment "Runtime dependency" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that must be installed for this port to function properly at runtime." .
+
+bsdpkg:fetchDepends a owl:ObjectProperty ;
+    rdfs:label "fetch depends" ;
+    rdfs:comment "Dependency needed for fetching sources" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that provide tools or protocols needed to download the source distribution files." .
+
+bsdpkg:extractDepends a owl:ObjectProperty ;
+    rdfs:label "extract depends" ;
+    rdfs:comment "Dependency needed for extracting sources" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that provide tools needed to extract or decompress the source distribution files." .
+
+bsdpkg:patchDepends a owl:ObjectProperty ;
+    rdfs:label "patch depends" ;
+    rdfs:comment "Dependency needed for patching" ;
+    rdfs:domain bsdpkg:Port ;
+    rdfs:range bsdpkg:Port ;
+    IAO:0000115 "Specifies ports that provide tools needed to apply patches to the source code during the build process." .
+
+# Common Categories
+bsdpkg:www a bsdpkg:Category ;
+    rdfs:label "www" ;
+    rdfs:comment "World Wide Web related ports" .
+
+bsdpkg:devel a bsdpkg:Category ;
+    rdfs:label "devel" ;
+    rdfs:comment "Development tools and libraries" .
+
+bsdpkg:games a bsdpkg:Category ;
+    rdfs:label "games" ;
+    rdfs:comment "Games and entertainment software" .
+
+bsdpkg:net a bsdpkg:Category ;
+    rdfs:label "net" ;
+    rdfs:comment "Networking software" .
+
+bsdpkg:security a bsdpkg:Category ;
+    rdfs:label "security" ;
+    rdfs:comment "Security tools and libraries" .
+
+bsdpkg:sysutils a bsdpkg:Category ;
+    rdfs:label "sysutils" ;
+    rdfs:comment "System utilities" .
+
+bsdpkg:textproc a bsdpkg:Category ;
+    rdfs:label "textproc" ;
+    rdfs:comment "Text processing utilities" .
+
+bsdpkg:x11 a bsdpkg:Category ;
+    rdfs:label "x11" ;
+    rdfs:comment "X Window System related software" .

@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <uri name="http://packagegraph.github.io/ontology/core#" uri="core.ttl"/>
-    <uri name="https://packagegraph.github.io/ontology/vcs#" uri="vcs.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/debian#" uri="debian.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/nix#" uri="nix.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/rpm#" uri="rpm.ttl"/>
-    <uri name="https://purl.org/packagegraph/ontology/bsdpkg#" uri="bsdpkg.ttl"/>
-    <uri name="https://purl.org/packagegraph/ontology/pacman#" uri="pacman.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/homebrew#" uri="homebrew.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/chocolatey#" uri="chocolatey.ttl"/>
-    <uri name="https://packagegraph.github.io/ontology/security#" uri="security.ttl"/>
-    <uri name="https://packagegraph.github.io/ontology/metrics#" uri="metrics.ttl"/>
-    <uri name="https://packagegraph.github.io/ontology/redhat#" uri="redhat.ttl"/>
+    <!-- Core -->
+    <uri name="https://purl.org/packagegraph/ontology/core#" uri="core/core.ttl"/>
+
+    <!-- Extensions -->
+    <uri name="https://purl.org/packagegraph/ontology/security#" uri="extensions/security/security.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/vcs#" uri="extensions/vcs/vcs.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/metrics#" uri="extensions/metrics/metrics.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/slsa#" uri="extensions/slsa/slsa.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/dq#" uri="extensions/dq/dq.ttl"/>
+
+    <!-- Ecosystems: System-level -->
+    <uri name="https://purl.org/packagegraph/ontology/rpm#" uri="ecosystems/rpm/rpm.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/debian#" uri="ecosystems/debian/debian.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/apk#" uri="ecosystems/apk/apk.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/pacman#" uri="ecosystems/pacman/pacman.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/portage#" uri="ecosystems/portage/portage.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/xbps#" uri="ecosystems/xbps/xbps.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/bsdpkg#" uri="ecosystems/bsdpkg/bsdpkg.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/nix#" uri="ecosystems/nix/nix.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/homebrew#" uri="ecosystems/homebrew/homebrew.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/chocolatey#" uri="ecosystems/chocolatey/chocolatey.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/flatpak#" uri="ecosystems/flatpak/flatpak.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/snap#" uri="ecosystems/snap/snap.ttl"/>
+
+    <!-- Ecosystems: Language-level -->
+    <uri name="https://purl.org/packagegraph/ontology/npm#" uri="ecosystems/npm/npm.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/pypi#" uri="ecosystems/pypi/pypi.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/cargo#" uri="ecosystems/cargo/cargo.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/gomod#" uri="ecosystems/gomod/gomod.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/conda#" uri="ecosystems/conda/conda.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/maven#" uri="ecosystems/maven/maven.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/rubygems#" uri="ecosystems/rubygems/rubygems.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/cpan#" uri="ecosystems/cpan/cpan.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/cran#" uri="ecosystems/cran/cran.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/hackage#" uri="ecosystems/hackage/hackage.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/nuget#" uri="ecosystems/nuget/nuget.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/hex#" uri="ecosystems/hex/hex.ttl"/>
+
+    <!-- Ecosystems: Embedded -->
+    <uri name="https://purl.org/packagegraph/ontology/bitbake#" uri="ecosystems/bitbake/bitbake.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/buildroot#" uri="ecosystems/buildroot/buildroot.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/opkg#" uri="ecosystems/opkg/opkg.ttl"/>
+
+    <!-- Vendor extensions -->
+    <uri name="https://purl.org/packagegraph/ontology/redhat#" uri="ecosystems/redhat/redhat.ttl"/>
 </catalog>

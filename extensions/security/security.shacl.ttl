@@ -1,0 +1,31 @@
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sec:PatchActivityShape a sh:NodeShape ;
+    sh:property [ sh:class sec:Vulnerability ;
+            sh:message "A patch activity must address at least one vulnerability." ;
+            sh:minCount 1 ;
+            sh:path sec:patchAddresses ] ;
+    sh:targetClass sec:PatchActivity .
+
+sec:SecurityAdvisoryShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A security advisory must have exactly one advisory identifier." ;
+            sh:minCount 1 ;
+            sh:path sec:advisoryId ] ;
+    sh:targetClass sec:SecurityAdvisory .
+
+sec:VulnerabilityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A vulnerability must have exactly one CVE identifier." ;
+            sh:minCount 1 ;
+            sh:path sec:cveId ],
+        [ sh:datatype xsd:float ;
+            sh:maxCount 1 ;
+            sh:message "A vulnerability can have at most one CVSS score." ;
+            sh:path sec:cvssScore ] ;
+    sh:targetClass sec:Vulnerability .
+
