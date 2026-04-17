@@ -697,3 +697,27 @@ choco:ChocolateyPackageShape
     sh:datatype xsd:string ;
     sh:message "A Chocolatey package must have exactly one package ID."
   ] .
+
+# Package URL (PURL) validation shape
+pkg:PURLShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:PackageIdentity ;
+  sh:property [
+    sh:path pkg:purl ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:anyURI ;
+    sh:pattern "^pkg:[a-z]+/.+@.+" ;
+    sh:message "A PURL must follow the format pkg:type/namespace/name@version"
+  ] .
+
+# CPE identifier validation shape
+sec:CPEShape
+  a sh:NodeShape ;
+  sh:targetClass pkg:PackageIdentity ;
+  sh:property [
+    sh:path sec:cpeId ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:pattern "^cpe:2\\.3:[aho]:[^:]+:[^:]+:[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$" ;
+    sh:message "A CPE identifier must follow CPE 2.3 format: cpe:2.3:part:vendor:product:version:update:edition:language:sw_edition:target_sw:target_hw:other"
+  ] .

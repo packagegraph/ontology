@@ -903,6 +903,13 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "The size of the package file";
   rdfs:label "package size" .
 
+:purl a owl:DatatypeProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range xsd:anyURI;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Package URL (PURL) - a standardized, universal identifier for software packages across ecosystems (e.g., pkg:npm/lodash@4.17.21, pkg:pypi/requests@2.28.0). Enables cross-tool interoperability and SBOM generation.";
+  rdfs:comment "Package URL (PURL) - standardized package identifier";
+  rdfs:label "purl" .
+
 ## upstreamProject DatatypeProperty removed in 0.4.0
 ## Superseded by hasUpstreamProject ObjectProperty (Package → UpstreamProject)
 

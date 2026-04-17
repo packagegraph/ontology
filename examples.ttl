@@ -888,3 +888,25 @@ ex:requests-debian-identity a pkg:PackageIdentity ;
 # 2. Bidirectional: ex:requests-debian-identity pkg:upstreamEquivalent ex:requests-pypi-identity
 # 3. Both → GitHub: both have pkg:upstreamRepository pointing to ex:requests-github-repo
 # 4. Via UpstreamProject hub: ex:requests-project pkg:ecosystemPackage links both identities
+
+# ============================================================
+# External Identifiers (Task 4)
+# Demonstrating PURL and CPE identifiers
+# ============================================================
+
+# Add PURL to existing package identities
+ex:requests-pypi-identity pkg:purl "pkg:pypi/requests@2.28.2"^^xsd:anyURI .
+
+ex:requests-debian-identity pkg:purl "pkg:deb/debian/python3-requests@2.28.2"^^xsd:anyURI ;
+  sec:cpeId "cpe:2.3:a:python-requests:requests:2.28.2:*:*:*:*:*:*:*" .
+
+# OpenSSL package identity with CPE
+ex:openssl-identity a pkg:PackageIdentity ;
+  pkg:packageName "openssl" ;
+  pkg:purl "pkg:deb/debian/openssl@3.0.2"^^xsd:anyURI ;
+  sec:cpeId "cpe:2.3:a:openssl:openssl:3.0.2:*:*:*:*:*:*:*" ;
+  rdfs:label "OpenSSL package identity" .
+
+# Link existing openssl-deb to its identity
+ex:openssl-deb pkg:isVersionOf ex:openssl-identity .
+ex:openssl-identity pkg:hasPackage ex:openssl-deb .

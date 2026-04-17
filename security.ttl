@@ -106,6 +106,13 @@ sec:cweId a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The Common Weakness Enumeration identifier classifying the vulnerability type." .
 
+sec:cpeId a owl:DatatypeProperty ;
+    rdfs:label "CPE identifier" ;
+    rdfs:comment "Common Platform Enumeration identifier for the package" ;
+    rdfs:domain pkg:PackageIdentity ;
+    rdfs:range xsd:string ;
+    IAO:0000115 "Common Platform Enumeration (CPE) 2.3 identifier linking this package to NVD vulnerability feeds. Format: cpe:2.3:a:vendor:product:version:*:*:*:*:*:*:*. Enables cross-referencing with CVE databases." .
+
 sec:accessVector a owl:DatatypeProperty ;
     rdfs:label "access vector" ;
     rdfs:comment "The attack vector for the vulnerability" ;
