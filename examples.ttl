@@ -799,3 +799,51 @@ ex:glibc-upstream-repo vcs:hasPackage ex:glibc-identity .
 # From the existing assertion: ex:cve-2024-1234 sec:affectsVersion ex:glibc-version-2.28-225
 # The inverse:
 ex:glibc-version-2.28-225 sec:vulnerableIn ex:cve-2024-1234 .
+
+# ============================================================
+# Capability Examples (Task 2)
+# Demonstrating shared library dependency resolution
+# ============================================================
+
+# Capability: libssl.so.3 (shared library provided by openssl)
+ex:cap-libssl-so-3 a pkg:Capability ;
+  pkg:capabilityName "libssl.so.3" ;
+  rdfs:label "OpenSSL shared library libssl.so.3" ;
+  rdfs:comment "Shared library for SSL/TLS cryptography" .
+
+# Capability: libc.so.6 (provided by glibc)
+ex:cap-libc-so-6 a pkg:Capability ;
+  pkg:capabilityName "libc.so.6(GLIBC_2.34)(64bit)" ;
+  rdfs:label "GNU C Library shared library libc.so.6" ;
+  rdfs:comment "Standard C library" .
+
+# Source package for openssl
+ex:openssl-source-deb a pkg:SourcePackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-version ;
+  rdfs:label "OpenSSL (Debian source package)" .
+
+# Binary package that provides libssl.so.3
+ex:openssl-deb a pkg:BinaryPackage, deb:DebianPackage ;
+  pkg:packageName "openssl" ;
+  pkg:hasVersion ex:openssl-version ;
+  pkg:builtFromSource ex:openssl-source-deb ;
+  pkg:providesCapability ex:cap-libssl-so-3 ;
+  pkg:description "OpenSSL library package" ;
+  rdfs:label "OpenSSL (Debian binary package)" .
+
+ex:openssl-version a pkg:Version ;
+  pkg:versionString "3.0.2-1" ;
+  rdfs:label "OpenSSL version 3.0.2-1" .
+
+# wget requires both capabilities
+ex:wget-deb pkg:requiresCapability ex:cap-libssl-so-3, ex:cap-libc-so-6 ;
+  rdfs:comment "Updated to show capability dependencies" .
+
+# glibc provides libc.so.6
+ex:glibc-deb pkg:providesCapability ex:cap-libc-so-6 .
+
+# CVE blast radius via .so linking
+# If libssl.so.3 has a vulnerability, all packages requiring it are affected
+# Query: SELECT ?pkg WHERE { ?pkg pkg:requiresCapability ex:cap-libssl-so-3 }
+# Result: ex:wget-deb (and any other packages requiring libssl.so.3)

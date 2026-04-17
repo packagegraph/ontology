@@ -545,6 +545,20 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Indicates that a package provides the functionality of another package";
   rdfs:label "provides" .
 
+:providesCapability a owl:ObjectProperty;
+  rdfs:domain :Package;
+  rdfs:range :Capability;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a capability it provides, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what provides this .so' queries.";
+  rdfs:comment "Links a package to a capability it provides";
+  rdfs:label "provides capability" .
+
+:requiresCapability a owl:ObjectProperty;
+  rdfs:domain :Package;
+  rdfs:range :Capability;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a capability it requires, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what requires this .so' queries and CVE blast radius analysis.";
+  rdfs:comment "Links a package to a capability it requires";
+  rdfs:label "requires capability" .
+
 :replaces a owl:ObjectProperty;
   rdfs:domain :Package;
   rdfs:range :Package;
@@ -735,6 +749,13 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "Records the date and time when a packaging-related activity was initiated.";
   rdfs:comment "When a packaging activity began";
   rdfs:label "activity start time" .
+
+:capabilityName a owl:DatatypeProperty;
+  rdfs:domain :Capability;
+  rdfs:range xsd:string;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The identifier for a capability, such as a shared library name (libssl.so.3), virtual package name, or other capability identifier.";
+  rdfs:comment "The name or identifier of a capability";
+  rdfs:label "capability name" .
 
 :checksum a owl:DatatypeProperty, owl:FunctionalProperty;
   rdfs:domain :Package;
@@ -1011,6 +1032,12 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A requirement relationship between software packages where one package needs another package to be present and functional in order to operate correctly.";
   rdfs:comment "A relationship indicating that one package requires another package to function properly";
   rdfs:label "Dependency" .
+
+:Capability a owl:Class;
+  rdfs:subClassOf owl:Thing;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "A functional capability provided by or required by a package, such as a shared library (e.g., libssl.so.3), virtual package name, or other abstract functionality. Critical for shared library dependency resolution - enables blast radius analysis via .so linking.";
+  rdfs:comment "A capability provided or required by packages (shared library, virtual package, etc.)";
+  rdfs:label "Capability" .
 
 :Distribution a owl:Class;
   rdfs:subClassOf owl:Thing;

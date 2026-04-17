@@ -106,6 +106,24 @@ pkg:MaintainerShape
         sh:message "A maintainer must have exactly one foaf:name."
     ] .
 
+# Shape for pkg:Capability
+pkg:CapabilityShape
+    a sh:NodeShape ;
+    sh:targetClass pkg:Capability ;
+    sh:property [
+        sh:path pkg:capabilityName ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A capability must have exactly one capability name."
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "A capability must have at least one label."
+    ] .
+
 # Shape for security:Vulnerability
 sec:VulnerabilityShape
   a sh:NodeShape ;
