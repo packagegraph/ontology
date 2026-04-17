@@ -12,8 +12,8 @@
 @prefix prov:  <http://www.w3.org/ns/prov#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix debian: <https://purl.org/packagegraph/ontology/debian#> .
-@prefix alpine: <https://purl.org/packagegraph/ontology/alpine#> .
-@prefix arch:  <https://purl.org/packagegraph/ontology/archlinux#> .
+@prefix apk: <https://purl.org/packagegraph/ontology/apk#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
 @prefix homebrew: <https://purl.org/packagegraph/ontology/homebrew#> .
 @prefix npm:   <https://purl.org/packagegraph/ontology/npm#> .
 @prefix pypi:  <https://purl.org/packagegraph/ontology/pypi#> .
@@ -22,8 +22,8 @@
 @prefix conda: <https://purl.org/packagegraph/ontology/conda#> .
 @prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
 @prefix snap:  <https://purl.org/packagegraph/ontology/snap#> .
-@prefix gentoo: <https://purl.org/packagegraph/ontology/gentoo#> .
-@prefix void:  <https://purl.org/packagegraph/ontology/void#> .
+@prefix portage: <https://purl.org/packagegraph/ontology/portage#> .
+@prefix xbps:  <https://purl.org/packagegraph/ontology/xbps#> .
 @prefix rubygems: <https://purl.org/packagegraph/ontology/rubygems#> .
 @prefix maven: <https://purl.org/packagegraph/ontology/maven#> .
 @prefix cpan:  <https://purl.org/packagegraph/ontology/cpan#> .
@@ -31,9 +31,12 @@
 @prefix hackage: <https://purl.org/packagegraph/ontology/hackage#> .
 @prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
 @prefix hex:   <https://purl.org/packagegraph/ontology/hex#> .
-@prefix freebsd: <https://purl.org/packagegraph/ontology/freebsd#> .
+@prefix bsdpkg: <https://purl.org/packagegraph/ontology/bsdpkg#> .
 @prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
 @prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
+@prefix bitbake: <https://purl.org/packagegraph/ontology/bitbake#> .
+@prefix buildroot: <https://purl.org/packagegraph/ontology/buildroot#> .
+@prefix opkg: <https://purl.org/packagegraph/ontology/opkg#> .
 
 <https://purl.org/packagegraph/ontology/shacl#>
   a owl:Ontology ;
@@ -390,9 +393,9 @@ debian:DebianPackageShape
   ] .
 
 # Alpine
-alpine:AlpinePackageShape
+apk:ApkPackageShape
   a sh:NodeShape ;
-  sh:targetClass alpine:AlpinePackage ;
+  sh:targetClass apk:ApkPackage ;
   sh:property [
     sh:path pkg:packageName ;
     sh:minCount 1 ;
@@ -402,9 +405,9 @@ alpine:AlpinePackageShape
   ] .
 
 # Arch Linux
-arch:ArchPackageShape
+pacman:PacmanPackageShape
   a sh:NodeShape ;
-  sh:targetClass arch:ArchPackage ;
+  sh:targetClass pacman:PacmanPackage ;
   sh:property [
     sh:path pkg:packageName ;
     sh:minCount 1 ;
@@ -510,9 +513,9 @@ snap:SnapPackageShape
   ] .
 
 # Gentoo
-gentoo:EbuildShape
+portage:EbuildShape
   a sh:NodeShape ;
-  sh:targetClass gentoo:Ebuild ;
+  sh:targetClass portage:Ebuild ;
   sh:property [
     sh:path pkg:packageName ;
     sh:minCount 1 ;
@@ -522,9 +525,9 @@ gentoo:EbuildShape
   ] .
 
 # Void
-void:VoidPackageShape
+xbps:XbpsPackageShape
   a sh:NodeShape ;
-  sh:targetClass void:VoidPackage ;
+  sh:targetClass xbps:XbpsPackage ;
   sh:property [
     sh:path pkg:packageName ;
     sh:minCount 1 ;
@@ -650,9 +653,9 @@ hex:HexPackageShape
   ] .
 
 # FreeBSD
-freebsd:BinaryPackageShape
+bsdpkg:BinaryPackageShape
   a sh:NodeShape ;
-  sh:targetClass freebsd:BinaryPackage ;
+  sh:targetClass bsdpkg:BinaryPackage ;
   sh:property [
     sh:path pkg:packageName ;
     sh:minCount 1 ;
@@ -661,7 +664,7 @@ freebsd:BinaryPackageShape
     sh:message "A FreeBSD package must have exactly one package name."
   ] ;
   sh:property [
-    sh:path freebsd:origin ;
+    sh:path bsdpkg:origin ;
     sh:maxCount 1 ;
     sh:datatype xsd:string ;
     sh:message "A FreeBSD package can have at most one origin."
@@ -708,6 +711,260 @@ pkg:PURLShape
     sh:datatype xsd:anyURI ;
     sh:pattern "^pkg:[a-z]+/.+@.+" ;
     sh:message "A PURL must follow the format pkg:type/namespace/name@version"
+  ] .
+
+# =============================================================================
+# Embedded Linux Build System Shapes
+# =============================================================================
+
+# Yocto Recipe Shape
+bitbake:BitBakeRecipeShape
+  a sh:NodeShape ;
+  sh:targetClass bitbake:BitBakeRecipe ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto recipe must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path bitbake:layer ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto recipe must belong to exactly one layer."
+  ] ;
+  sh:property [
+    sh:path bitbake:pv ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto recipe can have at most one PV (version)."
+  ] ;
+  sh:property [
+    sh:path bitbake:licFilesChksum ;
+    sh:datatype xsd:string ;
+    sh:message "LIC_FILES_CHKSUM must be a string."
+  ] .
+
+# Yocto Layer Shape
+bitbake:LayerShape
+  a sh:NodeShape ;
+  sh:targetClass bitbake:Layer ;
+  sh:property [
+    sh:path bitbake:layerName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto layer must have exactly one layer name."
+  ] ;
+  sh:property [
+    sh:path bitbake:layerPriority ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:message "A Yocto layer can have at most one priority."
+  ] .
+
+# Yocto Machine Shape
+bitbake:MachineShape
+  a sh:NodeShape ;
+  sh:targetClass bitbake:Machine ;
+  sh:property [
+    sh:path bitbake:machineName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto machine must have exactly one machine name."
+  ] .
+
+# Yocto BitBake Class Shape
+bitbake:BitBakeClassShape
+  a sh:NodeShape ;
+  sh:targetClass bitbake:BitBakeClass ;
+  sh:property [
+    sh:path bitbake:className ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A BitBake class must have exactly one class name."
+  ] .
+
+# Yocto Image Shape
+bitbake:ImageShape
+  a sh:NodeShape ;
+  sh:targetClass bitbake:Image ;
+  sh:property [
+    sh:path bitbake:imageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Yocto image must have exactly one image name."
+  ] .
+
+# Buildroot Package Shape
+buildroot:BuildrootPackageShape
+  a sh:NodeShape ;
+  sh:targetClass buildroot:BuildrootPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Buildroot package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path buildroot:installStaging ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A Buildroot package can have at most one install-staging flag."
+  ] ;
+  sh:property [
+    sh:path buildroot:installTarget ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "A Buildroot package can have at most one install-target flag."
+  ] ;
+  sh:property [
+    sh:path buildroot:cpeVendor ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Buildroot package can have at most one CPE vendor."
+  ] ;
+  sh:property [
+    sh:path buildroot:cpeProduct ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Buildroot package can have at most one CPE product."
+  ] ;
+  sh:property [
+    sh:path buildroot:site ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A Buildroot package can have at most one download site."
+  ] ;
+  sh:property [
+    sh:path buildroot:siteMethod ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:pattern "^(wget|git|svn|hg|bzr|file|local|scp|cvs)$" ;
+    sh:message "Buildroot site method must be a known download method (wget, git, svn, hg, bzr, file, local, scp, cvs)."
+  ] .
+
+# Buildroot Build Infrastructure Shape
+buildroot:BuildInfrastructureShape
+  a sh:NodeShape ;
+  sh:targetClass buildroot:BuildInfrastructure ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A build infrastructure must have at least one label."
+  ] .
+
+# Buildroot Defconfig Shape
+buildroot:DefconfigShape
+  a sh:NodeShape ;
+  sh:targetClass buildroot:Defconfig ;
+  sh:property [
+    sh:path buildroot:defconfigName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A defconfig must have exactly one name."
+  ] .
+
+# OpenWRT Package Shape
+opkg:OpkgPackageShape
+  a sh:NodeShape ;
+  sh:targetClass opkg:OpkgPackage ;
+  sh:property [
+    sh:path pkg:packageName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An OpenWRT package must have exactly one package name."
+  ] ;
+  sh:property [
+    sh:path opkg:feed ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An OpenWRT package can belong to at most one feed."
+  ] ;
+  sh:property [
+    sh:path opkg:category ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An OpenWRT package can have at most one category."
+  ] ;
+  sh:property [
+    sh:path opkg:title ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An OpenWRT package can have at most one title."
+  ] ;
+  sh:property [
+    sh:path opkg:defaultEnabled ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:boolean ;
+    sh:message "An OpenWRT package can have at most one default-enabled flag."
+  ] .
+
+# OpenWRT Kernel Module Shape
+opkg:KernelModuleShape
+  a sh:NodeShape ;
+  sh:targetClass opkg:KernelModule ;
+  sh:property [
+    sh:path opkg:autoload ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A kernel module can have at most one autoload configuration."
+  ] .
+
+# OpenWRT Feed Shape
+opkg:FeedShape
+  a sh:NodeShape ;
+  sh:targetClass opkg:Feed ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A feed must have at least one label."
+  ] .
+
+# OpenWRT Target Shape
+opkg:TargetShape
+  a sh:NodeShape ;
+  sh:targetClass opkg:Target ;
+  sh:property [
+    sh:path opkg:targetName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A target must have exactly one target name."
+  ] .
+
+# OpenWRT Device Profile Shape
+opkg:DeviceProfileShape
+  a sh:NodeShape ;
+  sh:targetClass opkg:DeviceProfile ;
+  sh:property [
+    sh:path opkg:profileName ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A device profile must have exactly one profile name."
+  ] ;
+  sh:property [
+    sh:path opkg:flashSize ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:message "A device profile can have at most one flash size."
+  ] ;
+  sh:property [
+    sh:path opkg:ramSize ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:integer ;
+    sh:message "A device profile can have at most one RAM size."
   ] .
 
 # CPE identifier validation shape

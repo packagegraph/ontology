@@ -1,5 +1,5 @@
 # Arch Linux Package Ontology
-@prefix arch: <https://purl.org/packagegraph/ontology/archlinux#> .
+@prefix pacman: <https://purl.org/packagegraph/ontology/pacman#> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 
@@ -14,7 +14,7 @@
 
 
 # Ontology Declaration
-<https://purl.org/packagegraph/ontology/archlinux#> a owl:Ontology ;
+<https://purl.org/packagegraph/ontology/pacman#> a owl:Ontology ;
     rdfs:label "Arch Linux Package Ontology" ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories" ;
     dcterms:abstract "The Arch Linux extension models Pacman packages, PKGBUILD build scripts, split packages, package groups, and the Arch User Repository (AUR). It captures Arch-specific metadata such as build options, checksums, packager signatures, and repository tiers (core, extra, multilib)." ;
@@ -27,57 +27,57 @@
     owl:imports <core.ttl> , <vcs.ttl> .
 
 # Arch-specific Classes
-arch:ArchPackage a owl:Class ;
+pacman:PacmanPackage a owl:Class ;
     rdfs:subClassOf pkg:Package ;
     rdfs:label "Arch Package" ;
     rdfs:comment "A package in Arch Linux .pkg.tar.xz format" ;
     IAO:0000115 "A compiled software package in Arch Linux format (.pkg.tar.xz or .pkg.tar.zst) that can be installed using the pacman package manager." .
 
-arch:PKGBUILD a owl:Class ;
+pacman:PKGBUILD a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage ;
     rdfs:label "PKGBUILD" ;
     rdfs:comment "A PKGBUILD file containing package build instructions" ;
     IAO:0000115 "A shell script containing build instructions and metadata for creating an Arch Linux package, following the PKGBUILD format specification." .
 
-arch:SplitPackage a owl:Class ;
-    rdfs:subClassOf arch:ArchPackage ;
+pacman:SplitPackage a owl:Class ;
+    rdfs:subClassOf pacman:PacmanPackage ;
     rdfs:label "Split Package" ;
     rdfs:comment "A package that is part of a split package group" ;
     IAO:0000115 "A package that is built from a single PKGBUILD alongside other related packages, sharing the same source and build process but producing separate installable packages." .
 
-arch:ArchRepository a owl:Class ;
+pacman:PacmanRepository a owl:Class ;
     rdfs:subClassOf pkg:Repository ;
     rdfs:label "Arch Repository" ;
     rdfs:comment "An Arch Linux repository accessible via Pacman" ;
     IAO:0000115 "A repository containing Arch Linux packages that can be accessed and managed through the pacman package manager." .
 
-arch:AUR a owl:Class ;
-    rdfs:subClassOf arch:ArchRepository ;
+pacman:AUR a owl:Class ;
+    rdfs:subClassOf pacman:PacmanRepository ;
     rdfs:label "AUR" ;
     rdfs:comment "Arch User Repository containing user-contributed PKGBUILDs" ;
     IAO:0000115 "The Arch User Repository, a community-driven repository for Arch Linux users to share and maintain PKGBUILD scripts for software not included in the official repositories." .
 
-arch:SRCINFO a owl:Class ;
+pacman:SRCINFO a owl:Class ;
     rdfs:subClassOf owl:Thing ;
     rdfs:label "SRCINFO" ;
     rdfs:comment "A .SRCINFO file containing package metadata in key=value format" ;
     IAO:0000115 "A metadata file in key=value format that contains parsed information from a PKGBUILD, used by the AUR web interface and helper tools." .
 
-arch:PackageGroup a owl:Class ;
+pacman:PackageGroup a owl:Class ;
     rdfs:subClassOf owl:Thing ;
     rdfs:label "Package Group" ;
     rdfs:comment "A logical grouping of packages in Arch Linux" ;
     IAO:0000115 "A logical collection of related packages in Arch Linux that can be installed or managed as a unit." .
 
 # Arch-specific Properties
-arch:pkgbase a owl:DatatypeProperty ;
+pacman:pkgbase a owl:DatatypeProperty ;
     rdfs:label "package base" ;
     rdfs:comment "The base name for split packages" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "The base name used to identify a group of split packages that are built from the same PKGBUILD." .
 
-arch:pkgver a owl:DatatypeProperty ;
+pacman:pkgver a owl:DatatypeProperty ;
     rdfs:subPropertyOf pkg:versionString ;
     rdfs:label "package version" ;
     rdfs:comment "The upstream version of the package" ;
@@ -85,7 +85,7 @@ arch:pkgver a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     IAO:0000115 "The version number of the upstream software as provided by the original developers." .
 
-arch:pkgrel a owl:DatatypeProperty, owl:FunctionalProperty ;
+pacman:pkgrel a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:subPropertyOf pkg:release ;
     rdfs:label "package release" ;
     rdfs:comment "The Arch-specific package release number" ;
@@ -93,7 +93,7 @@ arch:pkgrel a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:range xsd:int ;
     IAO:0000115 "The Arch Linux specific release number that increments when the PKGBUILD is updated without changing the upstream version." .
 
-arch:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
+pacman:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:subPropertyOf pkg:epoch ;
     rdfs:label "epoch" ;
     rdfs:comment "The epoch version number for version comparison override" ;
@@ -101,383 +101,383 @@ arch:epoch a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:range xsd:int ;
     IAO:0000115 "A version epoch used to override normal version comparison when upstream versioning schemes change or become incompatible." .
 
-arch:pkgdesc a owl:DatatypeProperty ;
+pacman:pkgdesc a owl:DatatypeProperty ;
     rdfs:subPropertyOf pkg:description ;
     rdfs:label "package description" ;
     rdfs:comment "A brief description of the package" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "A short textual description of what the package contains and its primary purpose." .
 
-arch:url a owl:DatatypeProperty ;
+pacman:url a owl:DatatypeProperty ;
     rdfs:subPropertyOf pkg:homepage ;
     rdfs:label "upstream URL" ;
     rdfs:comment "The upstream project URL" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "The official website or homepage URL of the upstream software project." .
 
-arch:install a owl:DatatypeProperty ;
+pacman:install a owl:DatatypeProperty ;
     rdfs:label "install script" ;
     rdfs:comment "The filename of the install script" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "The filename of a script that contains pre-install, post-install, pre-remove, or post-remove hooks for the package." .
 
-arch:changelog a owl:DatatypeProperty ;
+pacman:changelog a owl:DatatypeProperty ;
     rdfs:label "changelog" ;
     rdfs:comment "The filename of the changelog" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "The filename of a file containing the changelog or release notes for the package." .
 
-arch:source a owl:DatatypeProperty ;
+pacman:source a owl:DatatypeProperty ;
     rdfs:label "source" ;
     rdfs:comment "A source URL or filename used to build the package" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "A URL or filename specifying source files, patches, or other resources needed to build the package." .
 
-arch:noextract a owl:DatatypeProperty ;
+pacman:noextract a owl:DatatypeProperty ;
     rdfs:label "no extract" ;
     rdfs:comment "Files that should not be extracted during build" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Source files that should not be automatically extracted during the build process, typically binary files or archives that need special handling." .
 
-arch:validpgpkeys a owl:DatatypeProperty ;
+pacman:validpgpkeys a owl:DatatypeProperty ;
     rdfs:label "valid PGP keys" ;
     rdfs:comment "Valid PGP key IDs for source verification" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "PGP key fingerprints that are considered valid for verifying the authenticity of source files." .
 
-arch:backup a owl:DatatypeProperty ;
+pacman:backup a owl:DatatypeProperty ;
     rdfs:label "backup" ;
     rdfs:comment "Files that should be backed up during upgrades" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:string ;
     IAO:0000115 "Configuration files that should be backed up during package upgrades to preserve user modifications." .
 
-arch:options a owl:DatatypeProperty ;
+pacman:options a owl:DatatypeProperty ;
     rdfs:label "options" ;
     rdfs:comment "Build options (e.g., !strip, !docs)" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Build-time options that control how the package is compiled and processed, such as stripping symbols or including documentation." .
 
 # PKGBUILD Functions (as properties)
-arch:prepare a owl:DatatypeProperty ;
+pacman:prepare a owl:DatatypeProperty ;
     rdfs:label "prepare function" ;
     rdfs:comment "Commands to prepare the source for building" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Shell commands executed to prepare the source code before building, such as applying patches or configuring the build environment." .
 
-arch:build a owl:DatatypeProperty ;
+pacman:build a owl:DatatypeProperty ;
     rdfs:label "build function" ;
     rdfs:comment "Commands to build the software" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Shell commands executed to compile and build the software from source code." .
 
-arch:check a owl:DatatypeProperty ;
+pacman:check a owl:DatatypeProperty ;
     rdfs:label "check function" ;
     rdfs:comment "Commands to run tests" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Shell commands executed to run the software's test suite to verify the build is working correctly." .
 
-arch:package a owl:DatatypeProperty ;
+pacman:package a owl:DatatypeProperty ;
     rdfs:label "package function" ;
     rdfs:comment "Commands to package the built software" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Shell commands executed to install the built software into the package directory structure for final packaging." .
 
 # Checksum Properties
-arch:md5sums a owl:DatatypeProperty ;
+pacman:md5sums a owl:DatatypeProperty ;
     rdfs:label "MD5 checksums" ;
     rdfs:comment "MD5 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "MD5 hash values used to verify the integrity of source files, though MD5 is considered cryptographically weak." .
 
-arch:sha1sums a owl:DatatypeProperty ;
+pacman:sha1sums a owl:DatatypeProperty ;
     rdfs:label "SHA1 checksums" ;
     rdfs:comment "SHA1 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "SHA-1 hash values used to verify the integrity of source files, though SHA-1 is considered cryptographically weak." .
 
-arch:sha256sums a owl:DatatypeProperty ;
+pacman:sha256sums a owl:DatatypeProperty ;
     rdfs:label "SHA256 checksums" ;
     rdfs:comment "SHA256 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "SHA-256 hash values used to verify the integrity and authenticity of source files." .
 
-arch:sha384sums a owl:DatatypeProperty ;
+pacman:sha384sums a owl:DatatypeProperty ;
     rdfs:label "SHA384 checksums" ;
     rdfs:comment "SHA384 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "SHA-384 hash values used to verify the integrity and authenticity of source files." .
 
-arch:sha512sums a owl:DatatypeProperty ;
+pacman:sha512sums a owl:DatatypeProperty ;
     rdfs:label "SHA512 checksums" ;
     rdfs:comment "SHA512 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "SHA-512 hash values used to verify the integrity and authenticity of source files." .
 
-arch:b2sums a owl:DatatypeProperty ;
+pacman:b2sums a owl:DatatypeProperty ;
     rdfs:label "BLAKE2 checksums" ;
     rdfs:comment "BLAKE2 checksums for source files" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "BLAKE2 hash values used to verify the integrity and authenticity of source files, providing strong cryptographic security." .
 
 # Object Properties
-arch:builtFrom a owl:ObjectProperty ;
+pacman:builtFrom a owl:ObjectProperty ;
     owl:equivalentProperty vcs:packagedFromTag ;
     rdfs:label "built from" ;
     rdfs:comment "Links a package to the PKGBUILD it was built from" ;
-    rdfs:domain arch:ArchPackage ;
-    rdfs:range arch:PKGBUILD ;
+    rdfs:domain pacman:PacmanPackage ;
+    rdfs:range pacman:PKGBUILD ;
     IAO:0000115 "Relates an Arch package to the PKGBUILD file that was used to build it." .
 
-arch:hasSRCINFO a owl:ObjectProperty ;
+pacman:hasSRCINFO a owl:ObjectProperty ;
     rdfs:label "has SRCINFO" ;
     rdfs:comment "Links a PKGBUILD to its corresponding .SRCINFO file" ;
-    rdfs:domain arch:PKGBUILD ;
-    rdfs:range arch:SRCINFO ;
+    rdfs:domain pacman:PKGBUILD ;
+    rdfs:range pacman:SRCINFO ;
     IAO:0000115 "Relates a PKGBUILD to its corresponding .SRCINFO metadata file that contains parsed package information." .
 
-arch:inGroup a owl:ObjectProperty ;
+pacman:inGroup a owl:ObjectProperty ;
     rdfs:label "in group" ;
     rdfs:comment "Links a package to the group it belongs to" ;
-    rdfs:domain arch:ArchPackage ;
-    rdfs:range arch:PackageGroup ;
+    rdfs:domain pacman:PacmanPackage ;
+    rdfs:range pacman:PackageGroup ;
     IAO:0000115 "Relates a package to the logical group it belongs to for organizational and installation purposes." .
 
-arch:partOfSplit a owl:ObjectProperty ;
+pacman:partOfSplit a owl:ObjectProperty ;
     rdfs:label "part of split" ;
     rdfs:comment "Links a split package to other packages in the same split" ;
-    rdfs:domain arch:SplitPackage ;
-    rdfs:range arch:SplitPackage ;
+    rdfs:domain pacman:SplitPackage ;
+    rdfs:range pacman:SplitPackage ;
     IAO:0000115 "Relates split packages that are built from the same PKGBUILD and share the same pkgbase." .
 
 # Cross-format property equivalences are declared within property definitions below
 
 # Link to core VCS and ecosystem concepts
-arch:ArchPackage rdfs:subClassOf [
+pacman:PacmanPackage rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty pkg:partOfDistribution ;
     owl:someValuesFrom pkg:Distribution
 ] .
 
-arch:ArchRepository rdfs:subClassOf [
+pacman:PacmanRepository rdfs:subClassOf [
     a owl:Restriction ;
     owl:onProperty vcs:hasUpstreamRepository ;
     owl:someValuesFrom vcs:Repository
 ] .
 
 # Enhanced AUR and build analysis
-arch:aurVotes a owl:DatatypeProperty ;
+pacman:aurVotes a owl:DatatypeProperty ;
     rdfs:label "AUR votes" ;
     rdfs:comment "Number of votes for this AUR package" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:int ;
     IAO:0000115 "The number of user votes indicating popularity for an AUR package." .
 
-arch:aurPopularity a owl:DatatypeProperty ;
+pacman:aurPopularity a owl:DatatypeProperty ;
     rdfs:label "AUR popularity" ;
     rdfs:comment "Popularity score for this AUR package" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:float ;
     IAO:0000115 "A calculated popularity score for an AUR package based on votes and usage statistics." .
 
-arch:outOfDate a owl:DatatypeProperty ;
+pacman:outOfDate a owl:DatatypeProperty ;
     rdfs:label "out of date" ;
     rdfs:comment "Whether the AUR package is marked as out of date" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:boolean ;
     IAO:0000115 "Indicates whether an AUR package has been flagged as out of date by users." .
 
-arch:orphaned a owl:DatatypeProperty ;
+pacman:orphaned a owl:DatatypeProperty ;
     rdfs:label "orphaned" ;
     rdfs:comment "Whether the AUR package is orphaned (no maintainer)" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:boolean ;
     IAO:0000115 "Indicates whether an AUR package has no current maintainer and is available for adoption." .
 
-arch:lastModified a owl:DatatypeProperty, owl:FunctionalProperty ;
+pacman:lastModified a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "last modified" ;
     rdfs:comment "Date when the package was last modified" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range xsd:dateTime ;
     IAO:0000115 "The date and time when the package was last updated or modified." .
 
 # PKGBUILD analysis enhancements
-arch:pkgbuildContent a owl:DatatypeProperty ;
+pacman:pkgbuildContent a owl:DatatypeProperty ;
     rdfs:label "PKGBUILD content" ;
     rdfs:comment "The complete PKGBUILD file content" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "The complete text content of the PKGBUILD file including all functions and metadata." .
 
-arch:gitRepository a owl:DatatypeProperty ;
+pacman:gitRepository a owl:DatatypeProperty ;
     rdfs:label "git repository" ;
     rdfs:comment "Git repository URL for the package source" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:anyURI ;
     IAO:0000115 "The Git repository URL where the package source code or PKGBUILD is maintained." .
 
-arch:buildFlags a owl:DatatypeProperty ;
+pacman:buildFlags a owl:DatatypeProperty ;
     rdfs:label "build flags" ;
     rdfs:comment "Compiler flags used during build" ;
-    rdfs:domain arch:PKGBUILD ;
+    rdfs:domain pacman:PKGBUILD ;
     rdfs:range xsd:string ;
     IAO:0000115 "Compiler flags and build options used when compiling the package from source." .
 
 # Package relationship analysis
-arch:splitPackageBase a owl:ObjectProperty ;
+pacman:splitPackageBase a owl:ObjectProperty ;
     rdfs:label "split package base" ;
     rdfs:comment "Links to the base package in a split package group" ;
-    rdfs:domain arch:SplitPackage ;
-    rdfs:range arch:ArchPackage ;
+    rdfs:domain pacman:SplitPackage ;
+    rdfs:range pacman:PacmanPackage ;
     IAO:0000115 "Identifies the primary or base package in a group of split packages." .
 
-arch:aurMaintainer a owl:ObjectProperty ;
+pacman:aurMaintainer a owl:ObjectProperty ;
     rdfs:label "AUR maintainer" ;
     rdfs:comment "Links to the AUR package maintainer" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range pkg:Maintainer ;
     IAO:0000115 "Identifies the current maintainer of an AUR package." .
 
-arch:aurSubmitter a owl:ObjectProperty ;
+pacman:aurSubmitter a owl:ObjectProperty ;
     rdfs:label "AUR submitter" ;
     rdfs:comment "Links to the original submitter of the AUR package" ;
-    rdfs:domain arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
     rdfs:range pkg:Contributor ;
     IAO:0000115 "Identifies the person who originally submitted the package to the AUR." .
 
 # Repository and mirror analysis
-arch:repoSignature a owl:DatatypeProperty ;
+pacman:repoSignature a owl:DatatypeProperty ;
     rdfs:label "repository signature" ;
     rdfs:comment "GPG signature for repository verification" ;
-    rdfs:domain arch:ArchRepository ;
+    rdfs:domain pacman:PacmanRepository ;
     rdfs:range xsd:string ;
     IAO:0000115 "The GPG signature used to verify the authenticity of the repository and its packages." .
 
-arch:tierLevel a owl:DatatypeProperty ;
+pacman:tierLevel a owl:DatatypeProperty ;
     rdfs:label "tier level" ;
     rdfs:comment "Mirror tier level (Tier 1, Tier 2, etc.)" ;
-    rdfs:domain arch:ArchRepository ;
+    rdfs:domain pacman:PacmanRepository ;
     rdfs:range xsd:string ;
     IAO:0000115 "The tier classification of a repository mirror indicating its sync frequency and reliability." .
 
 # Dependency Properties
-arch:depends a owl:ObjectProperty ;
+pacman:depends a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:dependsOn ;
-    owl:equivalentProperty pkg:archDepends ;
+    owl:equivalentProperty pkg:pacmanDepends ;
     rdfs:label "depends" ;
     rdfs:comment "Runtime dependency" ;
     IAO:0000115 "A runtime dependency that must be installed for the package to function correctly." .
 
-arch:makedepends a owl:ObjectProperty ;
+pacman:makedepends a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:buildDependsOn ;
     rdfs:label "make depends" ;
     rdfs:comment "Build-time dependency" ;
-    rdfs:domain arch:PKGBUILD ;
-    rdfs:range arch:ArchPackage ;
+    rdfs:domain pacman:PKGBUILD ;
+    rdfs:range pacman:PacmanPackage ;
     IAO:0000115 "A build-time dependency required to compile the package but not needed at runtime." .
 
-arch:checkdepends a owl:ObjectProperty ;
+pacman:checkdepends a owl:ObjectProperty ;
     rdfs:label "check depends" ;
     rdfs:comment "Test-time dependency" ;
-    rdfs:domain arch:PKGBUILD ;
-    rdfs:range arch:ArchPackage ;
+    rdfs:domain pacman:PKGBUILD ;
+    rdfs:range pacman:PacmanPackage ;
     IAO:0000115 "A dependency required only when running the package's test suite during the build process." .
 
-arch:optdepends a owl:ObjectProperty ;
+pacman:optdepends a owl:ObjectProperty ;
     rdfs:label "optional depends" ;
     rdfs:comment "Optional dependency" ;
-    rdfs:domain arch:ArchPackage ;
-    rdfs:range arch:ArchPackage ;
+    rdfs:domain pacman:PacmanPackage ;
+    rdfs:range pacman:PacmanPackage ;
     IAO:0000115 "An optional dependency that provides additional functionality but is not required for basic operation." .
 
-arch:provides a owl:ObjectProperty ;
+pacman:provides a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:provides ;
     rdfs:label "provides" ;
     rdfs:comment "Virtual package provision" ;
     IAO:0000115 "A virtual package or capability that this package provides, allowing it to satisfy dependencies on that virtual package." .
 
-arch:conflicts a owl:ObjectProperty ;
+pacman:conflicts a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:conflicts ;
-    owl:equivalentProperty pkg:archConflicts ;
+    owl:equivalentProperty pkg:pacmanConflicts ;
     rdfs:label "conflicts" ;
     rdfs:comment "Package conflict" ;
     IAO:0000115 "A package that cannot be installed simultaneously with this package due to file conflicts or incompatibility." .
 
-arch:replaces a owl:ObjectProperty ;
+pacman:replaces a owl:ObjectProperty ;
     rdfs:subPropertyOf pkg:replaces ;
     rdfs:label "replaces" ;
     rdfs:comment "Package replacement" ;
     IAO:0000115 "A package that this package is intended to replace, typically used during package transitions or renames." .
 
 # Common Repositories
-arch:core a arch:ArchRepository ;
+pacman:core a pacman:PacmanRepository ;
     rdfs:label "core" ;
     rdfs:comment "Core Arch Linux repository" .
 
-arch:extra a arch:ArchRepository ;
+pacman:extra a pacman:PacmanRepository ;
     rdfs:label "extra" ;
     rdfs:comment "Extra Arch Linux repository" .
 
-arch:community a arch:ArchRepository ;
+pacman:community a pacman:PacmanRepository ;
     rdfs:label "community" ;
     rdfs:comment "Community Arch Linux repository" .
 
-arch:multilib a arch:ArchRepository ;
+pacman:multilib a pacman:PacmanRepository ;
     rdfs:label "multilib" ;
     rdfs:comment "Multilib Arch Linux repository for 32-bit support" .
 
-arch:testing a arch:ArchRepository ;
+pacman:testing a pacman:PacmanRepository ;
     rdfs:label "testing" ;
     rdfs:comment "Testing repository for core and extra" .
 
-arch:community-testing a arch:ArchRepository ;
+pacman:community-testing a pacman:PacmanRepository ;
     rdfs:label "community-testing" ;
     rdfs:comment "Testing repository for community packages" .
 
-arch:multilib-testing a arch:ArchRepository ;
+pacman:multilib-testing a pacman:PacmanRepository ;
     rdfs:label "multilib-testing" ;
     rdfs:comment "Testing repository for multilib packages" .
 
 # AUR Instance
-arch:aur a arch:AUR ;
+pacman:aur a pacman:AUR ;
     rdfs:label "Arch User Repository" ;
     rdfs:comment "The main Arch User Repository" .
 
 # Common Package Groups
-arch:base a arch:PackageGroup ;
+pacman:base a pacman:PackageGroup ;
     rdfs:label "base" ;
     rdfs:comment "Base system packages" .
 
-arch:base-devel a arch:PackageGroup ;
+pacman:base-devel a pacman:PackageGroup ;
     rdfs:label "base-devel" ;
     rdfs:comment "Basic development tools" .
 
-arch:gnome a arch:PackageGroup ;
+pacman:gnome a pacman:PackageGroup ;
     rdfs:label "gnome" ;
     rdfs:comment "GNOME desktop environment packages" .
 
-arch:kde-applications a arch:PackageGroup ;
+pacman:kde-applications a pacman:PackageGroup ;
     rdfs:label "kde-applications" ;
     rdfs:comment "KDE application packages" .
 
-arch:xfce4 a arch:PackageGroup ;
+pacman:xfce4 a pacman:PackageGroup ;
     rdfs:label "xfce4" ;
     rdfs:comment "Xfce desktop environment packages" .

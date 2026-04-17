@@ -5,8 +5,8 @@
 @prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
 @prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
 @prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
-@prefix arch:  <https://purl.org/packagegraph/ontology/archlinux#> .
-@prefix freebsd:   <https://purl.org/packagegraph/ontology/freebsd#> .
+@prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
+@prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
 @prefix choco: <https://purl.org/packagegraph/ontology/chocolatey#> .
 @prefix brew:  <https://purl.org/packagegraph/ontology/homebrew#> .
 @prefix nix:   <https://purl.org/packagegraph/ontology/nix#> .
@@ -208,7 +208,7 @@ ex:bash-rpm-version a pkg:Version ;
 ################################################################
 
 # glibc (Arch packaging on GitLab)
-ex:glibc-arch a arch:ArchPackage ;
+ex:glibc-arch a pacman:PacmanPackage ;
   pkg:packageName "glibc" ;
   pkg:hasVersion ex:glibc-arch-version ;
   pkg:description "GNU C Library - standard C library (Arch package)" ;
@@ -222,7 +222,7 @@ ex:glibc-arch-version a pkg:Version ;
     pkg:versionString "2.35-2" .
 
 # wget (Arch packaging on GitLab)
-ex:wget-arch a arch:ArchPackage ;
+ex:wget-arch a pacman:PacmanPackage ;
   pkg:packageName "wget" ;
   pkg:hasVersion ex:wget-arch-version ;
   pkg:description "Internet file retriever utility (Arch package)" ;
@@ -236,7 +236,7 @@ ex:wget-arch-version a pkg:Version ;
     pkg:versionString "1.21.2-1" .
 
 # bash (Arch packaging; standard pattern)
-ex:bash-arch a arch:ArchPackage ;
+ex:bash-arch a pacman:PacmanPackage ;
   pkg:packageName "bash" ;
   pkg:hasVersion ex:bash-arch-version ;
   pkg:description "GNU Bourne Again Shell (Arch package)" ;
@@ -254,7 +254,7 @@ ex:bash-arch-version a pkg:Version ;
 ################################################################
 
 # bash (FreeBSD ports cgit)
-ex:bash-bsd a freebsd:Port ;
+ex:bash-bsd a bsdpkg:Port ;
   pkg:packageName "bash" ;
   pkg:hasVersion ex:bash-bsd-version ;
   pkg:description "GNU Bourne Again Shell (FreeBSD port shells/bash)" ;
@@ -268,7 +268,7 @@ ex:bash-bsd-version a pkg:Version ;
     pkg:versionString "5.1.16" .
 
 # wget (FreeBSD ports cgit)
-ex:wget-bsd a freebsd:Port ;
+ex:wget-bsd a bsdpkg:Port ;
   pkg:packageName "wget" ;
   pkg:hasVersion ex:wget-bsd-version ;
   pkg:description "Internet file retriever utility (FreeBSD port ftp/wget)" ;
@@ -282,7 +282,7 @@ ex:wget-bsd-version a pkg:Version ;
     pkg:versionString "1.21.2" .
 
 # git (FreeBSD ports cgit)
-ex:git-bsd a freebsd:Port ;
+ex:git-bsd a bsdpkg:Port ;
   pkg:packageName "git" ;
   pkg:hasVersion ex:git-bsd-version ;
   pkg:description "Fast, scalable, distributed revision control system (FreeBSD port devel/git)" ;

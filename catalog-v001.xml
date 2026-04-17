@@ -5,8 +5,8 @@
     <uri name="http://packagegraph.github.io/ontology/debian#" uri="debian.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/nix#" uri="nix.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/rpm#" uri="rpm.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/bsd#" uri="bsd.ttl"/>
-    <uri name="http://packagegraph.github.io/ontology/archlinux#" uri="arch.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/bsdpkg#" uri="bsdpkg.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/pacman#" uri="pacman.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/homebrew#" uri="homebrew.ttl"/>
     <uri name="http://packagegraph.github.io/ontology/chocolatey#" uri="chocolatey.ttl"/>
     <uri name="https://packagegraph.github.io/ontology/security#" uri="security.ttl"/>

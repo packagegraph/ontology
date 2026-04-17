@@ -53,9 +53,9 @@
 # #################################################################
 # 
 # 
-# https://purl.org/packagegraph/ontology/core#archConflicts
+# https://purl.org/packagegraph/ontology/core#pacmanConflicts
 # 
-# https://purl.org/packagegraph/ontology/core#archDepends
+# https://purl.org/packagegraph/ontology/core#pacmanDepends
 # 
 # https://purl.org/packagegraph/ontology/core#conflicts
 # 
@@ -280,13 +280,13 @@ xsd:date a rdfs:Datatype .
 
 xsd:duration a rdfs:Datatype .
 
-:archConflicts a owl:ObjectProperty;
+:pacmanConflicts a owl:ObjectProperty;
   owl:equivalentProperty :conflicts;
   rdfs:comment "Cross-format equivalence for Arch Linux conflicts relationships";
   rdfs:label "equivalent to Arch conflicts";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package conflict relationships, allowing unified queries across different package management systems." .
 
-:archDepends a owl:ObjectProperty;
+:pacmanDepends a owl:ObjectProperty;
   owl:equivalentProperty :dependsOn;
   rdfs:comment "Cross-format equivalence for Arch Linux depends relationships";
   rdfs:label "equivalent to Arch depends";

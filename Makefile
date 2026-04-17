@@ -2,7 +2,7 @@
 # This Makefile provides utilities for validating, combining, and managing ontology files
 
 # Variables
-ECOSYSTEM_FILES = alpine.ttl arch.ttl cargo.ttl chocolatey.ttl conda.ttl cpan.ttl cran.ttl debian.ttl flatpak.ttl gentoo.ttl gomod.ttl hackage.ttl hex.ttl homebrew.ttl maven.ttl nix.ttl npm.ttl nuget.ttl pypi.ttl rubygems.ttl snap.ttl void.ttl
+ECOSYSTEM_FILES = apk.ttl bsdpkg.ttl buildroot.ttl cargo.ttl chocolatey.ttl conda.ttl cpan.ttl cran.ttl debian.ttl flatpak.ttl gomod.ttl hackage.ttl hex.ttl homebrew.ttl maven.ttl nix.ttl npm.ttl nuget.ttl opkg.ttl pacman.ttl portage.ttl pypi.ttl rubygems.ttl snap.ttl xbps.ttl bitbake.ttl
 ONTOLOGY_FILES = core.ttl vcs.ttl security.ttl metrics.ttl slsa.ttl $(ECOSYSTEM_FILES) examples.ttl
 VENDOR_FILES = redhat.ttl
 ALL_TTL_FILES = $(ONTOLOGY_FILES) $(VENDOR_FILES)
@@ -501,7 +501,7 @@ create-negotiation: create-dirs
 		echo '<head>'; \
 		echo '    <meta charset="UTF-8">'; \
 		echo '    <title>Arch Linux Package Ontology</title>'; \
-		echo '    <link rel="alternate" type="text/turtle" href="../downloads/arch.ttl" />'; \
+		echo '    <link rel="alternate" type="text/turtle" href="../downloads/pacman.ttl" />'; \
 		echo '    <link rel="alternate" type="application/rdf+xml" href="../downloads/arch.owl" />'; \
 		echo '    <link rel="alternate" type="application/ld+json" href="../downloads/arch.jsonld" />'; \
 		echo '    <link rel="alternate" type="application/n-triples" href="../downloads/arch.nt" />'; \
