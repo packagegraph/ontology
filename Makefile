@@ -3,7 +3,7 @@
 
 # Variables
 ECOSYSTEM_FILES = apk.ttl bsdpkg.ttl buildroot.ttl cargo.ttl chocolatey.ttl conda.ttl cpan.ttl cran.ttl debian.ttl flatpak.ttl gomod.ttl hackage.ttl hex.ttl homebrew.ttl maven.ttl nix.ttl npm.ttl nuget.ttl opkg.ttl pacman.ttl portage.ttl pypi.ttl rubygems.ttl snap.ttl xbps.ttl bitbake.ttl
-ONTOLOGY_FILES = core.ttl vcs.ttl security.ttl metrics.ttl slsa.ttl $(ECOSYSTEM_FILES) examples.ttl
+ONTOLOGY_FILES = core.ttl vcs.ttl security.ttl metrics.ttl slsa.ttl dq.ttl $(ECOSYSTEM_FILES) examples.ttl
 VENDOR_FILES = redhat.ttl
 ALL_TTL_FILES = $(ONTOLOGY_FILES) $(VENDOR_FILES)
 COMBINED_FILE = x.ttl

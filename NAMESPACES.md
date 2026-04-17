@@ -30,6 +30,7 @@ Ontology modules with TTL files and registered PURLs.
 | `slsa#` | `slsa.ttl` | `/packagegraph/ontology/slsa` | SLSA supply chain attestation |
 | `metrics#` | `metrics.ttl` | `/packagegraph/ontology/metrics` | Code metrics and analysis |
 | `redhat#` | `redhat.ttl` | `/packagegraph/ontology/redhat` | Red Hat vendor extension (AppCompat, RHEL sets) |
+| `dq#` | `dq.ttl` | `/packagegraph/ontology/dq` | Data quality issues (ETL validation) |
 | `shacl#` | `shacl.ttl` | `/packagegraph/ontology/shacl` | SHACL validation shapes |
 | `rubygems#` | `rubygems.ttl` | `/packagegraph/ontology/rubygems` | RubyGems (Ruby packages) |
 | `maven#` | `maven.ttl` | `/packagegraph/ontology/maven` | Maven Central (Java/JVM artifacts) |
