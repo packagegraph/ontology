@@ -4,7 +4,7 @@ This document is the authoritative registry of namespace identifiers for the Pac
 
 ## Naming Convention
 
-- **Use the ecosystem's canonical self-identifier.** What does the project call itself? Use that.
+- **Name the packaging system, not the distribution.** Use the package manager or format name (e.g., `pacman#` not `archlinux#`, `portage#` not `gentoo#`), following the `rpm#`/`debian#` convention. This allows the namespace to cover all distributions using that packaging system.
 - **No platform prefixes** (`linux-`, `macos-`, `windows-`) — ecosystems define their own scope.
 - **No language prefixes** (`python-`, `javascript-`) — registries define their own scope.
 - **No vendor prefixes** (`v-`) — vendor status is documented in ontology metadata.
@@ -20,8 +20,8 @@ Ontology modules with TTL files and registered PURLs.
 | `core#` | `core.ttl` | `/packagegraph/ontology/core` | Base classes shared by all ecosystems |
 | `debian#` | `debian.ttl` | `/packagegraph/ontology/debian` | Debian/Ubuntu (apt, dpkg, .deb) |
 | `rpm#` | `rpm.ttl` | `/packagegraph/ontology/rpm` | RPM ecosystem (dnf, zypper, yum) |
-| `archlinux#` | `arch.ttl` | `/packagegraph/ontology/archlinux` | Arch Linux (pacman, PKGBUILD, AUR) |
-| `freebsd#` | `freebsd.ttl` | `/packagegraph/ontology/freebsd` | FreeBSD (pkg, ports) |
+| `pacman#` | `pacman.ttl` | `/packagegraph/ontology/pacman` | Pacman (PKGBUILD, AUR — Arch, Manjaro, SteamOS) |
+| `bsdpkg#` | `bsdpkg.ttl` | `/packagegraph/ontology/bsdpkg` | BSD pkg(8) and ports (FreeBSD, GhostBSD, MidnightBSD) |
 | `homebrew#` | `homebrew.ttl` | `/packagegraph/ontology/homebrew` | Homebrew (macOS + Linux) |
 | `chocolatey#` | `chocolatey.ttl` | `/packagegraph/ontology/chocolatey` | Chocolatey (Windows, NuGet-based) |
 | `nix#` | `nix.ttl` | `/packagegraph/ontology/nix` | Nix (cross-platform, functional) |
@@ -38,6 +38,19 @@ Ontology modules with TTL files and registered PURLs.
 | `hackage#` | `hackage.ttl` | `/packagegraph/ontology/hackage` | Hackage (Haskell packages) |
 | `nuget#` | `nuget.ttl` | `/packagegraph/ontology/nuget` | NuGet (.NET packages) |
 | `hex#` | `hex.ttl` | `/packagegraph/ontology/hex` | Hex.pm (Elixir/Erlang packages) |
+| `apk#` | `apk.ttl` | `/packagegraph/ontology/apk` | APK (apk-tools — Alpine, postmarketOS) |
+| `portage#` | `portage.ttl` | `/packagegraph/ontology/portage` | Portage (emerge, ebuilds — Gentoo, ChromeOS, Flatcar) |
+| `xbps#` | `xbps.ttl` | `/packagegraph/ontology/xbps` | XBPS (Void Linux) |
+| `npm#` | `npm.ttl` | `/packagegraph/ontology/npm` | npm/yarn/pnpm (JavaScript/TypeScript) |
+| `pypi#` | `pypi.ttl` | `/packagegraph/ontology/pypi` | PyPI (Python packages) |
+| `cargo#` | `cargo.ttl` | `/packagegraph/ontology/cargo` | Cargo/crates.io (Rust) |
+| `gomod#` | `gomod.ttl` | `/packagegraph/ontology/gomod` | Go modules |
+| `conda#` | `conda.ttl` | `/packagegraph/ontology/conda` | Conda (cross-language scientific computing) |
+| `flatpak#` | `flatpak.ttl` | `/packagegraph/ontology/flatpak` | Flatpak (cross-distro application sandboxing) |
+| `snap#` | `snap.ttl` | `/packagegraph/ontology/snap` | Snap (cross-distro application packaging) |
+| `bitbake#` | `bitbake.ttl` | `/packagegraph/ontology/bitbake` | BitBake/OpenEmbedded (Yocto, other OE-based systems) |
+| `buildroot#` | `buildroot.ttl` | `/packagegraph/ontology/buildroot` | Buildroot (embedded Linux build system) |
+| `opkg#` | `opkg.ttl` | `/packagegraph/ontology/opkg` | opkg (OpenWRT, Entware, embedded Linux) |
 
 ## Reserved Namespaces
 
@@ -49,26 +62,16 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 |-----------|-----------|-------|
 | `openbsd#` | OpenBSD | pkg_add, ports (different structure from FreeBSD) |
 | `pkgsrc#` | pkgsrc | NetBSD-origin, runs on NetBSD, SmartOS/illumos, macOS, Linux |
-| `alpine#` | Alpine Linux | apk, musl-based, widely used in containers |
-| `portage#` | Gentoo | emerge, ebuilds, USE flags, source-based |
-| `flatpak#` | Flatpak | Application sandboxing, cross-distro |
-| `snap#` | Snap | Cross-distro application packaging (Canonical) |
 | `guix#` | GNU Guix | Functional (like Nix), Scheme-based |
-| `void#` | Void Linux | xbps, independent distro |
-| `wolfi#` | Wolfi | Chainguard's distroless-oriented distro |
+| ~~`wolfi#`~~ | Wolfi | Uses apk — packages belong in `apk#` namespace, not a separate namespace |
 
 ### Language-Level Package Ecosystems
 
 | Namespace | Ecosystem | Notes |
 |-----------|-----------|-------|
-| `npm#` | npm/yarn/pnpm | JavaScript/TypeScript registry. NOT `nodejs#`. |
-| `pypi#` | pip/PyPI | Python registry. NOT `pip#` or `python#`. |
-| `crates#` | crates.io/cargo | Rust registry. |
-| `gomod#` | Go modules | NOT `go#` (overloaded — board game). |
 | `cocoapods#` | CocoaPods | iOS/macOS Swift/Objective-C. |
 | `pub#` | pub.dev | Dart/Flutter. |
 | `opam#` | opam | OCaml. |
-| `conda#` | Conda | Cross-language scientific computing. NOT `anaconda#`. |
 | `vcpkg#` | vcpkg | C/C++ (Microsoft). |
 | `conan#` | Conan | C/C++ (JFrog). |
 | `swift#` | Swift Package Manager | Apple ecosystem (iOS/macOS/Linux). |
@@ -90,7 +93,6 @@ Names reserved for future ontology modules. No TTL file or PURL exists yet.
 | `espidf#` | ESP-IDF | Espressif IoT, highly vendored component system |
 | `arduino#` | Arduino Library Manager | Simplified embedded |
 | `zephyr#` | Zephyr RTOS (west) | Modular RTOS |
-| `yocto#` | Yocto/OpenEmbedded | Embedded Linux build system, layers/recipes |
 
 ### Container/Infrastructure Ecosystems
 
