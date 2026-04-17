@@ -4,7 +4,7 @@ This document is the authoritative registry of namespace identifiers for the Pac
 
 ## Naming Convention
 
-- **Name the packaging system, not the distribution.** Use the package manager or format name (e.g., `pacman#` not `archlinux#`, `portage#` not `gentoo#`), following the `rpm#`/`debian#` convention. This allows the namespace to cover all distributions using that packaging system.
+- **Name the packaging system, not the distribution.** Use the package manager or format name (e.g., `pacman#` not `archlinux#`, `portage#` not `gentoo#`), following the `rpm#`/`deb#` convention. This allows the namespace to cover all distributions using that packaging system.
 - **No platform prefixes** (`linux-`, `macos-`, `windows-`) — ecosystems define their own scope.
 - **No language prefixes** (`python-`, `javascript-`) — registries define their own scope.
 - **No vendor prefixes** (`v-`) — vendor status is documented in ontology metadata.
@@ -18,7 +18,7 @@ Ontology modules with TTL files and registered PURLs.
 | Namespace | File | PURL | Description |
 |-----------|------|------|-------------|
 | `core#` | `core.ttl` | `/packagegraph/ontology/core` | Base classes shared by all ecosystems |
-| `debian#` | `debian.ttl` | `/packagegraph/ontology/debian` | Debian/Ubuntu (apt, dpkg, .deb) |
+| `deb#` | `deb.ttl` | `/packagegraph/ontology/deb` | deb format (Debian, Ubuntu, Mint, Raspbian, Devuan) |
 | `rpm#` | `rpm.ttl` | `/packagegraph/ontology/rpm` | RPM ecosystem (dnf, zypper, yum) |
 | `pacman#` | `pacman.ttl` | `/packagegraph/ontology/pacman` | Pacman (PKGBUILD, AUR — Arch, Manjaro, SteamOS) |
 | `bsdpkg#` | `bsdpkg.ttl` | `/packagegraph/ontology/bsdpkg` | BSD pkg(8) and ports (FreeBSD, GhostBSD, MidnightBSD) |
@@ -192,7 +192,7 @@ Note: **Artifact Hub** (`artifacthub.io`) is a **registry** that hosts multiple 
 
 | Namespace | Vendor | Extends |
 |-----------|--------|---------|
-| `canonical#` | Canonical | `debian#`, `snap#` |
+| `canonical#` | Canonical | `deb#`, `snap#` |
 | `suse#` | SUSE | `rpm#` |
 | `amazon#` | Amazon | `rpm#` (AL2023), potentially `oci#` |
 

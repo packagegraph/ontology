@@ -12,7 +12,7 @@
 
     <!-- Ecosystems: System-level -->
     <uri name="https://purl.org/packagegraph/ontology/rpm#" uri="ecosystems/rpm/rpm.ttl"/>
-    <uri name="https://purl.org/packagegraph/ontology/debian#" uri="ecosystems/debian/debian.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/deb#" uri="ecosystems/deb/deb.ttl"/>
     <uri name="https://purl.org/packagegraph/ontology/apk#" uri="ecosystems/apk/apk.ttl"/>
     <uri name="https://purl.org/packagegraph/ontology/pacman#" uri="ecosystems/pacman/pacman.ttl"/>
     <uri name="https://purl.org/packagegraph/ontology/portage#" uri="ecosystems/portage/portage.ttl"/>

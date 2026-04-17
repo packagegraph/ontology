@@ -1,6 +1,6 @@
 @prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
 @prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
-@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/deb#> .
 @prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
 @prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
 @prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .

@@ -1,6 +1,6 @@
 @prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
 @prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
-@prefix deb:   <https://purl.org/packagegraph/ontology/debian#> .
+@prefix deb:   <https://purl.org/packagegraph/ontology/deb#> .
 @prefix rpm:   <https://purl.org/packagegraph/ontology/rpm#> .
 @prefix pacman:  <https://purl.org/packagegraph/ontology/pacman#> .
 @prefix bsdpkg:   <https://purl.org/packagegraph/ontology/bsdpkg#> .
@@ -224,7 +224,7 @@ ex:openssl-source-deb a pkg:SourcePackage ;
   rdfs:label "OpenSSL (Debian source package)" .
 
 # Binary package that provides libssl.so.3
-ex:openssl-deb a pkg:BinaryPackage, deb:DebianPackage ;
+ex:openssl-deb a pkg:BinaryPackage, deb:DebPackage ;
   pkg:packageName "openssl" ;
   pkg:hasVersion ex:openssl-version ;
   pkg:builtFromSource ex:openssl-source-deb ;

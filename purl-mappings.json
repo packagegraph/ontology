@@ -2,7 +2,7 @@
   "purl_domain": "/packagegraph",
   "purl_base": "https://purl.org/packagegraph",
   "target_base": "https://packagegraph.github.io/ontology/downloads",
-  "generated": "2026-04-17T21:33:08Z",
+  "generated": "2026-04-17T22:51:25Z",
   "mappings": [
     {"purl_path":"/packagegraph","purl_url":"https://purl.org/packagegraph","target_url":"https://packagegraph.github.io/ontology/","namespace_uri":null,"ttl_file":null,"type":"302"},
     {"purl_path":"/packagegraph/ontology/core","purl_url":"https://purl.org/packagegraph/ontology/core","target_url":"https://packagegraph.github.io/ontology/downloads/core.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/core#","ttl_file":"core.ttl","type":"302"},
@@ -20,7 +20,7 @@
     {"purl_path":"/packagegraph/ontology/conda","purl_url":"https://purl.org/packagegraph/ontology/conda","target_url":"https://packagegraph.github.io/ontology/downloads/conda.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/conda#","ttl_file":"conda.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/cpan","purl_url":"https://purl.org/packagegraph/ontology/cpan","target_url":"https://packagegraph.github.io/ontology/downloads/cpan.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/cpan#","ttl_file":"cpan.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/cran","purl_url":"https://purl.org/packagegraph/ontology/cran","target_url":"https://packagegraph.github.io/ontology/downloads/cran.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/cran#","ttl_file":"cran.ttl","type":"302"},
-    {"purl_path":"/packagegraph/ontology/debian","purl_url":"https://purl.org/packagegraph/ontology/debian","target_url":"https://packagegraph.github.io/ontology/downloads/debian.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/debian#","ttl_file":"debian.ttl","type":"302"},
+    {"purl_path":"/packagegraph/ontology/deb","purl_url":"https://purl.org/packagegraph/ontology/deb","target_url":"https://packagegraph.github.io/ontology/downloads/deb.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/deb#","ttl_file":"deb.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/flatpak","purl_url":"https://purl.org/packagegraph/ontology/flatpak","target_url":"https://packagegraph.github.io/ontology/downloads/flatpak.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/flatpak#","ttl_file":"flatpak.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/gomod","purl_url":"https://purl.org/packagegraph/ontology/gomod","target_url":"https://packagegraph.github.io/ontology/downloads/gomod.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/gomod#","ttl_file":"gomod.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/hackage","purl_url":"https://purl.org/packagegraph/ontology/hackage","target_url":"https://packagegraph.github.io/ontology/downloads/hackage.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/hackage#","ttl_file":"hackage.ttl","type":"302"},
