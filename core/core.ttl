@@ -114,11 +114,19 @@
 # https://purl.org/packagegraph/ontology/core#partOfDistribution
 # 
 # https://purl.org/packagegraph/ontology/core#partOfEcosystem
-# 
+#
+# https://purl.org/packagegraph/ontology/core#partOfRelease
+#
 # https://purl.org/packagegraph/ontology/core#provides
-# 
+#
+# https://purl.org/packagegraph/ontology/core#providesCapability
+#
+# https://purl.org/packagegraph/ontology/core#releaseContains
+#
 # https://purl.org/packagegraph/ontology/core#replaces
-# 
+#
+# https://purl.org/packagegraph/ontology/core#requiresCapability
+#
 # https://purl.org/packagegraph/ontology/core#rpmConflicts
 # 
 # https://purl.org/packagegraph/ontology/core#rpmProvides
@@ -126,18 +134,12 @@
 # https://purl.org/packagegraph/ontology/core#rpmRequires
 # 
 # https://purl.org/packagegraph/ontology/core#targetArchitecture
-# 
-# https://purl.org/packagegraph/ontology/core#testedBy
-# 
+#
 # https://purl.org/packagegraph/ontology/core#usedDependency
 # 
 # https://purl.org/packagegraph/ontology/core#usedSource
 # 
 # https://purl.org/packagegraph/ontology/core#wasBuiltBy
-# 
-# https://purl.org/packagegraph/ontology/core#wasPackagedBy
-# 
-# https://purl.org/packagegraph/ontology/core#wasPublishedBy
 # 
 # 
 # 
@@ -281,12 +283,14 @@ xsd:date a rdfs:Datatype .
 xsd:duration a rdfs:Datatype .
 
 :pacmanConflicts a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyConflictsWith;
   owl:equivalentProperty :conflicts;
   rdfs:comment "Cross-format equivalence for Arch Linux conflicts relationships";
   rdfs:label "equivalent to Arch conflicts";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package conflict relationships, allowing unified queries across different package management systems." .
 
 :pacmanDepends a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyDependsOn;
   owl:equivalentProperty :dependsOn;
   rdfs:comment "Cross-format equivalence for Arch Linux depends relationships";
   rdfs:label "equivalent to Arch depends";
@@ -324,11 +328,13 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "contributor organization" .
 
 :debConflicts a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyConflictsWith;
   rdfs:comment "Cross-format equivalence for Debian conflicts relationships";
   rdfs:label "equivalent to Debian conflicts";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package conflict relationships, allowing unified queries across different package management systems." .
 
 :debDepends a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyDependsOn;
   owl:equivalentProperty :dependsOn;
   rdfs:domain :Package;
   rdfs:range :Package;
@@ -337,6 +343,7 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package dependency relationships, allowing unified queries across different package management systems." .
 
 :debProvides a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyProvides;
   owl:equivalentProperty :provides;
   rdfs:comment "Cross-format equivalence for Debian provides relationships";
   rdfs:label "equivalent to Debian provides";
@@ -360,13 +367,14 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is required to compile or build a source package from its source code, but is not required for the resulting binary packages to function." .
 
 :derivedFrom a owl:ObjectProperty;
+  # Reserved for future use — fork/upstream derivation tracking
   rdfs:domain :Distribution;
   rdfs:range :Distribution;
   <http://purl.obolibrary.org/obo/IAO_0000115> "Specifies that one distribution is based on or derived from another distribution's codebase and package set.";
   rdfs:comment "Indicates that one distribution is derived from another";
   rdfs:label "derived from" .
 
-:directlyConflictsWith a owl:ObjectProperty;
+:directlyConflictsWith a owl:ObjectProperty, owl:SymmetricProperty;
   rdfs:subPropertyOf :conflicts;
   rdfs:domain :Package;
   rdfs:range :Package;
@@ -374,7 +382,7 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Direct conflict relationship between packages for efficient querying";
   rdfs:label "directly conflicts with" .
 
-:directlyDependsOn a owl:ObjectProperty;
+:directlyDependsOn a owl:ObjectProperty, owl:TransitiveProperty;
   rdfs:subPropertyOf :dependsOn;
   owl:inverseOf :isDirectDependencyOf;
   rdfs:domain :Package;
@@ -399,7 +407,7 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Direct provision relationship between packages for efficient querying";
   rdfs:label "directly provides" .
 
-:equivalentInDistribution a owl:ObjectProperty;
+:equivalentInDistribution a owl:ObjectProperty, owl:SymmetricProperty;
   rdfs:domain :Package;
   rdfs:range :Package;
   <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages from different distributions that provide equivalent functionality or serve the same purpose.";
@@ -524,7 +532,7 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a package to a package set it belongs to";
   rdfs:label "member of package set" .
 
-:partOfDistribution a owl:ObjectProperty;
+:partOfDistribution a owl:ObjectProperty, owl:TransitiveProperty;
   rdfs:range :Distribution;
   <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages, repositories, or other components with their parent distribution.";
   rdfs:comment "Links packages or repositories to their parent distribution";
@@ -567,16 +575,19 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "replaces" .
 
 :rpmConflicts a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyConflictsWith;
   rdfs:comment "Cross-format equivalence for RPM conflicts relationships";
   rdfs:label "equivalent to RPM conflicts";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package conflict relationships, allowing unified queries across different package management systems." .
 
 :rpmProvides a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyProvides;
   rdfs:comment "Cross-format equivalence for RPM provides relationships";
   rdfs:label "equivalent to RPM provides";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package provision relationships, allowing unified queries across different package management systems." .
 
 :rpmRequires a owl:ObjectProperty;
+  rdfs:subPropertyOf :directlyDependsOn;
   rdfs:comment "Cross-format equivalence for RPM requires relationships";
   rdfs:label "equivalent to RPM requires";
   <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package dependency relationships, allowing unified queries across different package management systems." .
@@ -588,12 +599,28 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a package to the architecture it targets";
   rdfs:label "target architecture" .
 
-:testedBy a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :TestActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with test activities that were performed to validate its functionality and quality.";
-  rdfs:comment "Links a package to test activities that validated it";
-  rdfs:label "tested by" .
+:contributesTo a owl:ObjectProperty;
+  owl:inverseOf :hasContributor;
+  rdfs:domain :Maintainer;
+  rdfs:range :Repository;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a maintainer with repositories they contribute to, enabling analysis of contributor activity across repositories.";
+  rdfs:comment "Links a maintainer to repositories they contribute to";
+  rdfs:label "contributes to" .
+
+:hasContributor a owl:ObjectProperty;
+  rdfs:domain :Repository;
+  rdfs:range :Maintainer;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of contributesTo, linking a repository to its contributors. Enables efficient 'who contributes to this repository' queries.";
+  rdfs:comment "Links a repository to its contributors";
+  rdfs:label "has contributor" .
+
+:derivedFromDistribution a owl:ObjectProperty;
+  rdfs:domain :Distribution;
+  rdfs:range :Distribution;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that one distribution is derived from another (e.g., Ubuntu from Debian, CentOS from RHEL), establishing distribution lineage for package tracking.";
+  rdfs:comment "Indicates that one distribution is derived from another";
+  rdfs:label "derived from distribution" .
+
 
 :usedDependency a owl:ObjectProperty;
   rdfs:subPropertyOf prov:used;
@@ -618,21 +645,7 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Links a package to the build activity that created it";
   rdfs:label "was built by" .
 
-:wasPackagedBy a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasGeneratedBy;
-  rdfs:domain :Package;
-  rdfs:range :PackagingActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with the packaging activity that assembled it into its final distributable form.";
-  rdfs:comment "Links a package to the packaging activity that created it";
-  rdfs:label "was packaged by" .
 
-:wasPublishedBy a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasGeneratedBy;
-  rdfs:domain :Package;
-  rdfs:range :PublishingActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with the publishing activity that made it available in a repository for distribution.";
-  rdfs:comment "Links a package to the publishing activity that made it available";
-  rdfs:label "was published by" .
 
 :performedBy a owl:ObjectProperty;
   rdfs:subPropertyOf prov:wasAssociatedWith;
@@ -701,10 +714,20 @@ xsd:duration a rdfs:Datatype .
   rdfs:label "has release" .
 
 :partOfRelease a owl:ObjectProperty;
+  rdfs:subPropertyOf :partOfDistribution;
+  owl:inverseOf :releaseContains;
   rdfs:range :DistributionRelease;
   <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages, repositories, or other components with a specific versioned release of a distribution.";
   rdfs:comment "Links packages or repositories to a specific distribution release";
   rdfs:label "part of release" .
+
+:releaseContains a owl:ObjectProperty;
+  owl:inverseOf :partOfRelease;
+  rdfs:domain :DistributionRelease;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Links a distribution release to packages it contains, enabling efficient 'what packages are in this release' queries.";
+  rdfs:comment "Links a distribution release to packages it contains";
+  rdfs:label "release contains" .
 
 :hasAccount a owl:ObjectProperty;
   rdfs:domain :Contributor;
@@ -933,6 +956,20 @@ xsd:duration a rdfs:Datatype .
   <http://purl.obolibrary.org/obo/IAO_0000115> "A textual representation of a package version, typically following semantic versioning or other versioning schemes to indicate the release sequence and compatibility.";
   rdfs:comment "The version identifier of a package";
   rdfs:label "version string" .
+
+:lastReleaseDate a owl:DatatypeProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range xsd:date;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The date of the most recent release or version of the package, enabling recency analysis and stale package detection.";
+  rdfs:comment "The date of the most recent release or version";
+  rdfs:label "last release date" .
+
+:lastCommitDate a owl:DatatypeProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range xsd:date;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "The date of the most recent commit to the upstream repository, indicating active development status.";
+  rdfs:comment "The date of the most recent commit to the upstream repository";
+  rdfs:label "last commit date" .
 
 :epoch a owl:DatatypeProperty;
   rdfs:domain :Version;

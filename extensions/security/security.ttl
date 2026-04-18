@@ -31,6 +31,12 @@
 # #
 # #################################################################
 
+sec:CVE a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "CVE Identifier" ;
+    rdfs:comment "A Common Vulnerabilities and Exposures identifier entity, shared across vulnerability and advisory graphs" ;
+    IAO:0000115 "A reified CVE identifier entity that can be shared across vulnerability records and advisories, enabling cross-graph CVE queries without string matching." .
+
 sec:Vulnerability a owl:Class ;
     rdfs:subClassOf owl:Thing ;
     rdfs:label "Vulnerability" ;
@@ -233,6 +239,18 @@ sec:addressesVulnerability a owl:ObjectProperty ;
     rdfs:range sec:Vulnerability ;
     IAO:0000115 "Links a security advisory to the vulnerabilities it addresses." .
 
+sec:cveEntity a owl:ObjectProperty ;
+    rdfs:label "CVE entity" ;
+    rdfs:comment "Links a vulnerability or advisory to a shared CVE identifier entity" ;
+    rdfs:range sec:CVE ;
+    IAO:0000115 "Associates a vulnerability or advisory with a reified CVE identifier entity, enabling graph-traversable relationships across all records that reference the same CVE." .
+
+sec:hasCWE a owl:ObjectProperty ;
+    rdfs:label "has CWE" ;
+    rdfs:comment "Links a vulnerability to a CWE weakness category entity" ;
+    rdfs:domain sec:Vulnerability ;
+    IAO:0000115 "Associates a vulnerability with a Common Weakness Enumeration category entity, enabling classification and analysis of vulnerability types." .
+
 sec:advisoryForPackage a owl:ObjectProperty ;
     rdfs:label "advisory for package" ;
     rdfs:comment "Links a security advisory to the package it applies to" ;
@@ -303,8 +321,16 @@ sec:patchProducedVersion a owl:ObjectProperty ;
     IAO:0000115 "Associates a fixed package version with the patch activity that produced it from the prior version." .
 
 sec:affectsPackage a owl:ObjectProperty ;
+    owl:inverseOf sec:hasVulnerabilityReport ;
     rdfs:label "affects package" ;
-    rdfs:comment "Links a vulnerability to the packages it affects" ;
+    rdfs:comment "Links a vulnerability directly to an affected package identity" ;
     rdfs:domain sec:Vulnerability ;
-    rdfs:range pkg:Package ;
-    IAO:0000115 "Associates a vulnerability with the specific packages it affects, complementing affectsVersion for package-level queries." .
+    rdfs:range pkg:PackageIdentity ;
+    IAO:0000115 "Associates a vulnerability directly with an affected package identity, bypassing version-string joins for direct package-level queries." .
+
+sec:hasVulnerabilityReport a owl:ObjectProperty ;
+    rdfs:label "has vulnerability report" ;
+    rdfs:comment "Links a package identity to vulnerabilities that affect it" ;
+    rdfs:domain pkg:PackageIdentity ;
+    rdfs:range sec:Vulnerability ;
+    IAO:0000115 "The inverse relationship of affectsPackage, linking a package identity to the vulnerabilities that affect it. Enables efficient 'what CVEs affect this package' queries." .
