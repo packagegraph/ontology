@@ -1,0 +1,79 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix slsa: <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix met: <https://purl.org/packagegraph/ontology/metrics#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://purl.org/packagegraph/ontology/alignments> a owl:Ontology ;
+    rdfs:label "PackageGraph External Alignments" ;
+    rdfs:comment "Formal alignment declarations between PackageGraph ontology and external standards (PROV-O, SPDX, Schema.org)" ;
+    dcterms:created "2026-04-18"^^xsd:date ;
+    dcterms:creator "PackageGraph Project" ;
+    dcterms:description "Maps PackageGraph classes and properties to their equivalents in PROV-O, SPDX 3.0, and Schema.org, enabling federated querying and SBOM generation." ;
+    owl:versionInfo "0.1.0" .
+
+# =============================================================================
+# PROV-O Alignment
+# =============================================================================
+# PackageGraph build/provenance properties map directly to PROV-O.
+# These alignments enable any PROV-O consumer to interpret PackageGraph
+# provenance chains without PackageGraph-specific tooling.
+
+pkg:builtFromSource owl:equivalentProperty prov:wasDerivedFrom .
+pkg:performedBy owl:equivalentProperty prov:wasAssociatedWith .
+pkg:BuildActivity rdfs:subClassOf prov:Activity .
+pkg:DataSnapshot rdfs:subClassOf prov:Entity .
+pkg:PackagingActivity rdfs:subClassOf prov:Activity .
+pkg:PublishingActivity rdfs:subClassOf prov:Activity .
+pkg:InstallationActivity rdfs:subClassOf prov:Activity .
+
+# =============================================================================
+# SPDX Alignment
+# =============================================================================
+# Enables SPARQL CONSTRUCT generation of SPDX SBOM documents.
+# PackageGraph License entities use SPDX license IRIs directly.
+
+pkg:License owl:equivalentClass spdx:License .
+pkg:checksum owl:equivalentProperty spdx:checksum .
+pkg:Package rdfs:subClassOf spdx:Package .
+pkg:downloadURL owl:equivalentProperty spdx:downloadLocation .
+
+# =============================================================================
+# Schema.org Alignment
+# =============================================================================
+# Enables search engine discovery and knowledge graph integration.
+
+pkg:description owl:equivalentProperty schema:description .
+pkg:homepage owl:equivalentProperty schema:url .
+pkg:Maintainer rdfs:subClassOf schema:Person .
+pkg:Package rdfs:subClassOf schema:SoftwareApplication .
+pkg:packageName owl:equivalentProperty schema:name .
+pkg:versionString owl:equivalentProperty schema:version .
+
+# =============================================================================
+# VCS ↔ PROV-O (reinforcing declarations already in vcs.ttl)
+# =============================================================================
+
+vcs:Commit rdfs:subClassOf prov:Entity .
+vcs:PullRequest rdfs:subClassOf prov:Activity .
+vcs:Branch rdfs:subClassOf prov:Entity .
+vcs:Tag rdfs:subClassOf prov:Entity .
+
+# =============================================================================
+# SLSA ↔ PROV-O (reinforcing declarations already in slsa.ttl)
+# =============================================================================
+
+slsa:ProvenanceAttestation rdfs:subClassOf prov:Entity .
+slsa:Builder rdfs:subClassOf prov:Agent .
+slsa:SourceAttestation rdfs:subClassOf prov:Entity .
+slsa:BuildEnvironment rdfs:subClassOf prov:Entity .
