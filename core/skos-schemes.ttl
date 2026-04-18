@@ -1,0 +1,159 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# =============================================================================
+# Dependency Type Concept Scheme
+# =============================================================================
+
+pkg:DependencyTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Package Dependency Types" ;
+    dcterms:description "Classification of dependency relationships between packages" ;
+    skos:hasTopConcept pkg:dep-strong, pkg:dep-weak .
+
+pkg:dep-strong a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "strong dependency" ;
+    skos:definition "Dependencies that are mandatory for package function." ;
+    skos:narrower pkg:dep-requires, pkg:dep-build-requires .
+
+pkg:dep-weak a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "weak dependency" ;
+    skos:definition "Dependencies that are optional or enhancing." ;
+    skos:narrower pkg:dep-recommends, pkg:dep-suggests, pkg:dep-enhances, pkg:dep-supplements, pkg:dep-check-requires .
+
+pkg:dep-requires a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "requires" ;
+    skos:definition "A mandatory runtime dependency — the package cannot function without it." ;
+    skos:broader pkg:dep-strong .
+
+pkg:dep-recommends a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "recommends" ;
+    skos:definition "A recommended dependency — installed by default but can be omitted." ;
+    skos:broader pkg:dep-weak .
+
+pkg:dep-suggests a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "suggests" ;
+    skos:definition "A suggested dependency — enhances functionality but rarely needed." ;
+    skos:broader pkg:dep-weak .
+
+pkg:dep-enhances a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "enhances" ;
+    skos:definition "A reverse-suggests — this package enhances another." ;
+    skos:broader pkg:dep-weak .
+
+pkg:dep-supplements a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "supplements" ;
+    skos:definition "A reverse-recommends — this package supplements another." ;
+    skos:broader pkg:dep-weak .
+
+pkg:dep-build-requires a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "build-requires" ;
+    skos:definition "A build-time dependency — needed only during compilation." ;
+    skos:broader pkg:dep-strong .
+
+pkg:dep-check-requires a skos:Concept ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "check-requires" ;
+    skos:definition "A test-time dependency — needed only for running test suites." ;
+    skos:broader pkg:dep-weak .
+
+# =============================================================================
+# Severity Level Concept Scheme (ordered via skos:notation)
+# =============================================================================
+
+sec:SeverityScheme a skos:ConceptScheme ;
+    rdfs:label "Vulnerability Severity Levels" ;
+    dcterms:description "CVSS-aligned severity classification for security vulnerabilities" ;
+    skos:hasTopConcept sec:sev-critical, sec:sev-important, sec:sev-moderate, sec:sev-low .
+
+sec:sev-critical a skos:Concept ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:prefLabel "critical" ;
+    skos:definition "CVSS 9.0-10.0. Immediate exploitation risk, full system compromise." ;
+    skos:notation "4"^^xsd:integer .
+
+sec:sev-important a skos:Concept ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:prefLabel "important" ;
+    skos:altLabel "high" ;
+    skos:definition "CVSS 7.0-8.9. Significant exploitation risk." ;
+    skos:notation "3"^^xsd:integer .
+
+sec:sev-moderate a skos:Concept ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:prefLabel "moderate" ;
+    skos:altLabel "medium" ;
+    skos:definition "CVSS 4.0-6.9. Limited exploitation risk." ;
+    skos:notation "2"^^xsd:integer .
+
+sec:sev-low a skos:Concept ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:prefLabel "low" ;
+    skos:definition "CVSS 0.1-3.9. Minimal exploitation risk." ;
+    skos:notation "1"^^xsd:integer .
+
+# =============================================================================
+# Advisory Type Concept Scheme
+# =============================================================================
+
+sec:AdvisoryTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Security Advisory Types" ;
+    dcterms:description "Classification of vendor security advisory formats" ;
+    skos:hasTopConcept sec:advtype-rhsa, sec:advtype-dsa, sec:advtype-glsa, sec:advtype-usa .
+
+sec:advtype-rhsa a skos:Concept ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "RHSA" ;
+    skos:definition "Red Hat Security Advisory." .
+
+sec:advtype-dsa a skos:Concept ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "DSA" ;
+    skos:definition "Debian Security Advisory." .
+
+sec:advtype-glsa a skos:Concept ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "GLSA" ;
+    skos:definition "Gentoo Linux Security Advisory." .
+
+sec:advtype-usa a skos:Concept ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "USA" ;
+    skos:definition "Ubuntu Security Advisory." .
+
+# =============================================================================
+# Checksum Algorithm Concept Scheme
+# =============================================================================
+
+pkg:ChecksumAlgorithmScheme a skos:ConceptScheme ;
+    rdfs:label "Checksum Algorithms" ;
+    dcterms:description "Cryptographic hash algorithms used for package integrity verification" ;
+    skos:hasTopConcept pkg:algo-sha256, pkg:algo-sha512, pkg:algo-sha1, pkg:algo-md5 .
+
+pkg:algo-sha256 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "sha256" .
+
+pkg:algo-sha512 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "sha512" .
+
+pkg:algo-sha1 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "sha1" .
+
+pkg:algo-md5 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "md5" .
