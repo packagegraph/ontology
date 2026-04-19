@@ -621,6 +621,29 @@ xsd:duration a rdfs:Datatype .
   rdfs:comment "Indicates that one distribution is derived from another";
   rdfs:label "derived from distribution" .
 
+:supersededBy a owl:ObjectProperty;
+  owl:inverseOf :supersedes;
+  rdfs:domain :Package;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that this package's functionality has been absorbed into another package due to subpackage reorganization across architectures or builds. Used to track packages that exist on some arches but are merged into others on different arches.";
+  rdfs:comment "Indicates that this package's functionality has been absorbed into another package (subpackage reorganization)";
+  rdfs:label "superseded by" .
+
+:supersedes a owl:ObjectProperty;
+  owl:inverseOf :supersededBy;
+  rdfs:domain :Package;
+  rdfs:range :Package;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that this package absorbs the functionality of another package, typically due to subpackage consolidation or reorganization across architectures.";
+  rdfs:comment "Indicates that this package absorbs the functionality of another package";
+  rdfs:label "supersedes" .
+
+:excludedArchitecture a owl:ObjectProperty;
+  rdfs:domain :PackageIdentity;
+  rdfs:range :Architecture;
+  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates an architecture on which this package is known to be unavailable due to architectural constraints or hardware requirements, not build failures. Used to distinguish missing packages from architecturally impossible ones.";
+  rdfs:comment "Indicates an architecture on which this package is known to be unavailable due to architectural constraints";
+  rdfs:label "excluded architecture" .
+
 
 :usedDependency a owl:ObjectProperty;
   rdfs:subPropertyOf prov:used;
@@ -1379,3 +1402,27 @@ _:genid11 a owl:Restriction;
     rdfs:label "is current" ;
     rdfs:comment "Whether this snapshot represents the current active data for its source." ;
     <http://purl.obolibrary.org/obo/IAO_0000115> "A boolean flag indicating whether this snapshot is the most recent for its data source. Used for tiered storage lifecycle management." .
+
+###  https://purl.org/packagegraph/ontology/core#repoType
+:repoType a owl:DatatypeProperty ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:range xsd:string ;
+    rdfs:label "repository type" ;
+    rdfs:comment "The type of package repository (release, development, build, updates, updates-testing)" ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "Classifies the repository source type to enable proper comparison semantics. Release repos are composed for end-user installation. Build repos are Koji build targets. Updates are post-release patches." .
+
+###  https://purl.org/packagegraph/ontology/core#repoSourceURL
+:repoSourceURL a owl:DatatypeProperty ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "repository source URL" ;
+    rdfs:comment "The URL from which this repository data was collected" ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "The HTTP/HTTPS URL of the package repository metadata that was used as the data source for collection. Enables traceability and re-collection." .
+
+###  https://purl.org/packagegraph/ontology/core#isPhantomPackage
+:isPhantomPackage a owl:DatatypeProperty ;
+    rdfs:domain :Package ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is phantom package" ;
+    rdfs:comment "Indicates that this package appears in repo metadata but has no installable files" ;
+    <http://purl.obolibrary.org/obo/IAO_0000115> "A boolean flag indicating that this package entry exists in the repository primary.xml metadata but has no corresponding files in filelists.xml, making it non-installable. Common for TeX Live virtual subpackages and generated meta-package entries." .

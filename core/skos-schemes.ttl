@@ -157,3 +157,40 @@ pkg:algo-sha1 a skos:Concept ;
 pkg:algo-md5 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;
     skos:prefLabel "md5" .
+
+# =============================================================================
+# Architecture-Specific Package Exclusion Scheme
+# =============================================================================
+
+pkg:ArchExclusionScheme a skos:ConceptScheme ;
+    rdfs:label "Architecture-Specific Package Exclusions" ;
+    dcterms:description "Packages or package patterns that are known to be unavailable on certain architectures due to hardware or architectural constraints, not build failures" ;
+    skos:hasTopConcept pkg:excl-intel-hw, pkg:excl-amd-gpu, pkg:excl-x86-emulation, pkg:excl-arch-specific-compiler .
+
+pkg:excl-intel-hw a skos:Concept ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:prefLabel "Intel hardware-specific" ;
+    skos:definition "Packages requiring Intel-specific hardware features (SGX, QAT, oneAPI)" ;
+    skos:example "intel-*, sgx-*, qatzip-*, accel-config" ;
+    skos:note "Excluded on: riscv64, aarch64, ppc64le, s390x" .
+
+pkg:excl-amd-gpu a skos:Concept ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:prefLabel "AMD GPU compute" ;
+    skos:definition "Packages requiring AMD GPU hardware (ROCm compute stack)" ;
+    skos:example "rocm-*, amdsmi" ;
+    skos:note "Excluded on: riscv64, ppc64le, s390x" .
+
+pkg:excl-x86-emulation a skos:Concept ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:prefLabel "x86 binary emulation" ;
+    skos:definition "Packages that provide x86/x86_64 binary translation or emulation" ;
+    skos:example "wine, wine-*" ;
+    skos:note "Excluded on: riscv64 (no x86 translation layer)" .
+
+pkg:excl-arch-specific-compiler a skos:Concept ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:prefLabel "Architecture-specific compiler components" ;
+    skos:definition "Compiler components that only exist on specific architectures" ;
+    skos:example "libquadmath (x86 only — RISC-V uses Q extension)" ;
+    skos:note "Per-package, not pattern-based" .
