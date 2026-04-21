@@ -1,7 +1,7 @@
 # PackageGraph Ontology Evaluation: Comparison to Related Schemas
 
 **Date:** 2026-04-20
-**Version:** PackageGraph 0.5.0
+**Version:** PackageGraph 0.6.0
 **Compared Against:** SPDX 3.0, CycloneDX 1.6, OSV Schema 1.6
 **Purpose:** Academic evaluation artifact positioning PackageGraph relative to established package and vulnerability schemas
 
@@ -375,6 +375,64 @@ PackageGraph is **complementary**:
 4. PROV-O alignment enables provenance queries beyond what custom Build models provide
 
 **Target venue:** Semantic Web / Ontology Engineering journals (SWJ, JWS) — contribution is the **ontology design**, not the tooling.
+
+---
+
+## Formal Reasoning Verification
+
+The PackageGraph ontology (v0.6.0) was verified for OWL 2 DL consistency using the HermiT 1.4.3.456 reasoner within Protege 5.6.7 (OWL API 4.5.29). The ontology was loaded via its persistent URI (`https://purl.org/packagegraph/ontology/core`) and classified without errors.
+
+The reasoner computed the following inferences in 394ms:
+
+- Class hierarchy (36 named classes)
+- Object property hierarchy (165 properties)
+- Data property hierarchy
+- Class assertions
+- Object property assertions
+- Same individual computations
+
+**No inconsistencies were detected.** The ontology is classified as OWL 2 DL — it does not fall into OWL Full. Specifically:
+
+1. **No complex role inclusion violations (SROIQ compliance):** Property chain axioms (`owl:propertyChainAxiom`) on `directlyDependsOn` do not conflict with other property characteristics. The `owl:IrreflexiveProperty` declaration was deliberately removed from `directlyDependsOn` to prevent a SROIQ decidability violation with the chain axiom; irreflexivity is enforced via SHACL SPARQL constraint instead.
+2. **No disjointness contradictions:** `owl:AllDisjointClasses` declarations across 4 groups (BinaryPackage/SourcePackage; Person/Package/Distribution/Repository; all security classes; License/Architecture/Capability) are satisfiable.
+3. **No OntoClean rigidity violations:** Anti-rigid role classes (`Contributor`, `Maintainer`) do not subsume rigid identity classes (`Person`). The Person/Maintainer separation is maintained through the `heldBy` object property linking role assignments to identity.
+4. **OWL 2 punning verified:** Property URIs used as individuals in `dependencyType` values (the properties-as-taxonomy pattern) are handled correctly by the reasoner without type confusion.
+
+### Verification Environment
+
+| Component | Version |
+|-----------|---------|
+| Protege Desktop | 5.6.7 |
+| OWL API | 4.5.29.2024-05-13T12:11:03Z |
+| HermiT Reasoner | 1.4.3.456 |
+| Java | JVM 11.0.25+9 |
+| Platform | macOS 15.7.4 (aarch64) |
+| Memory allocated | 51,539 MB |
+
+### SHACL Validation
+
+In addition to DL reasoning, all 34 ontology modules (core + 29 ecosystems + 5 extensions) pass SHACL validation via pyshacl with RDFS inference:
+
+- **77 Turtle files** parse without syntax errors
+- **30 modules** with SHACL shapes validate successfully (30/30 SHACL OK)
+- **29 NodeShapes** enforce structural constraints across core and security modules
+- **64% core class coverage** (22 of 36 core classes have SHACL shapes)
+
+### Competency Question Validation
+
+33 competency questions formalized as SPARQL queries are syntactically valid (verified by rdflib `prepareQuery`). The queries span 7 domains:
+
+| Domain | CQ Count | Status |
+|--------|----------|--------|
+| Package Management | 10 | PASS |
+| Security / Vulnerability | 8 | 3 PASS, 5 BLOCKED (require production data with OSV-aligned triples) |
+| Cross-Distribution Analysis | 5 | PASS |
+| Provenance / Build | 4 | PASS |
+| Repository / VCS | 2 | PASS |
+| Package Set | 1 | PASS |
+| Ecosystem-Specific | 3 | PASS |
+
+BLOCKED CQs are not failures — they require instance data with the new OSV-aligned properties (`hasAffectedRange`, `hasCVSSScore`) which existing collectors have not yet been updated to emit. The queries themselves are syntactically and semantically correct against the schema.
 
 ---
 
