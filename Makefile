@@ -2,6 +2,7 @@
 # Module-scoped validation, linting, and deployment
 
 PYTHON = $(if $(GITHUB_ACTIONS),python,uv run python)
+WIDOCO_JAR = widoco.jar
 DOCS_DIR = _site
 
 # Module discovery
@@ -92,13 +93,62 @@ clean:
 
 # ─── Deployment (GitHub Pages) ────────────────────────────────────────────────
 
-.PHONY: deploy deploy-quick
+.PHONY: deploy deploy-quick setup-tools generate-docs create-index
 DOWNLOADS_DIR = $(DOCS_DIR)/downloads
 ONTOLOGY_DOCS_DIR = $(DOCS_DIR)/ontology
 REPORTS_DIR = $(DOCS_DIR)/reports
 
-deploy: lint validate
+setup-tools:
+	@if [ ! -f $(WIDOCO_JAR) ] || [ ! -s $(WIDOCO_JAR) ]; then \
+		echo "Downloading Widoco..."; \
+		curl -sL -o $(WIDOCO_JAR) https://github.com/dgarijo/Widoco/releases/download/v1.4.25/widoco-1.4.25-jar-with-dependencies_JDK-17.jar || true; \
+		if [ ! -s $(WIDOCO_JAR) ]; then \
+			echo "  ⚠ Widoco download failed — docs will be generated without visualization"; \
+			rm -f $(WIDOCO_JAR); \
+		fi; \
+	fi
+
+generate-docs: setup-tools
+	@echo "Generating ontology documentation..."
+	@if [ ! -f $(WIDOCO_JAR) ] || [ ! -s $(WIDOCO_JAR) ]; then \
+		echo "  ⚠ Widoco not available — skipping HTML documentation generation"; \
+	else \
+		for f in $(ONTOLOGY_FILES); do \
+			base=$$(basename "$$f" .ttl); \
+			echo "  Generating docs for $$base..."; \
+			mkdir -p "$(ONTOLOGY_DOCS_DIR)/$$base"; \
+			timeout 120 java -Xmx2g -jar $(WIDOCO_JAR) \
+				-ontFile "$$f" \
+				-outFolder "$(ONTOLOGY_DOCS_DIR)/$$base" \
+				-webVowl -rewriteAll -getOntologyMetadata \
+				-includeImportedOntologies 2>/dev/null \
+			|| echo "    ⚠ $$base: Widoco generation failed (non-fatal)"; \
+		done; \
+	fi
+
+create-index:
+	@echo "Creating index page..."
+	@$(PYTHON) scripts/generate_index.py $(DOCS_DIR) $(ONTOLOGY_DOCS_DIR) $(DOWNLOADS_DIR)
+
+deploy: lint validate setup-tools
 	@echo "Building deployment..."
+	@mkdir -p $(DOWNLOADS_DIR) $(REPORTS_DIR) $(ONTOLOGY_DOCS_DIR)
+	@echo "Generating serializations..."
+	@for f in $(ONTOLOGY_FILES); do \
+		base=$$(basename "$$f" .ttl); \
+		$(PYTHON) -c "\
+from rdflib import Graph; g = Graph(); g.parse('$$f', format='turtle'); \
+g.serialize('$(DOWNLOADS_DIR)/$$base.ttl', format='turtle'); \
+g.serialize('$(DOWNLOADS_DIR)/$$base.nt', format='nt'); \
+g.serialize('$(DOWNLOADS_DIR)/$$base.jsonld', format='json-ld'); \
+print('  $$base: ttl + nt + jsonld')" 2>/dev/null || echo "  $$base: conversion failed"; \
+	done
+	@$(MAKE) generate-docs --no-print-directory
+	@$(MAKE) create-index --no-print-directory
+	@echo "Deployment complete: $(DOCS_DIR)/"
+
+deploy-quick: lint setup-tools
+	@echo "Quick deployment (no SHACL validation, no Widoco)..."
 	@mkdir -p $(DOWNLOADS_DIR) $(REPORTS_DIR) $(ONTOLOGY_DOCS_DIR)
 	@for f in $(ONTOLOGY_FILES); do \
 		base=$$(basename "$$f" .ttl); \
@@ -109,44 +159,8 @@ g.serialize('$(DOWNLOADS_DIR)/$$base.nt', format='nt'); \
 g.serialize('$(DOWNLOADS_DIR)/$$base.jsonld', format='json-ld'); \
 print('  $$base: ttl + nt + jsonld')" 2>/dev/null || echo "  $$base: conversion failed"; \
 	done
-	@echo "Generating index.html..."
-	@$(PYTHON) -c "\
-print('<!DOCTYPE html>'); \
-print('<html lang=\"en\">'); \
-print('<head>'); \
-print('  <meta charset=\"UTF-8\">'); \
-print('  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">'); \
-print('  <title>PackageGraph Ontology v0.6.0</title>'); \
-print('  <style>'); \
-print('    body { font-family: system-ui; max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }'); \
-print('    h1 { border-bottom: 3px solid #333; padding-bottom: 0.5rem; }'); \
-print('    .module { border: 1px solid #ddd; padding: 1rem; margin: 1rem 0; border-radius: 4px; }'); \
-print('    .module h3 { margin-top: 0; }'); \
-print('    .downloads { margin-top: 0.5rem; }'); \
-print('    .downloads a { margin-right: 1rem; color: #0066cc; }'); \
-print('    code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px; }'); \
-print('  </style>'); \
-print('</head>'); \
-print('<body>'); \
-print('  <h1>PackageGraph Ontology</h1>'); \
-print('  <p><strong>Version:</strong> 0.6.0 | <strong>License:</strong> CC0 1.0</p>'); \
-print('  <p>A rigorous OWL 2 ontology for cross-distribution package analysis.</p>'); \
-print('  <p><a href=\"https://github.com/packagegraph/ontology\">GitHub Repository</a> | <a href=\"https://github.com/packagegraph/ontology/blob/main/CHANGELOG.md\">Changelog</a> | <a href=\"https://github.com/packagegraph/ontology/blob/main/docs/competency-questions.md\">Competency Questions</a></p>'); \
-print('  <h2>Downloads</h2>'); \
-import os, glob; \
-[print(f'  <div class=\"module\"><h3>{os.path.basename(f)[:-4]}</h3><div class=\"downloads\"><a href=\"downloads/{os.path.basename(f)}\">Turtle</a><a href=\"downloads/{os.path.basename(f)[:-4]}.nt\">N-Triples</a><a href=\"downloads/{os.path.basename(f)[:-4]}.jsonld\">JSON-LD</a></div></div>') for f in sorted(glob.glob('$(DOWNLOADS_DIR)/*.ttl'))]; \
-print('  <hr>'); \
-print('  <p style=\"margin-top: 2rem; color: #666;\">Generated from PackageGraph Ontology v0.6.0</p>'); \
-print('</body>'); \
-print('</html>')" > $(DOCS_DIR)/index.html
-	@echo "Deployment complete: $(DOCS_DIR)/"
-
-deploy-quick: lint
-	@$(MAKE) deploy --no-print-directory
-	@echo "Deployment complete: $(DOCS_DIR)/"
-
-deploy-quick: lint
-	@$(MAKE) deploy --no-print-directory
+	@$(MAKE) create-index --no-print-directory
+	@echo "Quick deployment complete: $(DOCS_DIR)/"
 
 .PHONY: serve
 serve:
@@ -169,7 +183,8 @@ help:
 	@echo "                       (e.g., make validate-rpm)"
 	@echo "  make stats           Triple counts per module"
 	@echo "  make concat          Bundle all ontologies into x.ttl"
-	@echo "  make deploy          Full deployment pipeline"
+	@echo "  make deploy          Full deployment (docs + serializations)"
+	@echo "  make deploy-quick    Quick deploy (no Widoco, no SHACL)"
 	@echo "  make serve           Serve docs at :8000"
 	@echo ""
 	@echo "Modules: $(MODULES)"
