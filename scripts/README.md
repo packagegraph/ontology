@@ -100,3 +100,47 @@ One-time migration scripts used to split the monolithic `shacl.ttl` and `example
 ### fix_imports.py
 
 One-time migration script that rewrote `owl:imports <core.ttl>` (relative file paths) to `owl:imports <https://purl.org/packagegraph/ontology/core#>` (namespace URIs) across all modules. Not needed for ongoing work.
+
+### production_shacl_validate.py
+
+Validates SHACL shapes against production data in Fuseki. Samples instances via SPARQL CONSTRUCT queries (1K-5K per class), runs pyshacl locally, generates a conformance report.
+
+```bash
+# Requires Fuseki port-forward
+KUBECONFIG=~/.kube/config-2 oc port-forward -n packagegraph svc/fuseki 3031:3030
+
+# Run validation
+uv run python scripts/production_shacl_validate.py \
+  --endpoint http://localhost:3031/packagegraph/sparql \
+  --output docs/reports/2026-04-20-production-shacl-validation.md
+```
+
+Produces a markdown report with per-class conformance rates, violation categorization (collector bugs vs model gaps), and cross-graph comparison.
+
+### add_schema_annotations.py
+
+Bulk annotation tool that adds `@en` language tags to all rdfs:label/comment/IAO:0000115 literals and adds `rdfs:isDefinedBy` to all classes/properties across all ontology modules.
+
+```bash
+# Dry run (show what would change)
+uv run python scripts/add_schema_annotations.py --dry-run
+
+# Apply changes
+uv run python scripts/add_schema_annotations.py
+```
+
+Used for v0.6.0 FAIR compliance: added 3,568 language tags and 1,161 isDefinedBy declarations.
+
+### fix_ecosystem_patterns.py
+
+Automated remediation tool for systematic anti-patterns across ecosystem modules: subclass corrections (Package → BinaryPackage/SourcePackage), sub-property remapping (dev/test → buildDependsOn), taxonomy deprecation.
+
+```bash
+# Dry run
+uv run python scripts/fix_ecosystem_patterns.py --dry-run
+
+# Apply fixes
+uv run python scripts/fix_ecosystem_patterns.py
+```
+
+Implements the fixes documented in [2026-04-20-ecosystem-semantic-remediation.md](../docs/plans/2026-04-20-ecosystem-semantic-remediation.md).

@@ -19,11 +19,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Setup Java for tools
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
