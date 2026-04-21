@@ -8,6 +8,7 @@ dependencies = [
     "click>=8.2.1",
     "pyshacl>=0.31.0",
     "rdflib>=7.1.4",
+    "sparqlwrapper>=2.0.0",
 ]
 
 [dependency-groups]
