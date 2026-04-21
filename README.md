@@ -292,7 +292,7 @@ See CQ-PROV-01 for the full provenance chain query (upstream commit → source �
 ### SHACL Validation
 
 - **98 NodeShapes** across core + security modules
-- **64% core class coverage** (22 of 36 core classes have shapes)
+- **100% core class coverage** (all 36 core classes have shapes)
 - **SKOS enforcement:** sh:in constraints on enumerations (advisorySeverity, advisoryType, dependencyType)
 - **SPARQL constraints:** IrreflexiveDependsOnShape, DependencyConsistencyShape
 - **All examples pass validation** — pyshacl with RDFS inference
