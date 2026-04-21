@@ -6,6 +6,65 @@
 
 ---
 
+## Core Design Patterns
+
+### CD-1: OntoClean Person/Role Separation
+
+**Pattern:** Rigid identity (Person) separated from anti-rigid role assignments (Contributor, Maintainer).
+
+**Implementation:**
+
+```
+pkg:Person  a owl:Class ;
+    owl:equivalentClass foaf:Person ;
+    rdfs:subClassOf prov:Agent .
+    # Rigid: a person exists independently of any role
+
+pkg:Contributor  a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+    # Anti-rigid: a person can start/stop contributing without ceasing to exist
+
+pkg:Maintainer  a owl:Class ;
+    rdfs:subClassOf pkg:Contributor .
+    # Anti-rigid: a maintenance role that can be assigned and revoked
+
+pkg:heldBy  a owl:ObjectProperty ;
+    rdfs:domain pkg:Contributor ;
+    rdfs:range pkg:Person .
+    # Links the role assignment to the person holding it
+```
+
+**Why not make Maintainer a subclass of foaf:Person?** In OntoClean methodology, a class that is anti-rigid (instances can lose membership without ceasing to exist) cannot subsume a class that is rigid (instances cannot lose membership). A person can stop being a maintainer — the maintenance role ends, but the person continues to exist. Making Maintainer a subclass of Person would violate this constraint and cause a reasoner to infer that every Maintainer IS a Person, which conflates identity with role.
+
+**Traversal patterns:**
+
+- **Convenience (Person → Package):** `pkg:maintainedBy` — direct link from Package to Person who maintains it
+- **Detail (Person → Role → Package):** `pkg:hasMaintenanceRole` → Maintainer → `pkg:heldBy` → Person — captures role metadata (start date, role type)
+- **FOAF integration:** Only `pkg:Person` is `owl:equivalentClass foaf:Person`. Contributor and Maintainer are pure role assignments with no FOAF alignment.
+
+**Historical note:** An early version of `references/alignments.ttl` incorrectly declared `pkg:Maintainer rdfs:subClassOf schema:Person`. This was identified as an OntoClean violation in the v0.6.0 audit and corrected to `pkg:Person rdfs:subClassOf schema:Person`.
+
+---
+
+### CD-2: Two-Tier PURL Addressing
+
+**Pattern:** Separate URLs for machine consumption (PURLs → Turtle) and human consumption (GitHub Pages → HTML documentation).
+
+**Implementation:**
+
+| Audience | URL | Resolves to |
+|----------|-----|-------------|
+| **Tools** (owl:imports, Protégé, rdflib) | `https://purl.org/packagegraph/ontology/{module}` | Raw Turtle file |
+| **Humans** (browsers, citation) | `https://packagegraph.github.io/ontology/` | Landing page with Widoco/WebVOWL |
+
+**Why two tiers?** GitHub Pages serves static files — no server-side content negotiation is possible. `owl:imports` requires the PURL to resolve to parseable RDF, so module PURLs must redirect to `.ttl` files. Humans need HTML with visualization, served from the documentation site.
+
+**Discoverability:** The core ontology header includes `foaf:homepage <https://packagegraph.github.io/ontology/>` so that tools like Protégé can display a link to human-readable documentation.
+
+**Note:** When opening an ontology in Protégé, use `https://purl.org/packagegraph/ontology/core` (no `.ttl` extension). The PURL redirects to the Turtle file automatically.
+
+---
+
 ## Adopted Recommendations
 
 ### AR-1: Properties-as-Taxonomy for dependencyType
