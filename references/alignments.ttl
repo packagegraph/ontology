@@ -44,7 +44,7 @@ pkg:InstallationActivity rdfs:subClassOf prov:Activity .
 # PackageGraph License entities use SPDX license IRIs directly.
 
 pkg:License owl:equivalentClass spdx:License .
-pkg:checksum owl:equivalentProperty spdx:checksum .
+pkg:hasChecksum owl:equivalentProperty spdx:checksum .
 pkg:Package rdfs:subClassOf spdx:Package .
 pkg:downloadURL owl:equivalentProperty spdx:downloadLocation .
 
@@ -55,7 +55,7 @@ pkg:downloadURL owl:equivalentProperty spdx:downloadLocation .
 
 pkg:description owl:equivalentProperty schema:description .
 pkg:homepage owl:equivalentProperty schema:url .
-pkg:Maintainer rdfs:subClassOf schema:Person .
+pkg:Person rdfs:subClassOf schema:Person .
 pkg:Package rdfs:subClassOf schema:SoftwareApplication .
 pkg:packageName owl:equivalentProperty schema:name .
 pkg:versionString owl:equivalentProperty schema:version .
