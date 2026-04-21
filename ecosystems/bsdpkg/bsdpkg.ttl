@@ -521,5 +521,5 @@ bsdpkg: a owl:Ontology ;
     dcterms:title "BSD Package Ontology" ;
     rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

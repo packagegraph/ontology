@@ -289,5 +289,5 @@ met: a owl:Ontology ;
     dcterms:title "Package Metrics Ontology" ;
     rdfs:comment "Ontology for representing programming languages, code metrics, and per-language analysis breakdowns for software packages"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

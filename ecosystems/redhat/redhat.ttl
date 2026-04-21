@@ -52,5 +52,5 @@ rh: a owl:Ontology ;
     rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications"@en ;
     owl:imports pkg:,
         rpm: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

@@ -108,5 +108,5 @@ dq: a owl:Ontology ;
     dcterms:title "Data Quality Ontology" ;
     rdfs:comment "Ontology for recording and querying data quality issues in the PackageGraph knowledge graph"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.1.0" .
+    owl:versionInfo "0.6.0" .
 

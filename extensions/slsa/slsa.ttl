@@ -280,5 +280,5 @@ slsa: a owl:Ontology ;
     owl:imports pkg:,
         sec:,
         vcs: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

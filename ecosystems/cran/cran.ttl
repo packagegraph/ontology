@@ -117,7 +117,7 @@ cran: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing CRAN packages and the R ecosystem"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.1" .
+    owl:versionInfo "0.6.0" .
 
 cran:CranPackage a owl:Class ;
     rdfs:label "CRAN Package"@en ;

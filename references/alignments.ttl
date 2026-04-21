@@ -20,7 +20,7 @@
     dcterms:created "2026-04-18"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
     dcterms:description "Maps PackageGraph classes and properties to their equivalents in PROV-O, SPDX 3.0, and Schema.org, enabling federated querying and SBOM generation." ;
-    owl:versionInfo "0.1.0" .
+    owl:versionInfo "0.6.0" .
 
 # =============================================================================
 # PROV-O Alignment

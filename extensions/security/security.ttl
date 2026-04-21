@@ -449,7 +449,7 @@ sec: a owl:Ontology ;
     rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages"@en ;
     rdfs:seeAlso <http://spdx.org/rdf/terms> ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( pkg:Package sec:Vulnerability sec:SecurityAdvisory sec:AffectedRange sec:RangeEvent sec:CVSSScore sec:CVE sec:PatchActivity ) .

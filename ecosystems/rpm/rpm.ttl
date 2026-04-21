@@ -576,5 +576,5 @@ rpm: a owl:Ontology ;
     rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories"@en ;
     owl:imports pkg:,
         vcs: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

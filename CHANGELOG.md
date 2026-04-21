@@ -1,148 +1,105 @@
 # Changelog
 
-## [Unreleased] - 2026-04-15
+All notable changes to the PackageGraph ontology are documented in this file.
+
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.6.0] - 2026-04-20
+
+Academic readiness release — comprehensive semantic audit and remediation across all 34 modules.
 
 ### Added
-
-#### New Ontology Files
-- **RubyGems Package Ontology** (`rubygems.ttl`) — Models RubyGems registry packages including gem platforms, Ruby version requirements, prerelease versions, SHA-256 checksums, and gem dependencies
-- **Maven Package Ontology** (`maven.ttl`) — Models Maven Central artifacts including groupId:artifactId:version coordinates, POM metadata, dependency scopes (compile, provided, runtime, test), classifiers, and repository structure
-- **CPAN Package Ontology** (`cpan.ttl`) — Models CPAN distributions including PAUSE author IDs, maturity levels (released/developer), modules, and MetaCPAN metadata
-- **CRAN Package Ontology** (`cran.ttl`) — Models CRAN (R package archive) including compilation requirements, system dependencies, priority levels (base/recommended), Bioconductor views, and R dependency types (Depends, Imports, Suggests, LinkingTo, Enhances)
-- **Hackage Package Ontology** (`hackage.ttl`) — Models Hackage packages including Cabal file metadata, GHC version compatibility (tested-with), categories, stability levels, and build-depends relationships
-- **NuGet Package Ontology** (`nuget.ttl`) — Models NuGet Gallery packages including target frameworks, prerelease versions, icon URLs, tags, listed status, and framework-specific dependencies
-- **Hex Package Ontology** (`hex.ttl`) — Models Hex.pm packages including Elixir/Erlang version requirements, build tools (mix/rebar3), retirement status, and package checksums
-
-#### NAMESPACES.md Updates
-- Moved 7 namespaces from Reserved to Current: `rubygems#`, `maven#`, `cpan#`, `cran#`, `hackage#`, `nuget#`, `hex#`
-- All 7 now have TTL files and collectors
-
-## [0.5.1] - 2026-04-14
-
-### Added
-
-#### New Ontology File (dq.ttl)
-- **Data Quality Ontology** — Provides a structured way to record and query data quality issues discovered during ETL collection and enrichment
-  - 1 class: `dq:DataQualityIssue`
-  - 1 object property: `dq:hasQualityIssue` (links any resource to its quality issues)
-  - 6 datatype properties: `dq:issueType`, `dq:field`, `dq:rawValue`, `dq:detectedBy`, `dq:detectedAt`, `dq:severity`
-  - Issue type taxonomy: `dead-repo`, `malformed-email`, `invalid-homepage`, `missing-field`, `stale-data`, `encoding-error`
-  - **Namespace**: `https://purl.org/packagegraph/ontology/dq#`
-  - Imports: core.ttl
-
-#### VCS Ontology Additions (vcs.ttl)
-- **7 new properties** used by the `enrich-github-vcs` enricher but previously missing from the ontology:
-  - `vcs:repositoryURL` — Canonical web URL of the repository
-  - `vcs:repositoryDescription` — Short description as set by repository owner
-  - `vcs:repositoryStatus` — Availability status (e.g., `not-found` for HTTP 404, indicating deleted/private/moved repos)
-  - `vcs:statusCheckedAt` — Timestamp when repository status was last verified via API
-  - `vcs:starCount` — Star count (declared `owl:equivalentProperty` of `vcs:stargazerCount`)
-  - `vcs:commitDate` — Commit authored date (declared `owl:equivalentProperty` of `vcs:authorTimestamp`)
-  - `vcs:releaseName` — Human-readable release display name (distinct from tag name)
-
-### Documentation
-- **`docs/data-quality.md`** (platform) — Complete guide to the data quality system: SPARQL query cookbook, issue type taxonomy, ontology reference, environment variables
-
-## [0.5.0] - 2026-04-13
-
-### Added
-
-#### New Ontology File (slsa.ttl)
-- **SLSA Supply Chain Security Ontology** — Models SLSA v1.0 provenance attestations, build levels (L0-L3), builder identity, and build environments
-  - 5 classes: `ProvenanceAttestation`, `BuildLevel`, `Builder`, `SourceAttestation`, `BuildEnvironment`
-  - 4 SLSA level individuals: `slsa:L0`, `slsa:L1`, `slsa:L2`, `slsa:L3`
-  - 14 datatype properties (attestationDigest, builderVersion, buildImage, isEphemeral, isIsolated, etc.)
-  - 8 object properties (hasProvenance, attestsBuildLevel, builtBy, usedBuildEnvironment, etc.)
-  - **Namespace**: `https://packagegraph.github.io/ontology/slsa#`
-  - Imports: core.ttl, security.ttl, vcs.ttl
-
-#### PROV-O Grounding (core.ttl)
-- **`pkg:Package` now subclasses `prov:Entity`** — Completes the PROV-O entity layer for packages
-- **`pkg:Repository` now subclasses `prov:Entity`** — Repositories are provenance entities
-- **`pkg:builtFromSource` as `prov:wasDerivedFrom`** — Formalizes binary-to-source derivation semantics
-- **`pkg:maintainedBy` as `prov:wasAttributedTo`** — Package-to-maintainer attribution follows PROV-O
-- **New property `pkg:performedBy`** (subproperty of `prov:wasAssociatedWith`) — Links packaging activities to the agents that performed them
-
-#### PROV-O Grounding (vcs.ttl)
-- **`vcs:parentCommit` as `prov:wasDerivedFrom`** — Commit lineage follows provenance derivation
-- **`vcs:packagedFromTag` as `prov:wasDerivedFrom`** — VCS tag to package derivation
-- **`vcs:packagedFromCommit` as `prov:wasDerivedFrom`** — VCS commit to package derivation
-- **`vcs:previousRelease` as `prov:wasDerivedFrom`** — Release lineage as derivation chain
-- **`vcs:releasedBy` as `prov:wasAttributedTo`** — Release attribution with explicit range
-
-#### Supply Chain Security (security.ttl)
-- **New class `sec:PatchActivity`** (subclass of `pkg:PackagingActivity`) — Models the act of applying security patches
-- **New property `sec:patchedFrom`** (subproperty of `prov:wasDerivedFrom`) — Tracks version-to-version patch derivation
-- **New property `sec:patchProducedVersion`** (subproperty of `prov:wasGeneratedBy`) — Links fixed versions to patch activities
-- **New property `sec:patchAddresses`** — Links patch activities to vulnerabilities they fix
-- **New property `sec:affectsPackage`** — Package-level vulnerability association
-
-#### SHACL Validation Shapes (shacl.ttl)
-- `BuildActivityShape` — Validates PROV-O grounding for build activities
-- `ProvenanceAttestationShape` — Validates SLSA attestation level, timestamp, digest
-- `BuilderShape` — Validates builder ID URI
-- `BuildEnvironmentShape` — Validates ephemeral/isolated flags
-- `CommitShape` — Validates commit hash, timestamp, authorship
-- `PatchActivityShape` — Validates patch activities address vulnerabilities
-
-#### Example Instances (examples.ttl)
-- **PROV-O provenance chain** — Demonstrates upstream commit → VCS tag → source package → build activity → binary package for Debian openssl
-- **SLSA L2 attestation** — Koji-built RPM with full provenance (builder, build environment, source attestation)
-- **Security patch provenance** — Unpatched glibc → patch activity → patched glibc with CVE linkage
+- **Competency questions:** 33 CQs formalized as SPARQL queries across 7 domains
+- **OSV vulnerability model:** AffectedRange, RangeEvent, CVSSScore classes with full OSV schema alignment
+- **Properties-as-taxonomy:** dependencyType uses property URIs (OWL 2 punning) instead of magic strings
+- **6 new dependency shortcut properties:** recommends, suggests, enhances, supplements, checkRequires, preDepends
+- **New properties:** satisfiesCapability (InstalledFile → Capability), applicableArchitecture (Dependency → Architecture)
+- **Upper ontology alignment:** PROV-O, FOAF, SPDX, DOAP rdfs:seeAlso + subclass mappings
+- **owl:propertyChainAxiom** on directlyDependsOn (hasDependency → dependencyTarget)
+- **11 new SHACL shapes:** PackageIdentity, Distribution, DistributionRelease, Dependency, Architecture, License, VersionConstraint, AffectedRange, RangeEvent, CVSSScore, CVE
+- **SHACL SPARQL constraint:** IrreflexiveDependsOnShape (replaces OWL characteristic for SROIQ compliance)
+- **SKOS enforcement:** sh:in constraints on advisorySeverity, advisoryType, dependencyType
+- **Schema annotations:** @en language tags (3,568) and rdfs:isDefinedBy (1,161) across all modules
+- **Design decisions document** with adopted patterns, rejections, and deferrals
+- **Evaluation comparison:** PackageGraph vs SPDX 3.0 vs CycloneDX 1.6 vs OSV schema
+- **Production validation framework:** SHACL validation script for Fuseki data
 
 ### Changed
-- **slsa.ttl registered in build tooling** — Added to `ONTOLOGY_FILES` in Makefile for lint/concat/deploy
-- **Documentation updated** — README.md now lists slsa.ttl as 10th ontology with full description
+- **Package definition:** weakened from "can be installed" to "represented in repository metadata" (OntoClean fix)
+- **conflicts:** now owl:SymmetricProperty; isConflictWith removed (redundant)
+- **replaces:** added owl:AsymmetricProperty
+- **directlyDependsOn:** removed owl:IrreflexiveProperty (SROIQ violation with propertyChainAxiom)
+- **upstreamEcosystem:** DatatypeProperty → ObjectProperty (range :Ecosystem)
+- **VersionConstraint properties:** domain corrected from Dependency to VersionConstraint
+- **17 ecosystem subclass corrections:** source packages (cargo, npm, pypi, rubygems, gomod, hex, cpan, cran, hackage, portage) and binary packages (maven, nuget, conda, flatpak, snap, opkg, chocolatey)
+- **9 ecosystem sub-property remappings:** dev/test → buildDependsOn, optional → suggests/recommends
+- **metrics.ttl IAO precision:** linesOfCode, languageProportion, complexity metrics clarified
 
-## [0.4.0] - 2026-04-09
+### Deprecated
+- cvssScore, cvssVector → CVSSScore reification
+- licenseName → hasLicense ObjectProperty
+- deb/brew/npm/maven dependency type strings → pkg:dependencyType with property URIs
+- slsa:sourceRepository → slsa:hasSourceVcsRepository
 
-### Breaking Changes
+### Removed
+- isConflictWith property, maven:DependencyScope class
 
-- **Removed `pkg:upstreamProject` DatatypeProperty** — Superseded by `pkg:hasUpstreamProject` ObjectProperty linking `SourcePackage` to the new `UpstreamProject` class. Enables richer upstream metadata (project name, URL) instead of a plain string.
-- **Narrowed `pkg:buildDependsOn` domain** from `pkg:Package` to `pkg:SourcePackage`. Build dependencies are inherently a source-package concept.
-- **Changed `vcs:Repository` superclass** from `pkg:Repository` to `owl:Thing`. VCS repositories are independent entities, not a subtype of package repositories.
-- **Module class hierarchy aligned with core SourcePackage/BinaryPackage:**
-  - `deb:SourcePackage` now also subclasses `pkg:SourcePackage`
-  - `deb:BinaryPackage` now also subclasses `pkg:BinaryPackage`
-  - `rpm:SourceRPM` now also subclasses `pkg:SourcePackage`
-  - `rpm:BinaryRPM` now also subclasses `pkg:BinaryPackage`
-  - `arch:PKGBUILD` now subclasses `pkg:SourcePackage` (was `owl:Thing`)
-  - `bsd:Port` now subclasses `pkg:SourcePackage` (was `pkg:Package`)
-  - `nix:Derivation` now subclasses `pkg:SourcePackage` (was `pkg:Package`)
+### Fixed
+- OntoClean: Maintainer subClassOf schema:Person → Person subClassOf schema:Person
+- SROIQ decidability: IrreflexiveProperty + propertyChainAxiom conflict resolved
+- Stale alignment: pkg:checksum → pkg:hasChecksum in SPDX mapping
+- Example conformance: all examples pass pyshacl with RDFS inference
+- 6 ecosystem author/maintainer properties annotated with PROV-O/FOAF links
+
+## [0.5.1] - 2026-04-18
 
 ### Added
+- SKOS concept schemes for dependency types, severity levels, advisory types
+- OWL property characteristics: IrreflexiveProperty, AsymmetricProperty, SymmetricProperty
+- Data quality module (dq.ttl)
+- External alignment declarations (references/alignments.ttl)
 
-#### New Classes (core.ttl)
-- `pkg:SourcePackage` — Source package containing source code and build scripts
-- `pkg:BinaryPackage` — Compiled, installable package produced from a source package (cardinality 1 on `builtFromSource`)
-- `pkg:UpstreamProject` — Upstream open source project that distribution packages are based on
-- `pkg:DistributionRelease` — A specific versioned release of a distribution (e.g., Debian 12, Fedora 41)
-- `pkg:ContributorAccount` — A contributor's identity on a specific platform
-- `pkg:InstalledFile` — A file installed on the target filesystem by a binary package
+## [0.5.0] - 2026-04-14
 
-#### New Object Properties (core.ttl)
-- `pkg:builtFromSource` / `pkg:producedBinary` — Inverse pair linking binary and source packages
-- `pkg:hasUpstreamProject` — Links source packages to their upstream project
-- `pkg:hasDependency` / `pkg:dependencyTarget` — Reified dependency with version constraints
-- `pkg:hasRelease` — Links a distribution to its versioned releases
-- `pkg:partOfRelease` — Links packages/repositories to a specific distribution release
-- `pkg:hasAccount` — Links contributors to platform-specific accounts
-- `pkg:installsFile` — Links binary packages to files they install
-- `pkg:supportedArchitecture` — Architectures a source package can be built for
+### Added
+- Source/BinaryPackage class split
+- UpstreamProject class for cross-distribution upstream tracking
+- dcterms:abstract metadata on all modules
+- 18 new ecosystem modules (npm, pypi, cargo, gomod, maven, nuget, rubygems, cpan, cran, hackage, hex, conda, flatpak, snap, portage, opkg, bitbake, buildroot)
 
-#### New Datatype Properties (core.ttl)
-- `pkg:dependencyType` — Classifies dependency relationships (runtime, build, recommends, etc.)
-- `pkg:accountPlatform`, `pkg:accountUsername`, `pkg:accountURL` — Contributor account metadata
-- `pkg:installedFilePath` — Filesystem path where a file is installed
-- `pkg:projectName`, `pkg:projectURL` — Upstream project metadata
+## [0.3.0] - 2025-12-15
 
-#### SHACL Shapes (shacl.ttl)
-- Added validation shapes for all 6 new classes
+### Added
+- security.ttl with Vulnerability, SecurityAdvisory, CVE classes
+- metrics.ttl with ProgrammingLanguage and CodeMetrics
+- redhat.ttl vendor extension
+- PackageSet class, Patch class (RPM), VCS activity metrics
+- SHACL shapes for security and metrics entities
+
+## [0.2.0] - 2025-10-01
 
 ### Changed
-- `vcs:hasUpstreamRepository` range refined from `vcs:Repository` to `owl:Thing` (aligns with VCS repository independence)
-- All module ontologies bumped from 0.3.0 to 0.4.0
+- CI/CD deployment pipeline improvements
+- Ontology version metadata standardization
 
-## [0.3.0] - Initial tracked version
+## [0.1.1] - 2025-09-15
 
-First versioned release of the PackageGraph ontology suite.
+### Fixed
+- Example and documentation updates
+
+## [0.1.0] - 2025-09-05
+
+### Added
+- Initial ontology release with core classes (Package, Version, Dependency, Distribution)
+- Ecosystem modules: RPM, Debian, Arch/Pacman, BSD, Homebrew, Nix, Alpine, Chocolatey
+- VCS and SLSA extension modules
+- SHACL validation shapes and example instances
+
+[0.6.0]: https://github.com/packagegraph/ontology/compare/v0.5.1...v0.6.0
+[0.5.1]: https://github.com/packagegraph/ontology/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/packagegraph/ontology/compare/v0.3.0...v0.5.0
+[0.3.0]: https://github.com/packagegraph/ontology/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/packagegraph/ontology/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/packagegraph/ontology/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/packagegraph/ontology/releases/tag/v0.1.0

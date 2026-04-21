@@ -578,5 +578,5 @@ brew: a owl:Ontology ;
     dcterms:title "Homebrew Package Ontology" ;
     rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

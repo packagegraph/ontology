@@ -123,5 +123,5 @@ apk: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Alpine Linux packages and the apk-tools ecosystem"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.0" .
+    owl:versionInfo "0.6.0" .
 

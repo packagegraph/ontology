@@ -91,5 +91,5 @@ hackage: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Hackage packages and the Haskell ecosystem"@en ;
     owl:imports pkg: ;
-    owl:versionInfo "0.5.1" .
+    owl:versionInfo "0.6.0" .
 
