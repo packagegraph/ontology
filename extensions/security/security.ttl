@@ -1,336 +1,456 @@
-# Security Ontology
-@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 
+sec:accessComplexity a owl:DatatypeProperty ;
+    rdfs:label "access complexity"@en ;
+    IAO:0000115 "The complexity of the attack required to exploit the vulnerability."@en ;
+    rdfs:comment "The complexity of the attack required to exploit the vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
 
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/security#> a owl:Ontology ;
-    rdfs:label "Package Security Ontology" ;
-    rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages" ;
+sec:accessVector a owl:DatatypeProperty ;
+    rdfs:label "access vector"@en ;
+    IAO:0000115 "The attack vector: network, adjacent, local, or physical."@en ;
+    rdfs:comment "The attack vector for the vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:addressesVulnerability a owl:ObjectProperty ;
+    rdfs:label "addresses vulnerability"@en ;
+    IAO:0000115 "Links a security advisory to the vulnerabilities it addresses."@en ;
+    rdfs:comment "Links a security advisory to the vulnerabilities it addresses"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:Vulnerability .
+
+sec:advisoryDate a owl:DatatypeProperty ;
+    rdfs:label "advisory date"@en ;
+    IAO:0000115 "The date when the security advisory was published."@en ;
+    rdfs:comment "The date the security advisory was published"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:dateTime .
+
+sec:advisoryForPackage a owl:ObjectProperty ;
+    rdfs:label "advisory for package"@en ;
+    IAO:0000115 "Associates a security advisory with the package it applies to."@en ;
+    rdfs:comment "Links a security advisory to the package it applies to"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:Package .
+
+sec:advisorySeverity a owl:DatatypeProperty ;
+    rdfs:label "advisory severity"@en ;
+    IAO:0000115 "The overall severity level assigned to the advisory."@en ;
+    rdfs:comment "The overall severity level of the advisory"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:advisoryType a owl:DatatypeProperty ;
+    rdfs:label "advisory type"@en ;
+    IAO:0000115 "The type of advisory: security, bugfix, or enhancement."@en ;
+    rdfs:comment "The type of advisory"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:affectsEcosystem a owl:ObjectProperty ;
+    rdfs:label "affects ecosystem"@en ;
+    IAO:0000115 "Specifies which package ecosystem this affected range applies to (e.g., PyPI, npm, Debian). Maps to OSV schema's affected[].package.ecosystem field."@en ;
+    rdfs:comment "Links an affected range to the package ecosystem it applies to"@en ;
+    rdfs:domain sec:AffectedRange ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:Ecosystem .
+
+sec:affectsPackage a owl:ObjectProperty ;
+    rdfs:label "affects package"@en ;
+    IAO:0000115 "Associates a vulnerability directly with an affected package identity, bypassing version-string joins for direct package-level queries. This is a convenience shortcut that trades precision for query simplicity."@en ;
+    rdfs:comment "Convenience shortcut linking a vulnerability directly to an affected package identity. IMPRECISE: This property links to the PackageIdentity (all versions) without specifying affected version ranges. For version-specific vulnerability queries, use hasAffectedRange instead. Useful for quick 'is this package name affected?' queries but produces false positives if the package has been patched in some versions."@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:PackageIdentity ;
+    owl:inverseOf sec:hasVulnerabilityReport .
+
+sec:affectsPackageName a owl:DatatypeProperty ;
+    rdfs:label "affects package name"@en ;
+    IAO:0000115 "The package name within the specified ecosystem affected by this vulnerability range. Maps to OSV schema's affected[].package.name field."@en ;
+    rdfs:comment "The package name within an ecosystem affected by this range"@en ;
+    rdfs:domain sec:AffectedRange ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:affectsVersion a owl:ObjectProperty ;
+    rdfs:label "affects version"@en ;
+    IAO:0000115 "Associates a vulnerability with the package versions it affects."@en ;
+    rdfs:comment "Links a vulnerability to the package versions it affects"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:Version ;
+    owl:inverseOf sec:vulnerableIn .
+
+sec:baseScore a owl:DatatypeProperty ;
+    rdfs:label "base score"@en ;
+    IAO:0000115 "The CVSS base score representing the intrinsic severity of the vulnerability, independent of temporal or environmental factors. Range: 0.0 (none) to 10.0 (critical)."@en ;
+    rdfs:comment "The CVSS base score (0.0-10.0)"@en ;
+    rdfs:domain sec:CVSSScore ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float .
+
+sec:cpeId a owl:DatatypeProperty ;
+    rdfs:label "CPE identifier"@en ;
+    IAO:0000115 "Common Platform Enumeration (CPE) 2.3 identifier linking this package to NVD vulnerability feeds. Format: cpe:2.3:a:vendor:product:version:*:*:*:*:*:*:*. Enables cross-referencing with CVE databases."@en ;
+    rdfs:comment "Common Platform Enumeration identifier for the package"@en ;
+    rdfs:domain pkg:PackageIdentity ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:cveEntity a owl:ObjectProperty ;
+    rdfs:label "CVE entity"@en ;
+    IAO:0000115 "Associates a vulnerability or advisory with a reified CVE identifier entity, enabling graph-traversable relationships across all records that reference the same CVE."@en ;
+    rdfs:comment "Links a vulnerability or advisory to a shared CVE identifier entity"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:CVE .
+
+sec:cvssScore a owl:DatatypeProperty ;
+    rdfs:label "CVSS score"@en ;
+    IAO:0000115 "DEPRECATED: The Common Vulnerability Scoring System score (0.0-10.0). Replaced by the CVSSScore reification which supports multiple CVSS versions per vulnerability."@en ;
+    rdfs:comment "DEPRECATED: Use hasCVSSScore to link to a CVSSScore entity instead. The flat cvssScore property cannot represent multiple CVSS versions (v2, v3.1) for the same vulnerability."@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float ;
+    owl:deprecated true .
+
+sec:cvssVector a owl:DatatypeProperty ;
+    rdfs:label "CVSS vector"@en ;
+    IAO:0000115 "DEPRECATED: The full CVSS vector string encoding the vulnerability characteristics. Replaced by the CVSSScore reification."@en ;
+    rdfs:comment "DEPRECATED: Use hasCVSSScore → CVSSScore → vectorString instead. The flat cvssVector property is not tied to a CVSS version."@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string ;
+    owl:deprecated true .
+
+sec:cvssVersion a owl:DatatypeProperty ;
+    rdfs:label "CVSS version"@en ;
+    IAO:0000115 "The CVSS specification version used to compute this score. Values: 2.0, 3.0, 3.1, 4.0. Different versions use different metrics and produce different scores for the same vulnerability."@en ;
+    rdfs:comment "The CVSS scoring version (2.0, 3.0, 3.1, or 4.0)"@en ;
+    rdfs:domain sec:CVSSScore ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:cweId a owl:DatatypeProperty ;
+    rdfs:label "CWE identifier"@en ;
+    IAO:0000115 "The Common Weakness Enumeration identifier classifying the vulnerability type."@en ;
+    rdfs:comment "The CWE identifier classifying the vulnerability type"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:environmentalScore a owl:DatatypeProperty ;
+    rdfs:label "environmental score"@en ;
+    IAO:0000115 "The CVSS environmental score customized for a specific deployment context, considering modified impact metrics and organizational requirements. Optional — typically computed by individual organizations, not present in NVD data."@en ;
+    rdfs:comment "The CVSS environmental score customized for a specific IT environment"@en ;
+    rdfs:domain sec:CVSSScore ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float .
+
+sec:eventType a owl:DatatypeProperty ;
+    rdfs:label "event type"@en ;
+    IAO:0000115 "Indicates whether this event marks when the vulnerability was introduced into the codebase, when it was fixed, or the last known affected version. Maps to OSV schema's affected[].ranges[].events[].{introduced|fixed|last_affected} field names."@en ;
+    rdfs:comment "The type of range event: introduced, fixed, or last_affected"@en ;
+    rdfs:domain sec:RangeEvent ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:eventVersion a owl:DatatypeProperty ;
+    rdfs:label "event version"@en ;
+    IAO:0000115 "The version string (for SEMVER/ECOSYSTEM ranges) or git commit hash (for GIT ranges) marking this event. Maps to OSV schema's affected[].ranges[].events[].{introduced|fixed|last_affected} field values."@en ;
+    rdfs:comment "The version string or commit hash for this event"@en ;
+    rdfs:domain sec:RangeEvent ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:exploitabilityScore a owl:DatatypeProperty ;
+    rdfs:label "exploitability score"@en ;
+    IAO:0000115 "The CVSS exploitability sub-score."@en ;
+    rdfs:comment "The CVSS exploitability sub-score"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float .
+
+sec:fixedInVersion a owl:ObjectProperty ;
+    rdfs:label "fixed in version"@en ;
+    IAO:0000115 "Associates a vulnerability with the package version that contains its fix."@en ;
+    rdfs:comment "Links a vulnerability to the package version containing its fix"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:Version .
+
+sec:hasAffectedRange a owl:ObjectProperty ;
+    rdfs:label "has affected range"@en ;
+    IAO:0000115 "Associates a vulnerability with a reified affected range that specifies the ecosystem, package name, version range type, and discrete events (introduced/fixed). Maps to OSV schema's affected[].ranges[] structure. Multiple ranges can exist per vulnerability for different ecosystems or version schemes."@en ;
+    rdfs:comment "Links a vulnerability to an affected version range specification"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:AffectedRange .
+
+sec:hasCVSSScore a owl:ObjectProperty ;
+    rdfs:label "has CVSS score"@en ;
+    IAO:0000115 "Associates a vulnerability with a CVSS score entity. Multiple scores can exist per vulnerability for different CVSS versions (2.0, 3.0, 3.1, 4.0). NVD routinely provides both CVSS v2 and v3.1 — reification allows both to coexist."@en ;
+    rdfs:comment "Links a vulnerability to a reified CVSS assessment"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:CVSSScore .
+
+sec:hasCWE a owl:ObjectProperty ;
+    rdfs:label "has CWE"@en ;
+    IAO:0000115 "Associates a vulnerability with a Common Weakness Enumeration category entity, enabling classification and analysis of vulnerability types."@en ;
+    rdfs:comment "Links a vulnerability to a CWE weakness category entity"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: .
+
+sec:hasRangeEvent a owl:ObjectProperty ;
+    rdfs:label "has range event"@en ;
+    IAO:0000115 "Associates an affected range with version or commit markers indicating when a vulnerability was introduced, when it was fixed, or the last known affected version. Maps to OSV schema's affected[].ranges[].events[] array."@en ;
+    rdfs:comment "Links an affected range to a discrete event marking when the vulnerability was introduced, fixed, or last affected"@en ;
+    rdfs:domain sec:AffectedRange ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:RangeEvent .
+
+sec:impactAvailability a owl:DatatypeProperty ;
+    rdfs:label "impact on availability"@en ;
+    IAO:0000115 "The impact on system availability: none, low, or high."@en ;
+    rdfs:comment "The impact on system availability if the vulnerability is exploited"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:impactConfidentiality a owl:DatatypeProperty ;
+    rdfs:label "impact on confidentiality"@en ;
+    IAO:0000115 "The impact on confidentiality: none, low, or high."@en ;
+    rdfs:comment "The impact on confidentiality if the vulnerability is exploited"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:impactIntegrity a owl:DatatypeProperty ;
+    rdfs:label "impact on integrity"@en ;
+    IAO:0000115 "The impact on data integrity: none, low, or high."@en ;
+    rdfs:comment "The impact on data integrity if the vulnerability is exploited"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:impactScore a owl:DatatypeProperty ;
+    rdfs:label "impact score"@en ;
+    IAO:0000115 "The CVSS impact sub-score."@en ;
+    rdfs:comment "The CVSS impact sub-score"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float .
+
+sec:osvId a owl:DatatypeProperty ;
+    rdfs:label "OSV identifier"@en ;
+    IAO:0000115 "The canonical Open Source Vulnerability database identifier (e.g., GHSA-xxxx-xxxx-xxxx, PYSEC-2024-xxxx, RUSTSEC-2024-xxxx). Maps to OSV schema's id field. Not all vulnerabilities have CVE identifiers — this is the primary key."@en ;
+    rdfs:comment "The canonical OSV database identifier for this vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:patchAddresses a owl:ObjectProperty ;
+    rdfs:label "patch addresses"@en ;
+    IAO:0000115 "Associates a patch activity with the specific vulnerabilities that it addresses."@en ;
+    rdfs:comment "Links a patch activity to the vulnerabilities it fixes"@en ;
+    rdfs:domain sec:PatchActivity ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:Vulnerability .
+
+sec:patchProducedVersion a owl:ObjectProperty ;
+    rdfs:label "patch produced version"@en ;
+    IAO:0000115 "Associates a fixed package version with the patch activity that produced it from the prior version."@en ;
+    rdfs:comment "Links a fixed package version to the patch activity that produced it"@en ;
+    rdfs:domain pkg:Version ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:PatchActivity ;
+    rdfs:subPropertyOf prov:wasGeneratedBy .
+
+sec:patchedFrom a owl:ObjectProperty ;
+    rdfs:label "patched from"@en ;
+    IAO:0000115 "Associates a security-patched package version with the prior version from which it was derived, establishing the provenance chain for security updates."@en ;
+    rdfs:comment "Links a patched package version to the unpatched version it was derived from"@en ;
+    rdfs:domain pkg:Version ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range pkg:Version ;
+    rdfs:subPropertyOf prov:wasDerivedFrom .
+
+sec:publishedDate a owl:DatatypeProperty ;
+    rdfs:label "published date"@en ;
+    IAO:0000115 "The date when the vulnerability was publicly disclosed."@en ;
+    rdfs:comment "The date the vulnerability was publicly disclosed"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:dateTime .
+
+sec:rangeType a owl:DatatypeProperty ;
+    rdfs:label "range type"@en ;
+    IAO:0000115 "The versioning scheme: SEMVER (semantic versioning), ECOSYSTEM (ecosystem-specific), or GIT (git commit hashes). Maps to OSV schema's affected[].ranges[].type field."@en ;
+    rdfs:comment "The versioning scheme used in this affected range"@en ;
+    rdfs:domain sec:AffectedRange ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:severity a owl:DatatypeProperty ;
+    rdfs:label "severity"@en ;
+    IAO:0000115 "The severity classification: low, medium, high, or critical."@en ;
+    rdfs:comment "The severity level of the vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:summary a owl:DatatypeProperty ;
+    rdfs:label "summary"@en ;
+    IAO:0000115 "A human-readable description of the vulnerability."@en ;
+    rdfs:comment "A human-readable summary of the vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:temporalScore a owl:DatatypeProperty ;
+    rdfs:label "temporal score"@en ;
+    IAO:0000115 "The CVSS temporal score adjusting the base score based on current exploit code maturity, remediation level, and report confidence. Optional — not all assessments include temporal scoring."@en ;
+    rdfs:comment "The CVSS temporal score accounting for exploit availability and remediation level"@en ;
+    rdfs:domain sec:CVSSScore ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:float .
+
+sec:updatedDate a owl:DatatypeProperty ;
+    rdfs:label "updated date"@en ;
+    IAO:0000115 "The date when the vulnerability record was last modified."@en ;
+    rdfs:comment "The date the vulnerability record was last modified"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:dateTime .
+
+sec:vectorString a owl:DatatypeProperty ;
+    rdfs:label "vector string"@en ;
+    IAO:0000115 "The complete CVSS vector string encoding attack vector, complexity, privileges required, and impact metrics. Format varies by CVSS version."@en ;
+    rdfs:comment "The full CVSS vector string encoding all metric values"@en ;
+    rdfs:domain sec:CVSSScore ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:advisoryId a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "advisory identifier"@en ;
+    IAO:0000115 "The unique identifier for the security advisory."@en ;
+    rdfs:comment "The unique identifier for the security advisory"@en ;
+    rdfs:domain sec:SecurityAdvisory ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:cveId a owl:DatatypeProperty ;
+    rdfs:label "CVE identifier"@en ;
+    IAO:0000115 "The unique Common Vulnerabilities and Exposures identifier."@en ;
+    rdfs:comment "The unique CVE identifier for the vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:string .
+
+sec:hasVulnerabilityReport a owl:ObjectProperty ;
+    rdfs:label "has vulnerability report"@en ;
+    IAO:0000115 "The inverse relationship of affectsPackage, linking a package identity to the vulnerabilities that affect it. Enables efficient 'what CVEs affect this package' queries."@en ;
+    rdfs:comment "Links a package identity to vulnerabilities that affect it"@en ;
+    rdfs:domain pkg:PackageIdentity ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:Vulnerability .
+
+sec:vulnerableIn a owl:ObjectProperty ;
+    rdfs:label "vulnerable in"@en ;
+    IAO:0000115 "The inverse relationship of affectsVersion, linking a package version to the vulnerabilities it is affected by. Enables efficient 'what CVEs affect this version' queries without scanning all vulnerabilities."@en ;
+    rdfs:comment "Links a package version to the vulnerabilities that affect it"@en ;
+    rdfs:domain pkg:Version ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:Vulnerability .
+
+sec:CVE a owl:Class ;
+    rdfs:label "CVE Identifier"@en ;
+    IAO:0000115 "A reified CVE identifier entity that can be shared across vulnerability records and advisories, enabling cross-graph CVE queries without string matching."@en ;
+    rdfs:comment "A Common Vulnerabilities and Exposures identifier entity, shared across vulnerability and advisory graphs"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf owl:Thing .
+
+sec:PatchActivity a owl:Class ;
+    rdfs:label "Patch Activity"@en ;
+    IAO:0000115 "A packaging activity that applies one or more security patches to address vulnerabilities, producing a new package version derived from the unpatched version."@en ;
+    rdfs:comment "An activity that applies a security patch to produce a fixed package version"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf pkg:PackagingActivity .
+
+sec:RangeEvent a owl:Class ;
+    rdfs:label "Range Event"@en ;
+    IAO:0000115 "A version or commit marker indicating when a vulnerability was introduced into the codebase, when it was fixed, or the last known affected version. Maps to OSV schema's affected[].ranges[].events[] structure."@en ;
+    rdfs:comment "A discrete event in a vulnerability's affected version range (introduced, fixed, or last_affected)"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf owl:Thing .
+
+sec:AffectedRange a owl:Class ;
+    rdfs:label "Affected Range"@en ;
+    IAO:0000115 "A reified affected range entity that associates a vulnerability with an ecosystem, package name, version range type (SEMVER/ECOSYSTEM/GIT), and discrete range events (introduced/fixed/last_affected). This models the OSV schema's affected[].ranges[] structure, enabling precise version-specific vulnerability queries."@en ;
+    rdfs:comment "A version range specification for packages affected by a vulnerability, following the OSV schema model"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf owl:Thing .
+
+sec:CVSSScore a owl:Class ;
+    rdfs:label "CVSS Score"@en ;
+    IAO:0000115 "A Common Vulnerability Scoring System assessment reified to support multiple CVSS versions (2.0, 3.0, 3.1, 4.0) per vulnerability. NVD routinely provides both CVSS v2 and v3.1 scores — reification allows both to coexist without conflict."@en ;
+    rdfs:comment "A reified CVSS assessment with version, score, and vector"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf owl:Thing .
+
+sec:SecurityAdvisory a owl:Class ;
+    rdfs:label "Security Advisory"@en ;
+    IAO:0000115 "A vendor-issued security advisory (such as RHSA, DSA, or GLSA) that documents and addresses one or more known vulnerabilities, providing guidance and fixes for affected packages."@en ;
+    rdfs:comment "A vendor security advisory that addresses one or more vulnerabilities"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty sec:advisoryId ],
+        owl:Thing .
+
+sec:Vulnerability a owl:Class ;
+    rdfs:label "Vulnerability"@en ;
+    IAO:0000115 "A known security vulnerability in software, identified and tracked using the Common Vulnerabilities and Exposures (CVE) system, including severity scoring and impact assessment."@en ;
+    rdfs:comment "A known security vulnerability identified by a CVE record. Cross-references SPDX 3.0 Vulnerability concept but models additional OSV-aligned version ranges and provenance chains not present in SPDX."@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:seeAlso spdx:Vulnerability ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty sec:cveId ],
+        owl:Thing .
+
+sec: a owl:Ontology ;
+    rdfs:label "Package Security Ontology"@en ;
     dcterms:abstract "The Security ontology models CVE vulnerabilities, vendor security advisories (RHSA, DSA, GLSA), and CVSS severity scores. It links vulnerabilities to affected and fixed package versions, enabling SPARQL queries such as finding all packages in a distribution affected by a given CVE, or listing unpatched vulnerabilities for a release." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
-    dcterms:title "Package Security Ontology" ;
     dcterms:description "A comprehensive ontology for modeling security vulnerabilities (CVEs), vendor security advisories (RHSA, DSA, GLSA), severity scoring, and their relationships to affected and fixed package versions." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    dcterms:title "Package Security Ontology" ;
+    rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages"@en ;
+    rdfs:seeAlso <http://spdx.org/rdf/terms> ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
+[] a owl:AllDisjointClasses ;
+    owl:members ( pkg:Package sec:Vulnerability sec:SecurityAdvisory sec:AffectedRange sec:RangeEvent sec:CVSSScore sec:CVE sec:PatchActivity ) .
 
-# #################################################################
-# #
-# #    Classes
-# #
-# #################################################################
-
-sec:CVE a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "CVE Identifier" ;
-    rdfs:comment "A Common Vulnerabilities and Exposures identifier entity, shared across vulnerability and advisory graphs" ;
-    IAO:0000115 "A reified CVE identifier entity that can be shared across vulnerability records and advisories, enabling cross-graph CVE queries without string matching." .
-
-sec:Vulnerability a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Vulnerability" ;
-    rdfs:comment "A known security vulnerability identified by a CVE record" ;
-    IAO:0000115 "A known security vulnerability in software, identified and tracked using the Common Vulnerabilities and Exposures (CVE) system, including severity scoring and impact assessment." .
-
-sec:SecurityAdvisory a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Security Advisory" ;
-    rdfs:comment "A vendor security advisory that addresses one or more vulnerabilities" ;
-    IAO:0000115 "A vendor-issued security advisory (such as RHSA, DSA, or GLSA) that documents and addresses one or more known vulnerabilities, providing guidance and fixes for affected packages." .
-
-
-# #################################################################
-# #
-# #    Data Properties — Vulnerability
-# #
-# #################################################################
-
-sec:cveId a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "CVE identifier" ;
-    rdfs:comment "The unique CVE identifier for the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The unique Common Vulnerabilities and Exposures identifier." .
-
-sec:cvssScore a owl:DatatypeProperty ;
-    rdfs:label "CVSS score" ;
-    rdfs:comment "The CVSS base score for the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "The Common Vulnerability Scoring System score (0.0-10.0)." .
-
-sec:cvssVector a owl:DatatypeProperty ;
-    rdfs:label "CVSS vector" ;
-    rdfs:comment "The full CVSS vector string for the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The full CVSS vector string encoding the vulnerability characteristics." .
-
-sec:severity a owl:DatatypeProperty ;
-    rdfs:label "severity" ;
-    rdfs:comment "The severity level of the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The severity classification: low, medium, high, or critical." .
-
-sec:summary a owl:DatatypeProperty ;
-    rdfs:label "summary" ;
-    rdfs:comment "A human-readable summary of the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A human-readable description of the vulnerability." .
-
-sec:publishedDate a owl:DatatypeProperty ;
-    rdfs:label "published date" ;
-    rdfs:comment "The date the vulnerability was publicly disclosed" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when the vulnerability was publicly disclosed." .
-
-sec:updatedDate a owl:DatatypeProperty ;
-    rdfs:label "updated date" ;
-    rdfs:comment "The date the vulnerability record was last modified" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when the vulnerability record was last modified." .
-
-sec:cweId a owl:DatatypeProperty ;
-    rdfs:label "CWE identifier" ;
-    rdfs:comment "The CWE identifier classifying the vulnerability type" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Common Weakness Enumeration identifier classifying the vulnerability type." .
-
-sec:cpeId a owl:DatatypeProperty ;
-    rdfs:label "CPE identifier" ;
-    rdfs:comment "Common Platform Enumeration identifier for the package" ;
-    rdfs:domain pkg:PackageIdentity ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Common Platform Enumeration (CPE) 2.3 identifier linking this package to NVD vulnerability feeds. Format: cpe:2.3:a:vendor:product:version:*:*:*:*:*:*:*. Enables cross-referencing with CVE databases." .
-
-sec:accessVector a owl:DatatypeProperty ;
-    rdfs:label "access vector" ;
-    rdfs:comment "The attack vector for the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The attack vector: network, adjacent, local, or physical." .
-
-sec:accessComplexity a owl:DatatypeProperty ;
-    rdfs:label "access complexity" ;
-    rdfs:comment "The complexity of the attack required to exploit the vulnerability" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The complexity of the attack required to exploit the vulnerability." .
-
-sec:impactConfidentiality a owl:DatatypeProperty ;
-    rdfs:label "impact on confidentiality" ;
-    rdfs:comment "The impact on confidentiality if the vulnerability is exploited" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The impact on confidentiality: none, low, or high." .
-
-sec:impactIntegrity a owl:DatatypeProperty ;
-    rdfs:label "impact on integrity" ;
-    rdfs:comment "The impact on data integrity if the vulnerability is exploited" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The impact on data integrity: none, low, or high." .
-
-sec:impactAvailability a owl:DatatypeProperty ;
-    rdfs:label "impact on availability" ;
-    rdfs:comment "The impact on system availability if the vulnerability is exploited" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The impact on system availability: none, low, or high." .
-
-sec:exploitabilityScore a owl:DatatypeProperty ;
-    rdfs:label "exploitability score" ;
-    rdfs:comment "The CVSS exploitability sub-score" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "The CVSS exploitability sub-score." .
-
-sec:impactScore a owl:DatatypeProperty ;
-    rdfs:label "impact score" ;
-    rdfs:comment "The CVSS impact sub-score" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "The CVSS impact sub-score." .
-
-
-# #################################################################
-# #
-# #    Data Properties — SecurityAdvisory
-# #
-# #################################################################
-
-sec:advisoryId a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "advisory identifier" ;
-    rdfs:comment "The unique identifier for the security advisory" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The unique identifier for the security advisory." .
-
-sec:advisorySeverity a owl:DatatypeProperty ;
-    rdfs:label "advisory severity" ;
-    rdfs:comment "The overall severity level of the advisory" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The overall severity level assigned to the advisory." .
-
-sec:advisoryDate a owl:DatatypeProperty ;
-    rdfs:label "advisory date" ;
-    rdfs:comment "The date the security advisory was published" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when the security advisory was published." .
-
-sec:advisoryType a owl:DatatypeProperty ;
-    rdfs:label "advisory type" ;
-    rdfs:comment "The type of advisory" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The type of advisory: security, bugfix, or enhancement." .
-
-
-# #################################################################
-# #
-# #    Object Properties
-# #
-# #################################################################
-
-sec:affectsVersion a owl:ObjectProperty ;
-    owl:inverseOf sec:vulnerableIn ;
-    rdfs:label "affects version" ;
-    rdfs:comment "Links a vulnerability to the package versions it affects" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range pkg:Version ;
-    IAO:0000115 "Associates a vulnerability with the package versions it affects." .
-
-sec:vulnerableIn a owl:ObjectProperty ;
-    rdfs:label "vulnerable in" ;
-    rdfs:comment "Links a package version to the vulnerabilities that affect it" ;
-    rdfs:domain pkg:Version ;
-    rdfs:range sec:Vulnerability ;
-    IAO:0000115 "The inverse relationship of affectsVersion, linking a package version to the vulnerabilities it is affected by. Enables efficient 'what CVEs affect this version' queries without scanning all vulnerabilities." .
-
-sec:fixedInVersion a owl:ObjectProperty ;
-    rdfs:label "fixed in version" ;
-    rdfs:comment "Links a vulnerability to the package version containing its fix" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range pkg:Version ;
-    IAO:0000115 "Associates a vulnerability with the package version that contains its fix." .
-
-sec:addressesVulnerability a owl:ObjectProperty ;
-    rdfs:label "addresses vulnerability" ;
-    rdfs:comment "Links a security advisory to the vulnerabilities it addresses" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range sec:Vulnerability ;
-    IAO:0000115 "Links a security advisory to the vulnerabilities it addresses." .
-
-sec:cveEntity a owl:ObjectProperty ;
-    rdfs:label "CVE entity" ;
-    rdfs:comment "Links a vulnerability or advisory to a shared CVE identifier entity" ;
-    rdfs:range sec:CVE ;
-    IAO:0000115 "Associates a vulnerability or advisory with a reified CVE identifier entity, enabling graph-traversable relationships across all records that reference the same CVE." .
-
-sec:hasCWE a owl:ObjectProperty ;
-    rdfs:label "has CWE" ;
-    rdfs:comment "Links a vulnerability to a CWE weakness category entity" ;
-    rdfs:domain sec:Vulnerability ;
-    IAO:0000115 "Associates a vulnerability with a Common Weakness Enumeration category entity, enabling classification and analysis of vulnerability types." .
-
-sec:advisoryForPackage a owl:ObjectProperty ;
-    rdfs:label "advisory for package" ;
-    rdfs:comment "Links a security advisory to the package it applies to" ;
-    rdfs:domain sec:SecurityAdvisory ;
-    rdfs:range pkg:Package ;
-    IAO:0000115 "Associates a security advisory with the package it applies to." .
-
-
-# #################################################################
-# #
-# #    Cardinality Restrictions
-# #
-# #################################################################
-
-sec:Vulnerability rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty sec:cveId ;
-    owl:cardinality 1
-] .
-
-sec:SecurityAdvisory rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty sec:advisoryId ;
-    owl:cardinality 1
-] .
-
-
-# #################################################################
-# #
-# #    Supply Chain Security Classes
-# #
-# #################################################################
-
-sec:PatchActivity a owl:Class ;
-    rdfs:subClassOf pkg:PackagingActivity ;
-    rdfs:label "Patch Activity" ;
-    rdfs:comment "An activity that applies a security patch to produce a fixed package version" ;
-    IAO:0000115 "A packaging activity that applies one or more security patches to address vulnerabilities, producing a new package version derived from the unpatched version." .
-
-
-# #################################################################
-# #
-# #    Supply Chain Object Properties
-# #
-# #################################################################
-
-sec:patchedFrom a owl:ObjectProperty ;
-    rdfs:subPropertyOf prov:wasDerivedFrom ;
-    rdfs:label "patched from" ;
-    rdfs:comment "Links a patched package version to the unpatched version it was derived from" ;
-    rdfs:domain pkg:Version ;
-    rdfs:range pkg:Version ;
-    IAO:0000115 "Associates a security-patched package version with the prior version from which it was derived, establishing the provenance chain for security updates." .
-
-sec:patchAddresses a owl:ObjectProperty ;
-    rdfs:label "patch addresses" ;
-    rdfs:comment "Links a patch activity to the vulnerabilities it fixes" ;
-    rdfs:domain sec:PatchActivity ;
-    rdfs:range sec:Vulnerability ;
-    IAO:0000115 "Associates a patch activity with the specific vulnerabilities that it addresses." .
-
-sec:patchProducedVersion a owl:ObjectProperty ;
-    rdfs:subPropertyOf prov:wasGeneratedBy ;
-    rdfs:label "patch produced version" ;
-    rdfs:comment "Links a fixed package version to the patch activity that produced it" ;
-    rdfs:domain pkg:Version ;
-    rdfs:range sec:PatchActivity ;
-    IAO:0000115 "Associates a fixed package version with the patch activity that produced it from the prior version." .
-
-sec:affectsPackage a owl:ObjectProperty ;
-    owl:inverseOf sec:hasVulnerabilityReport ;
-    rdfs:label "affects package" ;
-    rdfs:comment "Links a vulnerability directly to an affected package identity" ;
-    rdfs:domain sec:Vulnerability ;
-    rdfs:range pkg:PackageIdentity ;
-    IAO:0000115 "Associates a vulnerability directly with an affected package identity, bypassing version-string joins for direct package-level queries." .
-
-sec:hasVulnerabilityReport a owl:ObjectProperty ;
-    rdfs:label "has vulnerability report" ;
-    rdfs:comment "Links a package identity to vulnerabilities that affect it" ;
-    rdfs:domain pkg:PackageIdentity ;
-    rdfs:range sec:Vulnerability ;
-    IAO:0000115 "The inverse relationship of affectsPackage, linking a package identity to the vulnerabilities that affect it. Enables efficient 'what CVEs affect this package' queries." .

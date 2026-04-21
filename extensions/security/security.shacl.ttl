@@ -1,31 +1,121 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+sec:AffectedRangeShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "SEMVER" "ECOSYSTEM" "GIT" ) ;
+            sh:maxCount 1 ;
+            sh:message "An affected range must have exactly one range type: SEMVER, ECOSYSTEM, or GIT."@en ;
+            sh:minCount 1 ;
+            sh:path sec:rangeType ],
+        [ sh:class sec:RangeEvent ;
+            sh:message "An affected range must have at least one range event."@en ;
+            sh:minCount 1 ;
+            sh:path sec:hasRangeEvent ],
+        [ sh:class pkg:Ecosystem ;
+            sh:maxCount 1 ;
+            sh:message "An affected range can have at most one ecosystem."@en ;
+            sh:path sec:affectsEcosystem ] ;
+    sh:targetClass sec:AffectedRange .
+
+sec:CVEShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A CVE must have exactly one CVE identifier matching pattern CVE-YYYY-NNNNN."@en ;
+            sh:minCount 1 ;
+            sh:path sec:cveId ;
+            sh:pattern "^CVE-\\d{4}-\\d{4,}$" ],
+        [ sh:datatype xsd:string ;
+            sh:message "A CVE must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass sec:CVE .
+
+sec:CVSSScoreShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "2.0" "3.0" "3.1" "4.0" ) ;
+            sh:maxCount 1 ;
+            sh:message "A CVSS score must have exactly one version: 2.0, 3.0, 3.1, or 4.0."@en ;
+            sh:minCount 1 ;
+            sh:path sec:cvssVersion ],
+        [ sh:datatype xsd:float ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 10.0 ;
+            sh:message "A CVSS score must have exactly one base score between 0.0 and 10.0."@en ;
+            sh:minCount 1 ;
+            sh:minInclusive 0.0 ;
+            sh:path sec:baseScore ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A CVSS score can have at most one vector string."@en ;
+            sh:path sec:vectorString ] ;
+    sh:targetClass sec:CVSSScore .
+
 sec:PatchActivityShape a sh:NodeShape ;
     sh:property [ sh:class sec:Vulnerability ;
-            sh:message "A patch activity must address at least one vulnerability." ;
+            sh:message "A patch activity must address at least one vulnerability."@en ;
             sh:minCount 1 ;
             sh:path sec:patchAddresses ] ;
     sh:targetClass sec:PatchActivity .
 
+sec:RangeEventShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "introduced" "fixed" "last_affected" ) ;
+            sh:maxCount 1 ;
+            sh:message "A range event must have exactly one event type: introduced, fixed, or last_affected."@en ;
+            sh:minCount 1 ;
+            sh:path sec:eventType ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A range event must have exactly one version string or commit hash."@en ;
+            sh:minCount 1 ;
+            sh:path sec:eventVersion ] ;
+    sh:targetClass sec:RangeEvent .
+
 sec:SecurityAdvisoryShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A security advisory must have exactly one advisory identifier." ;
+            sh:message "A security advisory must have exactly one advisory identifier."@en ;
             sh:minCount 1 ;
-            sh:path sec:advisoryId ] ;
+            sh:path sec:advisoryId ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "critical" "high" "medium" "low" "none" ) ;
+            sh:maxCount 1 ;
+            sh:message "Advisory severity must be one of: critical, high, medium, low, none."@en ;
+            sh:path sec:advisorySeverity ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "security" "bugfix" "enhancement" ) ;
+            sh:maxCount 1 ;
+            sh:message "Advisory type must be one of: security, bugfix, enhancement."@en ;
+            sh:path sec:advisoryType ] ;
     sh:targetClass sec:SecurityAdvisory .
 
 sec:VulnerabilityShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A vulnerability must have exactly one CVE identifier." ;
-            sh:minCount 1 ;
+            sh:message "A vulnerability can have at most one CVE identifier (not all vulnerabilities have CVEs — OSV uses GHSA/PYSEC/RUSTSEC)."@en ;
             sh:path sec:cveId ],
+        [ sh:datatype xsd:string ;
+            sh:message "A vulnerability must have at least one rdfs:label (the canonical OSV or CVE identifier)."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ],
         [ sh:datatype xsd:float ;
             sh:maxCount 1 ;
-            sh:message "A vulnerability can have at most one CVSS score." ;
-            sh:path sec:cvssScore ] ;
+            sh:message "A vulnerability can have at most one CVSS score (deprecated — use hasCVSSScore for multi-version support)."@en ;
+            sh:path sec:cvssScore ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A vulnerability can have at most one OSV identifier."@en ;
+            sh:path sec:osvId ],
+        [ sh:class sec:AffectedRange ;
+            sh:message "A vulnerability can have zero or more affected ranges."@en ;
+            sh:path sec:hasAffectedRange ],
+        [ sh:class sec:CVSSScore ;
+            sh:message "A vulnerability can have zero or more CVSS scores (one per CVSS version)."@en ;
+            sh:path sec:hasCVSSScore ] ;
     sh:targetClass sec:Vulnerability .
 
