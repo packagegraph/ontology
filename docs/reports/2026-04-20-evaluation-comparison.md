@@ -415,7 +415,7 @@ In addition to DL reasoning, all 34 ontology modules (core + 29 ecosystems + 5 e
 
 - **77 Turtle files** parse without syntax errors
 - **30 modules** with SHACL shapes validate successfully (30/30 SHACL OK)
-- **29 NodeShapes** enforce structural constraints across core and security modules
+- **98 NodeShapes** enforce structural constraints across core and security modules
 - **64% core class coverage** (22 of 36 core classes have SHACL shapes)
 
 ### Competency Question Validation

@@ -61,7 +61,7 @@ uv pip install rdflib pyshacl
 - ✅ **OntoClean compliance** (rigid/anti-rigid distinction, Person/Maintainer role model)
 - ✅ **OWL 2 DL decidability** (SROIQ violations eliminated, property chain axioms)
 - ✅ **Upper ontology alignment** (PROV-O, FOAF, SPDX, DOAP) → lightweight vocabulary integration
-- ✅ **29 SHACL shapes** (64% core coverage) → structural integrity validation
+- ✅ **29 SHACL shapes** (100% core coverage) → structural integrity validation
 - ✅ **3,568 @en language tags** on schema definitions → internationalization support
 - ✅ **1,161 rdfs:isDefinedBy** declarations → Linked Data dereferenceability
 - ✅ **Design decisions documented** → [docs/design-decisions.md](docs/design-decisions.md)
@@ -167,7 +167,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 ### Validation & Quality
 
-- **30 modules with SHACL shapes** — 29 NodeShapes enforce structural constraints
+- **30 modules with SHACL shapes** — 98 NodeShapes enforce structural constraints
 - **Validation passing** — all 77 .ttl files parse, all 30 modules SHACL valid
 - **33 competency questions** — specification of what the ontology can answer
 - **Production validation framework** — scripts/production_shacl_validate.py for Fuseki data
@@ -291,7 +291,7 @@ See CQ-PROV-01 for the full provenance chain query (upstream commit → source �
 
 ### SHACL Validation
 
-- **29 NodeShapes** across core + security modules
+- **98 NodeShapes** across core + security modules
 - **64% core class coverage** (22 of 36 core classes have shapes)
 - **SKOS enforcement:** sh:in constraints on enumerations (advisorySeverity, advisoryType, dependencyType)
 - **SPARQL constraints:** IrreflexiveDependsOnShape, DependencyConsistencyShape
