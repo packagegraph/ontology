@@ -1,146 +1,17 @@
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-# =============================================================================
-# Dependency Type Concept Scheme
-# =============================================================================
+pkg:algo-md5 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "md5" .
 
-pkg:DependencyTypeScheme a skos:ConceptScheme ;
-    rdfs:label "Package Dependency Types" ;
-    dcterms:description "Classification of dependency relationships between packages" ;
-    skos:hasTopConcept pkg:dep-strong, pkg:dep-weak .
-
-pkg:dep-strong a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "strong dependency" ;
-    skos:definition "Dependencies that are mandatory for package function." ;
-    skos:narrower pkg:dep-requires, pkg:dep-build-requires .
-
-pkg:dep-weak a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "weak dependency" ;
-    skos:definition "Dependencies that are optional or enhancing." ;
-    skos:narrower pkg:dep-recommends, pkg:dep-suggests, pkg:dep-enhances, pkg:dep-supplements, pkg:dep-check-requires .
-
-pkg:dep-requires a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "requires" ;
-    skos:definition "A mandatory runtime dependency — the package cannot function without it." ;
-    skos:broader pkg:dep-strong .
-
-pkg:dep-recommends a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "recommends" ;
-    skos:definition "A recommended dependency — installed by default but can be omitted." ;
-    skos:broader pkg:dep-weak .
-
-pkg:dep-suggests a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "suggests" ;
-    skos:definition "A suggested dependency — enhances functionality but rarely needed." ;
-    skos:broader pkg:dep-weak .
-
-pkg:dep-enhances a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "enhances" ;
-    skos:definition "A reverse-suggests — this package enhances another." ;
-    skos:broader pkg:dep-weak .
-
-pkg:dep-supplements a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "supplements" ;
-    skos:definition "A reverse-recommends — this package supplements another." ;
-    skos:broader pkg:dep-weak .
-
-pkg:dep-build-requires a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "build-requires" ;
-    skos:definition "A build-time dependency — needed only during compilation." ;
-    skos:broader pkg:dep-strong .
-
-pkg:dep-check-requires a skos:Concept ;
-    skos:inScheme pkg:DependencyTypeScheme ;
-    skos:prefLabel "check-requires" ;
-    skos:definition "A test-time dependency — needed only for running test suites." ;
-    skos:broader pkg:dep-weak .
-
-# =============================================================================
-# Severity Level Concept Scheme (ordered via skos:notation)
-# =============================================================================
-
-sec:SeverityScheme a skos:ConceptScheme ;
-    rdfs:label "Vulnerability Severity Levels" ;
-    dcterms:description "CVSS-aligned severity classification for security vulnerabilities" ;
-    skos:hasTopConcept sec:sev-critical, sec:sev-important, sec:sev-moderate, sec:sev-low .
-
-sec:sev-critical a skos:Concept ;
-    skos:inScheme sec:SeverityScheme ;
-    skos:prefLabel "critical" ;
-    skos:definition "CVSS 9.0-10.0. Immediate exploitation risk, full system compromise." ;
-    skos:notation "4"^^xsd:integer .
-
-sec:sev-important a skos:Concept ;
-    skos:inScheme sec:SeverityScheme ;
-    skos:prefLabel "important" ;
-    skos:altLabel "high" ;
-    skos:definition "CVSS 7.0-8.9. Significant exploitation risk." ;
-    skos:notation "3"^^xsd:integer .
-
-sec:sev-moderate a skos:Concept ;
-    skos:inScheme sec:SeverityScheme ;
-    skos:prefLabel "moderate" ;
-    skos:altLabel "medium" ;
-    skos:definition "CVSS 4.0-6.9. Limited exploitation risk." ;
-    skos:notation "2"^^xsd:integer .
-
-sec:sev-low a skos:Concept ;
-    skos:inScheme sec:SeverityScheme ;
-    skos:prefLabel "low" ;
-    skos:definition "CVSS 0.1-3.9. Minimal exploitation risk." ;
-    skos:notation "1"^^xsd:integer .
-
-# =============================================================================
-# Advisory Type Concept Scheme
-# =============================================================================
-
-sec:AdvisoryTypeScheme a skos:ConceptScheme ;
-    rdfs:label "Security Advisory Types" ;
-    dcterms:description "Classification of vendor security advisory formats" ;
-    skos:hasTopConcept sec:advtype-rhsa, sec:advtype-dsa, sec:advtype-glsa, sec:advtype-usa .
-
-sec:advtype-rhsa a skos:Concept ;
-    skos:inScheme sec:AdvisoryTypeScheme ;
-    skos:prefLabel "RHSA" ;
-    skos:definition "Red Hat Security Advisory." .
-
-sec:advtype-dsa a skos:Concept ;
-    skos:inScheme sec:AdvisoryTypeScheme ;
-    skos:prefLabel "DSA" ;
-    skos:definition "Debian Security Advisory." .
-
-sec:advtype-glsa a skos:Concept ;
-    skos:inScheme sec:AdvisoryTypeScheme ;
-    skos:prefLabel "GLSA" ;
-    skos:definition "Gentoo Linux Security Advisory." .
-
-sec:advtype-usa a skos:Concept ;
-    skos:inScheme sec:AdvisoryTypeScheme ;
-    skos:prefLabel "USA" ;
-    skos:definition "Ubuntu Security Advisory." .
-
-# =============================================================================
-# Checksum Algorithm Concept Scheme
-# =============================================================================
-
-pkg:ChecksumAlgorithmScheme a skos:ConceptScheme ;
-    rdfs:label "Checksum Algorithms" ;
-    dcterms:description "Cryptographic hash algorithms used for package integrity verification" ;
-    skos:hasTopConcept pkg:algo-sha256, pkg:algo-sha512, pkg:algo-sha1, pkg:algo-md5 .
+pkg:algo-sha1 a skos:Concept ;
+    skos:inScheme pkg:ChecksumAlgorithmScheme ;
+    skos:prefLabel "sha1" .
 
 pkg:algo-sha256 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;
@@ -150,47 +21,174 @@ pkg:algo-sha512 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;
     skos:prefLabel "sha512" .
 
-pkg:algo-sha1 a skos:Concept ;
-    skos:inScheme pkg:ChecksumAlgorithmScheme ;
-    skos:prefLabel "sha1" .
+pkg:dep-build-requires a skos:Concept ;
+    skos:broader pkg:dep-strong ;
+    skos:definition "A build-time dependency — needed only during compilation." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "build-requires" .
 
-pkg:algo-md5 a skos:Concept ;
-    skos:inScheme pkg:ChecksumAlgorithmScheme ;
-    skos:prefLabel "md5" .
+pkg:dep-check-requires a skos:Concept ;
+    skos:broader pkg:dep-weak ;
+    skos:definition "A test-time dependency — needed only for running test suites." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "check-requires" .
 
-# =============================================================================
-# Architecture-Specific Package Exclusion Scheme
-# =============================================================================
+pkg:dep-enhances a skos:Concept ;
+    skos:broader pkg:dep-weak ;
+    skos:definition "A reverse-suggests — this package enhances another." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "enhances" .
 
-pkg:ArchExclusionScheme a skos:ConceptScheme ;
-    rdfs:label "Architecture-Specific Package Exclusions" ;
-    dcterms:description "Packages or package patterns that are known to be unavailable on certain architectures due to hardware or architectural constraints, not build failures" ;
-    skos:hasTopConcept pkg:excl-intel-hw, pkg:excl-amd-gpu, pkg:excl-x86-emulation, pkg:excl-arch-specific-compiler .
+pkg:dep-recommends a skos:Concept ;
+    skos:broader pkg:dep-weak ;
+    skos:definition "A recommended dependency — installed by default but can be omitted." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "recommends" .
 
-pkg:excl-intel-hw a skos:Concept ;
-    skos:inScheme pkg:ArchExclusionScheme ;
-    skos:prefLabel "Intel hardware-specific" ;
-    skos:definition "Packages requiring Intel-specific hardware features (SGX, QAT, oneAPI)" ;
-    skos:example "intel-*, sgx-*, qatzip-*, accel-config" ;
-    skos:note "Excluded on: riscv64, aarch64, ppc64le, s390x" .
+pkg:dep-requires a skos:Concept ;
+    skos:broader pkg:dep-strong ;
+    skos:definition "A mandatory runtime dependency — the package cannot function without it." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "requires" .
+
+pkg:dep-suggests a skos:Concept ;
+    skos:broader pkg:dep-weak ;
+    skos:definition "A suggested dependency — enhances functionality but rarely needed." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "suggests" .
+
+pkg:dep-supplements a skos:Concept ;
+    skos:broader pkg:dep-weak ;
+    skos:definition "A reverse-recommends — this package supplements another." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:prefLabel "supplements" .
 
 pkg:excl-amd-gpu a skos:Concept ;
-    skos:inScheme pkg:ArchExclusionScheme ;
-    skos:prefLabel "AMD GPU compute" ;
     skos:definition "Packages requiring AMD GPU hardware (ROCm compute stack)" ;
     skos:example "rocm-*, amdsmi" ;
-    skos:note "Excluded on: riscv64, ppc64le, s390x" .
-
-pkg:excl-x86-emulation a skos:Concept ;
     skos:inScheme pkg:ArchExclusionScheme ;
-    skos:prefLabel "x86 binary emulation" ;
-    skos:definition "Packages that provide x86/x86_64 binary translation or emulation" ;
-    skos:example "wine, wine-*" ;
-    skos:note "Excluded on: riscv64 (no x86 translation layer)" .
+    skos:note "Excluded on: riscv64, ppc64le, s390x" ;
+    skos:prefLabel "AMD GPU compute" .
 
 pkg:excl-arch-specific-compiler a skos:Concept ;
-    skos:inScheme pkg:ArchExclusionScheme ;
-    skos:prefLabel "Architecture-specific compiler components" ;
     skos:definition "Compiler components that only exist on specific architectures" ;
     skos:example "libquadmath (x86 only — RISC-V uses Q extension)" ;
-    skos:note "Per-package, not pattern-based" .
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:note "Per-package, not pattern-based" ;
+    skos:prefLabel "Architecture-specific compiler components" .
+
+pkg:excl-intel-hw a skos:Concept ;
+    skos:definition "Packages requiring Intel-specific hardware features (SGX, QAT, oneAPI)" ;
+    skos:example "intel-*, sgx-*, qatzip-*, accel-config" ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:note "Excluded on: riscv64, aarch64, ppc64le, s390x" ;
+    skos:prefLabel "Intel hardware-specific" .
+
+pkg:excl-x86-emulation a skos:Concept ;
+    skos:definition "Packages that provide x86/x86_64 binary translation or emulation" ;
+    skos:example "wine, wine-*" ;
+    skos:inScheme pkg:ArchExclusionScheme ;
+    skos:note "Excluded on: riscv64 (no x86 translation layer)" ;
+    skos:prefLabel "x86 binary emulation" .
+
+sec:advtype-dsa a skos:Concept ;
+    skos:definition "Debian Security Advisory." ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "DSA" .
+
+sec:advtype-glsa a skos:Concept ;
+    skos:definition "Gentoo Linux Security Advisory." ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "GLSA" .
+
+sec:advtype-rhsa a skos:Concept ;
+    skos:definition "Red Hat Security Advisory." ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "RHSA" .
+
+sec:advtype-usa a skos:Concept ;
+    skos:definition "Ubuntu Security Advisory." ;
+    skos:inScheme sec:AdvisoryTypeScheme ;
+    skos:prefLabel "USA" .
+
+sec:sev-critical a skos:Concept ;
+    skos:definition "CVSS 9.0-10.0. Immediate exploitation risk, full system compromise." ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:notation 4 ;
+    skos:prefLabel "critical" .
+
+sec:sev-important a skos:Concept ;
+    skos:altLabel "high" ;
+    skos:definition "CVSS 7.0-8.9. Significant exploitation risk." ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:notation 3 ;
+    skos:prefLabel "important" .
+
+sec:sev-low a skos:Concept ;
+    skos:definition "CVSS 0.1-3.9. Minimal exploitation risk." ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:notation 1 ;
+    skos:prefLabel "low" .
+
+sec:sev-moderate a skos:Concept ;
+    skos:altLabel "medium" ;
+    skos:definition "CVSS 4.0-6.9. Limited exploitation risk." ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:notation 2 ;
+    skos:prefLabel "moderate" .
+
+pkg:dep-strong a skos:Concept ;
+    skos:definition "Dependencies that are mandatory for package function." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:narrower pkg:dep-build-requires,
+        pkg:dep-requires ;
+    skos:prefLabel "strong dependency" .
+
+pkg:ArchExclusionScheme a skos:ConceptScheme ;
+    rdfs:label "Architecture-Specific Package Exclusions"@en ;
+    dcterms:description "Packages or package patterns that are known to be unavailable on certain architectures due to hardware or architectural constraints, not build failures" ;
+    skos:hasTopConcept pkg:excl-amd-gpu,
+        pkg:excl-arch-specific-compiler,
+        pkg:excl-intel-hw,
+        pkg:excl-x86-emulation .
+
+pkg:ChecksumAlgorithmScheme a skos:ConceptScheme ;
+    rdfs:label "Checksum Algorithms"@en ;
+    dcterms:description "Cryptographic hash algorithms used for package integrity verification" ;
+    skos:hasTopConcept pkg:algo-md5,
+        pkg:algo-sha1,
+        pkg:algo-sha256,
+        pkg:algo-sha512 .
+
+sec:AdvisoryTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Security Advisory Types"@en ;
+    dcterms:description "Classification of vendor security advisory formats" ;
+    skos:hasTopConcept sec:advtype-dsa,
+        sec:advtype-glsa,
+        sec:advtype-rhsa,
+        sec:advtype-usa .
+
+sec:SeverityScheme a skos:ConceptScheme ;
+    rdfs:label "Vulnerability Severity Levels"@en ;
+    dcterms:description "CVSS-aligned severity classification for security vulnerabilities" ;
+    skos:hasTopConcept sec:sev-critical,
+        sec:sev-important,
+        sec:sev-low,
+        sec:sev-moderate .
+
+pkg:dep-weak a skos:Concept ;
+    skos:definition "Dependencies that are optional or enhancing." ;
+    skos:inScheme pkg:DependencyTypeScheme ;
+    skos:narrower pkg:dep-check-requires,
+        pkg:dep-enhances,
+        pkg:dep-recommends,
+        pkg:dep-suggests,
+        pkg:dep-supplements ;
+    skos:prefLabel "weak dependency" .
+
+pkg:DependencyTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Package Dependency Types"@en ;
+    dcterms:description "Classification of dependency relationships between packages" ;
+    skos:hasTopConcept pkg:dep-strong,
+        pkg:dep-weak .
+
