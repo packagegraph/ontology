@@ -297,11 +297,26 @@ See CQ-PROV-01 for the full provenance chain query (upstream commit → source �
 - **SPARQL constraints:** IrreflexiveDependsOnShape, DependencyConsistencyShape
 - **All examples pass validation** — pyshacl with RDFS inference
 
-### Namespace Convention
+### Namespace Convention and PURLs
 
-- **Ontology definitions:** `https://purl.org/packagegraph/ontology/{module}#`
+PackageGraph uses a **two-tier addressing** pattern:
+
+| Audience | URL | Resolves to |
+|----------|-----|-------------|
+| **Tools** (owl:imports, Protégé, rdflib) | `https://purl.org/packagegraph/ontology/core` | Raw Turtle file (machine-readable) |
+| **Humans** (browsers, citation, discovery) | `https://packagegraph.github.io/ontology/` | Landing page with Widoco documentation |
+
+**Why two tiers?** GitHub Pages is static — no server-side content negotiation. `owl:imports` requires the PURL to resolve to parseable RDF (Turtle), so PURLs must redirect to `.ttl` files. Humans need HTML documentation with WebVOWL visualization, which lives at the GitHub Pages site.
+
+**URIs:**
+
+- **Ontology PURLs (machine):** `https://purl.org/packagegraph/ontology/{module}` → Turtle download
+- **Documentation (human):** `https://packagegraph.github.io/ontology/` → landing page with Widoco docs
+- **Namespace URIs:** `https://purl.org/packagegraph/ontology/{module}#` (hash namespace — dereferencing strips `#fragment` and resolves the PURL)
 - **Data instances:** `https://packagegraph.github.io/d/{type}/{path}`
 - **Named graphs:** `https://packagegraph.github.io/graph/{distribution}/{release}`
+
+**Using in Protégé:** Open `https://purl.org/packagegraph/ontology/core` — the PURL redirects to the Turtle file. The ontology header includes `foaf:homepage <https://packagegraph.github.io/ontology/>` linking to the human-readable documentation.
 
 ---
 

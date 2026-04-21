@@ -1351,9 +1351,11 @@ xsd:date a rdfs:Datatype .
     dcterms:title "Package Management Core Ontology" ;
     rdfs:comment "Core ontology for representing software packages and repositories across different package management systems. Upper ontology positioning: PackageGraph adopts lightweight alignment to established domain vocabularies (PROV-O, FOAF, SPDX, DOAP) rather than full BFO or DOLCE alignment. Software packages are informational artifacts whose lifecycle includes physical manifestations (installed files) and social roles (maintainers). BFO's material-entity/process distinction and DOLCE's cognitive/social focus do not cleanly categorize these hybrid entities. Our alignment strategy prioritizes semantic interoperability with domain-standard vocabularies over foundational ontology categorization. Multilingual metadata design: PackageGraph does not mandate @en language tags on data literals for graph efficiency — package names are technical identifiers, not translatable text, and adding language tags to 62.7M string literals increases storage cost and breaks existing SPARQL queries. However, the ontology acknowledges that multilingual package metadata is a real domain concern: Debian and Ubuntu maintain dedicated localisation teams (debian-l10n-english, ubuntu-translators) providing meticulously translated descriptions for packages like apache2, nginx, and postgresql. The RDF literal language tag mechanism remains available for collectors that ingest such translated metadata — the ontology does not prohibit language-tagged literals, it simply does not require them for monolingual English data."@en ;
     rdfs:seeAlso <http://spdx.org/rdf/terms>,
+        <https://packagegraph.github.io/ontology/>,
         doap:,
         prov:,
         foaf: ;
+    foaf:homepage <https://packagegraph.github.io/ontology/> ;
     owl:versionInfo "0.6.0" .
 
 [] a owl:AllDisjointClasses ;

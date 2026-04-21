@@ -2,9 +2,10 @@
   "purl_domain": "/packagegraph",
   "purl_base": "https://purl.org/packagegraph",
   "target_base": "https://packagegraph.github.io/ontology/downloads",
-  "generated": "2026-04-17T22:51:25Z",
+  "generated": "2026-04-21T03:12:46Z",
   "mappings": [
-    {"purl_path":"/packagegraph","purl_url":"https://purl.org/packagegraph","target_url":"https://packagegraph.github.io/ontology/","namespace_uri":null,"ttl_file":null,"type":"302"},
+    {"purl_path":"/packagegraph","purl_url":"https://purl.org/packagegraph","target_url":"https://packagegraph.github.io/","namespace_uri":null,"ttl_file":null,"type":"302"},
+    {"purl_path":"/packagegraph/ontology","purl_url":"https://purl.org/packagegraph/ontology","target_url":"https://packagegraph.github.io/ontology/","namespace_uri":null,"ttl_file":null,"type":"302"},
     {"purl_path":"/packagegraph/ontology/core","purl_url":"https://purl.org/packagegraph/ontology/core","target_url":"https://packagegraph.github.io/ontology/downloads/core.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/core#","ttl_file":"core.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/dq","purl_url":"https://purl.org/packagegraph/ontology/dq","target_url":"https://packagegraph.github.io/ontology/downloads/dq.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/dq#","ttl_file":"dq.ttl","type":"302"},
     {"purl_path":"/packagegraph/ontology/metrics","purl_url":"https://purl.org/packagegraph/ontology/metrics","target_url":"https://packagegraph.github.io/ontology/downloads/metrics.ttl","namespace_uri":"https://purl.org/packagegraph/ontology/metrics#","ttl_file":"metrics.ttl","type":"302"},

@@ -48,9 +48,12 @@ fi
 mappings=""
 first=true
 
-# Also add the base domain redirect
-mappings="$mappings{\"purl_path\":\"$PURL_DOMAIN\",\"purl_url\":\"$PURL_BASE\",\"target_url\":\"https://packagegraph.github.io/ontology/\",\"namespace_uri\":null,\"ttl_file\":null,\"type\":\"302\"}"
+# Root domain redirect (packagegraph.github.io homepage)
+mappings="$mappings{\"purl_path\":\"$PURL_DOMAIN\",\"purl_url\":\"$PURL_BASE\",\"target_url\":\"https://packagegraph.github.io/\",\"namespace_uri\":null,\"ttl_file\":null,\"type\":\"302\"}"
 first=false
+
+# Ontology landing page (human-readable documentation entry point)
+mappings="$mappings,{\"purl_path\":\"$PURL_DOMAIN/ontology\",\"purl_url\":\"$PURL_BASE/ontology\",\"target_url\":\"https://packagegraph.github.io/ontology/\",\"namespace_uri\":null,\"ttl_file\":null,\"type\":\"302\"}"
 
 for ttl_file in "$ONTOLOGY_DIR"/core/*.ttl "$ONTOLOGY_DIR"/extensions/*/*.ttl "$ONTOLOGY_DIR"/ecosystems/*/*.ttl; do
     # Skip .shacl.ttl and .examples.ttl files
@@ -59,13 +62,23 @@ for ttl_file in "$ONTOLOGY_DIR"/core/*.ttl "$ONTOLOGY_DIR"/extensions/*/*.ttl "$
     [[ ! -f "$ttl_file" ]] && continue
     filename=$(basename "$ttl_file")
 
-    # Extract ontology namespace URI from near the owl:Ontology declaration
-    # Handles both single-line and multi-line declarations
-    ns_uri=$(grep -B2 'owl:Ontology' "$ttl_file" | grep -oE 'https://purl\.org/packagegraph/ontology/[^#]+#' | head -1 || true)
+    # Extract ontology namespace URI — find the prefix used in the owl:Ontology
+    # declaration, then resolve it from the @prefix declarations.
+    # After rdflib re-serialization, declarations use prefix form (npm: a owl:Ontology)
+    # not full URI form (<https://...> a owl:Ontology).
 
-    # Fallback: check @prefix : <...> declaration (for files using default prefix like core.ttl)
+    # Step 1: Find which prefix is used in the owl:Ontology declaration
+    onto_prefix=$(grep 'a owl:Ontology' "$ttl_file" | head -1 | sed 's/ a owl:Ontology.*//' | tr -d ' ' || true)
+
+    # Step 2: Resolve that prefix to its full URI from @prefix declarations
+    ns_uri=""
+    if [[ -n "$onto_prefix" ]]; then
+        ns_uri=$(grep "^@prefix ${onto_prefix}" "$ttl_file" | grep -oE 'https://purl\.org/packagegraph/ontology/[^>]+' | head -1 || true)
+    fi
+
+    # Fallback: full URI form near owl:Ontology (pre-rdflib files)
     if [[ -z "$ns_uri" ]]; then
-        ns_uri=$(grep '^@prefix :' "$ttl_file" | grep -oE 'https://purl\.org/packagegraph/ontology/[^#]+#' | head -1 || true)
+        ns_uri=$(grep -B2 'owl:Ontology' "$ttl_file" | grep -oE 'https://purl\.org/packagegraph/ontology/[^#]+#' | head -1 || true)
     fi
 
     if [[ -z "$ns_uri" ]]; then
