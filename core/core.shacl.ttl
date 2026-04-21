@@ -7,6 +7,12 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+pkg:ABIShape a sh:NodeShape ;
+    sh:property [ sh:message "An ABI must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:ABI .
+
 pkg:ArchitectureShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -30,8 +36,7 @@ pkg:BuildActivityShape a sh:NodeShape ;
     sh:targetClass pkg:BuildActivity .
 
 pkg:CapabilityShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:message "A capability must have at least one label."@en ;
+    sh:property [ sh:message "A capability must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
         [ sh:datatype xsd:string ;
@@ -54,6 +59,12 @@ pkg:ChecksumShape a sh:NodeShape ;
             sh:path pkg:checksumValue ] ;
     sh:targetClass pkg:Checksum .
 
+pkg:ContributionTypeShape a sh:NodeShape ;
+    sh:property [ sh:message "A contribution type must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:ContributionType .
+
 pkg:ContributorAccountShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -66,6 +77,20 @@ pkg:ContributorAccountShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pkg:accountUsername ] ;
     sh:targetClass pkg:ContributorAccount .
+
+pkg:ContributorShape a sh:NodeShape ;
+    sh:property [ sh:class pkg:Person ;
+            sh:maxCount 1 ;
+            sh:message "A contributor role must be held by exactly one person."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:heldBy ] ;
+    sh:targetClass pkg:Contributor .
+
+pkg:DataSnapshotShape a sh:NodeShape ;
+    sh:property [ sh:message "A data snapshot must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:DataSnapshot .
 
 pkg:DependencyConsistencyShape a sh:NodeShape ;
     sh:property [ sh:message "Package has directlyDependsOn but no corresponding hasDependency reification."@en ;
@@ -114,15 +139,13 @@ pkg:DistributionReleaseShape a sh:NodeShape ;
             sh:message "A distribution release must declare its repository type."@en ;
             sh:minCount 1 ;
             sh:path pkg:repoType ],
-        [ sh:datatype xsd:string ;
-            sh:message "A distribution release must have at least one label."@en ;
+        [ sh:message "A distribution release must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:DistributionRelease .
 
 pkg:DistributionShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
+    sh:property [ sh:maxCount 1 ;
             sh:message "A distribution must have exactly one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
@@ -133,6 +156,21 @@ pkg:DistributionShape a sh:NodeShape ;
             sh:path pkg:distributionName ] ;
     sh:targetClass pkg:Distribution .
 
+pkg:EcosystemShape a sh:NodeShape ;
+    sh:property [ sh:message "An ecosystem must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:Ecosystem .
+
+pkg:InstallationActivityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:message "An installation activity should have a start time."@en ;
+            sh:path pkg:activityStartTime ],
+        [ sh:datatype xsd:dateTime ;
+            sh:message "An installation activity should have an end time."@en ;
+            sh:path pkg:activityEndTime ] ;
+    sh:targetClass pkg:InstallationActivity .
+
 pkg:InstalledFileShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -140,6 +178,12 @@ pkg:InstalledFileShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pkg:installedFilePath ] ;
     sh:targetClass pkg:InstalledFile .
+
+pkg:InstructionSetArchitectureShape a sh:NodeShape ;
+    sh:property [ sh:message "An instruction set architecture must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:InstructionSetArchitecture .
 
 pkg:IrreflexiveDependsOnShape a sh:NodeShape ;
     sh:sparql [ sh:message "A package cannot directly depend on itself (irreflexivity constraint)."@en ;
@@ -152,8 +196,7 @@ pkg:IrreflexiveDependsOnShape a sh:NodeShape ;
     sh:targetSubjectsOf pkg:directlyDependsOn .
 
 pkg:LicenseShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:message "A license must have at least one label."@en ;
+    sh:property [ sh:message "A license must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
         [ sh:datatype xsd:string ;
@@ -162,6 +205,12 @@ pkg:LicenseShape a sh:NodeShape ;
             sh:path pkg:spdxId ] ;
     sh:targetClass pkg:License .
 
+pkg:MaintainerRoleShape a sh:NodeShape ;
+    sh:property [ sh:message "A maintainer role must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:MaintainerRole .
+
 pkg:MaintainerShape a sh:NodeShape ;
     sh:property [ sh:class pkg:Person ;
             sh:maxCount 1 ;
@@ -169,6 +218,14 @@ pkg:MaintainerShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pkg:heldBy ] ;
     sh:targetClass pkg:Maintainer .
+
+pkg:MetaPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A meta package must have exactly one package name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass pkg:MetaPackage .
 
 pkg:PURLShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
@@ -184,15 +241,19 @@ pkg:PackageIdentityShape a sh:NodeShape ;
             sh:message "A package identity must have exactly one PURL."@en ;
             sh:minCount 1 ;
             sh:path pkg:purl ],
-        [ sh:datatype xsd:string ;
-            sh:message "A package identity must have at least one label."@en ;
+        [ sh:message "A package identity must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:PackageIdentity .
 
+pkg:PackageManagerShape a sh:NodeShape ;
+    sh:property [ sh:message "A package manager must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:PackageManager .
+
 pkg:PackageSetShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:message "A package set must have at least one label."@en ;
+    sh:property [ sh:message "A package set must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:PackageSet .
@@ -215,6 +276,15 @@ pkg:PackageShape a sh:NodeShape ;
             sh:path pkg:maintainedBy ] ;
     sh:targetClass pkg:Package .
 
+pkg:PackagingActivityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:message "A packaging activity should have a start time."@en ;
+            sh:path pkg:activityStartTime ],
+        [ sh:datatype xsd:dateTime ;
+            sh:message "A packaging activity should have an end time."@en ;
+            sh:path pkg:activityEndTime ] ;
+    sh:targetClass pkg:PackagingActivity .
+
 pkg:PersonShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -223,6 +293,29 @@ pkg:PersonShape a sh:NodeShape ;
             sh:path foaf:name ] ;
     sh:targetClass pkg:Person .
 
+pkg:PhantomPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A phantom package must have exactly one package name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
+    sh:targetClass pkg:PhantomPackage .
+
+pkg:PublishingActivityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:message "A publishing activity should have a start time."@en ;
+            sh:path pkg:activityStartTime ],
+        [ sh:datatype xsd:dateTime ;
+            sh:message "A publishing activity should have an end time."@en ;
+            sh:path pkg:activityEndTime ] ;
+    sh:targetClass pkg:PublishingActivity .
+
+pkg:RepositoryShape a sh:NodeShape ;
+    sh:property [ sh:message "A repository must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:Repository .
+
 pkg:SourcePackageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -230,6 +323,15 @@ pkg:SourcePackageShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pkg:packageName ] ;
     sh:targetClass pkg:SourcePackage .
+
+pkg:TestActivityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:message "A test activity should have a start time."@en ;
+            sh:path pkg:activityStartTime ],
+        [ sh:datatype xsd:dateTime ;
+            sh:message "A test activity should have an end time."@en ;
+            sh:path pkg:activityEndTime ] ;
+    sh:targetClass pkg:TestActivity .
 
 pkg:UpstreamProjectShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
@@ -259,6 +361,13 @@ pkg:VersionShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pkg:versionString ] ;
     sh:targetClass pkg:Version .
+
+pkg:VirtualPackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A virtual package must have exactly one capability name."@en ;
+            sh:path pkg:capabilityName ] ;
+    sh:targetClass pkg:VirtualPackage .
 
 sec:CPEShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;

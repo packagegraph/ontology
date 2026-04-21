@@ -126,9 +126,12 @@ ex:openssl-commit-abc123 a vcs:Commit ;
   vcs:authoredBy ex:openssl-contributor ;
   rdfs:label "OpenSSL 3.2.1 release commit" .
 
+ex:person-openssl-team a pkg:Person ;
+  foaf:name "OpenSSL Release Team" .
+
 ex:openssl-contributor a pkg:Contributor ;
-  foaf:name "OpenSSL Release Team" ;
-  rdfs:label "OpenSSL Release Team" .
+  pkg:heldBy ex:person-openssl-team ;
+  rdfs:label "OpenSSL Release Team (contributor role)" .
 
 # VCS tag (derived from commit via prov:wasDerivedFrom through parentCommit pattern)
 ex:openssl-tag-3.2.1 a vcs:Release ;
