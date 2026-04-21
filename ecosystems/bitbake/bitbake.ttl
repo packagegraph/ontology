@@ -1,275 +1,289 @@
-# Yocto/OpenEmbedded Build System Ontology
-@prefix bitbake: <https://purl.org/packagegraph/ontology/bitbake#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-@prefix sec: <https://purl.org/packagegraph/ontology/security#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bitbake: <https://purl.org/packagegraph/ontology/bitbake#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/bitbake#> a owl:Ontology ;
-    rdfs:label "Yocto/OpenEmbedded Ontology" ;
-    rdfs:comment "Ontology for representing Yocto Project and OpenEmbedded packages, recipes, and build metadata" ;
+bitbake:autotools a bitbake:BitBakeClass ;
+    rdfs:label "autotools"@en ;
+    rdfs:comment "GNU Autotools build system (./configure && make && make install)"@en ;
+    bitbake:className "autotools" .
+
+bitbake:bbappendLayer a owl:ObjectProperty ;
+    rdfs:label "bbappend from layer"@en ;
+    IAO:0000115 "Associates a .bbappend file with the layer it comes from. Reveals cross-layer customization patterns."@en ;
+    rdfs:domain bitbake:BbappendFile ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:Layer .
+
+bitbake:builtForMachine a owl:ObjectProperty ;
+    rdfs:label "built for machine"@en ;
+    IAO:0000115 "Associates an image with the target machine it was built for."@en ;
+    rdfs:domain bitbake:Image ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:Machine .
+
+bitbake:className a owl:DatatypeProperty ;
+    rdfs:label "class name"@en ;
+    IAO:0000115 "The BitBake class name (e.g., 'autotools', 'cmake', 'meson', 'python3', 'systemd'). Identifies the upstream build system and available integration points."@en ;
+    rdfs:domain bitbake:BitBakeClass ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:cmake a bitbake:BitBakeClass ;
+    rdfs:label "cmake"@en ;
+    rdfs:comment "CMake build system"@en ;
+    bitbake:className "cmake" .
+
+bitbake:distroFeatures a owl:DatatypeProperty ;
+    rdfs:label "distro features"@en ;
+    IAO:0000115 "The DISTRO_FEATURES variable listing enabled distribution features (e.g., 'systemd', 'wayland', 'pam'). Space-separated list controlling conditional recipe behavior."@en ;
+    rdfs:domain bitbake:Distro ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:distroName a owl:DatatypeProperty ;
+    rdfs:label "distro name"@en ;
+    IAO:0000115 "The distribution name (e.g., 'poky', 'nodistro') from the DISTRO variable."@en ;
+    rdfs:domain bitbake:Distro ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:extendedBy a owl:ObjectProperty ;
+    rdfs:label "extended by"@en ;
+    IAO:0000115 "Associates a base recipe with .bbappend files that extend or override it. Critical for data science: reveals how downstream layers customize upstream recipes."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:BbappendFile .
+
+bitbake:go a bitbake:BitBakeClass ;
+    rdfs:label "go"@en ;
+    rdfs:comment "Go language build system"@en ;
+    bitbake:className "go" .
+
+bitbake:imageName a owl:DatatypeProperty ;
+    rdfs:label "image name"@en ;
+    IAO:0000115 "The image recipe name (e.g., 'core-image-minimal', 'core-image-sato')."@en ;
+    rdfs:domain bitbake:Image ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:inLayer a owl:ObjectProperty ;
+    rdfs:label "in layer"@en ;
+    IAO:0000115 "Associates a recipe with the OE layer it belongs to."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:Layer .
+
+bitbake:includesPackage a owl:ObjectProperty ;
+    rdfs:label "includes package"@en ;
+    IAO:0000115 "Associates an image with recipes it includes. Defines the package manifest for a deployed device."@en ;
+    rdfs:domain bitbake:Image ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:BitBakeRecipe .
+
+bitbake:inheritsClass a owl:ObjectProperty ;
+    rdfs:label "inherits class"@en ;
+    IAO:0000115 "Associates a recipe with the BitBake class(es) it inherits via the 'inherit' directive. Reveals the build system (autotools, cmake, meson), integration patterns (systemd, update-rc.d), and language runtime (python3, go)."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:BitBakeClass .
+
+bitbake:kernelModule a bitbake:BitBakeClass ;
+    rdfs:label "kernel module"@en ;
+    rdfs:comment "Out-of-tree Linux kernel module build"@en ;
+    bitbake:className "module" .
+
+bitbake:layer a owl:DatatypeProperty ;
+    rdfs:label "layer"@en ;
+    IAO:0000115 "The OE layer containing this recipe (e.g., 'meta-oe', 'poky/meta', 'meta-networking'). Used for data science to analyze layer composition and recipe provenance."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:layerCompatibility a owl:DatatypeProperty ;
+    rdfs:label "layer compatibility"@en ;
+    IAO:0000115 "The Yocto Project release compatibility string (e.g., 'scarthgap', 'nanbield') from LAYERSERIES_COMPAT, identifying which Yocto releases this layer is tested against."@en ;
+    rdfs:domain bitbake:Layer ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:layerName a owl:DatatypeProperty ;
+    rdfs:label "layer name"@en ;
+    IAO:0000115 "The layer directory name (e.g., 'meta-openembedded', 'poky/meta')."@en ;
+    rdfs:domain bitbake:Layer ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:layerPriority a owl:DatatypeProperty ;
+    rdfs:label "layer priority"@en ;
+    IAO:0000115 "The layer priority (from conf/layer.conf) determining precedence when multiple layers provide the same recipe. Higher priority layers override lower priority ones."@en ;
+    rdfs:domain bitbake:Layer ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:integer .
+
+bitbake:licFilesChksum a owl:DatatypeProperty ;
+    rdfs:label "LIC_FILES_CHKSUM"@en ;
+    IAO:0000115 "License file checksum from LIC_FILES_CHKSUM variable, ensuring license text hasn't changed unexpectedly. Critical for embedded license compliance — build fails if checksums don't match, preventing silent license changes."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:machine a owl:DatatypeProperty ;
+    rdfs:label "machine"@en ;
+    IAO:0000115 "Target machine compatibility specification from COMPATIBLE_MACHINE variable. A regex pattern limiting which machines can build this recipe."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:machineArch a owl:DatatypeProperty ;
+    rdfs:label "machine architecture"@en ;
+    IAO:0000115 "The base architecture for this machine (e.g., 'arm', 'aarch64', 'x86_64')."@en ;
+    rdfs:domain bitbake:Machine ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:machineName a owl:DatatypeProperty ;
+    rdfs:label "machine name"@en ;
+    IAO:0000115 "The machine identifier (e.g., 'qemuarm', 'beaglebone', 'raspberrypi4')."@en ;
+    rdfs:domain bitbake:Machine ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:meson a bitbake:BitBakeClass ;
+    rdfs:label "meson"@en ;
+    rdfs:comment "Meson build system"@en ;
+    bitbake:className "meson" .
+
+bitbake:packageFormat a owl:DatatypeProperty ;
+    rdfs:label "package format"@en ;
+    IAO:0000115 "The output package format from PACKAGE_CLASSES (e.g., 'package_ipk', 'package_rpm', 'package_deb')."@en ;
+    rdfs:domain bitbake:Distro ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:pn a owl:DatatypeProperty ;
+    rdfs:label "PN"@en ;
+    IAO:0000115 "The package name (PN variable) — typically derived from the recipe filename before the version underscore."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:pr a owl:DatatypeProperty ;
+    rdfs:label "PR"@en ;
+    IAO:0000115 "The package revision (PR variable) — incremented when the recipe changes but source version doesn't."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:pv a owl:DatatypeProperty ;
+    rdfs:label "PV"@en ;
+    IAO:0000115 "The package version (PV variable) — typically derived from the recipe filename (pkg_1.2.3.bb -> PV=1.2.3)."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:python3 a bitbake:BitBakeClass ;
+    rdfs:label "python3"@en ;
+    rdfs:comment "Python 3 setuptools/flit/poetry build"@en ;
+    bitbake:className "python3" .
+
+bitbake:rust a bitbake:BitBakeClass ;
+    rdfs:label "rust"@en ;
+    rdfs:comment "Rust/Cargo build system"@en ;
+    bitbake:className "rust" .
+
+bitbake:section a owl:DatatypeProperty ;
+    rdfs:label "section"@en ;
+    IAO:0000115 "The recipe section or category (e.g., 'base', 'console/utils', 'devel', 'kernel'). Maps to the SECTION variable in the recipe."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:srcUri a owl:DatatypeProperty ;
+    rdfs:label "SRC_URI"@en ;
+    IAO:0000115 "Source URI(s) from the SRC_URI variable, indicating where to fetch source code (git://, http://, file://). Multiple SRC_URI entries may exist for patches and additional files. Critical for provenance — identifies the upstream source origin."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range xsd:string .
+
+bitbake:systemd a bitbake:BitBakeClass ;
+    rdfs:label "systemd"@en ;
+    rdfs:comment "systemd service integration"@en ;
+    bitbake:className "systemd" .
+
+bitbake:targetsMachine a owl:ObjectProperty ;
+    rdfs:label "targets machine"@en ;
+    IAO:0000115 "Associates a recipe with the target machine(s) it is compatible with."@en ;
+    rdfs:domain bitbake:BitBakeRecipe ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:Machine .
+
+bitbake:usesDistro a owl:ObjectProperty ;
+    rdfs:label "uses distro"@en ;
+    IAO:0000115 "Associates an image with the distribution configuration used to build it."@en ;
+    rdfs:domain bitbake:Image ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:range bitbake:Distro .
+
+bitbake:BbappendFile a owl:Class ;
+    rdfs:label "BitBake Append File"@en ;
+    IAO:0000115 "A .bbappend file in a layer that extends or overrides variables in a base .bb recipe, allowing customization without modifying the original recipe. Multiple .bbappend files from different layers are applied in layer priority order."@en ;
+    rdfs:comment "A .bbappend file extending/overriding a recipe"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf prov:Entity .
+
+bitbake:Distro a owl:Class ;
+    rdfs:label "Yocto Distribution"@en ;
+    IAO:0000115 "A distribution configuration defining global policy choices: package format (ipk/rpm/deb), init system, default distro features, and toolchain settings. Named distros (e.g., poky, nodistro) determine the behavior applied to all recipes."@en ;
+    rdfs:comment "A Yocto distribution configuration (distro.conf)"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf pkg:Distribution .
+
+bitbake:Image a owl:Class ;
+    rdfs:label "Yocto Image"@en ;
+    IAO:0000115 "A complete filesystem image recipe (e.g., core-image-minimal, core-image-sato) that specifies which packages to include in the final bootable image. Images are the top-level build target — they define the package manifest for a deployed device."@en ;
+    rdfs:comment "A complete filesystem image produced by Yocto"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf prov:Entity .
+
+bitbake:Machine a owl:Class ;
+    rdfs:label "Target Machine"@en ;
+    IAO:0000115 "A machine configuration defining the target hardware (e.g., qemuarm, beaglebone, raspberrypi4) including architecture, kernel, bootloader, and device tree. Machine configs drive the cross-compilation toolchain selection and hardware-specific package variants."@en ;
+    rdfs:comment "A Yocto target machine configuration"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf pkg:Architecture .
+
+bitbake:Layer a owl:Class ;
+    rdfs:label "OE Layer"@en ;
+    IAO:0000115 "An OpenEmbedded layer containing recipes, configuration, and classes, organized under a meta-* directory. Layers provide modularity and allow recipes to be overridden or extended via .bbappend files. Layer priority determines which recipe version wins when multiple layers provide the same recipe."@en ;
+    rdfs:comment "An OpenEmbedded layer (meta-*)"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf pkg:Repository .
+
+bitbake:BitBakeClass a owl:Class ;
+    rdfs:label "BitBake Class"@en ;
+    IAO:0000115 "A BitBake class (.bbclass) providing shared build logic. Common classes include autotools, cmake, meson, python3, and systemd. Classes define standard build steps (configure, compile, install) for a particular build system or integration pattern. Critical for data science: the class reveals the upstream build system and integration capabilities."@en ;
+    rdfs:comment "A build class inherited by recipes via the 'inherit' directive"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf owl:Thing .
+
+bitbake:BitBakeRecipe a owl:Class ;
+    rdfs:label "Yocto Recipe"@en ;
+    IAO:0000115 "A BitBake recipe (.bb file) defining source fetch, configuration, compilation, and installation steps for a package in the Yocto/OpenEmbedded build system. Recipes are the fundamental build unit, producing one or more output packages (ipk, rpm, or deb)."@en ;
+    rdfs:comment "A BitBake recipe defining how to build a package"@en ;
+    rdfs:isDefinedBy bitbake: ;
+    rdfs:subClassOf pkg:SourcePackage .
+
+bitbake: a owl:Ontology ;
+    rdfs:label "Yocto/OpenEmbedded Ontology"@en ;
     dcterms:abstract "Models the Yocto Project and OpenEmbedded build systems, including BitBake recipes (.bb files), .bbappend overrides, layers (meta-*), target machine configurations, source fetch URIs, and the image artifacts produced. Yocto is the dominant build system for custom embedded Linux distributions, used in automotive, industrial, and IoT applications." ;
     dcterms:created "2026-04-17"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.6.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    rdfs:comment "Ontology for representing Yocto Project and OpenEmbedded packages, recipes, and build metadata"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.6.0" .
 
-# =============================================================================
-# Classes
-# =============================================================================
-
-bitbake:BitBakeRecipe a owl:Class ;
-    rdfs:subClassOf pkg:SourcePackage ;
-    rdfs:label "Yocto Recipe" ;
-    rdfs:comment "A BitBake recipe defining how to build a package" ;
-    IAO:0000115 "A BitBake recipe (.bb file) defining source fetch, configuration, compilation, and installation steps for a package in the Yocto/OpenEmbedded build system. Recipes are the fundamental build unit, producing one or more output packages (ipk, rpm, or deb)." .
-
-bitbake:Layer a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "OE Layer" ;
-    rdfs:comment "An OpenEmbedded layer (meta-*)" ;
-    IAO:0000115 "An OpenEmbedded layer containing recipes, configuration, and classes, organized under a meta-* directory. Layers provide modularity and allow recipes to be overridden or extended via .bbappend files. Layer priority determines which recipe version wins when multiple layers provide the same recipe." .
-
-bitbake:Machine a owl:Class ;
-    rdfs:subClassOf pkg:Architecture ;
-    rdfs:label "Target Machine" ;
-    rdfs:comment "A Yocto target machine configuration" ;
-    IAO:0000115 "A machine configuration defining the target hardware (e.g., qemuarm, beaglebone, raspberrypi4) including architecture, kernel, bootloader, and device tree. Machine configs drive the cross-compilation toolchain selection and hardware-specific package variants." .
-
-bitbake:BbappendFile a owl:Class ;
-    rdfs:subClassOf prov:Entity ;
-    rdfs:label "BitBake Append File" ;
-    rdfs:comment "A .bbappend file extending/overriding a recipe" ;
-    IAO:0000115 "A .bbappend file in a layer that extends or overrides variables in a base .bb recipe, allowing customization without modifying the original recipe. Multiple .bbappend files from different layers are applied in layer priority order." .
-
-bitbake:BitBakeClass a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "BitBake Class" ;
-    rdfs:comment "A build class inherited by recipes via the 'inherit' directive" ;
-    IAO:0000115 "A BitBake class (.bbclass) providing shared build logic. Common classes include autotools, cmake, meson, python3, and systemd. Classes define standard build steps (configure, compile, install) for a particular build system or integration pattern. Critical for data science: the class reveals the upstream build system and integration capabilities." .
-
-bitbake:Image a owl:Class ;
-    rdfs:subClassOf prov:Entity ;
-    rdfs:label "Yocto Image" ;
-    rdfs:comment "A complete filesystem image produced by Yocto" ;
-    IAO:0000115 "A complete filesystem image recipe (e.g., core-image-minimal, core-image-sato) that specifies which packages to include in the final bootable image. Images are the top-level build target — they define the package manifest for a deployed device." .
-
-bitbake:Distro a owl:Class ;
-    rdfs:subClassOf pkg:Distribution ;
-    rdfs:label "Yocto Distribution" ;
-    rdfs:comment "A Yocto distribution configuration (distro.conf)" ;
-    IAO:0000115 "A distribution configuration defining global policy choices: package format (ipk/rpm/deb), init system, default distro features, and toolchain settings. Named distros (e.g., poky, nodistro) determine the behavior applied to all recipes." .
-
-# =============================================================================
-# Datatype Properties
-# =============================================================================
-
-bitbake:layer a owl:DatatypeProperty ;
-    rdfs:label "layer" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The OE layer containing this recipe (e.g., 'meta-oe', 'poky/meta', 'meta-networking'). Used for data science to analyze layer composition and recipe provenance." .
-
-bitbake:section a owl:DatatypeProperty ;
-    rdfs:label "section" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The recipe section or category (e.g., 'base', 'console/utils', 'devel', 'kernel'). Maps to the SECTION variable in the recipe." .
-
-bitbake:srcUri a owl:DatatypeProperty ;
-    rdfs:label "SRC_URI" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Source URI(s) from the SRC_URI variable, indicating where to fetch source code (git://, http://, file://). Multiple SRC_URI entries may exist for patches and additional files. Critical for provenance — identifies the upstream source origin." .
-
-bitbake:machine a owl:DatatypeProperty ;
-    rdfs:label "machine" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Target machine compatibility specification from COMPATIBLE_MACHINE variable. A regex pattern limiting which machines can build this recipe." .
-
-bitbake:pn a owl:DatatypeProperty ;
-    rdfs:label "PN" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The package name (PN variable) — typically derived from the recipe filename before the version underscore." .
-
-bitbake:pv a owl:DatatypeProperty ;
-    rdfs:label "PV" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The package version (PV variable) — typically derived from the recipe filename (pkg_1.2.3.bb -> PV=1.2.3)." .
-
-bitbake:pr a owl:DatatypeProperty ;
-    rdfs:label "PR" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The package revision (PR variable) — incremented when the recipe changes but source version doesn't." .
-
-bitbake:licFilesChksum a owl:DatatypeProperty ;
-    rdfs:label "LIC_FILES_CHKSUM" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "License file checksum from LIC_FILES_CHKSUM variable, ensuring license text hasn't changed unexpectedly. Critical for embedded license compliance — build fails if checksums don't match, preventing silent license changes." .
-
-bitbake:layerName a owl:DatatypeProperty ;
-    rdfs:label "layer name" ;
-    rdfs:domain bitbake:Layer ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The layer directory name (e.g., 'meta-openembedded', 'poky/meta')." .
-
-bitbake:layerPriority a owl:DatatypeProperty ;
-    rdfs:label "layer priority" ;
-    rdfs:domain bitbake:Layer ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "The layer priority (from conf/layer.conf) determining precedence when multiple layers provide the same recipe. Higher priority layers override lower priority ones." .
-
-bitbake:layerCompatibility a owl:DatatypeProperty ;
-    rdfs:label "layer compatibility" ;
-    rdfs:domain bitbake:Layer ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Yocto Project release compatibility string (e.g., 'scarthgap', 'nanbield') from LAYERSERIES_COMPAT, identifying which Yocto releases this layer is tested against." .
-
-bitbake:machineName a owl:DatatypeProperty ;
-    rdfs:label "machine name" ;
-    rdfs:domain bitbake:Machine ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The machine identifier (e.g., 'qemuarm', 'beaglebone', 'raspberrypi4')." .
-
-bitbake:machineArch a owl:DatatypeProperty ;
-    rdfs:label "machine architecture" ;
-    rdfs:domain bitbake:Machine ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The base architecture for this machine (e.g., 'arm', 'aarch64', 'x86_64')." .
-
-bitbake:className a owl:DatatypeProperty ;
-    rdfs:label "class name" ;
-    rdfs:domain bitbake:BitBakeClass ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The BitBake class name (e.g., 'autotools', 'cmake', 'meson', 'python3', 'systemd'). Identifies the upstream build system and available integration points." .
-
-bitbake:imageName a owl:DatatypeProperty ;
-    rdfs:label "image name" ;
-    rdfs:domain bitbake:Image ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The image recipe name (e.g., 'core-image-minimal', 'core-image-sato')." .
-
-bitbake:distroName a owl:DatatypeProperty ;
-    rdfs:label "distro name" ;
-    rdfs:domain bitbake:Distro ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The distribution name (e.g., 'poky', 'nodistro') from the DISTRO variable." .
-
-bitbake:distroFeatures a owl:DatatypeProperty ;
-    rdfs:label "distro features" ;
-    rdfs:domain bitbake:Distro ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The DISTRO_FEATURES variable listing enabled distribution features (e.g., 'systemd', 'wayland', 'pam'). Space-separated list controlling conditional recipe behavior." .
-
-bitbake:packageFormat a owl:DatatypeProperty ;
-    rdfs:label "package format" ;
-    rdfs:domain bitbake:Distro ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The output package format from PACKAGE_CLASSES (e.g., 'package_ipk', 'package_rpm', 'package_deb')." .
-
-# =============================================================================
-# Object Properties
-# =============================================================================
-
-bitbake:inLayer a owl:ObjectProperty ;
-    rdfs:label "in layer" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range bitbake:Layer ;
-    IAO:0000115 "Associates a recipe with the OE layer it belongs to." .
-
-bitbake:targetsMachine a owl:ObjectProperty ;
-    rdfs:label "targets machine" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range bitbake:Machine ;
-    IAO:0000115 "Associates a recipe with the target machine(s) it is compatible with." .
-
-bitbake:extendedBy a owl:ObjectProperty ;
-    rdfs:label "extended by" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range bitbake:BbappendFile ;
-    IAO:0000115 "Associates a base recipe with .bbappend files that extend or override it. Critical for data science: reveals how downstream layers customize upstream recipes." .
-
-bitbake:inheritsClass a owl:ObjectProperty ;
-    rdfs:label "inherits class" ;
-    rdfs:domain bitbake:BitBakeRecipe ;
-    rdfs:range bitbake:BitBakeClass ;
-    IAO:0000115 "Associates a recipe with the BitBake class(es) it inherits via the 'inherit' directive. Reveals the build system (autotools, cmake, meson), integration patterns (systemd, update-rc.d), and language runtime (python3, go)." .
-
-bitbake:includesPackage a owl:ObjectProperty ;
-    rdfs:label "includes package" ;
-    rdfs:domain bitbake:Image ;
-    rdfs:range bitbake:BitBakeRecipe ;
-    IAO:0000115 "Associates an image with recipes it includes. Defines the package manifest for a deployed device." .
-
-bitbake:builtForMachine a owl:ObjectProperty ;
-    rdfs:label "built for machine" ;
-    rdfs:domain bitbake:Image ;
-    rdfs:range bitbake:Machine ;
-    IAO:0000115 "Associates an image with the target machine it was built for." .
-
-bitbake:usesDistro a owl:ObjectProperty ;
-    rdfs:label "uses distro" ;
-    rdfs:domain bitbake:Image ;
-    rdfs:range bitbake:Distro ;
-    IAO:0000115 "Associates an image with the distribution configuration used to build it." .
-
-bitbake:bbappendLayer a owl:ObjectProperty ;
-    rdfs:label "bbappend from layer" ;
-    rdfs:domain bitbake:BbappendFile ;
-    rdfs:range bitbake:Layer ;
-    IAO:0000115 "Associates a .bbappend file with the layer it comes from. Reveals cross-layer customization patterns." .
-
-# =============================================================================
-# Common BitBake Classes (named individuals for SPARQL aggregation)
-# =============================================================================
-
-bitbake:autotools a bitbake:BitBakeClass ;
-    bitbake:className "autotools" ;
-    rdfs:label "autotools" ;
-    rdfs:comment "GNU Autotools build system (./configure && make && make install)" .
-
-bitbake:cmake a bitbake:BitBakeClass ;
-    bitbake:className "cmake" ;
-    rdfs:label "cmake" ;
-    rdfs:comment "CMake build system" .
-
-bitbake:meson a bitbake:BitBakeClass ;
-    bitbake:className "meson" ;
-    rdfs:label "meson" ;
-    rdfs:comment "Meson build system" .
-
-bitbake:python3 a bitbake:BitBakeClass ;
-    bitbake:className "python3" ;
-    rdfs:label "python3" ;
-    rdfs:comment "Python 3 setuptools/flit/poetry build" .
-
-bitbake:systemd a bitbake:BitBakeClass ;
-    bitbake:className "systemd" ;
-    rdfs:label "systemd" ;
-    rdfs:comment "systemd service integration" .
-
-bitbake:go a bitbake:BitBakeClass ;
-    bitbake:className "go" ;
-    rdfs:label "go" ;
-    rdfs:comment "Go language build system" .
-
-bitbake:rust a bitbake:BitBakeClass ;
-    bitbake:className "rust" ;
-    rdfs:label "rust" ;
-    rdfs:comment "Rust/Cargo build system" .
-
-bitbake:kernelModule a bitbake:BitBakeClass ;
-    bitbake:className "module" ;
-    rdfs:label "kernel module" ;
-    rdfs:comment "Out-of-tree Linux kernel module build" .

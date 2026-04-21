@@ -5,12 +5,12 @@
 maven:MavenArtifactShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Maven artifact must have exactly one groupId." ;
+            sh:message "A Maven artifact must have exactly one groupId."@en ;
             sh:minCount 1 ;
             sh:path maven:groupId ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Maven artifact must have exactly one artifactId." ;
+            sh:message "A Maven artifact must have exactly one artifactId."@en ;
             sh:minCount 1 ;
             sh:path maven:artifactId ] ;
     sh:targetClass maven:MavenArtifact .

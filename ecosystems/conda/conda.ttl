@@ -1,144 +1,156 @@
-# Conda/Anaconda Package Ontology
-@prefix conda: <https://purl.org/packagegraph/ontology/conda#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix conda: <https://purl.org/packagegraph/ontology/conda#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/conda#> a owl:Ontology ;
-    rdfs:label "Conda Package Ontology" ;
-    rdfs:comment "Ontology for representing Conda packages, channels, and environments" ;
+conda:buildNumber a owl:DatatypeProperty ;
+    rdfs:label "build number"@en ;
+    IAO:0000115 "The build iteration number, incremented when the recipe changes without a version bump."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:integer .
+
+conda:buildString a owl:DatatypeProperty ;
+    rdfs:label "build string"@en ;
+    IAO:0000115 "The build string identifying the specific build variant, e.g., 'py312h1234567_0'."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:builtFromRecipe a owl:ObjectProperty ;
+    rdfs:label "built from recipe"@en ;
+    IAO:0000115 "Associates a package with the conda-build recipe used to produce it."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:Recipe .
+
+conda:channelUrl a owl:DatatypeProperty ;
+    rdfs:label "channel URL"@en ;
+    IAO:0000115 "The base URL of the Conda channel."@en ;
+    rdfs:domain conda:Channel ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:constrains a owl:DatatypeProperty ;
+    rdfs:label "constrains"@en ;
+    IAO:0000115 "Version constraints on packages that are NOT required but must satisfy the constraint if installed."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:hasFeedstock a owl:ObjectProperty ;
+    rdfs:label "has feedstock"@en ;
+    IAO:0000115 "Associates a recipe with its conda-forge feedstock repository."@en ;
+    rdfs:domain conda:Recipe ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:Feedstock .
+
+conda:hostDependsOn a owl:ObjectProperty ;
+    rdfs:label "host depends on"@en ;
+    IAO:0000115 "A host dependency needed during build for the target platform (cross-compilation)."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:CondaPackage ;
+    rdfs:subPropertyOf pkg:buildDependsOn .
+
+conda:inChannel a owl:ObjectProperty ;
+    rdfs:label "in channel"@en ;
+    IAO:0000115 "Associates a package with the Conda channel it is distributed through."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:Channel .
+
+conda:inEnvironment a owl:ObjectProperty ;
+    rdfs:label "in environment"@en ;
+    IAO:0000115 "Associates a package with a Conda environment it is installed in."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:Environment .
+
+conda:md5 a owl:DatatypeProperty ;
+    rdfs:label "md5"@en ;
+    IAO:0000115 "MD5 hash of the package archive for integrity verification."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:noarch a owl:DatatypeProperty ;
+    rdfs:label "noarch"@en ;
+    IAO:0000115 "Noarch type: 'python' for pure-Python packages or 'generic' for platform-independent data packages."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:runDependsOn a owl:ObjectProperty ;
+    rdfs:label "run depends on"@en ;
+    IAO:0000115 "A runtime dependency required when the package is installed."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range conda:CondaPackage ;
+    rdfs:subPropertyOf pkg:dependsOn .
+
+conda:sha256 a owl:DatatypeProperty ;
+    rdfs:label "sha256"@en ;
+    IAO:0000115 "SHA-256 hash of the package archive."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:subdirectory a owl:DatatypeProperty ;
+    rdfs:label "subdirectory"@en ;
+    IAO:0000115 "The platform subdirectory (e.g., 'linux-64', 'osx-arm64', 'noarch') the package targets."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:string .
+
+conda:timestamp a owl:DatatypeProperty ;
+    rdfs:label "timestamp"@en ;
+    IAO:0000115 "Unix timestamp of when the package was built."@en ;
+    rdfs:domain conda:CondaPackage ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:range xsd:long .
+
+conda:Environment a owl:Class ;
+    rdfs:label "Environment"@en ;
+    IAO:0000115 "An isolated Conda environment containing a specific set of resolved packages, described by an environment.yml file."@en ;
+    rdfs:comment "A Conda environment with a resolved set of packages"@en ;
+    rdfs:isDefinedBy conda: .
+
+conda:Feedstock a owl:Class ;
+    rdfs:label "Feedstock"@en ;
+    IAO:0000115 "A Git repository in the conda-forge organization containing a Conda recipe and CI configuration for automated package building."@en ;
+    rdfs:comment "A conda-forge feedstock repository"@en ;
+    rdfs:isDefinedBy conda: .
+
+conda:Channel a owl:Class ;
+    rdfs:label "Channel"@en ;
+    IAO:0000115 "A Conda package repository hosting packages for one or more platforms/subdirectories, such as the Anaconda defaults channel or the community-maintained conda-forge."@en ;
+    rdfs:comment "A Conda package channel (e.g., defaults, conda-forge)"@en ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:subClassOf pkg:Repository .
+
+conda:Recipe a owl:Class ;
+    rdfs:label "Recipe"@en ;
+    IAO:0000115 "A build recipe in meta.yaml format describing how to build a Conda package from source, including dependencies, build scripts, and test commands."@en ;
+    rdfs:comment "A conda-build recipe (meta.yaml)"@en ;
+    rdfs:isDefinedBy conda: .
+
+conda:CondaPackage a owl:Class ;
+    rdfs:label "Conda Package"@en ;
+    IAO:0000115 "A package in Conda format (.conda or .tar.bz2) containing pre-built binaries, metadata, and installation scripts, managed by the conda package manager."@en ;
+    rdfs:comment "A package distributed through a Conda channel"@en ;
+    rdfs:isDefinedBy conda: ;
+    rdfs:subClassOf pkg:BinaryPackage .
+
+conda: a owl:Ontology ;
+    rdfs:label "Conda Package Ontology"@en ;
     dcterms:abstract "Models the Conda ecosystem including packages from Anaconda defaults and conda-forge channels, environments, recipes, feedstocks, and noarch packages. Captures build strings, build numbers, and subdirectory/platform targeting." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    rdfs:comment "Ontology for representing Conda packages, channels, and environments"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
-# Classes
-
-conda:CondaPackage a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Conda Package" ;
-    rdfs:comment "A package distributed through a Conda channel" ;
-    IAO:0000115 "A package in Conda format (.conda or .tar.bz2) containing pre-built binaries, metadata, and installation scripts, managed by the conda package manager." .
-
-conda:Channel a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Channel" ;
-    rdfs:comment "A Conda package channel (e.g., defaults, conda-forge)" ;
-    IAO:0000115 "A Conda package repository hosting packages for one or more platforms/subdirectories, such as the Anaconda defaults channel or the community-maintained conda-forge." .
-
-conda:Environment a owl:Class ;
-    rdfs:label "Environment" ;
-    rdfs:comment "A Conda environment with a resolved set of packages" ;
-    IAO:0000115 "An isolated Conda environment containing a specific set of resolved packages, described by an environment.yml file." .
-
-conda:Recipe a owl:Class ;
-    rdfs:label "Recipe" ;
-    rdfs:comment "A conda-build recipe (meta.yaml)" ;
-    IAO:0000115 "A build recipe in meta.yaml format describing how to build a Conda package from source, including dependencies, build scripts, and test commands." .
-
-conda:Feedstock a owl:Class ;
-    rdfs:label "Feedstock" ;
-    rdfs:comment "A conda-forge feedstock repository" ;
-    IAO:0000115 "A Git repository in the conda-forge organization containing a Conda recipe and CI configuration for automated package building." .
-
-# Datatype Properties
-
-conda:buildString a owl:DatatypeProperty ;
-    rdfs:label "build string" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The build string identifying the specific build variant, e.g., 'py312h1234567_0'." .
-
-conda:buildNumber a owl:DatatypeProperty ;
-    rdfs:label "build number" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "The build iteration number, incremented when the recipe changes without a version bump." .
-
-conda:subdirectory a owl:DatatypeProperty ;
-    rdfs:label "subdirectory" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The platform subdirectory (e.g., 'linux-64', 'osx-arm64', 'noarch') the package targets." .
-
-conda:noarch a owl:DatatypeProperty ;
-    rdfs:label "noarch" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Noarch type: 'python' for pure-Python packages or 'generic' for platform-independent data packages." .
-
-conda:constrains a owl:DatatypeProperty ;
-    rdfs:label "constrains" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Version constraints on packages that are NOT required but must satisfy the constraint if installed." .
-
-conda:timestamp a owl:DatatypeProperty ;
-    rdfs:label "timestamp" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:long ;
-    IAO:0000115 "Unix timestamp of when the package was built." .
-
-conda:md5 a owl:DatatypeProperty ;
-    rdfs:label "md5" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "MD5 hash of the package archive for integrity verification." .
-
-conda:sha256 a owl:DatatypeProperty ;
-    rdfs:label "sha256" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "SHA-256 hash of the package archive." .
-
-conda:channelUrl a owl:DatatypeProperty ;
-    rdfs:label "channel URL" ;
-    rdfs:domain conda:Channel ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The base URL of the Conda channel." .
-
-# Object Properties
-
-conda:inChannel a owl:ObjectProperty ;
-    rdfs:label "in channel" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range conda:Channel ;
-    IAO:0000115 "Associates a package with the Conda channel it is distributed through." .
-
-conda:inEnvironment a owl:ObjectProperty ;
-    rdfs:label "in environment" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range conda:Environment ;
-    IAO:0000115 "Associates a package with a Conda environment it is installed in." .
-
-conda:builtFromRecipe a owl:ObjectProperty ;
-    rdfs:label "built from recipe" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range conda:Recipe ;
-    IAO:0000115 "Associates a package with the conda-build recipe used to produce it." .
-
-conda:hasFeedstock a owl:ObjectProperty ;
-    rdfs:label "has feedstock" ;
-    rdfs:domain conda:Recipe ;
-    rdfs:range conda:Feedstock ;
-    IAO:0000115 "Associates a recipe with its conda-forge feedstock repository." .
-
-conda:runDependsOn a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:dependsOn ;
-    rdfs:label "run depends on" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range conda:CondaPackage ;
-    IAO:0000115 "A runtime dependency required when the package is installed." .
-
-conda:hostDependsOn a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:buildDependsOn ;
-    rdfs:label "host depends on" ;
-    rdfs:domain conda:CondaPackage ;
-    rdfs:range conda:CondaPackage ;
-    IAO:0000115 "A host dependency needed during build for the target platform (cross-compilation)." .

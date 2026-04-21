@@ -1,68 +1,56 @@
-# Red Hat Vendor Extension Ontology
-@prefix rh: <https://purl.org/packagegraph/ontology/redhat#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rh: <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+rh:RHELAppStream a owl:NamedIndividual,
+        pkg:PackageSet ;
+    rdfs:label "RHEL AppStream"^^xsd:string ;
+    IAO:0000115 "The set of packages providing user-space applications, programming languages, development tools, and database servers for Red Hat Enterprise Linux, with independent lifecycle management."@en ;
+    rdfs:comment "The application stream package set providing user-space applications and development tools for Red Hat Enterprise Linux"@en .
 
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/redhat#> a owl:Ontology ;
-    rdfs:label "Red Hat Vendor Extension Ontology" ;
-    rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications" ;
+rh:RHELBaseOS a owl:NamedIndividual,
+        pkg:PackageSet ;
+    rdfs:label "RHEL BaseOS"^^xsd:string ;
+    IAO:0000115 "The set of packages that provides the core operating system foundation for Red Hat Enterprise Linux, including the kernel, system libraries, and essential utilities."@en ;
+    rdfs:comment "The base operating system package set providing the core OS functionality for Red Hat Enterprise Linux"@en .
+
+rh:RHIVOSCore a owl:NamedIndividual,
+        pkg:PackageSet ;
+    rdfs:label "RHIVOS Core RPM Set"^^xsd:string ;
+    IAO:0000115 "The curated set of RPM packages that form the core of the Red Hat In-Vehicle Operating System (RHIVOS), representing the minimal package footprint for automotive and embedded deployments."@en ;
+    rdfs:comment "The core package set for Red Hat In-Vehicle Operating System, containing the essential RPMs required for automotive deployments"@en .
+
+rh:acgLifecycleLevel a owl:DatatypeProperty ;
+    rdfs:label "ACG lifecycle level"@en ;
+    IAO:0000115 "An integer classification from the Red Hat Enterprise Linux Application Compatibility Guide that indicates the lifecycle support level and stability commitment for a package, where 0 means the package is excluded from ACG tracking, 1 indicates the highest priority with strong ABI stability guarantees, and 4 indicates the lowest priority with more flexibility for changes between minor releases."@en ;
+    rdfs:comment "The RHEL Application Compatibility Guide lifecycle classification (0=ignore, 1=high priority, 2-3=medium, 4=low priority)"@en ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:isDefinedBy rh: ;
+    rdfs:range xsd:integer .
+
+rh:acgLifecycleLevelLabel a owl:DatatypeProperty ;
+    rdfs:label "ACG lifecycle level label"@en ;
+    IAO:0000115 "A human-readable string label corresponding to the numeric ACG lifecycle level, such as 'ignore', 'high', or 'low'."@en ;
+    rdfs:comment "Human-readable label for the ACG lifecycle level"@en ;
+    rdfs:domain rpm:RPMPackage ;
+    rdfs:isDefinedBy rh: ;
+    rdfs:range xsd:string .
+
+rh: a owl:Ontology ;
+    rdfs:label "Red Hat Vendor Extension Ontology"@en ;
     dcterms:abstract "The Red Hat vendor extension adds RHEL and RHIVOS package set classifications to RPM packages. It models the Application Compatibility Guide (AppCompat) lifecycle tiers, enabling queries that distinguish between packages in the BaseOS, AppStream, and optional repositories, and their support lifecycle status." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
-    dcterms:title "Red Hat Vendor Extension Ontology" ;
     dcterms:description "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> , <https://purl.org/packagegraph/ontology/rpm#> .
+    dcterms:title "Red Hat Vendor Extension Ontology" ;
+    rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications"@en ;
+    owl:imports pkg:,
+        rpm: ;
+    owl:versionInfo "0.5.0" .
 
-
-# #################################################################
-# #
-# #    Named Individuals — Package Sets
-# #
-# #################################################################
-
-rh:RHIVOSCore a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHIVOS Core RPM Set"^^xsd:string ;
-    rdfs:comment "The core package set for Red Hat In-Vehicle Operating System, containing the essential RPMs required for automotive deployments" ;
-    IAO:0000115 "The curated set of RPM packages that form the core of the Red Hat In-Vehicle Operating System (RHIVOS), representing the minimal package footprint for automotive and embedded deployments." .
-
-rh:RHELBaseOS a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHEL BaseOS"^^xsd:string ;
-    rdfs:comment "The base operating system package set providing the core OS functionality for Red Hat Enterprise Linux" ;
-    IAO:0000115 "The set of packages that provides the core operating system foundation for Red Hat Enterprise Linux, including the kernel, system libraries, and essential utilities." .
-
-rh:RHELAppStream a owl:NamedIndividual, pkg:PackageSet ;
-    rdfs:label "RHEL AppStream"^^xsd:string ;
-    rdfs:comment "The application stream package set providing user-space applications and development tools for Red Hat Enterprise Linux" ;
-    IAO:0000115 "The set of packages providing user-space applications, programming languages, development tools, and database servers for Red Hat Enterprise Linux, with independent lifecycle management." .
-
-
-# #################################################################
-# #
-# #    Data Properties
-# #
-# #################################################################
-
-rh:acgLifecycleLevel a owl:DatatypeProperty ;
-    rdfs:label "ACG lifecycle level" ;
-    rdfs:comment "The RHEL Application Compatibility Guide lifecycle classification (0=ignore, 1=high priority, 2-3=medium, 4=low priority)" ;
-    rdfs:domain rpm:RPMPackage ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "An integer classification from the Red Hat Enterprise Linux Application Compatibility Guide that indicates the lifecycle support level and stability commitment for a package, where 0 means the package is excluded from ACG tracking, 1 indicates the highest priority with strong ABI stability guarantees, and 4 indicates the lowest priority with more flexibility for changes between minor releases." .
-
-rh:acgLifecycleLevelLabel a owl:DatatypeProperty ;
-    rdfs:label "ACG lifecycle level label" ;
-    rdfs:comment "Human-readable label for the ACG lifecycle level" ;
-    rdfs:domain rpm:RPMPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A human-readable string label corresponding to the numeric ACG lifecycle level, such as 'ignore', 'high', or 'low'." .

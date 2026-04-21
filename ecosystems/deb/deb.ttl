@@ -1,392 +1,420 @@
-# Debian Package Ontology
-@prefix deb: <https://purl.org/packagegraph/ontology/deb#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix deb: <https://purl.org/packagegraph/ontology/deb#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+deb:DebianRepository a owl:Class ;
+    rdfs:label "Debian Repository"@en ;
+    IAO:0000115 "A repository containing Debian packages that can be accessed and managed through the Advanced Package Tool (APT) system."@en ;
+    rdfs:comment "A repository containing Debian packages accessible via APT"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty vcs:hasUpstreamRepository ;
+            owl:someValuesFrom vcs:Repository ],
+        pkg:Repository .
 
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/deb#> a owl:Ontology ;
-    rdfs:label "Debian Package Ontology" ;
-    rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories" ;
+deb:alternativePackages a owl:ObjectProperty ;
+    rdfs:label "alternative packages"@en ;
+    IAO:0000115 "Identifies packages that can serve as alternatives to satisfy the same dependency or use case."@en ;
+    rdfs:comment "Links to packages that can serve as alternatives"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:breaks a owl:ObjectProperty ;
+    rdfs:label "breaks"@en ;
+    IAO:0000115 "Indicates that this package breaks the functionality of the specified package and they cannot be installed together."@en ;
+    rdfs:comment "Package breaking relationship"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:buildDepends a owl:ObjectProperty ;
+    rdfs:label "build depends"@en ;
+    IAO:0000115 "Specifies packages that must be installed to build this source package on any architecture."@en ;
+    rdfs:comment "Build-time dependency relationship"@en ;
+    rdfs:domain deb:SourcePackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage ;
+    rdfs:subPropertyOf pkg:buildDependsOn .
+
+deb:buildDependsIndep a owl:ObjectProperty ;
+    rdfs:label "build depends indep"@en ;
+    IAO:0000115 "Specifies packages that must be installed to build architecture-independent parts of this source package."@en ;
+    rdfs:comment "Architecture-independent build-time dependency"@en ;
+    rdfs:domain deb:SourcePackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:buildsFrom a owl:ObjectProperty ;
+    rdfs:label "builds from"@en ;
+    IAO:0000115 "Indicates the source package from which this binary package was compiled and built."@en ;
+    rdfs:comment "Links a binary package to the source package it was built from"@en ;
+    rdfs:domain deb:BinaryPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:SourcePackage ;
+    owl:equivalentProperty vcs:packagedFromTag .
+
+deb:conflicts a owl:ObjectProperty ;
+    rdfs:label "conflicts"@en ;
+    IAO:0000115 "Specifies packages that cannot be installed simultaneously with this package due to file conflicts or incompatibility."@en ;
+    rdfs:comment "Package conflict relationship"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage ;
+    rdfs:subPropertyOf pkg:conflicts .
+
+deb:contrib a deb:Component ;
+    rdfs:label "contrib"@en ;
+    rdfs:comment "Contrib component containing DFSG-free software that depends on non-free software"@en .
+
+deb:control a owl:DatatypeProperty ;
+    rdfs:label "control"@en ;
+    IAO:0000115 "Contains the complete text of the Debian control file which includes package metadata such as dependencies, description, and maintainer information."@en ;
+    rdfs:comment "The contents of the control file"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:dependencyType a owl:DatatypeProperty ;
+    owl:deprecated true ;
+    rdfs:label "dependency type"@en ;
+    IAO:0000115 "DEPRECATED: Specifies the type of dependency relationship. Use pkg:dependencyType (ObjectProperty with property URI values) instead for properties-as-taxonomy pattern."@en ;
+    rdfs:comment "DEPRECATED: String-based dependency type. Use pkg:dependencyType with property URIs (pkg:dependsOn, pkg:recommends, pkg:suggests, etc.)"@en ;
+    rdfs:domain deb:Dependency ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:depends a owl:ObjectProperty ;
+    rdfs:label "depends"@en ;
+    IAO:0000115 "Specifies packages that must be installed for this package to function properly; these dependencies are automatically installed by the package manager."@en ;
+    rdfs:comment "Hard dependency relationship"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subPropertyOf pkg:dependsOn .
+
+deb:distributionCodename a owl:DatatypeProperty ;
+    rdfs:label "distribution codename"@en ;
+    IAO:0000115 "The codename identifier for a specific Debian or Ubuntu release, used for package repository organization."@en ;
+    rdfs:comment "The codename of the Debian/Ubuntu release (e.g., bookworm, jammy)"@en ;
+    rdfs:domain deb:Distribution ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:endOfLifeDate a owl:DatatypeProperty ;
+    rdfs:label "end of life date"@en ;
+    IAO:0000115 "The date when official support and security updates for this distribution version will end."@en ;
+    rdfs:comment "The date when support for this distribution ends"@en ;
+    rdfs:domain deb:Distribution ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:dateTime .
+
+deb:enhances a owl:ObjectProperty ;
+    rdfs:label "enhances"@en ;
+    IAO:0000115 "Indicates that this package enhances the functionality of the specified package when both are installed together."@en ;
+    rdfs:comment "Enhancement relationship"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:essential a owl:DatatypeProperty ;
+    rdfs:label "essential"@en ;
+    IAO:0000115 "Indicates whether this package is essential to the system and cannot be removed without potentially breaking the system."@en ;
+    rdfs:comment "Whether the package is essential and cannot be removed"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:boolean .
+
+deb:extra a deb:Priority ;
+    rdfs:label "extra"@en ;
+    rdfs:comment "Extra packages that conflict with others with higher priorities"@en .
+
+deb:fileName a owl:DatatypeProperty ;
+    rdfs:label "file name"@en ;
+    IAO:0000115 "Specifies the full path and name of a file contained within the Debian package."@en ;
+    rdfs:comment "Name of a file contained in the package"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:hasPriority a owl:ObjectProperty ;
+    rdfs:label "has priority"@en ;
+    IAO:0000115 "Associates a package with its Debian priority level indicating its importance for system functionality."@en ;
+    rdfs:comment "Links a package to its Debian priority"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:Priority .
+
+deb:important a deb:Priority ;
+    rdfs:label "important"@en ;
+    rdfs:comment "Important programs including those which one would expect to find on any Unix-like system"@en .
+
+deb:inComponent a owl:ObjectProperty ;
+    rdfs:label "in component"@en ;
+    IAO:0000115 "Associates a package with the Debian component (main, contrib, non-free) it belongs to based on licensing requirements."@en ;
+    rdfs:comment "Links a package to the Debian component it belongs to"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:Component .
+
+deb:inSection a owl:ObjectProperty ;
+    rdfs:label "in section"@en ;
+    IAO:0000115 "Associates a package with its functional category or section within the Debian package classification system."@en ;
+    rdfs:comment "Links a package to the Debian section it belongs to"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:Section .
+
+deb:inSuite a owl:ObjectProperty ;
+    rdfs:label "in suite"@en ;
+    IAO:0000115 "Associates a package with the Debian suite (stable, testing, unstable) it is distributed in."@en ;
+    rdfs:comment "Links a package to the Debian suite it belongs to"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:Suite .
+
+deb:main a deb:Component ;
+    rdfs:label "main"@en ;
+    rdfs:comment "Main Debian component containing DFSG-free software"@en .
+
+deb:multiArch a owl:DatatypeProperty ;
+    rdfs:label "multi-arch"@en ;
+    IAO:0000115 "Specifies the multi-architecture support status of the package, indicating how it can be installed on systems with multiple architectures."@en ;
+    rdfs:comment "Multi-arch support status (same, foreign, allowed)"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:non-free a deb:Component ;
+    rdfs:label "non-free"@en ;
+    rdfs:comment "Non-free component containing software that does not comply with DFSG"@en .
+
+deb:onPackage a owl:ObjectProperty ;
+    rdfs:label "on package"@en ;
+    IAO:0000115 "The target package of a dependency relationship."@en ;
+    rdfs:comment "Links a dependency relationship to the target package"@en ;
+    rdfs:domain deb:Dependency ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:optional a deb:Priority ;
+    rdfs:label "optional"@en ;
+    rdfs:comment "Optional packages that include all those that you might reasonably want to install"@en .
+
+deb:packageFormat a owl:DatatypeProperty ;
+    rdfs:label "package format"@en ;
+    IAO:0000115 "Specifies the version of the Debian package format specification that this package conforms to."@en ;
+    rdfs:comment "The format version of the Debian package"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:partOfDistribution a owl:ObjectProperty ;
+    rdfs:label "part of distribution"@en ;
+    IAO:0000115 "Indicates that a suite is a component of a larger distribution family (e.g., 'bookworm' is part of 'Debian')."@en ;
+    rdfs:comment "Links a suite to its parent distribution"@en ;
+    rdfs:domain deb:Suite ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:Distribution .
+
+deb:postinst a owl:DatatypeProperty ;
+    rdfs:label "postinst"@en ;
+    IAO:0000115 "Contains the shell script that is executed after the package files have been installed, used for configuration and setup tasks."@en ;
+    rdfs:comment "Post-installation script"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:postrm a owl:DatatypeProperty ;
+    rdfs:label "postrm"@en ;
+    IAO:0000115 "Contains the shell script that is executed after the package has been removed, used for cleanup tasks."@en ;
+    rdfs:comment "Post-removal script"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:preinst a owl:DatatypeProperty ;
+    rdfs:label "preinst"@en ;
+    IAO:0000115 "Contains the shell script that is executed before the package files are installed, used for preparation tasks."@en ;
+    rdfs:comment "Pre-installation script"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:prerm a owl:DatatypeProperty ;
+    rdfs:label "prerm"@en ;
+    IAO:0000115 "Contains the shell script that is executed before the package is removed, used for preparation and cleanup tasks."@en ;
+    rdfs:comment "Pre-removal script"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:provides a owl:ObjectProperty ;
+    rdfs:label "provides"@en ;
+    IAO:0000115 "Indicates that this Debian package provides the functionality of another package or virtual package name."@en ;
+    rdfs:comment "Virtual package provision"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage ;
+    rdfs:subPropertyOf pkg:provides .
+
+deb:recommends a owl:ObjectProperty ;
+    rdfs:label "recommends"@en ;
+    IAO:0000115 "Specifies packages that are strongly recommended to be installed alongside this package for optimal functionality, typically installed by default unless explicitly excluded."@en ;
+    rdfs:comment "Recommended package relationship"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:releaseDate a owl:DatatypeProperty ;
+    rdfs:label "release date"@en ;
+    IAO:0000115 "The date when the distribution version was officially released."@en ;
+    rdfs:comment "The official release date of the distribution"@en ;
+    rdfs:domain deb:Distribution ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:dateTime .
+
+deb:required a deb:Priority ;
+    rdfs:label "required"@en ;
+    rdfs:comment "Packages absolutely necessary for the proper functioning of the system"@en .
+
+deb:sourcePackageName a owl:DatatypeProperty ;
+    rdfs:label "source package name"@en ;
+    IAO:0000115 "Specifies the name of the source package from which this binary package was compiled."@en ;
+    rdfs:comment "The name of the source package this binary package was built from"@en ;
+    rdfs:domain deb:BinaryPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:sourceVersion a owl:DatatypeProperty ;
+    rdfs:label "source version"@en ;
+    IAO:0000115 "Specifies the version string of the source package from which this binary package was built."@en ;
+    rdfs:comment "The version of the source package"@en ;
+    rdfs:domain deb:BinaryPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:stable a deb:Suite ;
+    rdfs:label "stable"@en ;
+    rdfs:comment "Debian stable suite"@en .
+
+deb:standard a deb:Priority ;
+    rdfs:label "standard"@en ;
+    rdfs:comment "Standard packages that provide a reasonably small but not too limited character-mode system"@en .
+
+deb:suggests a owl:ObjectProperty ;
+    rdfs:label "suggests"@en ;
+    IAO:0000115 "Specifies packages that may be useful in conjunction with this package but are not essential for its basic functionality."@en ;
+    rdfs:comment "Suggested package relationship"@en ;
+    rdfs:domain deb:DebPackage ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range deb:DebPackage .
+
+deb:supportStatus a owl:DatatypeProperty ;
+    rdfs:label "support status"@en ;
+    IAO:0000115 "Indicates the current support status such as actively supported, long-term support (LTS), or end-of-life (EOL)."@en ;
+    rdfs:comment "The current support status of the distribution (supported, LTS, EOL)"@en ;
+    rdfs:domain deb:Distribution ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:testing a deb:Suite ;
+    rdfs:label "testing"@en ;
+    rdfs:comment "Debian testing suite"@en .
+
+deb:unstable a deb:Suite ;
+    rdfs:label "unstable"@en ;
+    rdfs:comment "Debian unstable suite"@en .
+
+deb:versionConstraint a owl:DatatypeProperty ;
+    rdfs:label "version constraint"@en ;
+    IAO:0000115 "A string specifying the version constraint for a dependency, such as '>= 1.2.3', '< 2.0', or '= 1.5'."@en ;
+    rdfs:comment "A version constraint for a dependency (e.g., '>= 1.2.3')"@en ;
+    rdfs:domain deb:Dependency ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:range xsd:string .
+
+deb:Section a owl:Class ;
+    rdfs:label "Section"@en ;
+    IAO:0000115 "A categorical classification of Debian packages based on their functionality or purpose, such as devel (development tools), utils (utilities), or games (entertainment software)."@en ;
+    rdfs:comment "A Debian package section (e.g., devel, utils, games)"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf owl:Thing .
+
+deb:BinaryPackage a owl:Class ;
+    rdfs:label "Binary Package"@en ;
+    IAO:0000115 "A compiled Debian package in .deb format containing executable binaries, libraries, configuration files, and metadata that can be installed using APT or dpkg."@en ;
+    rdfs:comment "A Debian binary package containing compiled software"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf pkg:BinaryPackage,
+        deb:DebPackage .
+
+deb:Dependency a owl:Class ;
+    rdfs:label "Debian Dependency"@en ;
+    IAO:0000115 "Represents a dependency relationship between Debian packages, which can include version constraints and other specifiers."@en ;
+    rdfs:comment "A dependency relationship in Debian, potentially with version constraints"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf pkg:Dependency .
+
+deb:SourcePackage a owl:Class ;
+    rdfs:label "Source Package"@en ;
+    IAO:0000115 "A Debian package containing source code, patches, and build instructions (debian/ directory) used to create one or more binary packages."@en ;
+    rdfs:comment "A Debian source package containing source code and build instructions"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf pkg:SourcePackage,
+        deb:DebPackage .
+
+deb:Component a owl:Class ;
+    rdfs:label "Component"@en ;
+    IAO:0000115 "A classification of Debian packages based on their licensing and dependency requirements, such as main (DFSG-free), contrib (DFSG-free but depends on non-free), or non-free (not DFSG-compliant)."@en ;
+    rdfs:comment "A Debian component (e.g., main, contrib, non-free)"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf owl:Thing .
+
+deb:Distribution a owl:Class ;
+    rdfs:label "Distribution"@en ;
+    IAO:0000115 "A Linux distribution that is based on the Debian package management system."@en ;
+    rdfs:comment "A Debian-based distribution (e.g., Debian, Ubuntu)"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf owl:Thing .
+
+deb:Suite a owl:Class ;
+    rdfs:label "Suite"@en ;
+    IAO:0000115 "A Debian distribution release designation indicating the stability and testing status of packages, such as stable (thoroughly tested), testing (preparing for next stable), or unstable (latest development)."@en ;
+    rdfs:comment "A Debian suite (e.g., stable, testing, unstable)"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf owl:Thing .
+
+deb:Priority a owl:Class ;
+    rdfs:label "Priority"@en ;
+    IAO:0000115 "A classification indicating the importance of a Debian package for system functionality, ranging from required (essential for basic system operation) to extra (may conflict with higher priority packages)."@en ;
+    rdfs:comment "A Debian package priority (e.g., required, important, standard, optional, extra)"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf owl:Thing .
+
+deb:DebPackage a owl:Class ;
+    rdfs:label "Debian Package"@en ;
+    IAO:0000115 "A software package in Debian format (.deb) that can be managed by the Debian package management system including APT and dpkg."@en ;
+    rdfs:comment "A package in Debian .deb format"@en ;
+    rdfs:isDefinedBy deb: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty pkg:partOfDistribution ;
+            owl:someValuesFrom pkg:Distribution ],
+        pkg:Package .
+
+deb: a owl:Ontology ;
+    rdfs:label "Debian Package Ontology"@en ;
     dcterms:abstract "The Debian extension specializes PackageGraph Core for the Debian and Ubuntu ecosystem. It adds classes for suites (stable, testing, unstable), components (main, contrib, non-free), sections, and priorities, and models Debian-specific dependency types (Depends, Pre-Depends, Recommends, Suggests, Conflicts, Breaks, Enhances, Provides). Instances are dual-typed as both pkg:BinaryPackage and deb:BinaryPackage for cross-distribution interoperability." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
-    dcterms:title "Debian Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Debian packages, APT repositories, package dependencies, and Debian-specific metadata including suites, components, sections, and priorities." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> , <https://purl.org/packagegraph/ontology/vcs#> .
+    dcterms:title "Debian Package Ontology" ;
+    rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories"@en ;
+    owl:imports pkg:,
+        vcs: ;
+    owl:versionInfo "0.5.0" .
 
-# Debian-specific Classes
-deb:DebPackage a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Debian Package" ;
-    rdfs:comment "A package in Debian .deb format" ;
-    IAO:0000115 "A software package in Debian format (.deb) that can be managed by the Debian package management system including APT and dpkg." .
-
-deb:SourcePackage a owl:Class ;
-    rdfs:subClassOf deb:DebPackage, pkg:SourcePackage ;
-    rdfs:label "Source Package" ;
-    rdfs:comment "A Debian source package containing source code and build instructions" ;
-    IAO:0000115 "A Debian package containing source code, patches, and build instructions (debian/ directory) used to create one or more binary packages." .
-
-deb:BinaryPackage a owl:Class ;
-    rdfs:subClassOf deb:DebPackage, pkg:BinaryPackage ;
-    rdfs:label "Binary Package" ;
-    rdfs:comment "A Debian binary package containing compiled software" ;
-    IAO:0000115 "A compiled Debian package in .deb format containing executable binaries, libraries, configuration files, and metadata that can be installed using APT or dpkg." .
-
-deb:DebianRepository a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Debian Repository" ;
-    rdfs:comment "A repository containing Debian packages accessible via APT" ;
-    IAO:0000115 "A repository containing Debian packages that can be accessed and managed through the Advanced Package Tool (APT) system." .
-
-deb:Suite a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Suite" ;
-    rdfs:comment "A Debian suite (e.g., stable, testing, unstable)" ;
-    IAO:0000115 "A Debian distribution release designation indicating the stability and testing status of packages, such as stable (thoroughly tested), testing (preparing for next stable), or unstable (latest development)." .
-
-deb:Distribution a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Distribution" ;
-    rdfs:comment "A Debian-based distribution (e.g., Debian, Ubuntu)" ;
-    IAO:0000115 "A Linux distribution that is based on the Debian package management system." .
-
-deb:Component a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Component" ;
-    rdfs:comment "A Debian component (e.g., main, contrib, non-free)" ;
-    IAO:0000115 "A classification of Debian packages based on their licensing and dependency requirements, such as main (DFSG-free), contrib (DFSG-free but depends on non-free), or non-free (not DFSG-compliant)." .
-
-deb:Section a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Section" ;
-    rdfs:comment "A Debian package section (e.g., devel, utils, games)" ;
-    IAO:0000115 "A categorical classification of Debian packages based on their functionality or purpose, such as devel (development tools), utils (utilities), or games (entertainment software)." .
-
-deb:Priority a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Priority" ;
-    rdfs:comment "A Debian package priority (e.g., required, important, standard, optional, extra)" ;
-    IAO:0000115 "A classification indicating the importance of a Debian package for system functionality, ranging from required (essential for basic system operation) to extra (may conflict with higher priority packages)." .
-
-deb:Dependency a owl:Class ;
-    rdfs:subClassOf pkg:Dependency ;
-    rdfs:label "Debian Dependency" ;
-    rdfs:comment "A dependency relationship in Debian, potentially with version constraints" ;
-    IAO:0000115 "Represents a dependency relationship between Debian packages, which can include version constraints and other specifiers." .
-
-# Debian-specific Properties
-deb:packageFormat a owl:DatatypeProperty ;
-    rdfs:label "package format" ;
-    rdfs:comment "The format version of the Debian package" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the version of the Debian package format specification that this package conforms to." .
-
-deb:control a owl:DatatypeProperty ;
-    rdfs:label "control" ;
-    rdfs:comment "The contents of the control file" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Contains the complete text of the Debian control file which includes package metadata such as dependencies, description, and maintainer information." .
-
-deb:preinst a owl:DatatypeProperty ;
-    rdfs:label "preinst" ;
-    rdfs:comment "Pre-installation script" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Contains the shell script that is executed before the package files are installed, used for preparation tasks." .
-
-deb:postinst a owl:DatatypeProperty ;
-    rdfs:label "postinst" ;
-    rdfs:comment "Post-installation script" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Contains the shell script that is executed after the package files have been installed, used for configuration and setup tasks." .
-
-deb:prerm a owl:DatatypeProperty ;
-    rdfs:label "prerm" ;
-    rdfs:comment "Pre-removal script" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Contains the shell script that is executed before the package is removed, used for preparation and cleanup tasks." .
-
-deb:postrm a owl:DatatypeProperty ;
-    rdfs:label "postrm" ;
-    rdfs:comment "Post-removal script" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Contains the shell script that is executed after the package has been removed, used for cleanup tasks." .
-
-deb:essential a owl:DatatypeProperty ;
-    rdfs:label "essential" ;
-    rdfs:comment "Whether the package is essential and cannot be removed" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Indicates whether this package is essential to the system and cannot be removed without potentially breaking the system." .
-
-deb:multiArch a owl:DatatypeProperty ;
-    rdfs:label "multi-arch" ;
-    rdfs:comment "Multi-arch support status (same, foreign, allowed)" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the multi-architecture support status of the package, indicating how it can be installed on systems with multiple architectures." .
-
-deb:sourcePackageName a owl:DatatypeProperty ;
-    rdfs:label "source package name" ;
-    rdfs:comment "The name of the source package this binary package was built from" ;
-    rdfs:domain deb:BinaryPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the name of the source package from which this binary package was compiled." .
-
-deb:sourceVersion a owl:DatatypeProperty ;
-    rdfs:label "source version" ;
-    rdfs:comment "The version of the source package" ;
-    rdfs:domain deb:BinaryPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the version string of the source package from which this binary package was built." .
-
-deb:fileName a owl:DatatypeProperty ;
-    rdfs:label "file name" ;
-    rdfs:comment "Name of a file contained in the package" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the full path and name of a file contained within the Debian package." .
-
-# Object Properties
-deb:inSuite a owl:ObjectProperty ;
-    rdfs:label "in suite" ;
-    rdfs:comment "Links a package to the Debian suite it belongs to" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:Suite ;
-    IAO:0000115 "Associates a package with the Debian suite (stable, testing, unstable) it is distributed in." .
-
-deb:partOfDistribution a owl:ObjectProperty ;
-    rdfs:label "part of distribution" ;
-    rdfs:comment "Links a suite to its parent distribution" ;
-    rdfs:domain deb:Suite ;
-    rdfs:range deb:Distribution ;
-    IAO:0000115 "Indicates that a suite is a component of a larger distribution family (e.g., 'bookworm' is part of 'Debian')." .
-
-deb:inComponent a owl:ObjectProperty ;
-    rdfs:label "in component" ;
-    rdfs:comment "Links a package to the Debian component it belongs to" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:Component ;
-    IAO:0000115 "Associates a package with the Debian component (main, contrib, non-free) it belongs to based on licensing requirements." .
-
-deb:inSection a owl:ObjectProperty ;
-    rdfs:label "in section" ;
-    rdfs:comment "Links a package to the Debian section it belongs to" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:Section ;
-    IAO:0000115 "Associates a package with its functional category or section within the Debian package classification system." .
-
-deb:hasPriority a owl:ObjectProperty ;
-    rdfs:label "has priority" ;
-    rdfs:comment "Links a package to its Debian priority" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:Priority ;
-    IAO:0000115 "Associates a package with its Debian priority level indicating its importance for system functionality." .
-
-deb:buildsFrom a owl:ObjectProperty ;
-    owl:equivalentProperty vcs:packagedFromTag ;
-    rdfs:label "builds from" ;
-    rdfs:comment "Links a binary package to the source package it was built from" ;
-    rdfs:domain deb:BinaryPackage ;
-    rdfs:range deb:SourcePackage ;
-    IAO:0000115 "Indicates the source package from which this binary package was compiled and built." .
-
-deb:buildDepends a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:buildDependsOn ;
-    rdfs:label "build depends" ;
-    rdfs:comment "Build-time dependency relationship" ;
-    rdfs:domain deb:SourcePackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Specifies packages that must be installed to build this source package on any architecture." .
-
-deb:buildDependsIndep a owl:ObjectProperty ;
-    rdfs:label "build depends indep" ;
-    rdfs:comment "Architecture-independent build-time dependency" ;
-    rdfs:domain deb:SourcePackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Specifies packages that must be installed to build architecture-independent parts of this source package." .
-
-deb:onPackage a owl:ObjectProperty ;
-    rdfs:label "on package" ;
-    rdfs:comment "Links a dependency relationship to the target package" ;
-    rdfs:domain deb:Dependency ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "The target package of a dependency relationship." .
-
-deb:versionConstraint a owl:DatatypeProperty ;
-    rdfs:label "version constraint" ;
-    rdfs:comment "A version constraint for a dependency (e.g., '>= 1.2.3')" ;
-    rdfs:domain deb:Dependency ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A string specifying the version constraint for a dependency, such as '>= 1.2.3', '< 2.0', or '= 1.5'." .
-
-# Cross-format property equivalences are declared within property definitions below
-
-# Link to core VCS and ecosystem concepts
-deb:DebPackage rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty pkg:partOfDistribution ;
-    owl:someValuesFrom pkg:Distribution
-] .
-
-deb:DebianRepository rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty vcs:hasUpstreamRepository ;
-    owl:someValuesFrom vcs:Repository
-] .
-
-# Enhanced distribution analysis
-deb:distributionCodename a owl:DatatypeProperty ;
-    rdfs:label "distribution codename" ;
-    rdfs:comment "The codename of the Debian/Ubuntu release (e.g., bookworm, jammy)" ;
-    rdfs:domain deb:Distribution ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The codename identifier for a specific Debian or Ubuntu release, used for package repository organization." .
-
-deb:supportStatus a owl:DatatypeProperty ;
-    rdfs:label "support status" ;
-    rdfs:comment "The current support status of the distribution (supported, LTS, EOL)" ;
-    rdfs:domain deb:Distribution ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Indicates the current support status such as actively supported, long-term support (LTS), or end-of-life (EOL)." .
-
-deb:releaseDate a owl:DatatypeProperty ;
-    rdfs:label "release date" ;
-    rdfs:comment "The official release date of the distribution" ;
-    rdfs:domain deb:Distribution ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when the distribution version was officially released." .
-
-deb:endOfLifeDate a owl:DatatypeProperty ;
-    rdfs:label "end of life date" ;
-    rdfs:comment "The date when support for this distribution ends" ;
-    rdfs:domain deb:Distribution ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when official support and security updates for this distribution version will end." .
-
-# Package relationship analysis enhancements
-deb:dependencyType a owl:DatatypeProperty ;
-    rdfs:label "dependency type" ;
-    rdfs:comment "The type of dependency relationship (depends, recommends, suggests, etc.)" ;
-    rdfs:domain deb:Dependency ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Specifies the type of dependency relationship such as hard dependency, recommendation, or suggestion." .
-
-deb:alternativePackages a owl:ObjectProperty ;
-    rdfs:label "alternative packages" ;
-    rdfs:comment "Links to packages that can serve as alternatives" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Identifies packages that can serve as alternatives to satisfy the same dependency or use case." .
-
-# Dependency Types
-deb:depends a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:dependsOn ;
-    owl:equivalentProperty pkg:debDepends ;
-    rdfs:label "depends" ;
-    rdfs:comment "Hard dependency relationship" ;
-    IAO:0000115 "Specifies packages that must be installed for this package to function properly; these dependencies are automatically installed by the package manager." .
-
-deb:conflicts a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:conflicts ;
-    owl:equivalentProperty pkg:debConflicts ;
-    rdfs:label "conflicts" ;
-    rdfs:comment "Package conflict relationship" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Specifies packages that cannot be installed simultaneously with this package due to file conflicts or incompatibility." .
-
-deb:recommends a owl:ObjectProperty ;
-    rdfs:label "recommends" ;
-    rdfs:comment "Recommended package relationship" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Specifies packages that are strongly recommended to be installed alongside this package for optimal functionality, typically installed by default unless explicitly excluded." .
-
-deb:suggests a owl:ObjectProperty ;
-    rdfs:label "suggests" ;
-    rdfs:comment "Suggested package relationship" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Specifies packages that may be useful in conjunction with this package but are not essential for its basic functionality." .
-
-deb:enhances a owl:ObjectProperty ;
-    rdfs:label "enhances" ;
-    rdfs:comment "Enhancement relationship" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Indicates that this package enhances the functionality of the specified package when both are installed together." .
-
-deb:breaks a owl:ObjectProperty ;
-    rdfs:label "breaks" ;
-    rdfs:comment "Package breaking relationship" ;
-    rdfs:domain deb:DebPackage ;
-    rdfs:range deb:DebPackage ;
-    IAO:0000115 "Indicates that this package breaks the functionality of the specified package and they cannot be installed together." .
-
-# Common Suite instances
-deb:stable a deb:Suite ;
-    rdfs:label "stable" ;
-    rdfs:comment "Debian stable suite" .
-
-deb:testing a deb:Suite ;
-    rdfs:label "testing" ;
-    rdfs:comment "Debian testing suite" .
-
-deb:unstable a deb:Suite ;
-    rdfs:label "unstable" ;
-    rdfs:comment "Debian unstable suite" .
-
-# Common Component instances
-deb:main a deb:Component ;
-    rdfs:label "main" ;
-    rdfs:comment "Main Debian component containing DFSG-free software" .
-
-deb:contrib a deb:Component ;
-    rdfs:label "contrib" ;
-    rdfs:comment "Contrib component containing DFSG-free software that depends on non-free software" .
-
-deb:non-free a deb:Component ;
-    rdfs:label "non-free" ;
-    rdfs:comment "Non-free component containing software that does not comply with DFSG" .
-
-# Common Priority instances
-deb:required a deb:Priority ;
-    rdfs:label "required" ;
-    rdfs:comment "Packages absolutely necessary for the proper functioning of the system" .
-
-deb:important a deb:Priority ;
-    rdfs:label "important" ;
-    rdfs:comment "Important programs including those which one would expect to find on any Unix-like system" .
-
-deb:standard a deb:Priority ;
-    rdfs:label "standard" ;
-    rdfs:comment "Standard packages that provide a reasonably small but not too limited character-mode system" .
-
-deb:optional a deb:Priority ;
-    rdfs:label "optional" ;
-    rdfs:comment "Optional packages that include all those that you might reasonably want to install" .
-
-deb:extra a deb:Priority ;
-    rdfs:label "extra" ;
-    rdfs:comment "Extra packages that conflict with others with higher priorities" .

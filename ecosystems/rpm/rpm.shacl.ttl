@@ -5,7 +5,7 @@
 rpm:PatchShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A patch must have exactly one patch name." ;
+            sh:message "A patch must have exactly one patch name."@en ;
             sh:minCount 1 ;
             sh:path rpm:patchName ] ;
     sh:targetClass rpm:Patch .

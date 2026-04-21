@@ -1,97 +1,101 @@
-# NuGet Package Ontology
-@prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/nuget#> a owl:Ontology ;
-    rdfs:label "NuGet Package Ontology" ;
-    rdfs:comment "Ontology for representing NuGet packages and the .NET ecosystem" ;
+nuget:frameworkDependency a owl:ObjectProperty ;
+    rdfs:label "framework dependency"@en ;
+    IAO:0000115 "A framework-specific dependency (applies to specific target frameworks)."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range nuget:NuGetPackage ;
+    rdfs:subPropertyOf pkg:dependsOn .
+
+nuget:iconUrl a owl:DatatypeProperty ;
+    rdfs:label "icon URL"@en ;
+    IAO:0000115 "URL to the package icon image."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:anyURI .
+
+nuget:isPrerelease a owl:DatatypeProperty ;
+    rdfs:label "is prerelease"@en ;
+    IAO:0000115 "Whether this is a prerelease version (e.g., alpha, beta, rc)."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:boolean .
+
+nuget:listed a owl:DatatypeProperty ;
+    rdfs:label "listed"@en ;
+    IAO:0000115 "Whether the package is listed (visible in search). Unlisted packages are hidden but still downloadable."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:boolean .
+
+nuget:packageId a owl:DatatypeProperty ;
+    rdfs:label "package ID"@en ;
+    IAO:0000115 "The NuGet package identifier (case-insensitive, typically dotted like 'Newtonsoft.Json')."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:string .
+
+nuget:projectUrl a owl:DatatypeProperty ;
+    rdfs:label "project URL"@en ;
+    IAO:0000115 "The project homepage URL."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:anyURI .
+
+nuget:publishedTo a owl:ObjectProperty ;
+    rdfs:label "published to"@en ;
+    IAO:0000115 "Associates a package with the NuGet feed it was published to."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range nuget:NuGetFeed .
+
+nuget:tags a owl:DatatypeProperty ;
+    rdfs:label "tags"@en ;
+    IAO:0000115 "Space-separated tags describing the package."@en ;
+    rdfs:domain nuget:NuGetPackage ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:string .
+
+nuget:targetFramework a owl:DatatypeProperty ;
+    rdfs:label "target framework"@en ;
+    IAO:0000115 "The target framework moniker (e.g., 'net6.0', 'netstandard2.0', 'net48')."@en ;
+    rdfs:domain nuget:FrameworkGroup ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:range xsd:string .
+
+nuget:FrameworkGroup a owl:Class ;
+    rdfs:label "Framework Group"@en ;
+    IAO:0000115 "A set of dependencies that apply to a specific target framework (e.g., net6.0, netstandard2.0)."@en ;
+    rdfs:comment "A target framework dependency group"@en ;
+    rdfs:isDefinedBy nuget: .
+
+nuget:NuGetFeed a owl:Class ;
+    rdfs:label "NuGet Feed"@en ;
+    IAO:0000115 "A package feed serving NuGet packages, such as nuget.org or a private Azure Artifacts/Artifactory feed."@en ;
+    rdfs:comment "A NuGet package feed (nuget.org or private)"@en ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:subClassOf pkg:Repository .
+
+nuget:NuGetPackage a owl:Class ;
+    rdfs:label "NuGet Package"@en ;
+    IAO:0000115 "A .NET library or application distributed through NuGet Gallery or private feeds, described by a .nuspec file."@en ;
+    rdfs:comment "A package published to a NuGet feed"@en ;
+    rdfs:isDefinedBy nuget: ;
+    rdfs:subClassOf pkg:BinaryPackage .
+
+nuget: a owl:Ontology ;
+    rdfs:label "NuGet Package Ontology"@en ;
     dcterms:abstract "Models NuGet Gallery packages including target frameworks, prerelease versions, icon URLs, tags, and framework-specific dependencies. Instances are dual-typed as both pkg:Package and nuget:NuGetPackage." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.1" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    rdfs:comment "Ontology for representing NuGet packages and the .NET ecosystem"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.1" .
 
-# Classes
-
-nuget:NuGetPackage a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "NuGet Package" ;
-    rdfs:comment "A package published to a NuGet feed" ;
-    IAO:0000115 "A .NET library or application distributed through NuGet Gallery or private feeds, described by a .nuspec file." .
-
-nuget:NuGetFeed a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "NuGet Feed" ;
-    rdfs:comment "A NuGet package feed (nuget.org or private)" ;
-    IAO:0000115 "A package feed serving NuGet packages, such as nuget.org or a private Azure Artifacts/Artifactory feed." .
-
-nuget:FrameworkGroup a owl:Class ;
-    rdfs:label "Framework Group" ;
-    rdfs:comment "A target framework dependency group" ;
-    IAO:0000115 "A set of dependencies that apply to a specific target framework (e.g., net6.0, netstandard2.0)." .
-
-# Datatype Properties
-
-nuget:packageId a owl:DatatypeProperty ;
-    rdfs:label "package ID" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The NuGet package identifier (case-insensitive, typically dotted like 'Newtonsoft.Json')." .
-
-nuget:targetFramework a owl:DatatypeProperty ;
-    rdfs:label "target framework" ;
-    rdfs:domain nuget:FrameworkGroup ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The target framework moniker (e.g., 'net6.0', 'netstandard2.0', 'net48')." .
-
-nuget:isPrerelease a owl:DatatypeProperty ;
-    rdfs:label "is prerelease" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether this is a prerelease version (e.g., alpha, beta, rc)." .
-
-nuget:projectUrl a owl:DatatypeProperty ;
-    rdfs:label "project URL" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "The project homepage URL." .
-
-nuget:iconUrl a owl:DatatypeProperty ;
-    rdfs:label "icon URL" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "URL to the package icon image." .
-
-nuget:tags a owl:DatatypeProperty ;
-    rdfs:label "tags" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Space-separated tags describing the package." .
-
-nuget:listed a owl:DatatypeProperty ;
-    rdfs:label "listed" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the package is listed (visible in search). Unlisted packages are hidden but still downloadable." .
-
-# Object Properties
-
-nuget:frameworkDependency a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:dependsOn ;
-    rdfs:label "framework dependency" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range nuget:NuGetPackage ;
-    IAO:0000115 "A framework-specific dependency (applies to specific target frameworks)." .
-
-nuget:publishedTo a owl:ObjectProperty ;
-    rdfs:label "published to" ;
-    rdfs:domain nuget:NuGetPackage ;
-    rdfs:range nuget:NuGetFeed ;
-    IAO:0000115 "Associates a package with the NuGet feed it was published to." .

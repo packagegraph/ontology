@@ -6,7 +6,7 @@
 gomod:GoModuleShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Go module must have exactly one module path." ;
+            sh:message "A Go module must have exactly one module path."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ] ;
     sh:targetClass gomod:GoModule .

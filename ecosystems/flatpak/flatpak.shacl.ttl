@@ -6,7 +6,7 @@
 flatpak:FlatpakAppShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Flatpak app must have exactly one app ID." ;
+            sh:message "A Flatpak app must have exactly one app ID."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ] ;
     sh:targetClass flatpak:FlatpakApp .

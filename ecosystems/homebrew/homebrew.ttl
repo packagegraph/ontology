@@ -1,542 +1,582 @@
-# Homebrew Package Ontology
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
 @prefix brew: <https://purl.org/packagegraph/ontology/homebrew#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
-@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-
-# Ontology Declaration
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/homebrew#> a owl:Ontology ;
-    rdfs:label "Homebrew Package Ontology" ;
-    rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux" ;
-    dcterms:abstract "The Homebrew extension models macOS and Linuxbrew package management. It distinguishes formulae (source-built CLI tools) from casks (pre-built GUI applications), models taps (third-party repositories), bottles (pre-compiled binaries), and build specifications. Dependency types include build, test, recommended, and optional." ;
-    dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
-    dcterms:title "Homebrew Package Ontology" ;
-    dcterms:description "A comprehensive ontology for modeling Homebrew packages, formulae, casks, taps, and macOS application management including bottles, dependencies, and build specifications." ;
-    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
-
-# Homebrew-specific Classes
-brew:Formula a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Homebrew Formula" ;
-    rdfs:comment "A formula defining how to build and install a package with Homebrew" ;
-    IAO:0000115 "A formula defining how to build and install a package with Homebrew" .
-
-brew:Cask a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Homebrew Cask" ;
-    rdfs:comment "A cask for installing pre-built macOS applications" ;
-    IAO:0000115 "A cask for installing pre-built macOS applications" .
-
-brew:Tap a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Homebrew Tap" ;
-    rdfs:comment "A third-party repository of Homebrew formulae and casks" ;
-    IAO:0000115 "A third-party repository of Homebrew formulae and casks" .
-
-brew:Bottle a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Bottle" ;
-    rdfs:comment "A pre-compiled binary package for a formula" ;
-    IAO:0000115 "A pre-compiled binary package for a formula" .
-
-brew:SoftwareSpec a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Software Specification" ;
-    rdfs:comment "A specification defining how to obtain and build software" ;
-    IAO:0000115 "A specification defining how to obtain and build software" .
-
-brew:StableSpec a owl:Class ;
-    rdfs:subClassOf brew:SoftwareSpec ;
-    rdfs:label "Stable Specification" ;
-    rdfs:comment "Specification for the stable version of the software" ;
-    IAO:0000115 "Specification for the stable version of the software" .
-
-brew:HeadSpec a owl:Class ;
-    rdfs:subClassOf brew:SoftwareSpec ;
-    rdfs:label "HEAD Specification" ;
-    rdfs:comment "Specification for building from the development HEAD" ;
-    IAO:0000115 "Specification for building from the development HEAD" .
-
-brew:Dependency a owl:Class ;
-    rdfs:subClassOf pkg:Dependency ;
-    rdfs:label "Homebrew Dependency" ;
-    rdfs:comment "A dependency relationship in Homebrew" ;
-    IAO:0000115 "A dependency relationship in Homebrew" .
-
-brew:Option a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Option" ;
-    rdfs:comment "A build option for a formula" ;
-    IAO:0000115 "A build option for a formula" .
-
-brew:Patch a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Patch" ;
-    rdfs:comment "A patch to be applied during the build process" ;
-    IAO:0000115 "A patch to be applied during the build process" .
-
-brew:Resource a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Resource" ;
-    rdfs:comment "An additional resource needed by the formula" ;
-    IAO:0000115 "An additional resource needed by the formula" .
-
-brew:Service a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Service" ;
-    rdfs:comment "A system service definition for a formula" ;
-    IAO:0000115 "A system service definition for a formula" .
-
-brew:Test a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Homebrew Test" ;
-    rdfs:comment "Test instructions for verifying the installation" ;
-    IAO:0000115 "Test instructions for verifying the installation" .
-
-# Cask-specific Classes
 brew:App a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "macOS Application" ;
-    rdfs:comment "A macOS application bundle" ;
-    IAO:0000115 "A macOS application bundle" .
-
-brew:Artifact a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Cask Artifact" ;
-    rdfs:comment "An artifact installed by a cask (app, binary, etc.)" ;
-    IAO:0000115 "An artifact installed by a cask (app, binary, etc.)" .
+    rdfs:label "macOS Application"@en ;
+    IAO:0000115 "A macOS application bundle"@en ;
+    rdfs:comment "A macOS application bundle"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Binary a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Binary Artifact" ;
-    rdfs:comment "A command-line binary installed by a cask" ;
-    IAO:0000115 "A command-line binary installed by a cask" .
+    rdfs:label "Binary Artifact"@en ;
+    IAO:0000115 "A command-line binary installed by a cask"@en ;
+    rdfs:comment "A command-line binary installed by a cask"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
+
+brew:BuildDependency a owl:Class ;
+    rdfs:label "Build Dependency"@en ;
+    IAO:0000115 "A dependency that is required only during the build process of a Homebrew formula and is not needed at runtime."@en ;
+    rdfs:comment "Dependency needed only at build time"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Dependency .
 
 brew:ColorPicker a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Color Picker" ;
-    rdfs:comment "A color picker plugin for macOS" ;
-    IAO:0000115 "A color picker plugin for macOS" .
+    rdfs:label "Color Picker"@en ;
+    IAO:0000115 "A color picker plugin for macOS"@en ;
+    rdfs:comment "A color picker plugin for macOS"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:DictionaryDefinition a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Dictionary Definition" ;
-    rdfs:comment "A dictionary definition file" ;
-    IAO:0000115 "A dictionary definition file" .
+    rdfs:label "Dictionary Definition"@en ;
+    IAO:0000115 "A dictionary definition file"@en ;
+    rdfs:comment "A dictionary definition file"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Font a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Font" ;
-    rdfs:comment "A font file" ;
-    IAO:0000115 "A font file" .
+    rdfs:label "Font"@en ;
+    IAO:0000115 "A font file"@en ;
+    rdfs:comment "A font file"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:InputMethod a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Input Method" ;
-    rdfs:comment "An input method for macOS" ;
-    IAO:0000115 "An input method for macOS" .
+    rdfs:label "Input Method"@en ;
+    IAO:0000115 "An input method for macOS"@en ;
+    rdfs:comment "An input method for macOS"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:InternetPlugin a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Internet Plugin" ;
-    rdfs:comment "An internet browser plugin" ;
-    IAO:0000115 "An internet browser plugin" .
+    rdfs:label "Internet Plugin"@en ;
+    IAO:0000115 "An internet browser plugin"@en ;
+    rdfs:comment "An internet browser plugin"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:KeyboardLayout a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Keyboard Layout" ;
-    rdfs:comment "A keyboard layout file" ;
-    IAO:0000115 "A keyboard layout file" .
+    rdfs:label "Keyboard Layout"@en ;
+    IAO:0000115 "A keyboard layout file"@en ;
+    rdfs:comment "A keyboard layout file"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Manpage a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Manual Page" ;
-    rdfs:comment "A manual page file" ;
-    IAO:0000115 "A manual page file" .
+    rdfs:label "Manual Page"@en ;
+    IAO:0000115 "A manual page file"@en ;
+    rdfs:comment "A manual page file"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
+
+brew:OptionalDependency a owl:Class ;
+    rdfs:label "Optional Dependency"@en ;
+    IAO:0000115 "A dependency that provides additional features or functionality but is not required for basic operation of a Homebrew formula."@en ;
+    rdfs:comment "Optional dependency that adds extra functionality"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Dependency .
 
 brew:PreferencePane a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Preference Pane" ;
-    rdfs:comment "A System Preferences pane" ;
-    IAO:0000115 "A System Preferences pane" .
+    rdfs:label "Preference Pane"@en ;
+    IAO:0000115 "A System Preferences pane"@en ;
+    rdfs:comment "A System Preferences pane"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Qlplugin a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Quick Look Plugin" ;
-    rdfs:comment "A Quick Look plugin" ;
-    IAO:0000115 "A Quick Look plugin" .
+    rdfs:label "Quick Look Plugin"@en ;
+    IAO:0000115 "A Quick Look plugin"@en ;
+    rdfs:comment "A Quick Look plugin"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
+
+brew:RecommendedDependency a owl:Class ;
+    rdfs:label "Recommended Dependency"@en ;
+    IAO:0000115 "A dependency that was previously recommended for optimal functionality but is now deprecated in favor of other dependency types."@en ;
+    rdfs:comment "Recommended dependency (deprecated)"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Dependency .
+
+brew:RuntimeDependency a owl:Class ;
+    rdfs:label "Runtime Dependency"@en ;
+    IAO:0000115 "A dependency that is required for the proper execution and operation of a Homebrew formula after installation."@en ;
+    rdfs:comment "Dependency needed at runtime"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Dependency .
 
 brew:ScreenSaver a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Screen Saver" ;
-    rdfs:comment "A screen saver" ;
-    IAO:0000115 "A screen saver" .
+    rdfs:label "Screen Saver"@en ;
+    IAO:0000115 "A screen saver"@en ;
+    rdfs:comment "A screen saver"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Suite a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "Application Suite" ;
-    rdfs:comment "A suite of applications" ;
-    IAO:0000115 "A suite of applications" .
-
-brew:VstPlugin a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "VST Plugin" ;
-    rdfs:comment "A VST audio plugin" ;
-    IAO:0000115 "A VST audio plugin" .
+    rdfs:label "Application Suite"@en ;
+    IAO:0000115 "A suite of applications"@en ;
+    rdfs:comment "A suite of applications"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:Vst3Plugin a owl:Class ;
-    rdfs:subClassOf brew:Artifact ;
-    rdfs:label "VST3 Plugin" ;
-    rdfs:comment "A VST3 audio plugin" ;
-    IAO:0000115 "A VST3 audio plugin" .
+    rdfs:label "VST3 Plugin"@en ;
+    IAO:0000115 "A VST3 audio plugin"@en ;
+    rdfs:comment "A VST3 audio plugin"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
-# Formula Properties
-brew:formulaName a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "formula name" ;
-    rdfs:comment "The name of the Homebrew formula" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The name of the Homebrew formula" .
-
-brew:license a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:hasLicense ;
-    rdfs:label "license" ;
-    rdfs:comment "The software license" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range pkg:License ;
-    IAO:0000115 "The software license" .
-
-
-brew:versionScheme a owl:DatatypeProperty ;
-    rdfs:label "version scheme" ;
-    rdfs:comment "The version numbering scheme" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:int ;
-    IAO:0000115 "The version numbering scheme" .
-
-brew:kegOnly a owl:DatatypeProperty ;
-    rdfs:label "keg only" ;
-    rdfs:comment "Whether the formula is keg-only (not linked)" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the formula is keg-only (not linked)" .
-
-brew:deprecated a owl:DatatypeProperty ;
-    rdfs:label "deprecated" ;
-    rdfs:comment "Whether the formula is deprecated" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the formula is deprecated" .
-
-brew:disabled a owl:DatatypeProperty ;
-    rdfs:label "disabled" ;
-    rdfs:comment "Whether the formula is disabled" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the formula is disabled" .
-
-brew:deprecationDate a owl:DatatypeProperty ;
-    rdfs:label "deprecation date" ;
-    rdfs:comment "The date when the formula was deprecated" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:date ;
-    IAO:0000115 "The date when the formula was deprecated" .
-
-brew:disableDate a owl:DatatypeProperty ;
-    rdfs:label "disable date" ;
-    rdfs:comment "The date when the formula was disabled" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:date ;
-    IAO:0000115 "The date when the formula was disabled" .
-
-brew:deprecationReason a owl:DatatypeProperty ;
-    rdfs:label "deprecation reason" ;
-    rdfs:comment "The reason for deprecation" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The reason for deprecation" .
-
-brew:disableReason a owl:DatatypeProperty ;
-    rdfs:label "disable reason" ;
-    rdfs:comment "The reason for disabling" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The reason for disabling" .
-
-# Cask Properties
-brew:caskName a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "cask name" ;
-    rdfs:comment "The name of the Homebrew cask" ;
-    rdfs:domain brew:Cask ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The name of the Homebrew cask" .
-
-brew:token a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "token" ;
-    rdfs:comment "The unique token identifying the cask" ;
-    rdfs:domain brew:Cask ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The unique token identifying the cask" .
-
-brew:nameStanza a owl:DatatypeProperty ;
-    rdfs:label "name stanza" ;
-    rdfs:comment "The human-readable name of the application" ;
-    rdfs:domain brew:Cask ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The human-readable name of the application" .
+brew:VstPlugin a owl:Class ;
+    rdfs:label "VST Plugin"@en ;
+    IAO:0000115 "A VST audio plugin"@en ;
+    rdfs:comment "A VST audio plugin"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:Artifact .
 
 brew:appcast a owl:DatatypeProperty ;
-    rdfs:label "appcast" ;
-    rdfs:comment "URL for checking updates" ;
+    rdfs:label "appcast"@en ;
+    IAO:0000115 "URL for checking updates"@en ;
+    rdfs:comment "URL for checking updates"@en ;
     rdfs:domain brew:Cask ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "URL for checking updates" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:anyURI .
 
 brew:autoUpdates a owl:DatatypeProperty ;
-    rdfs:label "auto updates" ;
-    rdfs:comment "Whether the application auto-updates" ;
+    rdfs:label "auto updates"@en ;
+    IAO:0000115 "Whether the application auto-updates"@en ;
+    rdfs:comment "Whether the application auto-updates"@en ;
     rdfs:domain brew:Cask ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the application auto-updates" .
-
-# Software Spec Properties
-brew:url a owl:DatatypeProperty ;
-    rdfs:label "source URL" ;
-    rdfs:comment "The URL to download the source" ;
-    rdfs:domain brew:SoftwareSpec ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "The URL to download the source" .
-
-brew:mirror a owl:DatatypeProperty ;
-    rdfs:label "mirror URL" ;
-    rdfs:comment "A mirror URL for the source" ;
-    rdfs:domain brew:SoftwareSpec ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "A mirror URL for the source" .
-
-brew:sha256 a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "SHA256 checksum" ;
-    rdfs:comment "The SHA256 checksum of the source" ;
-    rdfs:domain brew:SoftwareSpec ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The SHA256 checksum of the source" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:boolean .
 
 brew:branch a owl:DatatypeProperty ;
-    rdfs:label "Git branch" ;
-    rdfs:comment "The Git branch to use for HEAD builds" ;
+    rdfs:label "Git branch"@en ;
+    IAO:0000115 "The Git branch to use for HEAD builds"@en ;
+    rdfs:comment "The Git branch to use for HEAD builds"@en ;
     rdfs:domain brew:HeadSpec ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Git branch to use for HEAD builds" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
 
-brew:tag a owl:DatatypeProperty ;
-    rdfs:label "Git tag" ;
-    rdfs:comment "The Git tag to use" ;
-    rdfs:domain brew:SoftwareSpec ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Git tag to use" .
+brew:buildDepends a owl:ObjectProperty ;
+    rdfs:label "build depends"@en ;
+    IAO:0000115 "Build-time dependency"@en ;
+    rdfs:comment "Build-time dependency"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subPropertyOf brew:hasDependency .
 
-brew:usingSubmodules a owl:DatatypeProperty ;
-    rdfs:label "using submodules" ;
-    rdfs:comment "Whether to initialize Git submodules" ;
-    rdfs:domain brew:SoftwareSpec ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether to initialize Git submodules" .
-
-# Dependency Properties
 brew:dependencyType a owl:DatatypeProperty ;
-    rdfs:label "dependency type" ;
-    rdfs:comment "The type of dependency (build, optional, recommended, etc.)" ;
+    owl:deprecated true ;
+    rdfs:label "dependency type"@en ;
+    IAO:0000115 "DEPRECATED: The type of dependency. Use pkg:dependencyType (ObjectProperty with property URI values) instead for properties-as-taxonomy pattern."@en ;
+    rdfs:comment "DEPRECATED: String-based dependency type. Use pkg:dependencyType with property URIs."@en ;
     rdfs:domain brew:Dependency ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The type of dependency (build, optional, recommended, etc.)" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
 
-# Object Properties
-brew:inTap a owl:ObjectProperty ;
-    rdfs:label "in tap" ;
-    rdfs:comment "Links a formula or cask to its tap" ;
-    rdfs:domain owl:Thing ;
-    rdfs:range brew:Tap ;
-    IAO:0000115 "Links a formula or cask to its tap" .
-
-brew:hasStable a owl:ObjectProperty ;
-    rdfs:label "has stable" ;
-    rdfs:comment "Links a formula to its stable specification" ;
+brew:deprecated a owl:DatatypeProperty ;
+    rdfs:label "deprecated"@en ;
+    IAO:0000115 "Whether the formula is deprecated"@en ;
+    rdfs:comment "Whether the formula is deprecated"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:StableSpec ;
-    IAO:0000115 "Links a formula to its stable specification" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:boolean .
 
-brew:hasHead a owl:ObjectProperty ;
-    rdfs:label "has HEAD" ;
-    rdfs:comment "Links a formula to its HEAD specification" ;
+brew:deprecationDate a owl:DatatypeProperty ;
+    rdfs:label "deprecation date"@en ;
+    IAO:0000115 "The date when the formula was deprecated"@en ;
+    rdfs:comment "The date when the formula was deprecated"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:HeadSpec ;
-    IAO:0000115 "Links a formula to its HEAD specification" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:date .
 
-brew:hasBottle a owl:ObjectProperty ;
-    rdfs:label "has bottle" ;
-    rdfs:comment "Links a formula to its bottles" ;
+brew:deprecationReason a owl:DatatypeProperty ;
+    rdfs:label "deprecation reason"@en ;
+    IAO:0000115 "The reason for deprecation"@en ;
+    rdfs:comment "The reason for deprecation"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:Bottle ;
-    IAO:0000115 "Links a formula to its bottles" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
 
-brew:hasDependency a owl:ObjectProperty ;
-    rdfs:label "has dependency" ;
-    rdfs:comment "Links a formula to its dependencies" ;
+brew:disableDate a owl:DatatypeProperty ;
+    rdfs:label "disable date"@en ;
+    IAO:0000115 "The date when the formula was disabled"@en ;
+    rdfs:comment "The date when the formula was disabled"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:Dependency ;
-    IAO:0000115 "Links a formula to its dependencies" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:date .
 
-brew:hasOption a owl:ObjectProperty ;
-    rdfs:label "has option" ;
-    rdfs:comment "Links a formula to its build options" ;
+brew:disableReason a owl:DatatypeProperty ;
+    rdfs:label "disable reason"@en ;
+    IAO:0000115 "The reason for disabling"@en ;
+    rdfs:comment "The reason for disabling"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:Option ;
-    IAO:0000115 "Links a formula to its build options" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
 
-brew:hasPatch a owl:ObjectProperty ;
-    rdfs:label "has patch" ;
-    rdfs:comment "Links a formula to its patches" ;
+brew:disabled a owl:DatatypeProperty ;
+    rdfs:label "disabled"@en ;
+    IAO:0000115 "Whether the formula is disabled"@en ;
+    rdfs:comment "Whether the formula is disabled"@en ;
     rdfs:domain brew:Formula ;
-    rdfs:range brew:Patch ;
-    IAO:0000115 "Links a formula to its patches" .
-
-brew:hasResource a owl:ObjectProperty ;
-    rdfs:label "has resource" ;
-    rdfs:comment "Links a formula to its resources" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range brew:Resource ;
-    IAO:0000115 "Links a formula to its resources" .
-
-brew:hasService a owl:ObjectProperty ;
-    rdfs:label "has service" ;
-    rdfs:comment "Links a formula to its service definition" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range brew:Service ;
-    IAO:0000115 "Links a formula to its service definition" .
-
-brew:hasTest a owl:ObjectProperty ;
-    rdfs:label "has test" ;
-    rdfs:comment "Links a formula to its test definition" ;
-    rdfs:domain brew:Formula ;
-    rdfs:range brew:Test ;
-    IAO:0000115 "Links a formula to its test definition" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:boolean .
 
 brew:hasArtifact a owl:ObjectProperty ;
-    rdfs:label "has artifact" ;
-    rdfs:comment "Links a cask to its artifacts" ;
+    rdfs:label "has artifact"@en ;
+    IAO:0000115 "Links a cask to its artifacts"@en ;
+    rdfs:comment "Links a cask to its artifacts"@en ;
     rdfs:domain brew:Cask ;
-    rdfs:range brew:Artifact ;
-    IAO:0000115 "Links a cask to its artifacts" .
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Artifact .
 
-# Dependency Types
-brew:buildDepends a owl:ObjectProperty ;
-    rdfs:subPropertyOf brew:hasDependency ;
-    rdfs:label "build depends" ;
-    rdfs:comment "Build-time dependency" ;
-    IAO:0000115 "Build-time dependency" .
+brew:hasBottle a owl:ObjectProperty ;
+    rdfs:label "has bottle"@en ;
+    IAO:0000115 "Links a formula to its bottles"@en ;
+    rdfs:comment "Links a formula to its bottles"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Bottle .
 
-brew:optionalDepends a owl:ObjectProperty ;
-    rdfs:subPropertyOf brew:hasDependency ;
-    rdfs:label "optional depends" ;
-    rdfs:comment "Optional dependency" ;
-    IAO:0000115 "Optional dependency" .
+brew:hasOption a owl:ObjectProperty ;
+    rdfs:label "has option"@en ;
+    IAO:0000115 "Links a formula to its build options"@en ;
+    rdfs:comment "Links a formula to its build options"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Option .
 
-brew:recommendedDepends a owl:ObjectProperty ;
-    rdfs:subPropertyOf brew:hasDependency ;
-    rdfs:label "recommended depends" ;
-    rdfs:comment "Recommended dependency" ;
-    IAO:0000115 "Recommended dependency" .
+brew:hasPatch a owl:ObjectProperty ;
+    rdfs:label "has patch"@en ;
+    IAO:0000115 "Links a formula to its patches"@en ;
+    rdfs:comment "Links a formula to its patches"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Patch .
 
-brew:runtimeDepends a owl:ObjectProperty ;
-    rdfs:subPropertyOf brew:hasDependency ;
-    rdfs:label "runtime depends" ;
-    rdfs:comment "Runtime dependency" ;
-    IAO:0000115 "Runtime dependency" .
+brew:hasResource a owl:ObjectProperty ;
+    rdfs:label "has resource"@en ;
+    IAO:0000115 "Links a formula to its resources"@en ;
+    rdfs:comment "Links a formula to its resources"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Resource .
 
-# Common Taps
-brew:homebrew-core a brew:Tap ;
-    rdfs:label "homebrew/core" ;
-    rdfs:comment "The main Homebrew tap containing core formulae" ;
-    foaf:homepage <https://github.com/Homebrew/homebrew-core> .
+brew:hasService a owl:ObjectProperty ;
+    rdfs:label "has service"@en ;
+    IAO:0000115 "Links a formula to its service definition"@en ;
+    rdfs:comment "Links a formula to its service definition"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Service .
+
+brew:hasTest a owl:ObjectProperty ;
+    rdfs:label "has test"@en ;
+    IAO:0000115 "Links a formula to its test definition"@en ;
+    rdfs:comment "Links a formula to its test definition"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Test .
 
 brew:homebrew-cask a brew:Tap ;
-    rdfs:label "homebrew/cask" ;
-    rdfs:comment "The main Homebrew cask tap for macOS applications" ;
+    rdfs:label "homebrew/cask"@en ;
+    rdfs:comment "The main Homebrew cask tap for macOS applications"@en ;
     foaf:homepage <https://github.com/Homebrew/homebrew-cask> .
 
 brew:homebrew-cask-fonts a brew:Tap ;
-    rdfs:label "homebrew/cask-fonts" ;
-    rdfs:comment "Homebrew cask tap for fonts" ;
+    rdfs:label "homebrew/cask-fonts"@en ;
+    rdfs:comment "Homebrew cask tap for fonts"@en ;
     foaf:homepage <https://github.com/Homebrew/homebrew-cask-fonts> .
 
-# Common dependency types
-brew:BuildDependency a owl:Class ;
-    rdfs:subClassOf brew:Dependency ;
-    rdfs:label "Build Dependency" ;
-    rdfs:comment "Dependency needed only at build time" ;
-    IAO:0000115 "A dependency that is required only during the build process of a Homebrew formula and is not needed at runtime." .
+brew:homebrew-core a brew:Tap ;
+    rdfs:label "homebrew/core"@en ;
+    rdfs:comment "The main Homebrew tap containing core formulae"@en ;
+    foaf:homepage <https://github.com/Homebrew/homebrew-core> .
 
-brew:OptionalDependency a owl:Class ;
-    rdfs:subClassOf brew:Dependency ;
-    rdfs:label "Optional Dependency" ;
-    rdfs:comment "Optional dependency that adds extra functionality" ;
-    IAO:0000115 "A dependency that provides additional features or functionality but is not required for basic operation of a Homebrew formula." .
+brew:inTap a owl:ObjectProperty ;
+    rdfs:label "in tap"@en ;
+    IAO:0000115 "Links a formula or cask to its tap"@en ;
+    rdfs:comment "Links a formula or cask to its tap"@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Tap .
 
-brew:RecommendedDependency a owl:Class ;
-    rdfs:subClassOf brew:Dependency ;
-    rdfs:label "Recommended Dependency" ;
-    rdfs:comment "Recommended dependency (deprecated)" ;
-    IAO:0000115 "A dependency that was previously recommended for optimal functionality but is now deprecated in favor of other dependency types." .
+brew:kegOnly a owl:DatatypeProperty ;
+    rdfs:label "keg only"@en ;
+    IAO:0000115 "Whether the formula is keg-only (not linked)"@en ;
+    rdfs:comment "Whether the formula is keg-only (not linked)"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:boolean .
 
-brew:RuntimeDependency a owl:Class ;
-    rdfs:subClassOf brew:Dependency ;
-    rdfs:label "Runtime Dependency" ;
-    rdfs:comment "Dependency needed at runtime" ;
-    IAO:0000115 "A dependency that is required for the proper execution and operation of a Homebrew formula after installation." .
+brew:license a owl:ObjectProperty ;
+    rdfs:label "license"@en ;
+    IAO:0000115 "The software license"@en ;
+    rdfs:comment "The software license"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range pkg:License ;
+    rdfs:subPropertyOf pkg:hasLicense .
 
-# Cardinality Restrictions for Homebrew Classes
-brew:Formula rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty brew:formulaName ;
-    owl:cardinality 1
-] .
+brew:mirror a owl:DatatypeProperty ;
+    rdfs:label "mirror URL"@en ;
+    IAO:0000115 "A mirror URL for the source"@en ;
+    rdfs:comment "A mirror URL for the source"@en ;
+    rdfs:domain brew:SoftwareSpec ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:anyURI .
 
-brew:Formula rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty brew:hasStable ;
-    owl:qualifiedCardinality 1 ;
-    owl:onClass brew:StableSpec
-] .
+brew:nameStanza a owl:DatatypeProperty ;
+    rdfs:label "name stanza"@en ;
+    IAO:0000115 "The human-readable name of the application"@en ;
+    rdfs:comment "The human-readable name of the application"@en ;
+    rdfs:domain brew:Cask ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
 
-brew:Formula rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty brew:hasHead ;
-    owl:maxQualifiedCardinality 1 ;
-    owl:onClass brew:HeadSpec
-] .
+brew:optionalDepends a owl:ObjectProperty ;
+    rdfs:label "optional depends"@en ;
+    IAO:0000115 "Optional dependency"@en ;
+    rdfs:comment "Optional dependency"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subPropertyOf brew:hasDependency .
 
-brew:Cask rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty brew:caskName ;
-    owl:cardinality 1
-] .
+brew:recommendedDepends a owl:ObjectProperty ;
+    rdfs:label "recommended depends"@en ;
+    IAO:0000115 "Recommended dependency"@en ;
+    rdfs:comment "Recommended dependency"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subPropertyOf brew:hasDependency .
 
-brew:Cask rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty brew:token ;
-    owl:cardinality 1
-] .
+brew:runtimeDepends a owl:ObjectProperty ;
+    rdfs:label "runtime depends"@en ;
+    IAO:0000115 "Runtime dependency"@en ;
+    rdfs:comment "Runtime dependency"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subPropertyOf brew:hasDependency .
+
+brew:sha256 a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "SHA256 checksum"@en ;
+    IAO:0000115 "The SHA256 checksum of the source"@en ;
+    rdfs:comment "The SHA256 checksum of the source"@en ;
+    rdfs:domain brew:SoftwareSpec ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
+
+brew:tag a owl:DatatypeProperty ;
+    rdfs:label "Git tag"@en ;
+    IAO:0000115 "The Git tag to use"@en ;
+    rdfs:comment "The Git tag to use"@en ;
+    rdfs:domain brew:SoftwareSpec ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
+
+brew:url a owl:DatatypeProperty ;
+    rdfs:label "source URL"@en ;
+    IAO:0000115 "The URL to download the source"@en ;
+    rdfs:comment "The URL to download the source"@en ;
+    rdfs:domain brew:SoftwareSpec ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:anyURI .
+
+brew:usingSubmodules a owl:DatatypeProperty ;
+    rdfs:label "using submodules"@en ;
+    IAO:0000115 "Whether to initialize Git submodules"@en ;
+    rdfs:comment "Whether to initialize Git submodules"@en ;
+    rdfs:domain brew:SoftwareSpec ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:boolean .
+
+brew:versionScheme a owl:DatatypeProperty ;
+    rdfs:label "version scheme"@en ;
+    IAO:0000115 "The version numbering scheme"@en ;
+    rdfs:comment "The version numbering scheme"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:int .
+
+brew:Bottle a owl:Class ;
+    rdfs:label "Homebrew Bottle"@en ;
+    IAO:0000115 "A pre-compiled binary package for a formula"@en ;
+    rdfs:comment "A pre-compiled binary package for a formula"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Option a owl:Class ;
+    rdfs:label "Homebrew Option"@en ;
+    IAO:0000115 "A build option for a formula"@en ;
+    rdfs:comment "A build option for a formula"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Patch a owl:Class ;
+    rdfs:label "Homebrew Patch"@en ;
+    IAO:0000115 "A patch to be applied during the build process"@en ;
+    rdfs:comment "A patch to be applied during the build process"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Resource a owl:Class ;
+    rdfs:label "Homebrew Resource"@en ;
+    IAO:0000115 "An additional resource needed by the formula"@en ;
+    rdfs:comment "An additional resource needed by the formula"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Service a owl:Class ;
+    rdfs:label "Homebrew Service"@en ;
+    IAO:0000115 "A system service definition for a formula"@en ;
+    rdfs:comment "A system service definition for a formula"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Test a owl:Class ;
+    rdfs:label "Homebrew Test"@en ;
+    IAO:0000115 "Test instructions for verifying the installation"@en ;
+    rdfs:comment "Test instructions for verifying the installation"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:caskName a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "cask name"@en ;
+    IAO:0000115 "The name of the Homebrew cask"@en ;
+    rdfs:comment "The name of the Homebrew cask"@en ;
+    rdfs:domain brew:Cask ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
+
+brew:formulaName a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "formula name"@en ;
+    IAO:0000115 "The name of the Homebrew formula"@en ;
+    rdfs:comment "The name of the Homebrew formula"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
+
+brew:hasHead a owl:ObjectProperty ;
+    rdfs:label "has HEAD"@en ;
+    IAO:0000115 "Links a formula to its HEAD specification"@en ;
+    rdfs:comment "Links a formula to its HEAD specification"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:HeadSpec .
+
+brew:hasStable a owl:ObjectProperty ;
+    rdfs:label "has stable"@en ;
+    IAO:0000115 "Links a formula to its stable specification"@en ;
+    rdfs:comment "Links a formula to its stable specification"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:StableSpec .
+
+brew:token a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "token"@en ;
+    IAO:0000115 "The unique token identifying the cask"@en ;
+    rdfs:comment "The unique token identifying the cask"@en ;
+    rdfs:domain brew:Cask ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range xsd:string .
+
+brew:StableSpec a owl:Class ;
+    rdfs:label "Stable Specification"@en ;
+    IAO:0000115 "Specification for the stable version of the software"@en ;
+    rdfs:comment "Specification for the stable version of the software"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:SoftwareSpec .
+
+brew:HeadSpec a owl:Class ;
+    rdfs:label "HEAD Specification"@en ;
+    IAO:0000115 "Specification for building from the development HEAD"@en ;
+    rdfs:comment "Specification for building from the development HEAD"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf brew:SoftwareSpec .
+
+brew:Tap a owl:Class ;
+    rdfs:label "Homebrew Tap"@en ;
+    IAO:0000115 "A third-party repository of Homebrew formulae and casks"@en ;
+    rdfs:comment "A third-party repository of Homebrew formulae and casks"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf pkg:Repository .
+
+brew:hasDependency a owl:ObjectProperty ;
+    rdfs:label "has dependency"@en ;
+    IAO:0000115 "Links a formula to its dependencies"@en ;
+    rdfs:comment "Links a formula to its dependencies"@en ;
+    rdfs:domain brew:Formula ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:range brew:Dependency .
+
+brew:Cask a owl:Class ;
+    rdfs:label "Homebrew Cask"@en ;
+    IAO:0000115 "A cask for installing pre-built macOS applications"@en ;
+    rdfs:comment "A cask for installing pre-built macOS applications"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty brew:caskName ],
+        [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty brew:token ],
+        pkg:Package .
+
+brew:Dependency a owl:Class ;
+    rdfs:label "Homebrew Dependency"@en ;
+    IAO:0000115 "A dependency relationship in Homebrew"@en ;
+    rdfs:comment "A dependency relationship in Homebrew"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf pkg:Dependency .
+
+brew:SoftwareSpec a owl:Class ;
+    rdfs:label "Software Specification"@en ;
+    IAO:0000115 "A specification defining how to obtain and build software"@en ;
+    rdfs:comment "A specification defining how to obtain and build software"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Artifact a owl:Class ;
+    rdfs:label "Cask Artifact"@en ;
+    IAO:0000115 "An artifact installed by a cask (app, binary, etc.)"@en ;
+    rdfs:comment "An artifact installed by a cask (app, binary, etc.)"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf owl:Thing .
+
+brew:Formula a owl:Class ;
+    rdfs:label "Homebrew Formula"@en ;
+    IAO:0000115 "A formula defining how to build and install a package with Homebrew"@en ;
+    rdfs:comment "A formula defining how to build and install a package with Homebrew"@en ;
+    rdfs:isDefinedBy brew: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty brew:formulaName ],
+        [ a owl:Restriction ;
+            owl:onClass brew:StableSpec ;
+            owl:onProperty brew:hasStable ;
+            owl:qualifiedCardinality 1 ],
+        [ a owl:Restriction ;
+            owl:maxQualifiedCardinality 1 ;
+            owl:onClass brew:HeadSpec ;
+            owl:onProperty brew:hasHead ],
+        pkg:Package .
+
+brew: a owl:Ontology ;
+    rdfs:label "Homebrew Package Ontology"@en ;
+    dcterms:abstract "The Homebrew extension models macOS and Linuxbrew package management. It distinguishes formulae (source-built CLI tools) from casks (pre-built GUI applications), models taps (third-party repositories), bottles (pre-compiled binaries), and build specifications. Dependency types include build, test, recommended, and optional." ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:description "A comprehensive ontology for modeling Homebrew packages, formulae, casks, taps, and macOS application management including bottles, dependencies, and build specifications." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    dcterms:title "Homebrew Package Ontology" ;
+    rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
+

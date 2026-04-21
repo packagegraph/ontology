@@ -5,8 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 buildroot:BuildInfrastructureShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:message "A build infrastructure must have at least one label." ;
+    sh:property [ sh:message "A build infrastructure must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass buildroot:BuildInfrastructure .
@@ -14,32 +13,32 @@ buildroot:BuildInfrastructureShape a sh:NodeShape ;
 buildroot:BuildrootPackageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package must have exactly one package name." ;
+            sh:message "A Buildroot package must have exactly one package name."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ],
         [ sh:datatype xsd:boolean ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package can have at most one install-staging flag." ;
+            sh:message "A Buildroot package can have at most one install-staging flag."@en ;
             sh:path buildroot:installStaging ],
         [ sh:datatype xsd:boolean ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package can have at most one install-target flag." ;
+            sh:message "A Buildroot package can have at most one install-target flag."@en ;
             sh:path buildroot:installTarget ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package can have at most one CPE vendor." ;
+            sh:message "A Buildroot package can have at most one CPE vendor."@en ;
             sh:path buildroot:cpeVendor ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package can have at most one CPE product." ;
+            sh:message "A Buildroot package can have at most one CPE product."@en ;
             sh:path buildroot:cpeProduct ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Buildroot package can have at most one download site." ;
+            sh:message "A Buildroot package can have at most one download site."@en ;
             sh:path buildroot:site ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "Buildroot site method must be a known download method (wget, git, svn, hg, bzr, file, local, scp, cvs)." ;
+            sh:message "Buildroot site method must be a known download method (wget, git, svn, hg, bzr, file, local, scp, cvs)."@en ;
             sh:path buildroot:siteMethod ;
             sh:pattern "^(wget|git|svn|hg|bzr|file|local|scp|cvs)$" ] ;
     sh:targetClass buildroot:BuildrootPackage .
@@ -47,7 +46,7 @@ buildroot:BuildrootPackageShape a sh:NodeShape ;
 buildroot:DefconfigShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A defconfig must have exactly one name." ;
+            sh:message "A defconfig must have exactly one name."@en ;
             sh:minCount 1 ;
             sh:path buildroot:defconfigName ] ;
     sh:targetClass buildroot:Defconfig .

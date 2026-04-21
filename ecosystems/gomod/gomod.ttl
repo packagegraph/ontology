@@ -1,125 +1,135 @@
-# Go Modules Ontology
-@prefix gomod: <https://purl.org/packagegraph/ontology/gomod#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gomod: <https://purl.org/packagegraph/ontology/gomod#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/gomod#> a owl:Ontology ;
-    rdfs:label "Go Modules Ontology" ;
-    rdfs:comment "Ontology for representing Go modules and packages" ;
+gomod:containsPackage a owl:ObjectProperty ;
+    rdfs:label "contains package"@en ;
+    IAO:0000115 "Associates a module with a Go package it contains."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range gomod:GoPackage .
+
+gomod:excludes a owl:ObjectProperty ;
+    rdfs:label "excludes"@en ;
+    IAO:0000115 "A module version excluded via an exclude directive in go.mod."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range gomod:GoModule .
+
+gomod:goSum a owl:DatatypeProperty ;
+    rdfs:label "go.sum hash"@en ;
+    IAO:0000115 "The cryptographic hash from go.sum (h1: prefix, SHA-256 of module zip), used by the Go toolchain for integrity verification via the checksum database (sum.golang.org)."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:goVersion a owl:DatatypeProperty ;
+    rdfs:label "go version"@en ;
+    IAO:0000115 "The minimum Go version required by the module, declared in the 'go' directive of go.mod."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:hasReplace a owl:ObjectProperty ;
+    rdfs:label "has replace directive"@en ;
+    IAO:0000115 "Associates a module with a replace directive in its go.mod."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range gomod:ReplaceDirective .
+
+gomod:importPath a owl:DatatypeProperty ;
+    rdfs:label "import path"@en ;
+    IAO:0000115 "The full import path of the Go package (module path + subdirectory)."@en ;
+    rdfs:domain gomod:GoPackage ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:isIndirect a owl:DatatypeProperty ;
+    rdfs:label "is indirect"@en ;
+    IAO:0000115 "Whether this dependency is indirect (not directly imported but required by a direct dependency), marked with // indirect in go.mod."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:boolean .
+
+gomod:isRetracted a owl:DatatypeProperty ;
+    rdfs:label "is retracted"@en ;
+    IAO:0000115 "Whether this module version has been retracted by the author via a retract directive in go.mod."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:boolean .
+
+gomod:modulePath a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "module path"@en ;
+    IAO:0000115 "The canonical module path (e.g., 'github.com/go-chi/chi/v5'), which uniquely identifies the module and determines its import path."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:replacementPath a owl:DatatypeProperty ;
+    rdfs:label "replacement path"@en ;
+    IAO:0000115 "The replacement module path or local directory in a replace directive."@en ;
+    rdfs:domain gomod:ReplaceDirective ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:replacementVersion a owl:DatatypeProperty ;
+    rdfs:label "replacement version"@en ;
+    IAO:0000115 "The version of the replacement module, if specified."@en ;
+    rdfs:domain gomod:ReplaceDirective ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:retractRationale a owl:DatatypeProperty ;
+    rdfs:label "retract rationale"@en ;
+    IAO:0000115 "The reason provided for retracting a module version."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range xsd:string .
+
+gomod:servedBy a owl:ObjectProperty ;
+    rdfs:label "served by"@en ;
+    IAO:0000115 "Associates a module with the Go proxy that serves it."@en ;
+    rdfs:domain gomod:GoModule ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:range gomod:GoProxy .
+
+gomod:GoProxy a owl:Class ;
+    rdfs:label "Go Module Proxy"@en ;
+    IAO:0000115 "A caching proxy server that serves Go module zip archives and metadata, such as the default proxy.golang.org or a private GOPROXY."@en ;
+    rdfs:comment "A Go module proxy (e.g., proxy.golang.org)"@en ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:subClassOf pkg:Repository .
+
+gomod:GoPackage a owl:Class ;
+    rdfs:label "Go Package"@en ;
+    IAO:0000115 "A directory of Go source files within a module that can be imported by its full path (module path + subdirectory)."@en ;
+    rdfs:comment "A single importable Go package within a module"@en ;
+    rdfs:isDefinedBy gomod: .
+
+gomod:ReplaceDirective a owl:Class ;
+    rdfs:label "Replace Directive"@en ;
+    IAO:0000115 "A directive in go.mod that substitutes one module version with another module path or local directory, used for forks, vendoring, or local development."@en ;
+    rdfs:comment "A go.mod replace directive"@en ;
+    rdfs:isDefinedBy gomod: .
+
+gomod:GoModule a owl:Class ;
+    rdfs:label "Go Module"@en ;
+    IAO:0000115 "A versioned collection of Go packages, identified by a module path declared in go.mod, and distributed as a source zip archive through a module proxy. Go modules contain source code that is compiled during go build."@en ;
+    rdfs:comment "A Go module identified by its module path"@en ;
+    rdfs:isDefinedBy gomod: ;
+    rdfs:subClassOf pkg:SourcePackage .
+
+gomod: a owl:Ontology ;
+    rdfs:label "Go Modules Ontology"@en ;
     dcterms:abstract "Models Go modules including module paths, semantic import versioning, go.sum integrity hashes, replace/exclude directives, and the Go module proxy system. Captures the distinction between modules (versioned collections) and packages (importable units)." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    rdfs:comment "Ontology for representing Go modules and packages"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
-# Classes
-
-gomod:GoModule a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Go Module" ;
-    rdfs:comment "A Go module identified by its module path" ;
-    IAO:0000115 "A versioned collection of Go packages, identified by a module path declared in go.mod, and distributed as a zip archive through a module proxy." .
-
-gomod:GoPackage a owl:Class ;
-    rdfs:label "Go Package" ;
-    rdfs:comment "A single importable Go package within a module" ;
-    IAO:0000115 "A directory of Go source files within a module that can be imported by its full path (module path + subdirectory)." .
-
-gomod:GoProxy a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Go Module Proxy" ;
-    rdfs:comment "A Go module proxy (e.g., proxy.golang.org)" ;
-    IAO:0000115 "A caching proxy server that serves Go module zip archives and metadata, such as the default proxy.golang.org or a private GOPROXY." .
-
-gomod:ReplaceDirective a owl:Class ;
-    rdfs:label "Replace Directive" ;
-    rdfs:comment "A go.mod replace directive" ;
-    IAO:0000115 "A directive in go.mod that substitutes one module version with another module path or local directory, used for forks, vendoring, or local development." .
-
-# Datatype Properties
-
-gomod:modulePath a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "module path" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The canonical module path (e.g., 'github.com/go-chi/chi/v5'), which uniquely identifies the module and determines its import path." .
-
-gomod:goVersion a owl:DatatypeProperty ;
-    rdfs:label "go version" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The minimum Go version required by the module, declared in the 'go' directive of go.mod." .
-
-gomod:goSum a owl:DatatypeProperty ;
-    rdfs:label "go.sum hash" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The cryptographic hash from go.sum (h1: prefix, SHA-256 of module zip), used by the Go toolchain for integrity verification via the checksum database (sum.golang.org)." .
-
-gomod:isIndirect a owl:DatatypeProperty ;
-    rdfs:label "is indirect" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether this dependency is indirect (not directly imported but required by a direct dependency), marked with // indirect in go.mod." .
-
-gomod:isRetracted a owl:DatatypeProperty ;
-    rdfs:label "is retracted" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether this module version has been retracted by the author via a retract directive in go.mod." .
-
-gomod:retractRationale a owl:DatatypeProperty ;
-    rdfs:label "retract rationale" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The reason provided for retracting a module version." .
-
-gomod:importPath a owl:DatatypeProperty ;
-    rdfs:label "import path" ;
-    rdfs:domain gomod:GoPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The full import path of the Go package (module path + subdirectory)." .
-
-gomod:replacementPath a owl:DatatypeProperty ;
-    rdfs:label "replacement path" ;
-    rdfs:domain gomod:ReplaceDirective ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The replacement module path or local directory in a replace directive." .
-
-gomod:replacementVersion a owl:DatatypeProperty ;
-    rdfs:label "replacement version" ;
-    rdfs:domain gomod:ReplaceDirective ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The version of the replacement module, if specified." .
-
-# Object Properties
-
-gomod:containsPackage a owl:ObjectProperty ;
-    rdfs:label "contains package" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range gomod:GoPackage ;
-    IAO:0000115 "Associates a module with a Go package it contains." .
-
-gomod:servedBy a owl:ObjectProperty ;
-    rdfs:label "served by" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range gomod:GoProxy ;
-    IAO:0000115 "Associates a module with the Go proxy that serves it." .
-
-gomod:hasReplace a owl:ObjectProperty ;
-    rdfs:label "has replace directive" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range gomod:ReplaceDirective ;
-    IAO:0000115 "Associates a module with a replace directive in its go.mod." .
-
-gomod:excludes a owl:ObjectProperty ;
-    rdfs:label "excludes" ;
-    rdfs:domain gomod:GoModule ;
-    rdfs:range gomod:GoModule ;
-    IAO:0000115 "A module version excluded via an exclude directive in go.mod." .

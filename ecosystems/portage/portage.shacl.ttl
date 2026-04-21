@@ -6,7 +6,7 @@
 portage:EbuildShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A Gentoo ebuild must have exactly one package name." ;
+            sh:message "A Gentoo ebuild must have exactly one package name."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ] ;
     sh:targetClass portage:Ebuild .

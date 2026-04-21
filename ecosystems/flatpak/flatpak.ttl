@@ -1,124 +1,134 @@
-# Flatpak Application Ontology
-@prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/flatpak#> a owl:Ontology ;
-    rdfs:label "Flatpak Application Ontology" ;
-    rdfs:comment "Ontology for representing Flatpak applications, runtimes, and remotes" ;
+flatpak:appId a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "application ID"@en ;
+    IAO:0000115 "Reverse-DNS application identifier (e.g., 'org.mozilla.Firefox')."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:branch a owl:DatatypeProperty ;
+    rdfs:label "branch"@en ;
+    IAO:0000115 "The Flatpak branch (typically 'stable', 'beta', or a version like '23.08')."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:command a owl:DatatypeProperty ;
+    rdfs:label "command"@en ;
+    IAO:0000115 "The main executable command run when the application is launched."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:commitHash a owl:DatatypeProperty ;
+    rdfs:label "commit hash"@en ;
+    IAO:0000115 "The OSTree commit hash identifying the exact installed version of the application."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:finishArg a owl:DatatypeProperty ;
+    rdfs:label "finish arg"@en ;
+    IAO:0000115 "A --finish-args flag specifying a sandbox permission (e.g., '--share=network', '--filesystem=home', '--socket=wayland')."@en ;
+    rdfs:domain flatpak:Permission ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:hasExtension a owl:ObjectProperty ;
+    rdfs:label "has extension"@en ;
+    IAO:0000115 "Associates an application or runtime with an extension."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range flatpak:Extension .
+
+flatpak:hasPermission a owl:ObjectProperty ;
+    rdfs:label "has permission"@en ;
+    IAO:0000115 "Associates an application with a sandbox permission."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range flatpak:Permission .
+
+flatpak:installedSize a owl:DatatypeProperty ;
+    rdfs:label "installed size"@en ;
+    IAO:0000115 "The installed size of the application in bytes."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:integer .
+
+flatpak:publishedOn a owl:ObjectProperty ;
+    rdfs:label "published on"@en ;
+    IAO:0000115 "Associates an application with the remote it is distributed through."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range flatpak:Remote .
+
+flatpak:runtimeVersion a owl:DatatypeProperty ;
+    rdfs:label "runtime version"@en ;
+    IAO:0000115 "The version of the runtime required by the application (e.g., '46' for GNOME 46)."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range xsd:string .
+
+flatpak:usesRuntime a owl:ObjectProperty ;
+    rdfs:label "uses runtime"@en ;
+    IAO:0000115 "Associates an application with the runtime it requires."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range flatpak:Runtime .
+
+flatpak:usesSdk a owl:ObjectProperty ;
+    rdfs:label "uses SDK"@en ;
+    IAO:0000115 "Associates an application with the SDK used to build it."@en ;
+    rdfs:domain flatpak:FlatpakApp ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:range flatpak:Runtime .
+
+flatpak:Extension a owl:Class ;
+    rdfs:label "Extension"@en ;
+    IAO:0000115 "An add-on that extends a runtime or application with additional functionality (e.g., GL drivers, codecs, language packs)."@en ;
+    rdfs:comment "A Flatpak extension adding capabilities to a runtime or app"@en ;
+    rdfs:isDefinedBy flatpak: .
+
+flatpak:Remote a owl:Class ;
+    rdfs:label "Remote"@en ;
+    IAO:0000115 "An OSTree-based repository serving Flatpak applications and runtimes, such as Flathub or a self-hosted remote."@en ;
+    rdfs:comment "A Flatpak remote repository (e.g., Flathub)"@en ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:subClassOf pkg:Repository .
+
+flatpak:Permission a owl:Class ;
+    rdfs:label "Permission"@en ;
+    IAO:0000115 "A sandbox permission granted to the application via --finish-args, controlling access to devices, filesystems, D-Bus services, and network."@en ;
+    rdfs:comment "A sandbox permission (finish-arg)"@en ;
+    rdfs:isDefinedBy flatpak: .
+
+flatpak:Runtime a owl:Class ;
+    rdfs:label "Runtime"@en ;
+    IAO:0000115 "A base platform providing shared libraries, frameworks, and a filesystem root for Flatpak applications (e.g., org.gnome.Platform, org.kde.Platform)."@en ;
+    rdfs:comment "A Flatpak runtime providing shared libraries"@en ;
+    rdfs:isDefinedBy flatpak: .
+
+flatpak:FlatpakApp a owl:Class ;
+    rdfs:label "Flatpak Application"@en ;
+    IAO:0000115 "A desktop application packaged in Flatpak format, identified by a reverse-DNS application ID (e.g., org.mozilla.Firefox), running in a Bubblewrap sandbox."@en ;
+    rdfs:comment "A sandboxed application distributed via Flatpak"@en ;
+    rdfs:isDefinedBy flatpak: ;
+    rdfs:subClassOf pkg:BinaryPackage .
+
+flatpak: a owl:Ontology ;
+    rdfs:label "Flatpak Application Ontology"@en ;
     dcterms:abstract "Models Flatpak's sandboxed application distribution including application IDs, runtimes, SDK extensions, finish-args (sandbox permissions), and Flathub remotes. Captures the application-level packaging model distinct from system-level package managers." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    rdfs:comment "Ontology for representing Flatpak applications, runtimes, and remotes"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
-# Classes
-
-flatpak:FlatpakApp a owl:Class ;
-    rdfs:subClassOf pkg:Package ;
-    rdfs:label "Flatpak Application" ;
-    rdfs:comment "A sandboxed application distributed via Flatpak" ;
-    IAO:0000115 "A desktop application packaged in Flatpak format, identified by a reverse-DNS application ID (e.g., org.mozilla.Firefox), running in a Bubblewrap sandbox." .
-
-flatpak:Runtime a owl:Class ;
-    rdfs:label "Runtime" ;
-    rdfs:comment "A Flatpak runtime providing shared libraries" ;
-    IAO:0000115 "A base platform providing shared libraries, frameworks, and a filesystem root for Flatpak applications (e.g., org.gnome.Platform, org.kde.Platform)." .
-
-flatpak:Extension a owl:Class ;
-    rdfs:label "Extension" ;
-    rdfs:comment "A Flatpak extension adding capabilities to a runtime or app" ;
-    IAO:0000115 "An add-on that extends a runtime or application with additional functionality (e.g., GL drivers, codecs, language packs)." .
-
-flatpak:Remote a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Remote" ;
-    rdfs:comment "A Flatpak remote repository (e.g., Flathub)" ;
-    IAO:0000115 "An OSTree-based repository serving Flatpak applications and runtimes, such as Flathub or a self-hosted remote." .
-
-flatpak:Permission a owl:Class ;
-    rdfs:label "Permission" ;
-    rdfs:comment "A sandbox permission (finish-arg)" ;
-    IAO:0000115 "A sandbox permission granted to the application via --finish-args, controlling access to devices, filesystems, D-Bus services, and network." .
-
-# Datatype Properties
-
-flatpak:appId a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "application ID" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Reverse-DNS application identifier (e.g., 'org.mozilla.Firefox')." .
-
-flatpak:branch a owl:DatatypeProperty ;
-    rdfs:label "branch" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Flatpak branch (typically 'stable', 'beta', or a version like '23.08')." .
-
-flatpak:command a owl:DatatypeProperty ;
-    rdfs:label "command" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The main executable command run when the application is launched." .
-
-flatpak:runtimeVersion a owl:DatatypeProperty ;
-    rdfs:label "runtime version" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The version of the runtime required by the application (e.g., '46' for GNOME 46)." .
-
-flatpak:finishArg a owl:DatatypeProperty ;
-    rdfs:label "finish arg" ;
-    rdfs:domain flatpak:Permission ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A --finish-args flag specifying a sandbox permission (e.g., '--share=network', '--filesystem=home', '--socket=wayland')." .
-
-flatpak:commitHash a owl:DatatypeProperty ;
-    rdfs:label "commit hash" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The OSTree commit hash identifying the exact installed version of the application." .
-
-flatpak:installedSize a owl:DatatypeProperty ;
-    rdfs:label "installed size" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "The installed size of the application in bytes." .
-
-# Object Properties
-
-flatpak:usesRuntime a owl:ObjectProperty ;
-    rdfs:label "uses runtime" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range flatpak:Runtime ;
-    IAO:0000115 "Associates an application with the runtime it requires." .
-
-flatpak:usesSdk a owl:ObjectProperty ;
-    rdfs:label "uses SDK" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range flatpak:Runtime ;
-    IAO:0000115 "Associates an application with the SDK used to build it." .
-
-flatpak:hasExtension a owl:ObjectProperty ;
-    rdfs:label "has extension" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range flatpak:Extension ;
-    IAO:0000115 "Associates an application or runtime with an extension." .
-
-flatpak:hasPermission a owl:ObjectProperty ;
-    rdfs:label "has permission" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range flatpak:Permission ;
-    IAO:0000115 "Associates an application with a sandbox permission." .
-
-flatpak:publishedOn a owl:ObjectProperty ;
-    rdfs:label "published on" ;
-    rdfs:domain flatpak:FlatpakApp ;
-    rdfs:range flatpak:Remote ;
-    IAO:0000115 "Associates an application with the remote it is distributed through." .

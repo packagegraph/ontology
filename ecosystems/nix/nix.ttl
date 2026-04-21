@@ -1,579 +1,623 @@
-# Nix Package Ontology
-@prefix nix: <https://purl.org/packagegraph/ontology/nix#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix spdx: <http://spdx.org/spdxdocs/spdx-v2.2.1#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix nix: <https://purl.org/packagegraph/ontology/nix#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+nix:BuildPythonApplication a owl:Class ;
+    rdfs:label "buildPythonApplication"@en ;
+    IAO:0000115 "A specialized Nix derivation builder for Python applications that handles Python dependencies and creates standalone executable applications."@en ;
+    rdfs:comment "A derivation for building Python applications"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
 
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/nix#> a owl:Ontology ;
-    rdfs:label "Nix Package Ontology" ;
-    rdfs:comment "Ontology for representing Nix packages, derivations, and expressions" ;
+nix:BuildPythonPackage a owl:Class ;
+    rdfs:label "buildPythonPackage"@en ;
+    IAO:0000115 "A specialized Nix derivation builder for Python packages that handles Python dependencies and creates reusable Python libraries."@en ;
+    rdfs:comment "A derivation for building Python packages"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:HomeManager a owl:Class ;
+    rdfs:label "Home Manager"@en ;
+    IAO:0000115 "A Nix-based tool for declaratively managing user-specific packages, dotfiles, and configurations in a reproducible manner."@en ;
+    rdfs:comment "A tool for managing user environments with Nix"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:NixFunction a owl:Class ;
+    rdfs:label "Nix Function"@en ;
+    IAO:0000115 "A functional programming construct in the Nix language that takes arguments and returns values, used for creating reusable and parameterizable expressions."@en ;
+    rdfs:comment "A function in the Nix expression language"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:NixOS a owl:Class ;
+    rdfs:label "NixOS"@en ;
+    IAO:0000115 "A Linux distribution built on top of the Nix package manager that allows declarative system configuration and atomic upgrades."@en ;
+    rdfs:comment "The NixOS operating system configuration"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:NixOSModule a owl:Class ;
+    rdfs:label "NixOS Module"@en ;
+    IAO:0000115 "A reusable configuration component in NixOS that defines system services, options, and their implementations in a modular way."@en ;
+    rdfs:comment "A module for configuring NixOS"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:StoreDerivation a owl:Class ;
+    rdfs:label "Store Derivation"@en ;
+    IAO:0000115 "A derivation that has been processed and stored in the Nix store with a unique hash-based path, ready for building or already built."@en ;
+    rdfs:comment "A derivation that has been instantiated in the Nix store"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:aarch64-darwin a owl:NamedIndividual ;
+    rdfs:label "aarch64-darwin"@en ;
+    rdfs:comment "ARM64 macOS system"@en .
+
+nix:aarch64-linux a owl:NamedIndividual ;
+    rdfs:label "aarch64-linux"@en ;
+    rdfs:comment "ARM64 Linux system"@en .
+
+nix:allowSubstitutes a owl:DatatypeProperty ;
+    rdfs:label "allow substitutes"@en ;
+    IAO:0000115 "A flag indicating whether pre-built binary substitutes can be used instead of building from source."@en ;
+    rdfs:comment "Whether to allow binary substitutes"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:boolean .
+
+nix:args a owl:DatatypeProperty ;
+    rdfs:label "builder arguments"@en ;
+    IAO:0000115 "Command-line arguments passed to the builder program when executing the build process."@en ;
+    rdfs:comment "Arguments passed to the builder"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:buildInputs a owl:ObjectProperty ;
+    rdfs:label "build inputs"@en ;
+    IAO:0000115 "Runtime dependencies that are needed when the built package is executed. This maps to the general concept of a runtime dependency in the core ontology."@en ;
+    rdfs:comment "Runtime dependencies available to the package. In Nix, these are dependencies for the target platform."@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation ;
+    rdfs:subPropertyOf pkg:dependsOn .
+
+nix:buildPhase a owl:DatatypeProperty ;
+    rdfs:label "build phase"@en ;
+    IAO:0000115 "Shell commands executed during the build phase to compile and build the software."@en ;
+    rdfs:comment "Commands run during the build phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:builder a owl:DatatypeProperty ;
+    rdfs:label "builder"@en ;
+    IAO:0000115 "The executable program or script that performs the actual build process for the derivation."@en ;
+    rdfs:comment "The program that builds the derivation"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:cargoLock a owl:DatatypeProperty ;
+    rdfs:label "Cargo lock"@en ;
+    IAO:0000115 "The Cargo.lock file content or path that specifies exact versions of Rust dependencies."@en ;
+    rdfs:comment "Cargo.lock file content or path"@en ;
+    rdfs:domain nix:BuildRustPackage ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:cargoSha256 a owl:DatatypeProperty ;
+    rdfs:label "Cargo SHA256"@en ;
+    IAO:0000115 "The SHA256 hash of the Cargo dependencies directory for Rust packages."@en ;
+    rdfs:comment "SHA256 of the Cargo dependencies"@en ;
+    rdfs:domain nix:BuildRustPackage ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:checkInputs a owl:ObjectProperty ;
+    rdfs:label "check inputs"@en ;
+    IAO:0000115 "Dependencies that are only needed during the check phase for running tests."@en ;
+    rdfs:comment "Dependencies needed only for testing"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation .
+
+nix:checkPhase a owl:DatatypeProperty ;
+    rdfs:label "check phase"@en ;
+    IAO:0000115 "Shell commands executed during the check phase to run tests and verify the build."@en ;
+    rdfs:comment "Commands run during the check phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:configurePhase a owl:DatatypeProperty ;
+    rdfs:label "configure phase"@en ;
+    IAO:0000115 "Shell commands executed during the configure phase to prepare the build environment and configure the software."@en ;
+    rdfs:comment "Commands run during the configure phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:doCheck a owl:DatatypeProperty ;
+    rdfs:label "do check"@en ;
+    IAO:0000115 "A flag indicating whether the check phase should be executed to run tests."@en ;
+    rdfs:comment "Whether to run the check phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:boolean .
+
+nix:dontBuild a owl:DatatypeProperty ;
+    rdfs:label "don't build"@en ;
+    IAO:0000115 "A flag indicating whether the build phase should be skipped."@en ;
+    rdfs:comment "Whether to skip the build phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:boolean .
+
+nix:dontInstall a owl:DatatypeProperty ;
+    rdfs:label "don't install"@en ;
+    IAO:0000115 "A flag indicating whether the install phase should be skipped."@en ;
+    rdfs:comment "Whether to skip the install phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:boolean .
+
+nix:evaluatesTo a owl:ObjectProperty ;
+    rdfs:label "evaluates to"@en ;
+    IAO:0000115 "Relates a Nix expression to the derivation that results from evaluating that expression."@en ;
+    rdfs:comment "Links a Nix expression to the derivation it evaluates to"@en ;
+    rdfs:domain nix:NixExpression ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation .
+
+nix:fixupPhase a owl:DatatypeProperty ;
+    rdfs:label "fixup phase"@en ;
+    IAO:0000115 "Shell commands executed during the fixup phase to perform post-installation cleanup and adjustments."@en ;
+    rdfs:comment "Commands run during the fixup phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:flakeDescription a owl:DatatypeProperty ;
+    rdfs:label "flake description"@en ;
+    IAO:0000115 "A human-readable description of what the flake provides or does."@en ;
+    rdfs:comment "Description of the flake"@en ;
+    rdfs:domain nix:Flake ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:flakeInput a owl:DatatypeProperty ;
+    rdfs:label "flake input"@en ;
+    IAO:0000115 "An external dependency or input that the flake depends on, such as other flakes or repositories."@en ;
+    rdfs:comment "An input dependency of the flake"@en ;
+    rdfs:domain nix:Flake ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:flakeOutput a owl:DatatypeProperty ;
+    rdfs:label "flake output"@en ;
+    IAO:0000115 "A named output provided by the flake, such as packages, apps, or development shells."@en ;
+    rdfs:comment "An output provided by the flake"@en ;
+    rdfs:domain nix:Flake ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:goModules a owl:DatatypeProperty ;
+    rdfs:label "Go modules"@en ;
+    IAO:0000115 "The Go module dependencies and their versions as specified in go.mod files."@en ;
+    rdfs:comment "Go module dependencies"@en ;
+    rdfs:domain nix:BuildGoModule ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:hasFlakeLock a owl:ObjectProperty ;
+    rdfs:label "has flake lock"@en ;
+    IAO:0000115 "Relates a flake to its lock file that specifies exact input versions."@en ;
+    rdfs:comment "Links a flake to its lock file"@en ;
+    rdfs:domain nix:Flake ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:FlakeLock .
+
+nix:hasInput a owl:ObjectProperty ;
+    rdfs:label "has input"@en ;
+    IAO:0000115 "Relates a derivation to the inputs required for its build process."@en ;
+    rdfs:comment "Links a derivation to its build inputs"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:BuildInput .
+
+nix:hasOverlay a owl:ObjectProperty ;
+    rdfs:label "has overlay"@en ;
+    IAO:0000115 "Relates a package set to overlays that modify or extend it."@en ;
+    rdfs:comment "Links a package set to its overlays"@en ;
+    rdfs:domain nix:Nixpkgs ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Overlay .
+
+nix:hasStorePath a owl:ObjectProperty ;
+    rdfs:label "has store path"@en ;
+    IAO:0000115 "Relates a derivation to its corresponding path in the Nix store."@en ;
+    rdfs:comment "Links a derivation to its store path"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:StorePath .
+
+nix:installCheckInputs a owl:ObjectProperty ;
+    rdfs:label "install check inputs"@en ;
+    IAO:0000115 "Dependencies that are needed for running installation verification tests."@en ;
+    rdfs:comment "Dependencies needed for install checks"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation .
+
+nix:installPhase a owl:DatatypeProperty ;
+    rdfs:label "install phase"@en ;
+    IAO:0000115 "Shell commands executed during the install phase to install the built software into the output directory."@en ;
+    rdfs:comment "Commands run during the install phase"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:md5 a owl:DatatypeProperty ;
+    rdfs:label "MD5 hash"@en ;
+    IAO:0000115 "The MD5 cryptographic hash of the source files, used for integrity verification."@en ;
+    rdfs:comment "The MD5 hash of the source"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:narSize a owl:DatatypeProperty ;
+    rdfs:label "NAR size"@en ;
+    IAO:0000115 "The size in bytes of the Nix Archive (NAR) representation of the store path."@en ;
+    rdfs:comment "The size of the Nix archive in bytes"@en ;
+    rdfs:domain nix:StorePath ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:long .
+
+nix:nativeBuildInputs a owl:ObjectProperty ;
+    rdfs:label "native build inputs"@en ;
+    IAO:0000115 "Build-time dependencies that run on the build platform and are used during compilation. This maps to the core build-time dependency concept."@en ;
+    rdfs:comment "Build-time dependencies for the build platform. In Nix, these are dependencies that run on the build host."@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation ;
+    rdfs:subPropertyOf pkg:buildDependsOn .
+
+nix:nixos-23-11 a nix:Channel ;
+    rdfs:label "nixos-23.11"@en ;
+    rdfs:comment "NixOS 23.11 stable channel"@en .
+
+nix:nixos-unstable a nix:Channel ;
+    rdfs:label "nixos-unstable"@en ;
+    rdfs:comment "The unstable NixOS channel"@en .
+
+nix:nixpkgs-unstable a nix:Channel ;
+    rdfs:label "nixpkgs-unstable"@en ;
+    rdfs:comment "The unstable nixpkgs channel"@en .
+
+nix:npmDepsHash a owl:DatatypeProperty ;
+    rdfs:label "NPM dependencies hash"@en ;
+    IAO:0000115 "The cryptographic hash of the NPM dependencies for Node.js packages."@en ;
+    rdfs:comment "Hash of NPM dependencies"@en ;
+    rdfs:domain nix:BuildNpmPackage ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:outputHash a owl:DatatypeProperty ;
+    rdfs:label "output hash"@en ;
+    IAO:0000115 "The expected cryptographic hash of the derivation's output, used for fixed-output derivations."@en ;
+    rdfs:comment "The hash of the derivation output"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:outputHashAlgo a owl:DatatypeProperty ;
+    rdfs:label "output hash algorithm"@en ;
+    IAO:0000115 "The cryptographic hash algorithm used to compute the output hash (e.g., sha256, sha1, md5)."@en ;
+    rdfs:comment "The algorithm used for the output hash"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:outputHashMode a owl:DatatypeProperty ;
+    rdfs:label "output hash mode"@en ;
+    IAO:0000115 "The mode for computing the output hash, either 'flat' for single files or 'recursive' for directory trees."@en ;
+    rdfs:comment "The mode for output hashing (flat or recursive)"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:pname a owl:DatatypeProperty ;
+    rdfs:label "package name"@en ;
+    IAO:0000115 "The base name of a package without version information, used as the primary identifier for the software."@en ;
+    rdfs:comment "The package name part of the derivation"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:postBuild a owl:DatatypeProperty ;
+    rdfs:label "post build"@en ;
+    IAO:0000115 "Shell commands executed after the build phase to perform post-build processing."@en ;
+    rdfs:comment "Commands run after building"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:postConfigure a owl:DatatypeProperty ;
+    rdfs:label "post configure"@en ;
+    IAO:0000115 "Shell commands executed after the configure phase to perform post-configuration tasks."@en ;
+    rdfs:comment "Commands run after configuring"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:postInstall a owl:DatatypeProperty ;
+    rdfs:label "post install"@en ;
+    IAO:0000115 "Shell commands executed after the install phase to perform additional installation tasks."@en ;
+    rdfs:comment "Commands run after installation"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:preBuild a owl:DatatypeProperty ;
+    rdfs:label "pre build"@en ;
+    IAO:0000115 "Shell commands executed before the build phase to prepare for compilation."@en ;
+    rdfs:comment "Commands run before building"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:preConfigure a owl:DatatypeProperty ;
+    rdfs:label "pre configure"@en ;
+    IAO:0000115 "Shell commands executed before the configure phase to prepare for configuration."@en ;
+    rdfs:comment "Commands run before configuring"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:preferLocalBuild a owl:DatatypeProperty ;
+    rdfs:label "prefer local build"@en ;
+    IAO:0000115 "A flag indicating whether the derivation should preferentially be built locally rather than using remote builders."@en ;
+    rdfs:comment "Whether to prefer building locally"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:boolean .
+
+nix:propagatedBuildInputs a owl:ObjectProperty ;
+    rdfs:label "propagated build inputs"@en ;
+    IAO:0000115 "Runtime dependencies that are automatically made available to packages that depend on this one."@en ;
+    rdfs:comment "Dependencies propagated to dependents"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation .
+
+nix:propagatedNativeBuildInputs a owl:ObjectProperty ;
+    rdfs:label "propagated native build inputs"@en ;
+    IAO:0000115 "Build-time dependencies that are automatically made available to packages that depend on this one."@en ;
+    rdfs:comment "Native build dependencies propagated to dependents"@en ;
+    rdfs:domain nix:StdenvMkDerivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range nix:Derivation .
+
+nix:sha1 a owl:DatatypeProperty ;
+    rdfs:label "SHA1 hash"@en ;
+    IAO:0000115 "The SHA1 cryptographic hash of the source files, used for integrity verification."@en ;
+    rdfs:comment "The SHA1 hash of the source"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:sha256 a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "SHA256 hash"@en ;
+    IAO:0000115 "The SHA256 cryptographic hash of the source files, used for integrity verification."@en ;
+    rdfs:comment "The SHA256 hash of the source"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:sourceUrl a owl:DatatypeProperty ;
+    rdfs:label "source URL"@en ;
+    IAO:0000115 "The URL location from which the source code or archive can be downloaded."@en ;
+    rdfs:comment "The URL where the source can be downloaded"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:anyURI .
+
+nix:src a owl:DatatypeProperty ;
+    rdfs:label "source"@en ;
+    IAO:0000115 "The source code, archive, or files that serve as input for building the package."@en ;
+    rdfs:comment "The source code or files for the package"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:storePathName a owl:DatatypeProperty ;
+    rdfs:label "store path name"@en ;
+    IAO:0000115 "The human-readable name component of a store path, typically including package name and version."@en ;
+    rdfs:comment "The name component of a store path"@en ;
+    rdfs:domain nix:StorePath ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:vendorSha256 a owl:DatatypeProperty ;
+    rdfs:label "vendor SHA256"@en ;
+    IAO:0000115 "The SHA256 hash of the Go vendor directory containing all dependencies."@en ;
+    rdfs:comment "SHA256 of the Go vendor directory"@en ;
+    rdfs:domain nix:BuildGoModule ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:version a owl:DatatypeProperty ;
+    rdfs:label "package version"@en ;
+    IAO:0000115 "The version string of a package, indicating the specific release or revision of the software."@en ;
+    rdfs:comment "The version of the package"@en ;
+    rdfs:domain pkg:Version ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf pkg:versionString .
+
+nix:x86_64-darwin a owl:NamedIndividual ;
+    rdfs:label "x86_64-darwin"@en ;
+    rdfs:comment "64-bit macOS system"@en .
+
+nix:x86_64-linux a owl:NamedIndividual ;
+    rdfs:label "x86_64-linux"@en ;
+    rdfs:comment "64-bit Linux system"@en .
+
+nix:BuildInput a owl:Class ;
+    rdfs:label "Build Input"@en ;
+    IAO:0000115 "A dependency or resource required during the build process of a Nix derivation, including libraries, tools, or other packages."@en ;
+    rdfs:comment "An input to the build process"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:BuildNpmPackage a owl:Class ;
+    rdfs:label "buildNpmPackage"@en ;
+    IAO:0000115 "A specialized Nix derivation builder for Node.js packages that handles NPM dependencies and builds JavaScript applications or libraries."@en ;
+    rdfs:comment "A derivation for building NPM packages"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:FlakeLock a owl:Class ;
+    rdfs:label "Flake Lock"@en ;
+    IAO:0000115 "A lock file that records the exact versions and hashes of all flake inputs to ensure reproducible builds across different environments."@en ;
+    rdfs:comment "A lock file specifying exact versions of flake inputs"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:NixExpression a owl:Class ;
+    rdfs:label "Nix Expression"@en ;
+    IAO:0000115 "A piece of code written in the Nix functional programming language that can be evaluated to produce derivations or other values."@en ;
+    rdfs:comment "A Nix language expression that evaluates to a derivation"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:Nixpkgs a owl:Class ;
+    rdfs:label "Nixpkgs"@en ;
+    IAO:0000115 "The main repository containing the Nix package collection with thousands of software packages and their build expressions."@en ;
+    rdfs:comment "The Nix package collection repository"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf pkg:Repository .
+
+nix:Overlay a owl:Class ;
+    rdfs:label "Nix Overlay"@en ;
+    IAO:0000115 "A function that takes a package set and returns a modified version, used to add new packages or override existing ones without modifying the original package set."@en ;
+    rdfs:comment "A function that extends or modifies package sets"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf owl:Thing .
+
+nix:name a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "derivation name"@en ;
+    IAO:0000115 "The full name of a Nix derivation, typically combining the package name and version."@en ;
+    rdfs:comment "The name of the derivation"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:narHash a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "NAR hash"@en ;
+    IAO:0000115 "The cryptographic hash of the Nix Archive (NAR) representation of the store path contents."@en ;
+    rdfs:comment "The hash of the Nix archive (NAR)"@en ;
+    rdfs:domain nix:StorePath ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:storePathHash a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "store path hash"@en ;
+    IAO:0000115 "The cryptographic hash component that uniquely identifies a store path."@en ;
+    rdfs:comment "The hash component of a store path"@en ;
+    rdfs:domain nix:StorePath ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:system a owl:DatatypeProperty ;
+    rdfs:label "system"@en ;
+    IAO:0000115 "The target system platform for which the derivation is built, specifying architecture and operating system."@en ;
+    rdfs:comment "The system platform (e.g., x86_64-linux)"@en ;
+    rdfs:domain nix:Derivation ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:range xsd:string .
+
+nix:BuildGoModule a owl:Class ;
+    rdfs:label "buildGoModule"@en ;
+    IAO:0000115 "A specialized Nix derivation builder for Go modules that handles Go module dependencies and builds Go applications or libraries."@en ;
+    rdfs:comment "A derivation for building Go modules"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:BuildRustPackage a owl:Class ;
+    rdfs:label "buildRustPackage"@en ;
+    IAO:0000115 "A specialized Nix derivation builder for Rust packages that handles Cargo dependencies and builds Rust applications or libraries."@en ;
+    rdfs:comment "A derivation for building Rust packages"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:Channel a owl:Class ;
+    rdfs:label "Nix Channel"@en ;
+    IAO:0000115 "A named snapshot of the Nix package collection that provides a stable set of package versions for reproducible installations."@en ;
+    rdfs:comment "A Nix channel providing a snapshot of packages"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf pkg:Repository .
+
+nix:Flake a owl:Class ;
+    rdfs:label "Nix Flake"@en ;
+    IAO:0000115 "A self-contained Nix project with explicitly declared inputs and outputs that provides reproducible builds and dependency management."@en ;
+    rdfs:comment "A self-contained unit with reproducible dependencies"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf pkg:Repository .
+
+nix:StorePath a owl:Class ;
+    rdfs:label "Store Path"@en ;
+    IAO:0000115 "A unique path in the Nix store identified by a cryptographic hash that contains the result of building a derivation or other store objects."@en ;
+    rdfs:comment "A path in the Nix store"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty nix:storePathHash ],
+        [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty nix:narHash ],
+        owl:Thing .
+
+nix:StdenvMkDerivation a owl:Class ;
+    rdfs:label "stdenv.mkDerivation"@en ;
+    IAO:0000115 "The standard Nix derivation builder that provides a common build environment with typical build phases and utilities for most software packages."@en ;
+    rdfs:comment "A derivation built using the standard environment"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf nix:Derivation .
+
+nix:Derivation a owl:Class ;
+    rdfs:label "Nix Derivation"@en ;
+    IAO:0000115 "A specification in the Nix language that describes how to build a software package, including its dependencies, build instructions, and metadata."@en ;
+    rdfs:comment "A Nix derivation describing how to build a package"@en ;
+    rdfs:isDefinedBy nix: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty nix:name ],
+        [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty nix:system ],
+        pkg:SourcePackage .
+
+nix: a owl:Ontology ;
+    rdfs:label "Nix Package Ontology"@en ;
     dcterms:abstract "The Nix extension models the purely functional Nix package management ecosystem. It captures Nix derivations, store paths, flakes, build phases (configure, build, install, check), and language-specific builders (stdenv.mkDerivation, buildPythonPackage, buildGoModule). The ontology represents Nix's content-addressable store and reproducible build model." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "Package Management Ontology Project" ;
-    dcterms:title "Nix Package Ontology" ;
     dcterms:description "A comprehensive ontology for modeling Nix packages, derivations, expressions, flakes, and the Nix package management ecosystem including store paths, build phases, and language-specific builders." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    dcterms:title "Nix Package Ontology" ;
+    rdfs:comment "Ontology for representing Nix packages, derivations, and expressions"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
-# Nix-specific Classes
-nix:Derivation a owl:Class ;
-    rdfs:subClassOf pkg:SourcePackage ;
-    rdfs:label "Nix Derivation" ;
-    rdfs:comment "A Nix derivation describing how to build a package" ;
-    IAO:0000115 "A specification in the Nix language that describes how to build a software package, including its dependencies, build instructions, and metadata." .
-
-nix:StoreDerivation a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "Store Derivation" ;
-    rdfs:comment "A derivation that has been instantiated in the Nix store" ;
-    IAO:0000115 "A derivation that has been processed and stored in the Nix store with a unique hash-based path, ready for building or already built." .
-
-nix:NixExpression a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Nix Expression" ;
-    rdfs:comment "A Nix language expression that evaluates to a derivation" ;
-    IAO:0000115 "A piece of code written in the Nix functional programming language that can be evaluated to produce derivations or other values." .
-
-nix:NixFunction a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Nix Function" ;
-    rdfs:comment "A function in the Nix expression language" ;
-    IAO:0000115 "A functional programming construct in the Nix language that takes arguments and returns values, used for creating reusable and parameterizable expressions." .
-
-nix:Nixpkgs a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Nixpkgs" ;
-    rdfs:comment "The Nix package collection repository" ;
-    IAO:0000115 "The main repository containing the Nix package collection with thousands of software packages and their build expressions." .
-
-nix:Channel a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Nix Channel" ;
-    rdfs:comment "A Nix channel providing a snapshot of packages" ;
-    IAO:0000115 "A named snapshot of the Nix package collection that provides a stable set of package versions for reproducible installations." .
-
-nix:Flake a owl:Class ;
-    rdfs:subClassOf pkg:Repository ;
-    rdfs:label "Nix Flake" ;
-    rdfs:comment "A self-contained unit with reproducible dependencies" ;
-    IAO:0000115 "A self-contained Nix project with explicitly declared inputs and outputs that provides reproducible builds and dependency management." .
-
-nix:FlakeLock a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Flake Lock" ;
-    rdfs:comment "A lock file specifying exact versions of flake inputs" ;
-    IAO:0000115 "A lock file that records the exact versions and hashes of all flake inputs to ensure reproducible builds across different environments." .
-
-nix:StorePath a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Store Path" ;
-    rdfs:comment "A path in the Nix store" ;
-    IAO:0000115 "A unique path in the Nix store identified by a cryptographic hash that contains the result of building a derivation or other store objects." .
-
-nix:BuildInput a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Build Input" ;
-    rdfs:comment "An input to the build process" ;
-    IAO:0000115 "A dependency or resource required during the build process of a Nix derivation, including libraries, tools, or other packages." .
-
-nix:Overlay a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Nix Overlay" ;
-    rdfs:comment "A function that extends or modifies package sets" ;
-    IAO:0000115 "A function that takes a package set and returns a modified version, used to add new packages or override existing ones without modifying the original package set." .
-
-nix:NixOS a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "NixOS" ;
-    rdfs:comment "The NixOS operating system configuration" ;
-    IAO:0000115 "A Linux distribution built on top of the Nix package manager that allows declarative system configuration and atomic upgrades." .
-
-nix:NixOSModule a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "NixOS Module" ;
-    rdfs:comment "A module for configuring NixOS" ;
-    IAO:0000115 "A reusable configuration component in NixOS that defines system services, options, and their implementations in a modular way." .
-
-nix:HomeManager a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Home Manager" ;
-    rdfs:comment "A tool for managing user environments with Nix" ;
-    IAO:0000115 "A Nix-based tool for declaratively managing user-specific packages, dotfiles, and configurations in a reproducible manner." .
-
-# Package Builders
-nix:StdenvMkDerivation a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "stdenv.mkDerivation" ;
-    rdfs:comment "A derivation built using the standard environment" ;
-    IAO:0000115 "The standard Nix derivation builder that provides a common build environment with typical build phases and utilities for most software packages." .
-
-nix:BuildGoModule a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "buildGoModule" ;
-    rdfs:comment "A derivation for building Go modules" ;
-    IAO:0000115 "A specialized Nix derivation builder for Go modules that handles Go module dependencies and builds Go applications or libraries." .
-
-nix:BuildRustPackage a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "buildRustPackage" ;
-    rdfs:comment "A derivation for building Rust packages" ;
-    IAO:0000115 "A specialized Nix derivation builder for Rust packages that handles Cargo dependencies and builds Rust applications or libraries." .
-
-nix:BuildPythonApplication a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "buildPythonApplication" ;
-    rdfs:comment "A derivation for building Python applications" ;
-    IAO:0000115 "A specialized Nix derivation builder for Python applications that handles Python dependencies and creates standalone executable applications." .
-
-nix:BuildPythonPackage a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "buildPythonPackage" ;
-    rdfs:comment "A derivation for building Python packages" ;
-    IAO:0000115 "A specialized Nix derivation builder for Python packages that handles Python dependencies and creates reusable Python libraries." .
-
-nix:BuildNpmPackage a owl:Class ;
-    rdfs:subClassOf nix:Derivation ;
-    rdfs:label "buildNpmPackage" ;
-    rdfs:comment "A derivation for building NPM packages" ;
-    IAO:0000115 "A specialized Nix derivation builder for Node.js packages that handles NPM dependencies and builds JavaScript applications or libraries." .
-
-# Nix-specific Properties
-nix:name a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "derivation name" ;
-    rdfs:comment "The name of the derivation" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The full name of a Nix derivation, typically combining the package name and version." .
-
-nix:pname a owl:DatatypeProperty ;
-    rdfs:label "package name" ;
-    rdfs:comment "The package name part of the derivation" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The base name of a package without version information, used as the primary identifier for the software." .
-
-nix:version a owl:DatatypeProperty ;
-    rdfs:subPropertyOf pkg:versionString ;
-    rdfs:label "package version" ;
-    rdfs:comment "The version of the package" ;
-    rdfs:domain pkg:Version ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The version string of a package, indicating the specific release or revision of the software." .
-
-nix:system a owl:DatatypeProperty ;
-    rdfs:label "system" ;
-    rdfs:comment "The system platform (e.g., x86_64-linux)" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The target system platform for which the derivation is built, specifying architecture and operating system." .
-
-nix:builder a owl:DatatypeProperty ;
-    rdfs:label "builder" ;
-    rdfs:comment "The program that builds the derivation" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The executable program or script that performs the actual build process for the derivation." .
-
-nix:args a owl:DatatypeProperty ;
-    rdfs:label "builder arguments" ;
-    rdfs:comment "Arguments passed to the builder" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Command-line arguments passed to the builder program when executing the build process." .
-
-nix:src a owl:DatatypeProperty ;
-    rdfs:label "source" ;
-    rdfs:comment "The source code or files for the package" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The source code, archive, or files that serve as input for building the package." .
-
-nix:sourceUrl a owl:DatatypeProperty ;
-    rdfs:label "source URL" ;
-    rdfs:comment "The URL where the source can be downloaded" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:anyURI ;
-    IAO:0000115 "The URL location from which the source code or archive can be downloaded." .
-
-nix:sha256 a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "SHA256 hash" ;
-    rdfs:comment "The SHA256 hash of the source"  ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The SHA256 cryptographic hash of the source files, used for integrity verification." .
-
-nix:sha1 a owl:DatatypeProperty ;
-    rdfs:label "SHA1 hash" ;
-    rdfs:comment "The SHA1 hash of the source" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The SHA1 cryptographic hash of the source files, used for integrity verification." .
-
-nix:md5 a owl:DatatypeProperty ;
-    rdfs:label "MD5 hash" ;
-    rdfs:comment "The MD5 hash of the source" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The MD5 cryptographic hash of the source files, used for integrity verification." .
-
-nix:outputHash a owl:DatatypeProperty ;
-    rdfs:label "output hash" ;
-    rdfs:comment "The hash of the derivation output" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The expected cryptographic hash of the derivation's output, used for fixed-output derivations." .
-
-nix:outputHashAlgo a owl:DatatypeProperty ;
-    rdfs:label "output hash algorithm" ;
-    rdfs:comment "The algorithm used for the output hash" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The cryptographic hash algorithm used to compute the output hash (e.g., sha256, sha1, md5)." .
-
-nix:outputHashMode a owl:DatatypeProperty ;
-    rdfs:label "output hash mode" ;
-    rdfs:comment "The mode for output hashing (flat or recursive)" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The mode for computing the output hash, either 'flat' for single files or 'recursive' for directory trees." .
-
-nix:preferLocalBuild a owl:DatatypeProperty ;
-    rdfs:label "prefer local build" ;
-    rdfs:comment "Whether to prefer building locally" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "A flag indicating whether the derivation should preferentially be built locally rather than using remote builders." .
-
-nix:allowSubstitutes a owl:DatatypeProperty ;
-    rdfs:label "allow substitutes" ;
-    rdfs:comment "Whether to allow binary substitutes" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "A flag indicating whether pre-built binary substitutes can be used instead of building from source." .
-
-# Build Phase Properties
-nix:configurePhase a owl:DatatypeProperty ;
-    rdfs:label "configure phase" ;
-    rdfs:comment "Commands run during the configure phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed during the configure phase to prepare the build environment and configure the software." .
-
-nix:buildPhase a owl:DatatypeProperty ;
-    rdfs:label "build phase" ;
-    rdfs:comment "Commands run during the build phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed during the build phase to compile and build the software." .
-
-nix:checkPhase a owl:DatatypeProperty ;
-    rdfs:label "check phase" ;
-    rdfs:comment "Commands run during the check phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed during the check phase to run tests and verify the build." .
-
-nix:installPhase a owl:DatatypeProperty ;
-    rdfs:label "install phase" ;
-    rdfs:comment "Commands run during the install phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed during the install phase to install the built software into the output directory." .
-
-nix:fixupPhase a owl:DatatypeProperty ;
-    rdfs:label "fixup phase" ;
-    rdfs:comment "Commands run during the fixup phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed during the fixup phase to perform post-installation cleanup and adjustments." .
-
-nix:postInstall a owl:DatatypeProperty ;
-    rdfs:label "post install" ;
-    rdfs:comment "Commands run after installation" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed after the install phase to perform additional installation tasks." .
-
-nix:preBuild a owl:DatatypeProperty ;
-    rdfs:label "pre build" ;
-    rdfs:comment "Commands run before building" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed before the build phase to prepare for compilation." .
-
-nix:postBuild a owl:DatatypeProperty ;
-    rdfs:label "post build" ;
-    rdfs:comment "Commands run after building" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed after the build phase to perform post-build processing." .
-
-nix:preConfigure a owl:DatatypeProperty ;
-    rdfs:label "pre configure" ;
-    rdfs:comment "Commands run before configuring" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed before the configure phase to prepare for configuration." .
-
-nix:postConfigure a owl:DatatypeProperty ;
-    rdfs:label "post configure" ;
-    rdfs:comment "Commands run after configuring" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "Shell commands executed after the configure phase to perform post-configuration tasks." .
-
-nix:doCheck a owl:DatatypeProperty ;
-    rdfs:label "do check" ;
-    rdfs:comment "Whether to run the check phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "A flag indicating whether the check phase should be executed to run tests." .
-
-nix:dontBuild a owl:DatatypeProperty ;
-    rdfs:label "don't build" ;
-    rdfs:comment "Whether to skip the build phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "A flag indicating whether the build phase should be skipped." .
-
-nix:dontInstall a owl:DatatypeProperty ;
-    rdfs:label "don't install" ;
-    rdfs:comment "Whether to skip the install phase" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "A flag indicating whether the install phase should be skipped." .
-
-# Language-specific Properties
-nix:goModules a owl:DatatypeProperty ;
-    rdfs:label "Go modules" ;
-    rdfs:comment "Go module dependencies" ;
-    rdfs:domain nix:BuildGoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Go module dependencies and their versions as specified in go.mod files." .
-
-nix:vendorSha256 a owl:DatatypeProperty ;
-    rdfs:label "vendor SHA256" ;
-    rdfs:comment "SHA256 of the Go vendor directory" ;
-    rdfs:domain nix:BuildGoModule ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The SHA256 hash of the Go vendor directory containing all dependencies." .
-
-nix:cargoSha256 a owl:DatatypeProperty ;
-    rdfs:label "Cargo SHA256" ;
-    rdfs:comment "SHA256 of the Cargo dependencies" ;
-    rdfs:domain nix:BuildRustPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The SHA256 hash of the Cargo dependencies directory for Rust packages." .
-
-nix:cargoLock a owl:DatatypeProperty ;
-    rdfs:label "Cargo lock" ;
-    rdfs:comment "Cargo.lock file content or path" ;
-    rdfs:domain nix:BuildRustPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The Cargo.lock file content or path that specifies exact versions of Rust dependencies." .
-
-nix:npmDepsHash a owl:DatatypeProperty ;
-    rdfs:label "NPM dependencies hash" ;
-    rdfs:comment "Hash of NPM dependencies" ;
-    rdfs:domain nix:BuildNpmPackage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The cryptographic hash of the NPM dependencies for Node.js packages." .
-
-# Flake Properties
-nix:flakeDescription a owl:DatatypeProperty ;
-    rdfs:label "flake description" ;
-    rdfs:comment "Description of the flake" ;
-    rdfs:domain nix:Flake ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A human-readable description of what the flake provides or does." .
-
-nix:flakeInput a owl:DatatypeProperty ;
-    rdfs:label "flake input" ;
-    rdfs:comment "An input dependency of the flake" ;
-    rdfs:domain nix:Flake ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "An external dependency or input that the flake depends on, such as other flakes or repositories." .
-
-nix:flakeOutput a owl:DatatypeProperty ;
-    rdfs:label "flake output" ;
-    rdfs:comment "An output provided by the flake" ;
-    rdfs:domain nix:Flake ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "A named output provided by the flake, such as packages, apps, or development shells." .
-
-# Store Properties
-nix:storePathHash a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "store path hash" ;
-    rdfs:comment "The hash component of a store path" ;
-    rdfs:domain nix:StorePath ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The cryptographic hash component that uniquely identifies a store path." .
-
-nix:storePathName a owl:DatatypeProperty ;
-    rdfs:label "store path name" ;
-    rdfs:comment "The name component of a store path" ;
-    rdfs:domain nix:StorePath ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The human-readable name component of a store path, typically including package name and version." .
-
-nix:narHash a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "NAR hash" ;
-    rdfs:comment "The hash of the Nix archive (NAR)" ;
-    rdfs:domain nix:StorePath ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The cryptographic hash of the Nix Archive (NAR) representation of the store path contents." .
-
-nix:narSize a owl:DatatypeProperty ;
-    rdfs:label "NAR size" ;
-    rdfs:comment "The size of the Nix archive in bytes" ;
-    rdfs:domain nix:StorePath ;
-    rdfs:range xsd:long ;
-    IAO:0000115 "The size in bytes of the Nix Archive (NAR) representation of the store path." .
-
-# Object Properties
-nix:evaluatesTo a owl:ObjectProperty ;
-    rdfs:label "evaluates to" ;
-    rdfs:comment "Links a Nix expression to the derivation it evaluates to" ;
-    rdfs:domain nix:NixExpression ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Relates a Nix expression to the derivation that results from evaluating that expression." .
-
-nix:hasInput a owl:ObjectProperty ;
-    rdfs:label "has input" ;
-    rdfs:comment "Links a derivation to its build inputs" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range nix:BuildInput ;
-    IAO:0000115 "Relates a derivation to the inputs required for its build process." .
-
-nix:hasStorePath a owl:ObjectProperty ;
-    rdfs:label "has store path" ;
-    rdfs:comment "Links a derivation to its store path" ;
-    rdfs:domain nix:Derivation ;
-    rdfs:range nix:StorePath ;
-    IAO:0000115 "Relates a derivation to its corresponding path in the Nix store." .
-
-nix:hasFlakeLock a owl:ObjectProperty ;
-    rdfs:label "has flake lock" ;
-    rdfs:comment "Links a flake to its lock file" ;
-    rdfs:domain nix:Flake ;
-    rdfs:range nix:FlakeLock ;
-    IAO:0000115 "Relates a flake to its lock file that specifies exact input versions." .
-
-nix:hasOverlay a owl:ObjectProperty ;
-    rdfs:label "has overlay" ;
-    rdfs:comment "Links a package set to its overlays" ;
-    rdfs:domain nix:Nixpkgs ;
-    rdfs:range nix:Overlay ;
-    IAO:0000115 "Relates a package set to overlays that modify or extend it." .
-
-# Dependency Properties
-nix:buildInputs a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:dependsOn ;
-    rdfs:label "build inputs" ;
-    rdfs:comment "Runtime dependencies available to the package. In Nix, these are dependencies for the target platform." ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Runtime dependencies that are needed when the built package is executed. This maps to the general concept of a runtime dependency in the core ontology." .
-
-nix:nativeBuildInputs a owl:ObjectProperty ;
-    rdfs:subPropertyOf pkg:buildDependsOn ;
-    rdfs:label "native build inputs" ;
-    rdfs:comment "Build-time dependencies for the build platform. In Nix, these are dependencies that run on the build host." ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Build-time dependencies that run on the build platform and are used during compilation. This maps to the core build-time dependency concept." .
-
-nix:propagatedBuildInputs a owl:ObjectProperty ;
-    rdfs:label "propagated build inputs" ;
-    rdfs:comment "Dependencies propagated to dependents" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Runtime dependencies that are automatically made available to packages that depend on this one." .
-
-nix:propagatedNativeBuildInputs a owl:ObjectProperty ;
-    rdfs:label "propagated native build inputs" ;
-    rdfs:comment "Native build dependencies propagated to dependents" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Build-time dependencies that are automatically made available to packages that depend on this one." .
-
-nix:checkInputs a owl:ObjectProperty ;
-    rdfs:label "check inputs" ;
-    rdfs:comment "Dependencies needed only for testing" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Dependencies that are only needed during the check phase for running tests." .
-
-nix:installCheckInputs a owl:ObjectProperty ;
-    rdfs:label "install check inputs" ;
-    rdfs:comment "Dependencies needed for install checks" ;
-    rdfs:domain nix:StdenvMkDerivation ;
-    rdfs:range nix:Derivation ;
-    IAO:0000115 "Dependencies that are needed for running installation verification tests." .
-
-# Common Systems
-nix:x86_64-linux a owl:NamedIndividual ;
-    rdfs:label "x86_64-linux" ;
-    rdfs:comment "64-bit Linux system" .
-
-nix:aarch64-linux a owl:NamedIndividual ;
-    rdfs:label "aarch64-linux" ;
-    rdfs:comment "ARM64 Linux system" .
-
-nix:x86_64-darwin a owl:NamedIndividual ;
-    rdfs:label "x86_64-darwin" ;
-    rdfs:comment "64-bit macOS system" .
-
-nix:aarch64-darwin a owl:NamedIndividual ;
-    rdfs:label "aarch64-darwin" ;
-    rdfs:comment "ARM64 macOS system" .
-
-# Common Channels
-nix:nixos-unstable a nix:Channel ;
-    rdfs:label "nixos-unstable" ;
-    rdfs:comment "The unstable NixOS channel" .
-
-nix:nixos-23-11 a nix:Channel ;
-    rdfs:label "nixos-23.11" ;
-    rdfs:comment "NixOS 23.11 stable channel" .
-
-nix:nixpkgs-unstable a nix:Channel ;
-    rdfs:label "nixpkgs-unstable" ;
-    rdfs:comment "The unstable nixpkgs channel" .
-
-# Cardinality Restrictions for Nix Classes
-nix:Derivation rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty nix:name ;
-    owl:cardinality 1
-] .
-
-nix:Derivation rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty nix:system ;
-    owl:cardinality 1
-] .
-
-nix:StorePath rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty nix:storePathHash ;
-    owl:cardinality 1
-] .
-
-nix:StorePath rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty nix:narHash ;
-    owl:cardinality 1
-] .

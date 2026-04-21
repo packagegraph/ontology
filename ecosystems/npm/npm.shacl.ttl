@@ -6,7 +6,7 @@
 npm:NpmPackageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "An NPM package must have exactly one package name." ;
+            sh:message "An NPM package must have exactly one package name."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ] ;
     sh:targetClass npm:NpmPackage .

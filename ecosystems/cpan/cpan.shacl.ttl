@@ -6,12 +6,12 @@
 cpan:DistributionShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A CPAN distribution must have exactly one distribution name." ;
+            sh:message "A CPAN distribution must have exactly one distribution name."@en ;
             sh:minCount 1 ;
             sh:path pkg:packageName ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A CPAN distribution must have exactly one PAUSE ID." ;
+            sh:message "A CPAN distribution must have exactly one PAUSE ID."@en ;
             sh:minCount 1 ;
             sh:path cpan:authorPAUSEID ] ;
     sh:targetClass cpan:Distribution .
