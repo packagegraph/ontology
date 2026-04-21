@@ -1,7 +1,16 @@
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+vcs:BranchShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A branch must have exactly one branch name."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:branchName ] ;
+    sh:targetClass vcs:Branch .
 
 vcs:CommitShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
@@ -18,4 +27,36 @@ vcs:CommitShape a sh:NodeShape ;
             sh:message "A commit's author must be a pkg:Contributor."@en ;
             sh:path vcs:authoredBy ] ;
     sh:targetClass vcs:Commit .
+
+vcs:IssueShape a sh:NodeShape ;
+    sh:property [ sh:message "An issue must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass vcs:Issue .
+
+vcs:PullRequestShape a sh:NodeShape ;
+    sh:property [ sh:message "A pull request must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass vcs:PullRequest .
+
+vcs:ReleaseShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:message "A release should have a release date."@en ;
+            sh:path vcs:releaseDate ] ;
+    sh:targetClass vcs:Release .
+
+vcs:RepositoryShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:message "A repository should have a repository URL."@en ;
+            sh:path vcs:repositoryURL ] ;
+    sh:targetClass vcs:Repository .
+
+vcs:TagShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A tag must have exactly one tag name."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:tagName ] ;
+    sh:targetClass vcs:Tag .
 

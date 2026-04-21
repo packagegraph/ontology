@@ -1,0 +1,11 @@
+@prefix dq: <https://purl.org/packagegraph/ontology/dq#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dq:DataQualityIssueShape a sh:NodeShape ;
+    sh:property [ sh:message "A data quality issue must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass dq:DataQualityIssue .
+

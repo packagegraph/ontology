@@ -1,3 +1,4 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix slsa: <https://purl.org/packagegraph/ontology/slsa#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -12,6 +13,12 @@ slsa:BuildEnvironmentShape a sh:NodeShape ;
             sh:message "A build environment can have at most one isolated flag."@en ;
             sh:path slsa:isIsolated ] ;
     sh:targetClass slsa:BuildEnvironment .
+
+slsa:BuildLevelShape a sh:NodeShape ;
+    sh:property [ sh:message "A build level must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass slsa:BuildLevel .
 
 slsa:BuilderShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
