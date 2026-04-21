@@ -1,508 +1,398 @@
-# Package Management RDF Ontologies
+# PackageGraph Ontology
 
-A comprehensive collection of RDF/OWL ontologies for representing software
-packages, repositories, and metadata across major package management systems.
+**Version:** 0.6.0
+**License:** CC0 1.0 Universal
+**Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 30/30 Modules SHACL Valid
+
+A rigorous OWL 2 ontology for cross-distribution package analysis and software supply chain research.
+
+---
 
 ## Overview
 
-This project provides formal RDF schemas (ontologies) that enable semantic
-representation of software packages and their ecosystems. Each ontology captures
-the unique characteristics and metadata structures of different package
-management systems while maintaining interoperability through a common base
-ontology.
+PackageGraph is an **analytical ontology** designed for research queries that SBOM formats (SPDX, CycloneDX) cannot answer:
 
-## Ontologies Included
+- **Cross-distribution analysis:** Which packages exist in both Fedora and Debian under different names? How do their dependency trees differ?
+- **Vulnerability impact modeling:** Which packages are affected by CVE-X across all distributions, accounting for backported patches?
+- **Provenance tracing:** What is the complete build chain from upstream commit → source package → binary → installed files?
+- **Longitudinal studies:** How has the dependency closure of openssl evolved across 10 Fedora releases?
 
-### 1. Core Package Ontology (`core.ttl`)
+**Key distinction:** SPDX/CycloneDX describe **artifacts** (what's in this build). PackageGraph describes **distributions** (how 15 Linux distributions package the same upstream projects).
 
-- **Purpose**: Base ontology defining common concepts across all package
-  management systems
-- **Key Classes**: Package, Repository, PackageManager, Dependency, Version,
-  Maintainer, License, Architecture
-- **Key Properties**: packageName, description, homepage, downloadURL,
-  installSize, checksum
-- **Namespace**: `https://purl.org/packagegraph/ontology/core#`
+**Not a replacement for SBOMs** — PackageGraph is complementary. SPDX excels at compliance workflows; PackageGraph excels at SPARQL-based analytical queries across ecosystems.
 
-### 2. VCS Integration Ontology (`vcs.ttl`)
+---
 
-- **Purpose**: Represents version control system integration and source code
-  management
-- **Key Classes**: Repository, Commit, Tag, Branch, SourcePackage
-- **Key Features**: Git integration, commit tracking, tag-based packaging
-- **Namespace**: `https://purl.org/packagegraph/ontology/vcs#`
+## Quick Start
 
-### 3. Debian/APT Ontology (`debian.ttl`)
+```bash
+# Validate all ontology modules
+make lint                  # Parse all 77 .ttl files
+make validate-all          # Run SHACL validation on 30 modules
 
-- **Purpose**: Represents Debian packages (.deb), APT repositories, and
-  Debian-specific metadata
-- **Key Classes**: DebianPackage, SourcePackage, BinaryPackage, Suite,
-  Component, Section, Priority
-- **Key Features**: Debian control file metadata, dependency types (depends,
-  recommends, suggests), maintainer scripts
-- **Namespace**: `https://purl.org/packagegraph/ontology/debian#`
+# Statistics
+make stats                 # Show triple counts per module
 
-### 4. RPM Ontology (`rpm.ttl`)
+# Validate a single module
+make validate-rpm          # SHACL-validate just the RPM module
+make validate-security     # SHACL-validate just the security module
 
-- **Purpose**: Represents RPM packages, YUM/DNF repositories, and RPM-specific
-  metadata
-- **Key Classes**: RPMPackage, SourceRPM, BinaryRPM, RPMGroup, NEVR, Changelog
-- **Key Features**: RPM header tags, build metadata, file information, changelog
-  entries
-- **Namespace**: `https://purl.org/packagegraph/ontology/rpm#`
+# Generate deployment artifacts
+make deploy                # Creates _site/ with TTL, N-Triples, JSON-LD serializations
+```
 
-### 5. Arch Linux Ontology (`arch.ttl`)
+**Requirements:** Python 3.12+, `uv` package manager, `rdflib`, `pyshacl`
 
-- **Purpose**: Represents Arch packages, PKGBUILD files, and Pacman repositories
-  including AUR
-- **Key Classes**: ArchPackage, PKGBUILD, SplitPackage, AUR, SRCINFO,
-  PackageGroup
-- **Key Features**: PKGBUILD functions, checksums, build options, package groups
-- **Namespace**: `https://purl.org/packagegraph/ontology/archlinux#`
+```bash
+# Install dependencies
+pip install uv
+uv pip install rdflib pyshacl
+```
 
-### 6. FreeBSD Ports Ontology (`freebsd.ttl`)
+---
 
-- **Purpose**: Represents FreeBSD ports (FreeBSD, OpenBSD, NetBSD), Makefiles, and
-  ports trees
-- **Key Classes**: Port, PortsTree, Makefile, PortSkeleton, Distinfo, Category,
-  Flavor
-- **Key Features**: Port build configuration, patches, options, master sites,
-  flavors
-- **Namespace**: `https://purl.org/packagegraph/ontology/freebsd#`
+## What's New in v0.6.0
 
-### 7. Chocolatey Ontology (`chocolatey.ttl`)
+**Academic readiness release** — journal-level semantic rigor across all 34 modules:
 
-- **Purpose**: Represents Chocolatey packages, NuGet format, and
-  Windows-specific metadata
-- **Key Classes**: ChocolateyPackage, Nupkg, Nuspec, ChocolateyScript,
-  InstallScript, UninstallScript
-- **Key Features**: PowerShell scripts, installer types, registry keys,
-  Windows-specific properties
-- **Namespace**: `https://purl.org/packagegraph/ontology/chocolatey#`
+- ✅ **33 competency questions** formalized as SPARQL (7 domains) → [docs/competency-questions.md](docs/competency-questions.md)
+- ✅ **OSV-aligned vulnerability model** (AffectedRange, RangeEvent, CVSSScore) → aligned with OSV schema 1.6
+- ✅ **Properties-as-taxonomy** for dependencyType (OWL 2 punning) → harmonizes dual-model (reified + shortcut)
+- ✅ **OntoClean compliance** (rigid/anti-rigid distinction, Person/Maintainer role model)
+- ✅ **OWL 2 DL decidability** (SROIQ violations eliminated, property chain axioms)
+- ✅ **Upper ontology alignment** (PROV-O, FOAF, SPDX, DOAP) → lightweight vocabulary integration
+- ✅ **29 SHACL shapes** (64% core coverage) → structural integrity validation
+- ✅ **3,568 @en language tags** on schema definitions → internationalization support
+- ✅ **1,161 rdfs:isDefinedBy** declarations → Linked Data dereferenceability
+- ✅ **Design decisions documented** → [docs/design-decisions.md](docs/design-decisions.md)
+- ✅ **Evaluation comparison** → [vs SPDX/CycloneDX/OSV](docs/reports/2026-04-20-evaluation-comparison.md)
 
-### 8. Homebrew Ontology (`homebrew.ttl`)
+See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
-- **Purpose**: Represents Homebrew formulas, casks, taps, and macOS-specific
-  packaging
-- **Key Classes**: Formula, Cask, Tap, Bottle, SoftwareSpec, Artifact (Apps,
-  Fonts, etc.)
-- **Key Features**: Build specifications, dependency types, macOS application
-  artifacts, bottles
-- **Namespace**: `https://purl.org/packagegraph/ontology/homebrew#`
+---
 
-### 9. Nix Ontology (`nix.ttl`)
+## Ontology Modules
 
-- **Purpose**: Represents Nix derivations, expressions, Nixpkgs, and functional
-  package management
-- **Key Classes**: Derivation, StoreDerivation, NixExpression, Flake,
-  StdenvMkDerivation
-- **Key Features**: Build phases, store paths, reproducible builds, functional
-  dependencies
-- **Namespace**: `https://purl.org/packagegraph/ontology/nix#`
+### Core (1 module)
 
-### 10. SLSA Supply Chain Security Ontology (`slsa.ttl`)
+| Module | Classes | Properties | Description |
+|--------|---------|------------|-------------|
+| **core** | 36 | 165 | Package, Version, Dependency, Distribution, Architecture, License, Person, Maintainer, Contributor, BuildActivity, PackageIdentity, VirtualPackage, PhantomPackage, MetaPackage, VersionConstraint |
 
-- **Purpose**: Models SLSA (Supply-chain Levels for Software Artifacts)
-  provenance attestations and build security
-- **Key Classes**: ProvenanceAttestation, BuildLevel, Builder, SourceAttestation,
-  BuildEnvironment
-- **Key Features**: SLSA build levels (L0-L3), cryptographic attestations, build
-  isolation and ephemeral environment tracking, PROV-O grounded
-- **Namespace**: `https://purl.org/packagegraph/ontology/slsa#`
+**Key patterns:**
+- Binary/Source package split
+- Dependency dual-model (reified + shortcut via owl:propertyChainAxiom)
+- OntoClean-compliant Person (rigid) / Maintainer (anti-rigid role)
+- Properties-as-taxonomy for dependencyType
 
-### 11. Security Ontology (`security.ttl`)
+**Namespace:** `https://purl.org/packagegraph/ontology/core#`
 
-- **Purpose**: Models CVE vulnerabilities, security advisories, and patch
-  provenance
-- **Key Classes**: Vulnerability, SecurityAdvisory, PatchActivity
-- **Key Features**: CVSS scoring, advisory-to-CVE mapping, affected/fixed version
-  tracking, patch derivation chains
-- **Namespace**: `https://purl.org/packagegraph/ontology/security#`
+### Ecosystems (29 modules)
 
-### 12. Code Metrics Ontology (`metrics.ttl`)
+#### System-Level Package Managers (13 modules)
 
-- **Purpose**: Represents code analysis metrics and programming language
-  properties
-- **Key Classes**: CodeMetrics, LanguageMetrics, ProgrammingLanguage
-- **Key Features**: Lines of code counts, memory safety flags, garbage collection
-  tracking
-- **Namespace**: `https://purl.org/packagegraph/ontology/metrics#`
+| Module | Namespace | Description |
+|--------|-----------|-------------|
+| **deb** | `deb#` | Debian/Ubuntu packages — sections, priorities, multi-arch, Pre-Depends |
+| **rpm** | `rpm#` | RPM/DNF packages — epochs, disttags, changelogs, weak dependencies |
+| **pacman** | `pacman#` | Arch Linux packages — groups, provides/conflicts, install/remove hooks |
+| **apk** | `apk#` | Alpine Linux packages — repository branches, APKBUILD scripts |
+| **portage** | `portage#` | Gentoo packages — ebuilds, USE flags, slots, EAPI, eclasses |
+| **homebrew** | `brew#` | macOS packages — formulae, casks, bottles, taps |
+| **nix** | `nix#` | Nix packages — derivations, channels, stdenv, functional builds |
+| **xbps** | `xbps#` | Void Linux packages — XBPS-specific properties |
+| **opkg** | `opkg#` | OpenWrt packages — embedded Linux package management |
+| **bsdpkg** | `bsdpkg#` | FreeBSD/NetBSD/OpenBSD ports — makefiles, flavors, options |
+| **bitbake** | `bitbake#` | Yocto/OpenEmbedded — recipes, layers, machines, distros |
+| **buildroot** | `buildroot#` | Buildroot packages — defconfigs, build infrastructures |
+| **redhat** | `rh#` | Red Hat vendor extensions — RHEL package sets, BaseOS/AppStream |
 
-### 13. NPM Package Ontology (`npm.ttl`)
+#### Language Ecosystem Managers (16 modules)
 
-- **Purpose**: Represents NPM packages and the Node.js ecosystem
-- **Key Classes**: NpmPackage, Scope, Script, Workspace, NpmRegistry
-- **Key Features**: Scoped packages, lifecycle scripts, peer/optional/bundled
-  dependencies, integrity hashes, workspaces
-- **Namespace**: `https://purl.org/packagegraph/ontology/npm#`
+| Module | Namespace | Description |
+|--------|-----------|-------------|
+| **npm** | `npm#` | Node.js/JavaScript — scopes, workspaces, peer deps, scripts |
+| **pypi** | `pypi#` | Python packages — wheels, sdists, extras, classifiers, PEP 517 |
+| **cargo** | `cargo#` | Rust crates — features, editions, targets, dev-dependencies |
+| **gomod** | `gomod#` | Go modules — module paths, replace directives, go.sum |
+| **maven** | `maven#` | Java/JVM artifacts — groupId:artifactId:version, scopes, POM |
+| **nuget** | `nuget#` | .NET packages — target frameworks, prerelease, listed status |
+| **rubygems** | `rubygems#` | Ruby gems — platforms, gemspec metadata |
+| **cpan** | `cpan#` | Perl distributions — PAUSE IDs, maturity levels, modules |
+| **cran** | `cran#` | R packages — Depends/Imports/Suggests/LinkingTo, compilation |
+| **hackage** | `hackage#` | Haskell packages — Cabal metadata, GHC compatibility |
+| **hex** | `hex#` | Elixir/Erlang — mix/rebar3, retirement status |
+| **conda** | `conda#` | Anaconda packages — channels, feedstocks, recipes |
+| **flatpak** | `flatpak#` | Linux desktop apps — runtimes, extensions, sandboxing |
+| **snap** | `snap#` | Ubuntu Snap apps — confinement, interfaces, tracks |
+| **chocolatey** | `choco#` | Windows packages — NuGet format, PowerShell scripts, shims |
 
-### 14. PyPI Package Ontology (`pypi.ttl`)
+### Extensions (5 modules)
 
-- **Purpose**: Represents Python packages distributed through PyPI
-- **Key Classes**: PythonPackage, Wheel, Sdist, Classifier, Extra, EntryPoint
-- **Key Features**: Wheels vs sdists, trove classifiers, extras_require, entry
-  points, PEP 517 build backends, yanked versions
-- **Namespace**: `https://purl.org/packagegraph/ontology/pypi#`
+| Module | Namespace | Description |
+|--------|-----------|-------------|
+| **security** | `sec#` | CVE vulnerabilities, OSV ranges, CVSS scores, security advisories, patch provenance |
+| **vcs** | `vcs#` | Git repositories, commits, branches, tags, pull requests, contributor activity |
+| **slsa** | `slsa#` | Build provenance attestations, SLSA levels, builder identity |
+| **metrics** | `met#` | Code analysis — lines of code, cyclomatic complexity, language breakdowns |
+| **dq** | `dq#` | Data quality issues and metadata validation |
 
-### 15. Conda/Anaconda Package Ontology (`conda.ttl`)
-
-- **Purpose**: Represents Conda packages, channels, and environments
-- **Key Classes**: CondaPackage, Channel, Environment, Recipe, Feedstock
-- **Key Features**: Channels (defaults, conda-forge), build strings, noarch
-  packages, environments, feedstock CI
-- **Namespace**: `https://purl.org/packagegraph/ontology/conda#`
-
-### 16. Cargo/crates.io Package Ontology (`cargo.ttl`)
-
-- **Purpose**: Represents Rust crates from crates.io
-- **Key Classes**: Crate, Feature, Target, CrateCategory
-- **Key Features**: Feature flags, Rust editions, build targets (lib/bin),
-  build scripts, crate categories
-- **Namespace**: `https://purl.org/packagegraph/ontology/cargo#`
-
-### 17. Go Modules Ontology (`gomod.ttl`)
-
-- **Purpose**: Represents Go modules and packages
-- **Key Classes**: GoModule, GoPackage, GoProxy, ReplaceDirective
-- **Key Features**: Module paths, semantic import versioning, go.sum integrity
-  hashes, replace/exclude directives, retracted versions
-- **Namespace**: `https://purl.org/packagegraph/ontology/gomod#`
-
-### 18. Flatpak Application Ontology (`flatpak.ttl`)
-
-- **Purpose**: Represents Flatpak applications, runtimes, and remotes
-- **Key Classes**: FlatpakApp, Runtime, Extension, Remote, Permission
-- **Key Features**: Application IDs, sandbox permissions (finish-args), runtimes,
-  OSTree commits, Flathub distribution
-- **Namespace**: `https://purl.org/packagegraph/ontology/flatpak#`
-
-### 19. Snap Package Ontology (`snap.ttl`)
-
-- **Purpose**: Represents Snap packages and the Snap Store
-- **Key Classes**: SnapPackage, SnapChannel, Interface, SnapBase, SnapApp
-- **Key Features**: Confinement levels, interfaces (plugs/slots), channels/tracks,
-  bases, store revision tracking
-- **Namespace**: `https://purl.org/packagegraph/ontology/snap#`
-
-### 20. Alpine APK Package Ontology (`alpine.ttl`)
-
-- **Purpose**: Represents Alpine Linux packages and apk-tools
-- **Key Classes**: AlpinePackage, ApkRepository, AbuildScript, AlpineBranch
-- **Key Features**: APKINDEX format, musl libc, install-if triggers, provider
-  priorities, aports build system
-- **Namespace**: `https://purl.org/packagegraph/ontology/alpine#`
-
-### 21. Gentoo Portage Ontology (`gentoo.ttl`)
-
-- **Purpose**: Represents Gentoo packages, ebuilds, and the Portage system
-- **Key Classes**: GentooPackage, Ebuild, UseFlag, Overlay, Eclass, Slot
-- **Key Features**: USE flags, slots/subslots, EAPI versions, keyword masking,
-  eclasses, source-based compilation, overlays
-- **Namespace**: `https://purl.org/packagegraph/ontology/gentoo#`
-
-### 22. Void Linux XBPS Package Ontology (`void.ttl`)
-
-- **Purpose**: Represents Void Linux packages and XBPS package manager
-- **Key Classes**: VoidPackage, VoidTemplate, VoidRepository, Alternative
-- **Key Features**: Build styles, musl/glibc variants, alternatives system,
-  void-packages templates
-- **Namespace**: `https://purl.org/packagegraph/ontology/void#`
+---
 
 ## Key Features
 
-### Comprehensive Metadata Coverage
+### Semantic Web Best Practices
 
-- **Package Information**: Names, versions, descriptions, licenses, maintainers
-- **Build Information**: Source URLs, checksums, build dependencies, build
-  scripts
-- **Installation Details**: File lists, install sizes, configuration files
-- **Repository Structure**: Package organization, categories, sections,
-  priorities
-- **Dependency Relationships**: Runtime, build-time, optional, and conflicting
-  dependencies
+- **OWL 2 DL decidability** — no OWL Full violations, SROIQ-compliant reasoning
+- **OntoClean methodology** — rigid/anti-rigid distinction (Person vs Maintainer roles)
+- **IAO:0000115 definitions** — every class and property has formal OBO Foundry definitions
+- **@en language tags** on all schema elements — internationalization support
+- **rdfs:isDefinedBy** on all entities — Linked Data dereferenceability
+- **PROV-O alignment** — build activities, provenance chains
+- **FOAF integration** — person entities, maintainer attribution
 
-### System-Specific Extensions
+### Cross-Ecosystem Analysis
 
-Each ontology captures unique features of its package management system:
+- **PackageIdentity** class — version-agnostic identity enables cross-distribution queries
+- **29 specialized ecosystem modules** — captures ecosystem-specific semantics (RPM epochs, Debian sections, npm scopes)
+- **Dependency dual-model** — reified (with version constraints) + shortcut (for graph traversal)
+- **Properties-as-taxonomy** — dependencyType values are property URIs (pkg:buildDependsOn, pkg:recommends, etc.)
 
-- **Debian**: Suite/component structure, maintainer scripts, policy compliance
-- **RPM**: NEVR versioning, spec files, RPM tags, build environments
-- **Arch**: PKGBUILD structure, AUR integration, split packages
-- **BSD**: Ports tree organization, build options, master sites, flavors
-- **Chocolatey**: PowerShell integration, Windows installer types, registry handling
-- **Homebrew**: Formula/cask distinction, tap system, bottle distribution
-- **Nix**: Functional derivations, store paths, reproducible builds, flakes
-- **NPM**: Scoped packages, lifecycle scripts, peer dependencies, workspaces
-- **PyPI**: Wheels/sdists, trove classifiers, extras, entry points
-- **Conda**: Channels, environments, feedstocks, noarch packages
-- **Cargo**: Feature flags, Rust editions, build targets
-- **Go**: Module paths, integrity hashes, replace directives
-- **Flatpak**: Sandbox permissions, runtimes, OSTree distribution
-- **Snap**: Confinement levels, interfaces (plugs/slots), channels
-- **Alpine**: musl libc, APKINDEX, install-if triggers
-- **Gentoo**: USE flags, slots/subslots, eclasses, source compilation
-- **Void**: XBPS, musl/glibc variants, build styles, alternatives
+### Vulnerability & Security
 
-### Interoperability Design
+- **OSV-aligned model** — AffectedRange with SEMVER/ECOSYSTEM/GIT events (introduced/fixed)
+- **CVSS reification** — supports multiple CVSS versions (2.0, 3.0, 3.1, 4.0) per vulnerability
+- **Patch provenance** — PatchActivity links vulnerabilities through build chains
+- **CVE + GHSA support** — not all vulnerabilities have CVEs
 
-- **Common Base**: All ontologies extend the core package ontology
-- **Standard Vocabularies**: Reuses established vocabularies (Dublin Core, FOAF,
-  DOAP, SPDX)
-- **Consistent Naming**: Follows RDF/OWL best practices and naming conventions
-- **Cross-References**: Enables linking packages across different systems
+### Validation & Quality
 
-### OWL 2 Compliance and Cardinality Constraints
+- **30 modules with SHACL shapes** — 29 NodeShapes enforce structural constraints
+- **Validation passing** — all 77 .ttl files parse, all 30 modules SHACL valid
+- **33 competency questions** — specification of what the ontology can answer
+- **Production validation framework** — scripts/production_shacl_validate.py for Fuseki data
 
-- **Functional Properties**: Unique identifiers, checksums, and URLs marked as functional
-- **Cardinality Restrictions**: Mandatory properties with exact cardinality constraints
-- **Qualified Cardinality**: Complex constraints using owl:onClass restrictions
-- **Property Equivalencies**: Cross-format property mappings for interoperability
-- **Protégé Compatible**: All ontologies load successfully in Protégé ontology editor
+---
 
-## Usage Examples
-
-The `package-examples.ttl` file demonstrates how to represent real packages
-using these ontologies:
-
-```turtle
-# Debian vim package
-ex:vim-debian a deb:BinaryPackage ;
-    pkg:packageName "vim" ;
-    pkg:description "Vi IMproved - enhanced vi editor" ;
-    deb:version "2:9.0.1378-2" ;
-    deb:architecture "amd64" ;
-    deb:inSuite deb:unstable ;
-    deb:inComponent deb:main .
-
-# Homebrew wget formula  
-ex:wget-brew a brew:Formula ;
-    brew:formulaName "wget" ;
-    pkg:version "1.21.4" ;
-    brew:desc "Internet file retriever" ;
-    brew:hasStable ex:wget-stable .
-
-# Nix hello derivation
-ex:hello-nix a nix:StdenvMkDerivation ;
-    nix:pname "hello" ;
-    nix:version "2.12.1" ;
-    pkg:description "A program that produces a familiar, friendly greeting" ;
-    nix:doCheck true .
-```
-
-## File Structure
+## Directory Structure
 
 ```
-# Core + cross-cutting
-├── core.ttl                       # Base ontology (32 classes, 98 properties)
-├── vcs.ttl                        # Version control (13 classes, 67 properties)
-├── security.ttl                   # CVE/advisories (3 classes, 27 properties)
-├── metrics.ttl                    # Code metrics (3 classes, 19 properties)
-├── slsa.ttl                       # SLSA provenance (5 classes, 23 properties)
-├── shacl.ttl                      # SHACL validation shapes
-├── examples.ttl                   # Example instances
+ontology/
+├── core/
+│   ├── core.ttl                    # 36 core classes, 165 properties
+│   ├── core.shacl.ttl              # 22 SHACL NodeShapes
+│   ├── core.examples.ttl           # Example instances
+│   └── skos-schemes.ttl            # Dependency types, severity, advisory types
 │
-# Linux distributions
-├── debian.ttl                     # Debian/APT (10 classes, 33 properties)
-├── rpm.ttl                        # RPM/YUM/DNF (13 classes, 53 properties)
-├── redhat.ttl                     # Red Hat vendor extensions
-├── arch.ttl                       # Arch Linux (7 classes, 47 properties)
-├── alpine.ttl                     # Alpine APK (4 classes, 12 properties)
-├── gentoo.ttl                     # Gentoo Portage (6 classes, 18 properties)
-├── void.ttl                       # Void Linux XBPS (4 classes, 14 properties)
-├── freebsd.ttl                    # FreeBSD Ports (15 classes, 45 properties)
-├── nix.ttl                        # Nix (20 classes, 52 properties)
+├── ecosystems/                     # 29 ecosystem-specific modules
+│   ├── deb/deb.ttl                 # Debian packages
+│   ├── rpm/rpm.ttl                 # RPM packages
+│   ├── pacman/pacman.ttl           # Arch Linux
+│   ├── npm/npm.ttl                 # Node.js
+│   ├── pypi/pypi.ttl               # Python
+│   ├── cargo/cargo.ttl             # Rust
+│   ├── maven/maven.ttl             # Java/JVM
+│   └── ... (22 more)
 │
-# Application packaging
-├── homebrew.ttl                   # Homebrew (33 classes, 37 properties)
-├── chocolatey.ttl                 # Chocolatey (11 classes, 39 properties)
-├── flatpak.ttl                    # Flatpak (5 classes, 12 properties)
-├── snap.ttl                       # Snap (5 classes, 15 properties)
+├── extensions/                     # 5 extension modules
+│   ├── security/security.ttl       # Vulnerabilities, CVEs, advisories
+│   ├── vcs/vcs.ttl                 # Git, commits, repositories
+│   ├── slsa/slsa.ttl               # Build provenance
+│   ├── metrics/metrics.ttl         # Code analysis metrics
+│   └── dq/dq.ttl                   # Data quality
 │
-# Language ecosystems
-├── npm.ttl                        # NPM/Node.js (5 classes, 20 properties)
-├── pypi.ttl                       # PyPI/Python (6 classes, 16 properties)
-├── conda.ttl                      # Conda/Anaconda (5 classes, 15 properties)
-├── cargo.ttl                      # Cargo/crates.io (4 classes, 17 properties)
-├── gomod.ttl                      # Go modules (4 classes, 13 properties)
+├── references/
+│   └── alignments.ttl              # PROV-O, SPDX, Schema.org, FOAF mappings
 │
-└── README.md
-
-Note: ETL tools live in the platform repository.
-Total: 24 modules, 213 classes, 694 properties.
+├── scripts/                        # Validation and tooling
+│   ├── validate_module.py          # Per-module SHACL validation
+│   ├── production_shacl_validate.py # Fuseki production data validation
+│   ├── add_schema_annotations.py   # Bulk @en tags + isDefinedBy
+│   └── fix_ecosystem_patterns.py   # Ecosystem anti-pattern remediation
+│
+├── docs/
+│   ├── competency-questions.md     # 33 CQs as formal specification
+│   ├── design-decisions.md         # Adopted patterns + documented rejections
+│   └── reports/
+│       ├── 2026-04-20-evaluation-comparison.md  # vs SPDX/CycloneDX/OSV
+│       └── 2026-04-20-production-shacl-validation.md
+│
+├── Makefile                        # Build, validation, deployment
+├── CHANGELOG.md                    # Version history
+└── pyproject.toml                  # Python tooling dependencies
 ```
+
+---
 
 ## Applications
 
-These ontologies enable various applications:
+### 1. Cross-Distribution Package Research
 
-### 1. Package Discovery and Search
+**Query:** Which packages exist in both Fedora and Debian under different names?
 
-- Semantic search across multiple package ecosystems
-- Cross-system package recommendation
-- Dependency analysis and visualization
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 
-### 2. Package Management Tools
+SELECT ?fedoraName ?debianName ?identity WHERE {
+  ?identity a pkg:PackageIdentity .
+  ?fedoraPkg pkg:hasIdentity ?identity ;
+             pkg:packageName ?fedoraName ;
+             pkg:partOfRelease/pkg:distributionName "Fedora" .
+  ?debianPkg pkg:hasIdentity ?identity ;
+             pkg:packageName ?debianName ;
+             pkg:partOfRelease/pkg:distributionName "Debian" .
+  FILTER(?fedoraName != ?debianName)
+}
+```
 
-- Universal package metadata APIs
-- Cross-platform dependency resolution
-- Package migration and conversion tools
+**Answer:** PackageIdentity enables cross-distribution joins. See [33 competency questions](docs/competency-questions.md) for more examples.
 
-### 3. Research and Analytics
+### 2. Vulnerability Impact Analysis
 
-- Package ecosystem analysis
-- Software supply chain research
-- Dependency vulnerability tracking
-- Package maintenance patterns
+**Query:** Which packages across all distributions are affected by CVE-2024-1234 with version ranges?
 
-### 4. Integration and Interoperability
+Uses the OSV-aligned model (AffectedRange, RangeEvent) to provide precise version-specific vulnerability data, not just package-name matching.
 
-- Container image metadata standardization
-- CI/CD pipeline package tracking
-- Software bill of materials (SBOM) generation
-- Package provenance and attestation
+### 3. Dependency Blast Radius
 
-### 5. Data Collection and ETL
+**Query:** What is the transitive dependency closure for openssl in Fedora 43?
 
-- **Repository Harvesting**: Automated extraction of package metadata from APT and RPM repositories
-- **Knowledge Graph Construction**: Builds comprehensive linked data graphs from package ecosystems
-- **Data Pipeline Integration**: Supports batch and incremental data processing workflows
-- **Multi-format Export**: Converts semantic data to various RDF serializations for different use cases
+```sparql
+?package pkg:packageName "openssl" ;
+         pkg:directlyDependsOn+ ?dep .
+```
+
+Property path traversal using the materialized shortcut properties.
+
+### 4. Provenance Chain Tracing
+
+**Query:** Trace a binary package back through its build to the upstream commit.
+
+See CQ-PROV-01 for the full provenance chain query (upstream commit → source → build → binary).
+
+---
 
 ## Technical Details
 
 ### Ontology Design Principles
 
-- **Modularity**: Each system has its own ontology importing the core
-- **Extensibility**: Easy to add new package systems or extend existing ones
-- **Consistency**: Common patterns for similar concepts across systems
-- **Completeness**: Captures both common and unique metadata for each system
+1. **Modular architecture** — 34 independent modules with owl:imports
+2. **Dual-model for dependencies** — reified (Dependency class with constraints) + shortcut (directlyDependsOn) linked via owl:propertyChainAxiom
+3. **OntoClean rigor** — Person (rigid identity) vs Maintainer/Contributor (anti-rigid roles)
+4. **Properties-as-taxonomy** — dependencyType values are property URIs (pkg:buildDependsOn, pkg:recommends, etc.) via OWL 2 punning
+5. **FAIR compliance** — PROV-O/FOAF/SPDX vocabulary reuse, @en language tags, rdfs:isDefinedBy
 
-### RDF/OWL Features Used
+### OWL 2 Features
 
-- **Class Hierarchies**: Inheritance relationships between package types
-- **Property Hierarchies**: Specialization of dependency and relationship types
-- **Domain/Range Restrictions**: Type safety for properties
-- **Functional Properties**: Ensures uniqueness of key identifiers and checksums
-- **Cardinality Restrictions**: Enforces mandatory and optional property constraints
-- **Qualified Cardinality**: Complex restrictions on property values with class constraints
-- **Property Equivalencies**: Cross-format mappings for interoperability
-- **Annotation Properties**: Metadata about the ontologies themselves including IAO definitions
-- **Named Individuals**: Common instances (licenses, architectures, etc.)
+- **Property characteristics:** Symmetric (conflicts, equivalentInDistribution), Asymmetric (replaces, builtFromSource), Irreflexive (enforced via SHACL SPARQL, not OWL characteristic for chain-derived properties)
+- **Property chain axioms:** directlyDependsOn derived from hasDependency → dependencyTarget
+- **Disjointness constraints:** owl:AllDisjointClasses groups prevent type confusion
+- **Punning:** Property URIs used as individuals in dependencyType values
 
-### Namespace Management
+### SHACL Validation
 
-Each ontology uses its own namespace to avoid conflicts:
+- **29 NodeShapes** across core + security modules
+- **64% core class coverage** (22 of 36 core classes have shapes)
+- **SKOS enforcement:** sh:in constraints on enumerations (advisorySeverity, advisoryType, dependencyType)
+- **SPARQL constraints:** IrreflexiveDependsOnShape, DependencyConsistencyShape
+- **All examples pass validation** — pyshacl with RDFS inference
 
-- Core: `https://purl.org/packagegraph/ontology/core#`
-- VCS: `https://purl.org/packagegraph/ontology/vcs#`
-- Debian: `https://purl.org/packagegraph/ontology/debian#`
-- RPM: `https://purl.org/packagegraph/ontology/rpm#`
-- Arch: `https://purl.org/packagegraph/ontology/archlinux#`
-- FreeBSD: `https://purl.org/packagegraph/ontology/freebsd#`
-- Chocolatey: `https://purl.org/packagegraph/ontology/chocolatey#`
-- Homebrew: `https://purl.org/packagegraph/ontology/homebrew#`
-- Nix: `https://purl.org/packagegraph/ontology/nix#`
+### Namespace Convention
 
-## Validation and Quality
+- **Ontology definitions:** `https://purl.org/packagegraph/ontology/{module}#`
+- **Data instances:** `https://packagegraph.github.io/d/{type}/{path}`
+- **Named graphs:** `https://packagegraph.github.io/graph/{distribution}/{release}`
 
-### OWL 2 Compliance
+---
 
-- **OWL 2 DL Compliant**: All ontologies conform to OWL 2 DL profile
-- **Cardinality Constraints**: Comprehensive use of functional properties and cardinality restrictions
-- **Protégé Validated**: All files load successfully in Protégé ontology editor
-- **Cross-Format Equivalencies**: Property mappings enable package format interoperability
+## Validation
 
-### Schema Validation
-
-- No circular dependencies between imports
-- Consistent use of datatypes and object properties  
-- Comprehensive IAO_0000115 definitions for all terms
-- Proper namespace management and relative imports
-
-### Coverage Analysis
-
-The ontologies cover the major metadata elements found in each package format:
-
-- **Debian**: Control file fields, dependency relationships, maintainer scripts
-- **RPM**: RPM header tags, spec file metadata, build information
-- **Arch**: PKGBUILD variables, dependency arrays, build functions
-- **BSD**: Makefile variables, port options, distinfo checksums
-- **Chocolatey**: NuSpec elements, PowerShell scripts, Windows-specific data
-- **Homebrew**: Formula DSL, cask artifacts, dependency specifications
-- **Nix**: Derivation attributes, build phases, store paths
-
-## Development and Validation
-
-### Build System
-
-The project includes a Makefile for validation and testing:
+Run the full validation suite:
 
 ```bash
-make lint           # Validate all TTL files for syntax errors
-make lint-combined  # Validate the combined ontology file
+make lint          # Parse all .ttl files → All 77 files valid
+make validate-all  # SHACL validation → 30/30 modules SHACL OK
 ```
 
-### Import Structure
+Per-module validation:
 
-All ontologies use relative imports for better portability:
-- `owl:imports <core.ttl>` instead of web URLs
-- Enables local development and Protégé compatibility
+```bash
+uv run python scripts/validate_module.py rpm
+uv run python scripts/validate_module.py security
+```
 
-### ETL Tools
+Production data validation (requires Fuseki):
 
-ETL (Extract, Transform, Load) tools for package repository data collection have moved to the `platform` repository. The platform repo includes:
+```bash
+# Port-forward to cluster
+KUBECONFIG=~/.kube/config-2 oc port-forward -n packagegraph svc/fuseki 3031:3030
 
-- **packagegraph-etl**: Python package for collecting and transforming package metadata
-- **Collectors**: Support for Debian APT and RPM repositories
-- **Parallel Processing**: Configurable worker pools and chunking
-- **Minio Integration**: Content-addressable storage for RDF snapshots
-- **TDB2 Building**: Apache Jena tools for creating indexed SPARQL databases
+# Validate against production data
+uv run python scripts/production_shacl_validate.py \
+  --endpoint http://localhost:3031/packagegraph/sparql
+```
 
-See the `platform` repository for ETL usage and deployment.
+---
+
+## Documentation
+
+- **[CHANGELOG.md](CHANGELOG.md)** — version history and release notes
+- **[Competency Questions](docs/competency-questions.md)** — 33 CQs as formal specification
+- **[Design Decisions](docs/design-decisions.md)** — adopted patterns, documented rejections
+- **[Evaluation Comparison](docs/reports/2026-04-20-evaluation-comparison.md)** — PackageGraph vs SPDX vs CycloneDX vs OSV
+- **[Production Validation Report](docs/reports/2026-04-20-production-shacl-validation.md)** — conformance framework
+
+---
 
 ## Contributing
 
-To extend or modify these ontologies:
+### Adding a New Ecosystem Module
 
-1. **Follow OWL/RDF Best Practices**: Use appropriate property types, maintain
-   consistency
-1. **Extend Base Classes**: New package types should subclass existing core
-   classes where possible
-1. **Document Changes**: Add rdfs:label and rdfs:comment for all new terms
-1. **Test Compatibility**: Ensure changes don't break existing instances
-1. **Update Examples**: Add examples demonstrating new features
-1. **Validate Changes**: Run `make lint` to ensure OWL 2 compliance
+See [scripts/README.md](scripts/README.md) for the workflow:
+
+1. Create `ecosystems/{name}/{name}.ttl`
+2. Add classes extending pkg:BinaryPackage or pkg:SourcePackage
+3. Declare shortcut properties as rdfs:subPropertyOf of appropriate core properties
+4. Add SHACL shapes in `{name}.shacl.ttl`
+5. Create examples in `{name}.examples.ttl`
+6. Run `make validate-{name}` to verify
+7. Add entry to this README and NAMESPACES.md
+
+### Design Guidelines
+
+- **Use properties-as-taxonomy** — don't create string-based dependency type properties
+- **Subclass correctly** — extend BinaryPackage (if ecosystem distributes pre-built) or SourcePackage (if source)
+- **Map dev/test deps** to pkg:buildDependsOn, optional deps to pkg:suggests/recommends
+- **Follow OntoClean** — roles are anti-rigid, identities are rigid
+- **Add PROV-O alignment** — author/maintainer properties should reference prov:wasAttributedTo in comments
+
+---
 
 ## License
 
-These ontologies are released under the CC0 License, allowing free use,
-modification, and distribution.
+[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) — public domain dedication.
 
-## Future Work
+You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.
 
-Potential extensions and improvements:
+---
 
-### Ontology Extensions
-- Container image ontologies (Docker, OCI)
-- Language-specific package managers (npm, pip, cargo, gem)
-- Mobile app stores (Google Play, App Store)
-- Enterprise package management (SCCM, Jamf)
-- Package security and vulnerability metadata
-- Build system integration (Maven, Gradle, CMake)
+## Citation
 
-### ETL Tool Enhancements
-- Additional repository format support (Arch AUR, Homebrew taps, Nix channels)
-- Real-time streaming data collection
-- Graph database integration (Neo4j, Amazon Neptune)
-- Machine learning pipeline integration for package analysis
-- Distributed processing with Apache Spark
+```bibtex
+@misc{packagegraph2026,
+  title={PackageGraph: An OWL 2 Ontology for Cross-Distribution Package Analysis},
+  author={PackageGraph Project},
+  year={2026},
+  version={0.6.0},
+  url={https://purl.org/packagegraph/ontology/core}
+}
+```
 
-### Advanced Features
-- Reproducible build attestation
-- Software supply chain provenance
-- Automated vulnerability scanning integration
-- Package ecosystem health metrics
+---
 
-## Contact
+## Links
 
-This is an open-source project. Contributions, suggestions, and feedback are
-welcome through standard open-source collaboration channels.
+- **Ontology browsing:** https://packagegraph.github.io/ontology/
+- **Source repository:** https://github.com/packagegraph/ontology
+- **Dataset (Fuseki):** 62.7M triples across 15 named graphs
+- **Related:** [PackageGraph Platform](https://github.com/packagegraph/platform) — Rust collectors and enrichers
