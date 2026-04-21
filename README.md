@@ -378,15 +378,27 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 ## Citation
 
+If you use PackageGraph in academic work, please cite:
+
+> PackageGraph Project. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.6.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+
+**BibTeX:**
+
 ```bibtex
 @misc{packagegraph2026,
-  title={PackageGraph: An OWL 2 Ontology for Cross-Distribution Package Analysis},
-  author={PackageGraph Project},
-  year={2026},
-  version={0.6.0},
-  url={https://purl.org/packagegraph/ontology/core}
+  title        = {{PackageGraph}: An {OWL} 2 Ontology for Cross-Distribution
+                  Software Package Analysis},
+  author       = {{PackageGraph Project}},
+  year         = {2026},
+  howpublished = {\url{https://purl.org/packagegraph/ontology/core}},
+  note         = {Version 0.6.0. 34 modules, 253 classes, 29 ecosystem
+                  extensions. OWL 2 DL, OntoClean compliant, SHACL validated.
+                  Licensed under CC0 1.0 Universal.},
+  url          = {https://purl.org/packagegraph/ontology/core}
 }
 ```
+
+**Preferred namespace prefix:** `pkg:` for `https://purl.org/packagegraph/ontology/core#`
 
 ---
 
