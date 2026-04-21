@@ -53,10 +53,13 @@ ex:glibc-deb-version a pkg:Version ;
   rdfs:label "Version 2.31-13+deb11u3 for glibc-deb" ;
   pkg:versionString "2.31-13+deb11u3" .
 
-ex:glibc-deb-maintainer a pkg:Maintainer ;
-  rdfs:label "GNU C Library Debian Maintainers" ;
+ex:person-debian-glibc-team a pkg:Person ;
   foaf:name "GNU C Library Debian Maintainers" ;
   foaf:mbox <mailto:debian-glibc@lists.debian.org> .
+
+ex:glibc-deb-maintainer a pkg:Maintainer ;
+  rdfs:label "GNU C Library Debian Maintainers (maintainer role)" ;
+  pkg:heldBy ex:person-debian-glibc-team .
 
 # wget (Debian packaging on Salsa)
 ex:wget-source-deb a pkg:SourcePackage ;
@@ -78,10 +81,13 @@ ex:wget-deb-version a pkg:Version ;
     rdfs:label "Version 1.21.1-1+deb11u1 for wget-deb" ;
     pkg:versionString "1.21.1-1+deb11u1" .
 
-ex:wget-deb-maintainer a pkg:Maintainer ;
-    rdfs:label "Noel Torres" ;
+ex:person-noel-torres a pkg:Person ;
     foaf:name "Noel Torres" ;
     foaf:mbox <mailto:ntorres@debian.org> .
+
+ex:wget-deb-maintainer a pkg:Maintainer ;
+    rdfs:label "Noel Torres (wget Debian maintainer role)" ;
+    pkg:heldBy ex:person-noel-torres .
 
 # git (Debian packaging on Salsa)
 ex:git-source-deb a pkg:SourcePackage ;

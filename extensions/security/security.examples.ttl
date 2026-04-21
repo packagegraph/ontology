@@ -104,3 +104,60 @@ ex:rhsa-2024-5678 a sec:SecurityAdvisory ;
   sec:addressesVulnerability ex:cve-2024-1234 ;
   sec:advisoryForPackage ex:glibc-rpm ;
   rdfs:label "RHSA-2024:5678" .
+
+
+# ============================================================
+# OSV-Aligned Vulnerability Examples (Task 3 & 4)
+# ============================================================
+
+# Vulnerability without CVE (OSV-only), demonstrating OSV alignment
+ex:ghsa-2024-abcd a sec:Vulnerability ;
+  sec:osvId "GHSA-xxxx-yyyy-zzzz" ;
+  rdfs:label "GHSA-xxxx-yyyy-zzzz" ;
+  sec:summary "Prototype pollution in lodash" ;
+  sec:severity "high" ;
+  sec:publishedDate "2024-02-10T00:00:00Z"^^xsd:dateTime ;
+  sec:hasAffectedRange ex:lodash-affected-range ;
+  sec:hasCVSSScore ex:ghsa-cvss-v31 .
+
+# AffectedRange with SEMVER range type and events
+ex:lodash-affected-range a sec:AffectedRange ;
+  sec:rangeType "SEMVER" ;
+  sec:affectsPackageName "lodash" ;
+  sec:hasRangeEvent ex:lodash-introduced-event , ex:lodash-fixed-event ;
+  rdfs:label "lodash affected range for GHSA-xxxx-yyyy-zzzz" .
+
+# RangeEvent: when vulnerability was introduced
+ex:lodash-introduced-event a sec:RangeEvent ;
+  sec:eventType "introduced" ;
+  sec:eventVersion "0" ;
+  rdfs:label "Vulnerability introduced in lodash 0" .
+
+# RangeEvent: when vulnerability was fixed
+ex:lodash-fixed-event a sec:RangeEvent ;
+  sec:eventType "fixed" ;
+  sec:eventVersion "4.17.21" ;
+  rdfs:label "Vulnerability fixed in lodash 4.17.21" .
+
+# CVSSScore reification with version support
+ex:ghsa-cvss-v31 a sec:CVSSScore ;
+  sec:cvssVersion "3.1" ;
+  sec:baseScore "7.5"^^xsd:float ;
+  sec:vectorString "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N" ;
+  rdfs:label "CVSS v3.1 score for GHSA-xxxx-yyyy-zzzz" .
+
+# Demonstrate multiple CVSS versions for same vulnerability
+ex:cve-2024-1234-cvss-v2 a sec:CVSSScore ;
+  sec:cvssVersion "2.0" ;
+  sec:baseScore "10.0"^^xsd:float ;
+  sec:vectorString "AV:N/AC:L/Au:N/C:C/I:C/A:C" ;
+  rdfs:label "CVSS v2.0 score for CVE-2024-1234" .
+
+ex:cve-2024-1234-cvss-v31 a sec:CVSSScore ;
+  sec:cvssVersion "3.1" ;
+  sec:baseScore "9.8"^^xsd:float ;
+  sec:vectorString "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H" ;
+  rdfs:label "CVSS v3.1 score for CVE-2024-1234" .
+
+# Update existing CVE to use reified CVSS
+ex:cve-2024-1234 sec:hasCVSSScore ex:cve-2024-1234-cvss-v2 , ex:cve-2024-1234-cvss-v31 .
