@@ -2,7 +2,7 @@
 *.jar
 *.lock
 _site/
-reports/
-docs/
+/reports/
+docs/plans/
 package_data/
 .playwright-cli/
