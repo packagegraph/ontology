@@ -6,16 +6,16 @@
 vcs:CommitShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A commit must have exactly one commit hash." ;
+            sh:message "A commit must have exactly one commit hash."@en ;
             sh:minCount 1 ;
             sh:path vcs:commitHash ],
         [ sh:datatype xsd:dateTime ;
             sh:maxCount 1 ;
-            sh:message "A commit must have exactly one timestamp." ;
+            sh:message "A commit must have exactly one timestamp."@en ;
             sh:minCount 1 ;
             sh:path vcs:commitTimestamp ],
         [ sh:class pkg:Contributor ;
-            sh:message "A commit's author must be a pkg:Contributor." ;
+            sh:message "A commit's author must be a pkg:Contributor."@en ;
             sh:path vcs:authoredBy ] ;
     sh:targetClass vcs:Commit .
 

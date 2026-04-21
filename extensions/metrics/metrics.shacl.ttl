@@ -3,7 +3,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 met:CodeMetricsShape a sh:NodeShape ;
-    sh:property [ sh:message "Code metrics must have at least one language metrics breakdown." ;
+    sh:property [ sh:message "Code metrics must have at least one language metrics breakdown."@en ;
             sh:minCount 1 ;
             sh:path met:hasLanguageMetrics ] ;
     sh:targetClass met:CodeMetrics .
@@ -11,12 +11,12 @@ met:CodeMetricsShape a sh:NodeShape ;
 met:ProgrammingLanguageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A programming language must have exactly one language name." ;
+            sh:message "A programming language must have exactly one language name."@en ;
             sh:minCount 1 ;
             sh:path met:languageName ],
         [ sh:datatype xsd:boolean ;
             sh:maxCount 1 ;
-            sh:message "A programming language can have at most one memory safety indicator." ;
+            sh:message "A programming language can have at most one memory safety indicator."@en ;
             sh:path met:isMemorySafe ] ;
     sh:targetClass met:ProgrammingLanguage .
 

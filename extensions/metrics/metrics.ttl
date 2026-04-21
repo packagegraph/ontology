@@ -1,314 +1,293 @@
-# Metrics Ontology
-@prefix met: <https://purl.org/packagegraph/ontology/metrics#> .
-@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
-
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix met: <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+met:Assembly a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Assembly"@en ;
+    met:isGarbageCollected false ;
+    met:isMemorySafe false ;
+    met:languageName "Assembly" .
 
-# Ontology Declaration
-<https://purl.org/packagegraph/ontology/metrics#> a owl:Ontology ;
-    rdfs:label "Package Metrics Ontology" ;
-    rdfs:comment "Ontology for representing programming languages, code metrics, and per-language analysis breakdowns for software packages" ;
+met:C a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "C"@en ;
+    met:isGarbageCollected false ;
+    met:isMemorySafe false ;
+    met:languageName "C" .
+
+met:CSharp a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "C#"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "C#" .
+
+met:Cpp a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "C++"@en ;
+    met:isGarbageCollected false ;
+    met:isMemorySafe false ;
+    met:languageName "C++" .
+
+met:Go a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Go"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "Go" .
+
+met:Java a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Java"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "Java" .
+
+met:JavaScript a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "JavaScript"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "JavaScript" .
+
+met:Perl a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Perl"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "Perl" .
+
+met:Python a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Python"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "Python" .
+
+met:Ruby a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Ruby"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "Ruby" .
+
+met:Rust a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Rust"@en ;
+    met:isGarbageCollected false ;
+    met:isMemorySafe true ;
+    met:languageName "Rust" .
+
+met:Shell a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "Shell"@en ;
+    met:isGarbageCollected false ;
+    met:isMemorySafe true ;
+    met:languageName "Shell" .
+
+met:TypeScript a owl:NamedIndividual,
+        met:ProgrammingLanguage ;
+    rdfs:label "TypeScript"@en ;
+    met:isGarbageCollected true ;
+    met:isMemorySafe true ;
+    met:languageName "TypeScript" .
+
+met:analysisDate a owl:DatatypeProperty ;
+    rdfs:label "analysis date"@en ;
+    IAO:0000115 "The date when the code metrics analysis was performed."@en ;
+    rdfs:comment "The date when the code metrics analysis was performed"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:dateTime .
+
+met:blankLines a owl:DatatypeProperty ;
+    rdfs:label "blank lines"@en ;
+    IAO:0000115 "Number of blank lines in files of this language."@en ;
+    rdfs:comment "Number of blank lines in files of this language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:commentLines a owl:DatatypeProperty ;
+    rdfs:label "comment lines"@en ;
+    IAO:0000115 "Number of comment lines in files of this language."@en ;
+    rdfs:comment "Number of comment lines in files of this language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:cyclomaticComplexity a owl:DatatypeProperty ;
+    rdfs:label "cyclomatic complexity"@en ;
+    IAO:0000115 "Average cyclomatic complexity per function in this language, measuring the number of independent paths through the code. Higher values indicate more complex branching logic."@en ;
+    rdfs:comment "Average cyclomatic complexity of functions in this language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:float .
+
+met:filesCount a owl:DatatypeProperty ;
+    rdfs:label "files count"@en ;
+    IAO:0000115 "Number of source files in this programming language."@en ;
+    rdfs:comment "Number of source files in this programming language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:halsteadEffort a owl:DatatypeProperty ;
+    rdfs:label "Halstead effort"@en ;
+    IAO:0000115 "Average Halstead effort metric per function in this language, estimating the mental effort required to understand the code based on operator and operand counts."@en ;
+    rdfs:comment "Average Halstead effort metric for functions in this language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:float .
+
+met:hasCodeMetrics a owl:ObjectProperty ;
+    rdfs:label "has code metrics"@en ;
+    IAO:0000115 "Associates a package version with its code analysis results."@en ;
+    rdfs:comment "Associates a package version with its code analysis results"@en ;
+    rdfs:domain pkg:Version ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range met:CodeMetrics .
+
+met:implementedIn a owl:ObjectProperty ;
+    rdfs:label "implemented in"@en ;
+    IAO:0000115 "Associates a package with the programming languages it is implemented in."@en ;
+    rdfs:comment "Associates a package with the programming languages it is implemented in"@en ;
+    rdfs:domain pkg:Package ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range met:ProgrammingLanguage .
+
+met:isGarbageCollected a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "is garbage collected"@en ;
+    IAO:0000115 "Whether the language uses automatic garbage collection for memory management."@en ;
+    rdfs:comment "Whether the language uses automatic garbage collection"@en ;
+    rdfs:domain met:ProgrammingLanguage ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:boolean .
+
+met:isMemorySafe a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "is memory safe"@en ;
+    IAO:0000115 "Whether the language provides memory safety guarantees through its type system or runtime."@en ;
+    rdfs:comment "Whether the language provides memory safety guarantees"@en ;
+    rdfs:domain met:ProgrammingLanguage ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:boolean .
+
+met:language a owl:ObjectProperty ;
+    rdfs:label "language"@en ;
+    IAO:0000115 "Identifies the programming language for a set of language-specific metrics."@en ;
+    rdfs:comment "Identifies the programming language for a set of language-specific metrics"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range met:ProgrammingLanguage .
+
+met:languageProportion a owl:DatatypeProperty ;
+    rdfs:label "language proportion"@en ;
+    IAO:0000115 "The fraction of the total codebase written in this language, measured by lines of code (not files or bytes), from 0.0 to 1.0."@en ;
+    rdfs:comment "The fraction of the total codebase in this language, from 0.0 to 1.0"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:float .
+
+met:linesOfCode a owl:DatatypeProperty ;
+    rdfs:label "lines of code"@en ;
+    IAO:0000115 "Physical lines of code (LOC) in this specific programming language, as counted by cloc or similar tools. Includes all non-blank, non-comment lines. This is a physical line count, not logical SLOC."@en ;
+    rdfs:comment "Lines of code in this specific programming language"@en ;
+    rdfs:domain met:LanguageMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:totalBlankLines a owl:DatatypeProperty ;
+    rdfs:label "total blank lines"@en ;
+    IAO:0000115 "Total blank lines across all source files."@en ;
+    rdfs:comment "Total blank lines across all source files"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:totalCommentLines a owl:DatatypeProperty ;
+    rdfs:label "total comment lines"@en ;
+    IAO:0000115 "Total comment lines across all source files."@en ;
+    rdfs:comment "Total comment lines across all source files"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:totalFiles a owl:DatatypeProperty ;
+    rdfs:label "total files"@en ;
+    IAO:0000115 "Total number of source files in the analyzed version."@en ;
+    rdfs:comment "Total number of source files in the analyzed version"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:totalLinesOfCode a owl:DatatypeProperty ;
+    rdfs:label "total lines of code"@en ;
+    IAO:0000115 "Total physical lines of code (LOC) across all languages in the analyzed version. Sum of per-language linesOfCode values."@en ;
+    rdfs:comment "Total lines of code across all languages in the analyzed version"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
+met:hasLanguageMetrics a owl:ObjectProperty ;
+    rdfs:label "has language metrics"@en ;
+    IAO:0000115 "Links summary code metrics to per-language breakdowns."@en ;
+    rdfs:comment "Links summary code metrics to per-language breakdowns"@en ;
+    rdfs:domain met:CodeMetrics ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range met:LanguageMetrics .
+
+met:languageName a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "language name"@en ;
+    IAO:0000115 "The canonical name of the programming language."@en ;
+    rdfs:comment "The canonical name of the programming language"@en ;
+    rdfs:domain met:ProgrammingLanguage ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:string .
+
+met:CodeMetrics a owl:Class ;
+    rdfs:label "Code Metrics"@en ;
+    IAO:0000115 "Summary code analysis results for a specific version of a software package."@en ;
+    rdfs:comment "Summary code analysis results for a specific version of a software package"@en ;
+    rdfs:isDefinedBy met: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality 1 ;
+            owl:onProperty met:hasLanguageMetrics ],
+        owl:Thing .
+
+met:LanguageMetrics a owl:Class ;
+    rdfs:label "Language Metrics"@en ;
+    IAO:0000115 "Per-language code analysis breakdown within a set of code metrics, providing detailed statistics for a single programming language."@en ;
+    rdfs:comment "Per-language code analysis breakdown within a set of code metrics"@en ;
+    rdfs:isDefinedBy met: ;
+    rdfs:subClassOf owl:Thing .
+
+met:ProgrammingLanguage a owl:Class ;
+    rdfs:label "Programming Language"@en ;
+    IAO:0000115 "A programming language used in software development."@en ;
+    rdfs:comment "A programming language used in software development"@en ;
+    rdfs:isDefinedBy met: ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality 1 ;
+            owl:onProperty met:languageName ],
+        owl:Thing .
+
+met: a owl:Ontology ;
+    rdfs:label "Package Metrics Ontology"@en ;
     dcterms:abstract "The Metrics ontology captures quantitative code analysis data for packages, including lines of code, cyclomatic complexity, and per-language breakdowns. It enables queries that correlate package size and complexity with dependency counts, maintainer activity, or vulnerability exposure across distributions." ;
     dcterms:created "2025-09-05"^^xsd:date ;
     dcterms:creator "PackageGraph Project" ;
-    dcterms:title "Package Metrics Ontology" ;
     dcterms:description "A comprehensive ontology for modeling programming languages, code analysis metrics, and per-language breakdowns including lines of code, complexity measures, and language characteristics." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionInfo "0.5.0" ;
-    owl:imports <https://purl.org/packagegraph/ontology/core#> .
+    dcterms:title "Package Metrics Ontology" ;
+    rdfs:comment "Ontology for representing programming languages, code metrics, and per-language analysis breakdowns for software packages"@en ;
+    owl:imports pkg: ;
+    owl:versionInfo "0.5.0" .
 
-
-# #################################################################
-# #
-# #    Classes
-# #
-# #################################################################
-
-met:ProgrammingLanguage a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Programming Language" ;
-    rdfs:comment "A programming language used in software development" ;
-    IAO:0000115 "A programming language used in software development." .
-
-met:CodeMetrics a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Code Metrics" ;
-    rdfs:comment "Summary code analysis results for a specific version of a software package" ;
-    IAO:0000115 "Summary code analysis results for a specific version of a software package." .
-
-met:LanguageMetrics a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Language Metrics" ;
-    rdfs:comment "Per-language code analysis breakdown within a set of code metrics" ;
-    IAO:0000115 "Per-language code analysis breakdown within a set of code metrics, providing detailed statistics for a single programming language." .
-
-
-# #################################################################
-# #
-# #    Data Properties -- ProgrammingLanguage
-# #
-# #################################################################
-
-met:languageName a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "language name" ;
-    rdfs:comment "The canonical name of the programming language" ;
-    rdfs:domain met:ProgrammingLanguage ;
-    rdfs:range xsd:string ;
-    IAO:0000115 "The canonical name of the programming language." .
-
-met:isMemorySafe a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "is memory safe" ;
-    rdfs:comment "Whether the language provides memory safety guarantees" ;
-    rdfs:domain met:ProgrammingLanguage ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the language provides memory safety guarantees through its type system or runtime." .
-
-met:isGarbageCollected a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "is garbage collected" ;
-    rdfs:comment "Whether the language uses automatic garbage collection" ;
-    rdfs:domain met:ProgrammingLanguage ;
-    rdfs:range xsd:boolean ;
-    IAO:0000115 "Whether the language uses automatic garbage collection for memory management." .
-
-
-# #################################################################
-# #
-# #    Data Properties -- CodeMetrics
-# #
-# #################################################################
-
-met:totalLinesOfCode a owl:DatatypeProperty ;
-    rdfs:label "total lines of code" ;
-    rdfs:comment "Total lines of code across all languages in the analyzed version" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Total lines of code across all languages in the analyzed version." .
-
-met:totalFiles a owl:DatatypeProperty ;
-    rdfs:label "total files" ;
-    rdfs:comment "Total number of source files in the analyzed version" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Total number of source files in the analyzed version." .
-
-met:totalBlankLines a owl:DatatypeProperty ;
-    rdfs:label "total blank lines" ;
-    rdfs:comment "Total blank lines across all source files" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Total blank lines across all source files." .
-
-met:totalCommentLines a owl:DatatypeProperty ;
-    rdfs:label "total comment lines" ;
-    rdfs:comment "Total comment lines across all source files" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Total comment lines across all source files." .
-
-met:analysisDate a owl:DatatypeProperty ;
-    rdfs:label "analysis date" ;
-    rdfs:comment "The date when the code metrics analysis was performed" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range xsd:dateTime ;
-    IAO:0000115 "The date when the code metrics analysis was performed." .
-
-
-# #################################################################
-# #
-# #    Data Properties -- LanguageMetrics
-# #
-# #################################################################
-
-met:linesOfCode a owl:DatatypeProperty ;
-    rdfs:label "lines of code" ;
-    rdfs:comment "Lines of code in this specific programming language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Lines of code in this specific programming language." .
-
-met:filesCount a owl:DatatypeProperty ;
-    rdfs:label "files count" ;
-    rdfs:comment "Number of source files in this programming language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Number of source files in this programming language." .
-
-met:blankLines a owl:DatatypeProperty ;
-    rdfs:label "blank lines" ;
-    rdfs:comment "Number of blank lines in files of this language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Number of blank lines in files of this language." .
-
-met:commentLines a owl:DatatypeProperty ;
-    rdfs:label "comment lines" ;
-    rdfs:comment "Number of comment lines in files of this language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:integer ;
-    IAO:0000115 "Number of comment lines in files of this language." .
-
-met:cyclomaticComplexity a owl:DatatypeProperty ;
-    rdfs:label "cyclomatic complexity" ;
-    rdfs:comment "Average cyclomatic complexity of functions in this language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "Average cyclomatic complexity of functions in this language." .
-
-met:halsteadEffort a owl:DatatypeProperty ;
-    rdfs:label "Halstead effort" ;
-    rdfs:comment "Average Halstead effort metric for functions in this language" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "Average Halstead effort metric for functions in this language." .
-
-met:languageProportion a owl:DatatypeProperty ;
-    rdfs:label "language proportion" ;
-    rdfs:comment "The fraction of the total codebase in this language, from 0.0 to 1.0" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range xsd:float ;
-    IAO:0000115 "The fraction of the total codebase in this language, from 0.0 to 1.0." .
-
-
-# #################################################################
-# #
-# #    Object Properties
-# #
-# #################################################################
-
-met:hasCodeMetrics a owl:ObjectProperty ;
-    rdfs:label "has code metrics" ;
-    rdfs:comment "Associates a package version with its code analysis results" ;
-    rdfs:domain pkg:Version ;
-    rdfs:range met:CodeMetrics ;
-    IAO:0000115 "Associates a package version with its code analysis results." .
-
-met:hasLanguageMetrics a owl:ObjectProperty ;
-    rdfs:label "has language metrics" ;
-    rdfs:comment "Links summary code metrics to per-language breakdowns" ;
-    rdfs:domain met:CodeMetrics ;
-    rdfs:range met:LanguageMetrics ;
-    IAO:0000115 "Links summary code metrics to per-language breakdowns." .
-
-met:language a owl:ObjectProperty ;
-    rdfs:label "language" ;
-    rdfs:comment "Identifies the programming language for a set of language-specific metrics" ;
-    rdfs:domain met:LanguageMetrics ;
-    rdfs:range met:ProgrammingLanguage ;
-    IAO:0000115 "Identifies the programming language for a set of language-specific metrics." .
-
-met:implementedIn a owl:ObjectProperty ;
-    rdfs:label "implemented in" ;
-    rdfs:comment "Associates a package with the programming languages it is implemented in" ;
-    rdfs:domain pkg:Package ;
-    rdfs:range met:ProgrammingLanguage ;
-    IAO:0000115 "Associates a package with the programming languages it is implemented in." .
-
-
-# #################################################################
-# #
-# #    Cardinality Restrictions
-# #
-# #################################################################
-
-met:ProgrammingLanguage rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty met:languageName ;
-    owl:cardinality 1
-] .
-
-met:CodeMetrics rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty met:hasLanguageMetrics ;
-    owl:minCardinality 1
-] .
-
-
-# #################################################################
-# #
-# #    Named Individuals -- Programming Languages
-# #
-# #################################################################
-
-met:C a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "C" ;
-    met:languageName "C" ;
-    met:isMemorySafe false ;
-    met:isGarbageCollected false .
-
-met:Cpp a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "C++" ;
-    met:languageName "C++" ;
-    met:isMemorySafe false ;
-    met:isGarbageCollected false .
-
-met:Assembly a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Assembly" ;
-    met:languageName "Assembly" ;
-    met:isMemorySafe false ;
-    met:isGarbageCollected false .
-
-met:Java a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Java" ;
-    met:languageName "Java" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:Python a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Python" ;
-    met:languageName "Python" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:Ruby a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Ruby" ;
-    met:languageName "Ruby" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:Perl a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Perl" ;
-    met:languageName "Perl" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:CSharp a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "C#" ;
-    met:languageName "C#" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:JavaScript a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "JavaScript" ;
-    met:languageName "JavaScript" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:TypeScript a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "TypeScript" ;
-    met:languageName "TypeScript" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:Go a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Go" ;
-    met:languageName "Go" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected true .
-
-met:Rust a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Rust" ;
-    met:languageName "Rust" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected false .
-
-met:Shell a owl:NamedIndividual, met:ProgrammingLanguage ;
-    rdfs:label "Shell" ;
-    met:languageName "Shell" ;
-    met:isMemorySafe true ;
-    met:isGarbageCollected false .
