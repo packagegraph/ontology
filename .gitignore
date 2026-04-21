@@ -3,5 +3,6 @@
 *.lock
 _site/
 reports/
+docs/
 package_data/
 .playwright-cli/
