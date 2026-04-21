@@ -1,124 +1,261 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+pkg:ArchitectureShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "An architecture must have exactly one architecture name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:architectureName ] ;
+    sh:targetClass pkg:Architecture .
+
 pkg:BinaryPackageShape a sh:NodeShape ;
     sh:property [ sh:class pkg:SourcePackage ;
             sh:maxCount 1 ;
-            sh:message "A binary package must be built from exactly one source package." ;
-            sh:minCount 1 ;
-            sh:path pkg:builtFromSource ] ;
+            sh:message "A binary package should indicate its source package."@en ;
+            sh:path pkg:builtFromSource ;
+            sh:severity sh:Warning ] ;
     sh:targetClass pkg:BinaryPackage .
 
 pkg:BuildActivityShape a sh:NodeShape ;
     sh:property [ sh:class prov:Agent ;
-            sh:message "A build activity's performer must be a prov:Agent." ;
+            sh:message "A build activity's performer must be a prov:Agent."@en ;
             sh:path pkg:performedBy ] ;
     sh:targetClass pkg:BuildActivity .
 
 pkg:CapabilityShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
-            sh:message "A capability must have at least one label." ;
+            sh:message "A capability must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A capability must have exactly one capability name." ;
+            sh:message "A capability must have exactly one capability name."@en ;
             sh:minCount 1 ;
             sh:path pkg:capabilityName ] ;
     sh:targetClass pkg:Capability .
 
+pkg:ChecksumShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A checksum must have exactly one algorithm."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:checksumAlgorithm ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A checksum must have exactly one hash value."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:checksumValue ] ;
+    sh:targetClass pkg:Checksum .
+
 pkg:ContributorAccountShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A contributor account must have exactly one platform." ;
+            sh:message "A contributor account must have exactly one platform."@en ;
             sh:minCount 1 ;
             sh:path pkg:accountPlatform ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A contributor account must have exactly one username." ;
+            sh:message "A contributor account must have exactly one username."@en ;
             sh:minCount 1 ;
             sh:path pkg:accountUsername ] ;
     sh:targetClass pkg:ContributorAccount .
 
+pkg:DependencyConsistencyShape a sh:NodeShape ;
+    sh:property [ sh:message "Package has directlyDependsOn but no corresponding hasDependency reification."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:hasDependency ;
+            sh:severity sh:Warning ] ;
+    sh:targetSubjectsOf pkg:directlyDependsOn .
+
+pkg:DependencyShape a sh:NodeShape ;
+    sh:property [ sh:class pkg:Package ;
+            sh:maxCount 1 ;
+            sh:message "A dependency must have exactly one target package."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:dependencyTarget ],
+        [ sh:in ( pkg:dependsOn pkg:buildDependsOn pkg:recommends pkg:suggests pkg:enhances pkg:supplements pkg:checkRequires pkg:preDepends pkg:conflicts ) ;
+            sh:maxCount 1 ;
+            sh:message "Dependency type must be a property URI from the dependency property hierarchy."@en ;
+            sh:nodeKind sh:IRI ;
+            sh:path pkg:dependencyType ],
+        [ sh:class pkg:VersionConstraint ;
+            sh:maxCount 1 ;
+            sh:message "A dependency can have at most one version constraint."@en ;
+            sh:path pkg:hasVersionConstraint ],
+        [ sh:class pkg:Architecture ;
+            sh:message "A dependency can specify architecture applicability (architecture-conditional dependencies)."@en ;
+            sh:path pkg:applicableArchitecture ] ;
+    sh:targetClass pkg:Dependency .
+
 pkg:DistributionReleaseShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
-            sh:message "A distribution release must have at least one label." ;
+            sh:maxCount 1 ;
+            sh:message "A distribution release must have exactly one codename."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:releaseCodename ],
+        [ sh:class pkg:Distribution ;
+            sh:maxCount 1 ;
+            sh:message "A distribution release must belong to exactly one distribution."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:partOfDistribution ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A distribution release can have at most one release version."@en ;
+            sh:path pkg:releaseVersion ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A distribution release must declare its repository type."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:repoType ],
+        [ sh:datatype xsd:string ;
+            sh:message "A distribution release must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:DistributionRelease .
 
+pkg:DistributionShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A distribution must have exactly one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A distribution must have exactly one distribution name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:distributionName ] ;
+    sh:targetClass pkg:Distribution .
+
 pkg:InstalledFileShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "An installed file must have exactly one file path." ;
+            sh:message "An installed file must have exactly one file path."@en ;
             sh:minCount 1 ;
             sh:path pkg:installedFilePath ] ;
     sh:targetClass pkg:InstalledFile .
 
-pkg:MaintainerShape a sh:NodeShape ;
+pkg:IrreflexiveDependsOnShape a sh:NodeShape ;
+    sh:sparql [ sh:message "A package cannot directly depend on itself (irreflexivity constraint)."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:directlyDependsOn $this .
+                    }
+                """ ] ;
+    sh:targetSubjectsOf pkg:directlyDependsOn .
+
+pkg:LicenseShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:message "A maintainer must have exactly one foaf:name." ;
+            sh:message "A license must have at least one label."@en ;
             sh:minCount 1 ;
-            sh:path foaf:name ] ;
+            sh:path rdfs:label ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A license can have at most one SPDX identifier."@en ;
+            sh:path pkg:spdxId ] ;
+    sh:targetClass pkg:License .
+
+pkg:MaintainerShape a sh:NodeShape ;
+    sh:property [ sh:class pkg:Person ;
+            sh:maxCount 1 ;
+            sh:message "A maintainer role must be held by exactly one person."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:heldBy ] ;
     sh:targetClass pkg:Maintainer .
 
 pkg:PURLShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
             sh:maxCount 1 ;
-            sh:message "A PURL must follow the format pkg:type/namespace/name@version" ;
+            sh:message "A PURL must follow the format pkg:type/namespace/name@version"@en ;
             sh:path pkg:purl ;
             sh:pattern "^pkg:[a-z]+/.+@.+" ] ;
     sh:targetClass pkg:PackageIdentity .
 
+pkg:PackageIdentityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A package identity must have exactly one PURL."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:purl ],
+        [ sh:datatype xsd:string ;
+            sh:message "A package identity must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass pkg:PackageIdentity .
+
 pkg:PackageSetShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
-            sh:message "A package set must have at least one label." ;
+            sh:message "A package set must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:PackageSet .
 
 pkg:PackageShape a sh:NodeShape ;
-    sh:property [ sh:message "A package must have at least one version." ;
+    sh:property [ sh:message "A package must have at least one version."@en ;
             sh:minCount 1 ;
             sh:path pkg:hasVersion ],
         [ sh:maxCount 1 ;
-            sh:message "A package must have exactly one package name." ;
+            sh:message "A package must have exactly one package name."@en ;
             sh:path pkg:packageName ],
         [ sh:maxCount 1 ;
-            sh:message "A package can have at most one homepage." ;
+            sh:message "A package can have at most one homepage."@en ;
             sh:path pkg:homepage ],
         [ sh:maxCount 1 ;
-            sh:message "A package can have at most one download URL." ;
+            sh:message "A package can have at most one download URL."@en ;
             sh:path pkg:downloadURL ],
-        [ sh:maxCount 1 ;
-            sh:message "A package can have at most one checksum." ;
-            sh:path pkg:checksum ],
-        [ sh:class pkg:Maintainer ;
-            sh:message "The value of pkg:maintainedBy must be a pkg:Maintainer." ;
+        [ sh:class pkg:Person ;
+            sh:message "The value of pkg:maintainedBy must be a pkg:Person (convenience shortcut). For role details, use hasMaintenanceRole."@en ;
             sh:path pkg:maintainedBy ] ;
     sh:targetClass pkg:Package .
 
+pkg:PersonShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A person must have exactly one foaf:name."@en ;
+            sh:minCount 1 ;
+            sh:path foaf:name ] ;
+    sh:targetClass pkg:Person .
+
 pkg:SourcePackageShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A source package must have exactly one package name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ] ;
     sh:targetClass pkg:SourcePackage .
 
 pkg:UpstreamProjectShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "An upstream project must have exactly one project name." ;
+            sh:message "An upstream project must have exactly one project name."@en ;
             sh:minCount 1 ;
             sh:path pkg:projectName ] ;
     sh:targetClass pkg:UpstreamProject .
 
+pkg:VersionConstraintShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A version constraint must have exactly one operator."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:versionConstraintOperator ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A version constraint must have exactly one version value."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:versionConstraintValue ] ;
+    sh:targetClass pkg:VersionConstraint .
+
 pkg:VersionShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A version must have exactly one version string." ;
+            sh:message "A version must have exactly one version string."@en ;
             sh:minCount 1 ;
             sh:path pkg:versionString ] ;
     sh:targetClass pkg:Version .
@@ -126,7 +263,7 @@ pkg:VersionShape a sh:NodeShape ;
 sec:CPEShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
-            sh:message "A CPE identifier must follow CPE 2.3 format: cpe:2.3:part:vendor:product:version:update:edition:language:sw_edition:target_sw:target_hw:other" ;
+            sh:message "A CPE identifier must follow CPE 2.3 format: cpe:2.3:part:vendor:product:version:update:edition:language:sw_edition:target_sw:target_hw:other"@en ;
             sh:path sec:cpeId ;
             sh:pattern "^cpe:2\\.3:[aho]:[^:]+:[^:]+:[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$" ] ;
     sh:targetClass pkg:PackageIdentity .

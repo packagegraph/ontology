@@ -1,1428 +1,1370 @@
 @prefix : <https://purl.org/packagegraph/ontology/core#> .
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix spdx: <http://spdx.org/rdf/terms#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-# 
-# 
-# #################################################################
-# #
-# #    Annotation properties
-# #
-# #################################################################
-# 
-# 
-# http://purl.obolibrary.org/obo/IAO_0000115
-# 
-# http://purl.org/dc/terms/created
-# 
-# http://purl.org/dc/terms/creator
-# 
-# http://purl.org/dc/terms/description
-# 
-# http://purl.org/dc/terms/license
-# 
-# http://purl.org/dc/terms/title
-# 
-# 
-# 
-# #################################################################
-# #
-# #    Datatypes
-# #
-# #################################################################
-# 
-# 
-# http://www.w3.org/2001/XMLSchema#date
-# 
-# http://www.w3.org/2001/XMLSchema#duration
-# 
-# 
-# 
-# #################################################################
-# #
-# #    Object Properties
-# #
-# #################################################################
-# 
-# 
-# https://purl.org/packagegraph/ontology/core#pacmanConflicts
-# 
-# https://purl.org/packagegraph/ontology/core#pacmanDepends
-# 
-# https://purl.org/packagegraph/ontology/core#conflicts
-# 
-# https://purl.org/packagegraph/ontology/core#containedIn
-# 
-# https://purl.org/packagegraph/ontology/core#contains
-#
-# https://purl.org/packagegraph/ontology/core#contributorOrganization
-#
-# https://purl.org/packagegraph/ontology/core#debConflicts
-# 
-# https://purl.org/packagegraph/ontology/core#debDepends
-# 
-# https://purl.org/packagegraph/ontology/core#debProvides
-# 
-# https://purl.org/packagegraph/ontology/core#dependsOn
-# 
-# https://purl.org/packagegraph/ontology/core#derivedFrom
-# 
-# https://purl.org/packagegraph/ontology/core#directlyConflictsWith
-# 
-# https://purl.org/packagegraph/ontology/core#directlyDependsOn
-# 
-# https://purl.org/packagegraph/ontology/core#directlyProvides
-# 
-# https://purl.org/packagegraph/ontology/core#equivalentInDistribution
-# 
-# https://purl.org/packagegraph/ontology/core#hasABI
-# 
-# https://purl.org/packagegraph/ontology/core#hasISA
-# 
-# https://purl.org/packagegraph/ontology/core#hasLicense
-# 
-# https://purl.org/packagegraph/ontology/core#hasMaintainerRole
-# 
-# https://purl.org/packagegraph/ontology/core#hasVersion
-# 
-# https://purl.org/packagegraph/ontology/core#hasVersionConstraint
-# 
-# https://purl.org/packagegraph/ontology/core#isConflictWith
-# 
-# https://purl.org/packagegraph/ontology/core#isDependencyOf
-# 
-# https://purl.org/packagegraph/ontology/core#isProvidedBy
-# 
-# https://purl.org/packagegraph/ontology/core#isReplacedBy
-# 
-# https://purl.org/packagegraph/ontology/core#maintainedBy
-# 
-# https://purl.org/packagegraph/ontology/core#managedBy
-# 
-# https://purl.org/packagegraph/ontology/core#manages
-#
-# https://purl.org/packagegraph/ontology/core#memberOfPackageSet
-#
-# https://purl.org/packagegraph/ontology/core#partOfDistribution
-# 
-# https://purl.org/packagegraph/ontology/core#partOfEcosystem
-#
-# https://purl.org/packagegraph/ontology/core#partOfRelease
-#
-# https://purl.org/packagegraph/ontology/core#provides
-#
-# https://purl.org/packagegraph/ontology/core#providesCapability
-#
-# https://purl.org/packagegraph/ontology/core#releaseContains
-#
-# https://purl.org/packagegraph/ontology/core#replaces
-#
-# https://purl.org/packagegraph/ontology/core#requiresCapability
-#
-# https://purl.org/packagegraph/ontology/core#rpmConflicts
-# 
-# https://purl.org/packagegraph/ontology/core#rpmProvides
-# 
-# https://purl.org/packagegraph/ontology/core#rpmRequires
-# 
-# https://purl.org/packagegraph/ontology/core#targetArchitecture
-#
-# https://purl.org/packagegraph/ontology/core#usedDependency
-# 
-# https://purl.org/packagegraph/ontology/core#usedSource
-# 
-# https://purl.org/packagegraph/ontology/core#wasBuiltBy
-# 
-# 
-# 
-# #################################################################
-# #
-# #    Data properties
-# #
-# #################################################################
-# 
-# 
-# https://purl.org/packagegraph/ontology/core#activeContributor
-# 
-# https://purl.org/packagegraph/ontology/core#activityDuration
-# 
-# https://purl.org/packagegraph/ontology/core#activityEndTime
-# 
-# https://purl.org/packagegraph/ontology/core#activityLogOutput
-# 
-# https://purl.org/packagegraph/ontology/core#activityStartTime
-# 
-# https://purl.org/packagegraph/ontology/core#checksum
-# 
-# https://purl.org/packagegraph/ontology/core#checksumType
-# 
-# https://purl.org/packagegraph/ontology/core#dependencyWeight
-# 
-# https://purl.org/packagegraph/ontology/core#description
-# 
-# https://purl.org/packagegraph/ontology/core#downloadURL
-# 
-# https://purl.org/packagegraph/ontology/core#exitCode
-# 
-# https://purl.org/packagegraph/ontology/core#homepage
-# 
-# https://purl.org/packagegraph/ontology/core#installSize
-# 
-# https://purl.org/packagegraph/ontology/core#isMetaPackage
-#
-# https://purl.org/packagegraph/ontology/core#isVendorOriginated
-#
-# https://purl.org/packagegraph/ontology/core#isaSpecificCode
-# 
-# https://purl.org/packagegraph/ontology/core#maintainerSince
-# 
-# https://purl.org/packagegraph/ontology/core#packageName
-# 
-# https://purl.org/packagegraph/ontology/core#packageSize
-# 
-# https://purl.org/packagegraph/ontology/core#upstreamProject
-# 
-# https://purl.org/packagegraph/ontology/core#versionConstraintOperator
-# 
-# https://purl.org/packagegraph/ontology/core#versionConstraintValue
-# 
-# https://purl.org/packagegraph/ontology/core#versionString
-# 
-# 
-# 
-# #################################################################
-# #
-# #    Classes
-# #
-# #################################################################
-# 
-# 
-# https://purl.org/packagegraph/ontology/core#ABI
-# 
-# https://purl.org/packagegraph/ontology/core#Architecture
-# 
-# https://purl.org/packagegraph/ontology/core#BuildActivity
-# 
-# https://purl.org/packagegraph/ontology/core#ContributionType
-# 
-# https://purl.org/packagegraph/ontology/core#Contributor
-# 
-# https://purl.org/packagegraph/ontology/core#Dependency
-# 
-# https://purl.org/packagegraph/ontology/core#Distribution
-# 
-# https://purl.org/packagegraph/ontology/core#Ecosystem
-# 
-# https://purl.org/packagegraph/ontology/core#InstallationActivity
-# 
-# https://purl.org/packagegraph/ontology/core#InstructionSetArchitecture
-# 
-# https://purl.org/packagegraph/ontology/core#License
-# 
-# https://purl.org/packagegraph/ontology/core#Maintainer
-# 
-# https://purl.org/packagegraph/ontology/core#MaintainerRole
-# 
-# https://purl.org/packagegraph/ontology/core#MetaPackage
-# 
-# https://purl.org/packagegraph/ontology/core#Package
-# 
-# https://purl.org/packagegraph/ontology/core#PackageManager
-#
-# https://purl.org/packagegraph/ontology/core#PackageSet
-#
-# https://purl.org/packagegraph/ontology/core#PackagingActivity
-# 
-# https://purl.org/packagegraph/ontology/core#PublishingActivity
-# 
-# https://purl.org/packagegraph/ontology/core#Repository
-# 
-# https://purl.org/packagegraph/ontology/core#TestActivity
-# 
-# https://purl.org/packagegraph/ontology/core#Version
-# 
-# https://purl.org/packagegraph/ontology/core#VersionConstraint
-# 
-# https://purl.org/packagegraph/ontology/core#VirtualPackage
-# 
-# Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://purl.org/packagegraph/ontology/core#> a owl:Ontology;
-  dcterms:abstract "PackageGraph Core defines the foundational classes and properties for representing software packages across Linux distributions and other package ecosystems. It models binary and source packages, versioned dependencies with constraints, maintainers, architectures, and distribution releases as a connected RDF graph. The ontology serves as the shared schema that distribution-specific extensions (Debian, RPM, Arch, etc.) specialize, enabling cross-distribution queries over a unified SPARQL endpoint.";
-  dcterms:created "2025-09-05"^^xsd:date;
-  dcterms:creator "Package Management Ontology Project";
-  dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems.";
-  dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/>;
-  dcterms:title "Package Management Core Ontology";
-  rdfs:comment "Core ontology for representing software packages and repositories across different package management systems";
-  rdfs:label "Package Management Core Ontology";
-  owl:versionInfo "0.5.0" .
+IAO:0000115 a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-<http://purl.obolibrary.org/obo/IAO_0000115> a owl:AnnotationProperty .
+dcterms:created a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-dcterms:created a owl:AnnotationProperty .
+dcterms:creator a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-dcterms:creator a owl:AnnotationProperty .
+dcterms:description a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-dcterms:description a owl:AnnotationProperty .
+dcterms:license a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-dcterms:license a owl:AnnotationProperty .
+dcterms:title a owl:AnnotationProperty ;
+    rdfs:isDefinedBy : .
 
-dcterms:title a owl:AnnotationProperty .
+:ContributionType a owl:Class ;
+    rdfs:label "Contribution Type"@en ;
+    IAO:0000115 "Categorizes the nature of contributions made to a package, such as code, documentation, packaging, or security updates."@en ;
+    rdfs:comment "The type of contribution made to a package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
 
-xsd:date a rdfs:Datatype .
+:InstallationActivity a owl:Class ;
+    rdfs:label "Installation Activity"@en ;
+    IAO:0000115 "An activity that deploys a package and its dependencies onto a target system, making the software available for use."@en ;
+    rdfs:comment "The process of installing a package on a system"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Activity .
+
+:MetaPackage a owl:Class ;
+    rdfs:label "Meta Package"@en ;
+    IAO:0000115 "A package that contains minimal or no files itself but serves to group related packages together through dependencies, commonly used for task-based installations."@en ;
+    rdfs:comment "A package that exists primarily to depend on other packages"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Package .
+
+:PhantomPackage a owl:Class ;
+    rdfs:label "Phantom Package"@en ;
+    IAO:0000115 "A package that exists in repository primary metadata (e.g., primary.xml for RPM) but has no corresponding files in the file list metadata. Common for TeX Live virtual subpackages and auto-generated meta-entries. Structurally different from a regular Package because it cannot be installed."@en ;
+    rdfs:comment "A package entry in repository metadata that has no installable files"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Package .
+
+:PublishingActivity a owl:Class ;
+    rdfs:label "Publishing Activity"@en ;
+    IAO:0000115 "An activity that uploads and makes a package available for distribution through a package repository."@en ;
+    rdfs:comment "The process of making a package available in a repository"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Activity .
+
+:TestActivity a owl:Class ;
+    rdfs:label "Test Activity"@en ;
+    IAO:0000115 "An activity that executes test suites to verify the functionality and quality of a software package."@en ;
+    rdfs:comment "The process of running tests on a package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Activity .
+
+:VirtualPackage a owl:Class ;
+    rdfs:label "Virtual Package"@en ;
+    IAO:0000115 "An abstract functional promise that can be satisfied by one or more concrete packages. Virtual packages have no artifact (no size, no checksum, no installable files) — they represent a capability that multiple packages can provide."@en ;
+    rdfs:comment "An abstract functional promise that can be satisfied by one or more concrete packages"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Capability .
+
+:accountPlatform a owl:DatatypeProperty ;
+    rdfs:label "account platform"@en ;
+    IAO:0000115 "Identifies the platform or service where a contributor account is registered, such as GitHub, Debian, Fedora, or GitLab."@en ;
+    rdfs:comment "The platform or service where the account exists"@en ;
+    rdfs:domain :ContributorAccount ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:accountUrl a owl:DatatypeProperty ;
+    rdfs:label "account URL"@en ;
+    IAO:0000115 "The web URL of a contributor's profile page on a specific platform."@en ;
+    rdfs:comment "The URL of the contributor's profile on the platform"@en ;
+    rdfs:domain :ContributorAccount ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:accountUsername a owl:DatatypeProperty ;
+    rdfs:label "account username"@en ;
+    IAO:0000115 "The username, login, or unique identifier of a contributor on a specific platform."@en ;
+    rdfs:comment "The username or identifier on the platform"@en ;
+    rdfs:domain :ContributorAccount ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:activeContributor a owl:DatatypeProperty ;
+    rdfs:label "active contributor"@en ;
+    IAO:0000115 "Indicates whether a contributor is currently active in package development or maintenance."@en ;
+    rdfs:comment "Whether the contributor is currently active"@en ;
+    rdfs:domain :Contributor ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:boolean .
+
+:activityDuration a owl:DatatypeProperty ;
+    rdfs:label "activity duration"@en ;
+    IAO:0000115 "The total time duration required to complete a packaging-related activity."@en ;
+    rdfs:comment "How long a packaging activity took to complete"@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:duration .
+
+:activityEndTime a owl:DatatypeProperty ;
+    rdfs:label "activity end time"@en ;
+    IAO:0000115 "Records the date and time when a packaging-related activity was completed."@en ;
+    rdfs:comment "When a packaging activity completed"@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:dateTime ;
+    rdfs:subPropertyOf prov:endedAtTime .
+
+:activityLogOutput a owl:DatatypeProperty ;
+    rdfs:label "activity log output"@en ;
+    IAO:0000115 "The textual log output generated during the execution of a packaging activity, useful for debugging and auditing."@en ;
+    rdfs:comment "Log output generated during a packaging activity"@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:activityStartTime a owl:DatatypeProperty ;
+    rdfs:label "activity start time"@en ;
+    IAO:0000115 "Records the date and time when a packaging-related activity was initiated."@en ;
+    rdfs:comment "When a packaging activity began"@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:dateTime ;
+    rdfs:subPropertyOf prov:startedAtTime .
+
+:applicableArchitecture a owl:ObjectProperty ;
+    rdfs:label "applicable architecture"@en ;
+    IAO:0000115 "Specifies the architecture(s) for which this dependency applies. Many package ecosystems support architecture-conditional dependencies: RPM allows architecture qualifiers in Requires directives (e.g., glibc is required on x86_64 but not wasm), Debian allows architecture restrictions in Build-Depends fields (e.g., [amd64] [arm64]). When omitted, the dependency applies to all architectures."@en ;
+    rdfs:comment "The architecture(s) for which this dependency applies (architecture-conditional dependencies)"@en ;
+    rdfs:domain :Dependency ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Architecture .
+
+:buildDependsOn a owl:ObjectProperty ;
+    rdfs:label "build depends on"@en ;
+    IAO:0000115 "A relationship indicating that one package is required to compile or build a source package from its source code, but is not required for the resulting binary packages to function."@en ;
+    rdfs:comment "Indicates a build-time dependency that is required to build the source package but not needed at runtime."@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:builtFromSource a owl:AsymmetricProperty,
+        owl:ObjectProperty ;
+    rdfs:label "built from source"@en ;
+    IAO:0000115 "Associates a binary package with the source package from which it was compiled, enabling grouping of related binary outputs."@en ;
+    rdfs:comment "Links a binary package to the source package it was built from"@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :SourcePackage ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    owl:inverseOf :producedBinary .
+
+:capabilityName a owl:DatatypeProperty ;
+    rdfs:label "capability name"@en ;
+    IAO:0000115 "The identifier for a capability, such as a shared library name (libssl.so.3), virtual package name, or other capability identifier."@en ;
+    rdfs:comment "The name or identifier of a capability"@en ;
+    rdfs:domain :Capability ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:checkRequires a owl:ObjectProperty ;
+    rdfs:label "check requires"@en ;
+    IAO:0000115 "A test-time dependency required to run a source package's test suite but not needed for building or runtime. Used in RPM BuildRequires with check context."@en ;
+    rdfs:comment "Indicates a test-time dependency for running the package's test suite"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:checksumAlgorithm a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "checksum algorithm"@en ;
+    IAO:0000115 "The name of the cryptographic hash algorithm used to compute this checksum value."@en ;
+    rdfs:comment "The hash algorithm (e.g., SHA-256, MD5, SHA-1)"@en ;
+    rdfs:domain :Checksum ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:checksumValue a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "checksum value"@en ;
+    IAO:0000115 "The actual cryptographic hash value as a hexadecimal string."@en ;
+    rdfs:comment "The hexadecimal hash string"@en ;
+    rdfs:domain :Checksum ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:containedIn a owl:ObjectProperty ;
+    rdfs:label "contained in"@en ;
+    IAO:0000115 "A relationship that associates a software package with the repository where it is stored and made available for distribution."@en ;
+    rdfs:comment "Links a package to the repository that contains it"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Repository ;
+    owl:inverseOf :contains .
+
+:contributesTo a owl:ObjectProperty ;
+    rdfs:label "contributes to"@en ;
+    IAO:0000115 "Associates a contributor role with repositories it contributes to, enabling analysis of contributor activity across repositories."@en ;
+    rdfs:comment "Links a contributor role to repositories it contributes to"@en ;
+    rdfs:domain :Contributor ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Repository ;
+    owl:inverseOf :hasContributor .
+
+:contributorOrganization a owl:ObjectProperty ;
+    rdfs:label "contributor organization"@en ;
+    IAO:0000115 "Associates a contributor with the organization they are affiliated with, enabling analysis of contributor diversity and organizational representation in package maintenance."@en ;
+    rdfs:comment "Links a contributor to their affiliated organization"@en ;
+    rdfs:domain :Contributor ;
+    rdfs:isDefinedBy : ;
+    rdfs:range foaf:Organization .
+
+:dependencyType a owl:ObjectProperty ;
+    rdfs:label "dependency type"@en ;
+    IAO:0000115 "Classifies the nature of a dependency relationship by linking the reified Dependency node directly to the formal property predicate that defines its semantics. Values are property URIs (pkg:dependsOn, pkg:buildDependsOn, pkg:recommends, etc.) using OWL 2 punning. This harmonizes the dual-model: the reified node references the exact shortcut predicate it represents, unifying what was previously a disconnected magic string with the traversable property hierarchy."@en ;
+    rdfs:comment "The type of dependency relationship, represented by the URI of the corresponding shortcut property"@en ;
+    rdfs:domain :Dependency ;
+    rdfs:isDefinedBy : .
+
+:dependencyWeight a owl:DatatypeProperty ;
+    rdfs:label "dependency weight"@en ;
+    IAO:0000115 "Provides a numeric weight indicating the relative importance or strength of a dependency relationship."@en ;
+    rdfs:comment "Relative weight or importance of a dependency"@en ;
+    rdfs:domain :Dependency ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:float .
+
+:derivedFrom a owl:ObjectProperty ;
+    rdfs:label "derived from"@en ;
+    IAO:0000115 "Specifies that one distribution is based on or derived from another distribution's codebase and package set."@en ;
+    rdfs:comment "Indicates that one distribution is derived from another"@en ;
+    rdfs:domain :Distribution ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Distribution .
+
+:derivedFromDistribution a owl:ObjectProperty ;
+    rdfs:label "derived from distribution"@en ;
+    IAO:0000115 "Indicates that one distribution is derived from another (e.g., Ubuntu from Debian, CentOS from RHEL), establishing distribution lineage for package tracking."@en ;
+    rdfs:comment "Indicates that one distribution is derived from another"@en ;
+    rdfs:domain :Distribution ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Distribution .
+
+:description a owl:DatatypeProperty ;
+    rdfs:label "description"@en ;
+    IAO:0000115 "A textual explanation of the package's purpose, functionality, and features, intended to help users understand what the package provides."@en ;
+    rdfs:comment "A human-readable description of what the package does"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:directlyConflictsWith a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "directly conflicts with"@en ;
+    IAO:0000115 "A direct conflict relationship between packages, providing an efficient query path for identifying incompatible packages."@en ;
+    rdfs:comment "Direct conflict relationship between packages for efficient querying"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :conflicts .
+
+:directlyDependsOn a owl:ObjectProperty ;
+    rdfs:label "directly depends on"@en ;
+    IAO:0000115 "A direct dependency relationship between packages, providing an efficient query path that bypasses the detailed dependency metadata structure. This property is a materialized convenience shortcut semantically grounded by the property chain axiom: if X hasDependency D and D dependencyTarget Y, then X directlyDependsOn Y. For version constraint details, traverse the Dependency reification."@en ;
+    rdfs:comment "Materialized convenience shortcut of the hasDependency → dependencyTarget chain. For version constraint details, traverse the Dependency reification. NOTE: owl:propertyChainAxiom requires OWL 2 reasoning to materialize — Fuseki without OWL reasoning will not auto-derive this property from hasDependency chains."@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn ;
+    owl:inverseOf :isDirectDependencyOf ;
+    owl:propertyChainAxiom ( :hasDependency :dependencyTarget ) .
+
+:directlyProvides a owl:ObjectProperty ;
+    rdfs:label "directly provides"@en ;
+    IAO:0000115 "A direct provision relationship indicating that one package provides the functionality of another, optimized for efficient dependency resolution queries."@en ;
+    rdfs:comment "Direct provision relationship between packages for efficient querying"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :provides .
+
+:downloadURL a owl:DatatypeProperty ;
+    rdfs:label "download URL"@en ;
+    IAO:0000115 "The web address from which the package file or archive can be directly downloaded or accessed."@en ;
+    rdfs:comment "The URL from which the package can be downloaded"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:ecosystemPackage a owl:ObjectProperty ;
+    rdfs:label "ecosystem package"@en ;
+    IAO:0000115 "Links an upstream project to package identities in various ecosystems (PyPI, npm, Cargo, etc.). Enables queries like 'what packages from different ecosystems come from the same project'."@en ;
+    rdfs:comment "Links an upstream project to a package identity in a specific ecosystem"@en ;
+    rdfs:domain :UpstreamProject ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageIdentity .
+
+:endOfLifeDate a owl:DatatypeProperty ;
+    rdfs:label "end of life date"@en ;
+    IAO:0000115 "The date when a distribution release ceases to receive security updates and support."@en ;
+    rdfs:comment "The date when the distribution release reaches end of life"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:date .
+
+:enhances a owl:ObjectProperty ;
+    rdfs:label "enhances"@en ;
+    IAO:0000115 "A reverse-direction weak dependency indicating that installing this package enhances the functionality of the target package. Used in Debian Enhances tag. If package A enhances package B, installing A provides additional features to B."@en ;
+    rdfs:comment "Indicates that this package enhances another package's functionality"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:epoch a owl:DatatypeProperty ;
+    rdfs:label "epoch"@en ;
+    IAO:0000115 "A version component used to differentiate between incompatible versioning schemes or to correct mistakes in version ordering."@en ;
+    rdfs:comment "The epoch of the version, used in some systems to manage version comparison across different numbering schemes."@en ;
+    rdfs:domain :Version ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:integer .
+
+:equivalentInDistribution a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "equivalent in distribution"@en ;
+    IAO:0000115 "Associates packages from different distributions that provide equivalent functionality or serve the same purpose."@en ;
+    rdfs:comment "Links packages that serve equivalent functions across distributions"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:excludedArchitecture a owl:ObjectProperty ;
+    rdfs:label "excluded architecture"@en ;
+    IAO:0000115 "Indicates an architecture on which this package is known to be unavailable due to architectural constraints or hardware requirements, not build failures. Used to distinguish missing packages from architecturally impossible ones."@en ;
+    rdfs:comment "Indicates an architecture on which this package is known to be unavailable due to architectural constraints"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Architecture .
+
+:exitCode a owl:DatatypeProperty ;
+    rdfs:label "exit code"@en ;
+    IAO:0000115 "The numeric exit code returned by a packaging activity, indicating success (typically 0) or failure (non-zero)."@en ;
+    rdfs:comment "The exit code returned by a packaging activity"@en ;
+    rdfs:domain prov:Activity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:int .
+
+:hasABI a owl:ObjectProperty ;
+    rdfs:label "has ABI"@en ;
+    IAO:0000115 "Associates a package with the application binary interface it conforms to."@en ;
+    rdfs:comment "Links a package to its application binary interface"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :ABI .
+
+:hasAccount a owl:ObjectProperty ;
+    rdfs:label "has account"@en ;
+    IAO:0000115 "Associates a contributor with an account or identity on a specific platform such as GitHub, Debian, or Fedora, enabling cross-platform contributor identification."@en,
+        "Associates a person with a ContributorAccount representing their identity on a specific platform (e.g., GitHub username, Fedora Account System login, Debian maintainer email)."@en ;
+    rdfs:comment "Links a contributor to an identity on a specific platform"@en,
+        "Links a person to their platform account identifier"@en ;
+    rdfs:domain :Contributor,
+        :Person ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :ContributorAccount .
+
+:hasChecksum a owl:ObjectProperty ;
+    rdfs:label "has checksum"@en ;
+    IAO:0000115 "Associates a package with a Checksum instance containing a hash value and algorithm."@en ;
+    rdfs:comment "Links a package to one of its checksums"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Checksum .
+
+:hasISA a owl:ObjectProperty ;
+    rdfs:label "has instruction set architecture"@en ;
+    IAO:0000115 "Associates a binary package with the specific instruction set architecture it was compiled for."@en ;
+    rdfs:comment "Links a package to its instruction set architecture"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :InstructionSetArchitecture .
+
+:hasLicense a owl:ObjectProperty ;
+    rdfs:label "has license"@en ;
+    IAO:0000115 "A relationship that associates a software package with the legal license under which it is distributed and may be used."@en ;
+    rdfs:comment "Links a package to its license"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :License .
+
+:hasMaintainerRole a owl:ObjectProperty ;
+    rdfs:label "has maintainer role"@en ;
+    IAO:0000115 "Associates a maintainer with their specific role and responsibilities for packages."@en ;
+    rdfs:comment "Links a maintainer to their specific role"@en ;
+    rdfs:domain :Maintainer ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :MaintainerRole .
+
+:hasMaintenanceRole a owl:ObjectProperty ;
+    rdfs:label "has maintenance role"@en ;
+    IAO:0000115 "Associates a package with a Maintainer role assignment, providing access to role type (via hasMaintainerRole), start date (via maintainerSince), and the person holding the role (via heldBy)."@en ;
+    rdfs:comment "Links a package to a maintenance role assignment providing detailed role metadata"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Maintainer .
+
+:hasRelease a owl:ObjectProperty ;
+    rdfs:label "has release"@en ;
+    IAO:0000115 "Associates a distribution with a specific versioned release, such as Debian 12 or Fedora 41."@en ;
+    rdfs:comment "Links a distribution to one of its releases"@en ;
+    rdfs:domain :Distribution ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :DistributionRelease .
+
+:hasUpstreamProject a owl:ObjectProperty ;
+    rdfs:label "has upstream project"@en ;
+    IAO:0000115 "Associates a source package with the upstream open source project that it packages for distribution."@en ;
+    rdfs:comment "Links a source package to the upstream project it packages"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :UpstreamProject .
+
+:hasVersionConstraint a owl:ObjectProperty ;
+    rdfs:label "has version constraint"@en ;
+    IAO:0000115 "Associates a dependency with a structured version constraint that specifies acceptable version ranges."@en ;
+    rdfs:comment "Links a dependency to a structured version constraint"@en ;
+    rdfs:domain :Dependency ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :VersionConstraint .
+
+:heldBy a owl:ObjectProperty ;
+    rdfs:label "held by"@en ;
+    IAO:0000115 "The inverse of holdsRole — links a role assignment to the person holding it."@en ;
+    rdfs:comment "Links a role assignment back to the person who holds it"@en ;
+    rdfs:domain :Contributor ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Person ;
+    owl:inverseOf :holdsRole .
+
+:homepage a owl:DatatypeProperty ;
+    rdfs:label "homepage"@en ;
+    IAO:0000115 "The web address of the main website or homepage associated with the software package or its development project."@en ;
+    rdfs:comment "The homepage URL of the package or project"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:installSize a owl:DatatypeProperty ;
+    rdfs:label "install size"@en ;
+    IAO:0000115 "The amount of disk space, measured in bytes, that the package will occupy after being fully installed on the target system."@en ;
+    rdfs:comment "The disk space required when the package is installed"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:long .
+
+:installedFilePath a owl:DatatypeProperty ;
+    rdfs:label "installed file path"@en ;
+    IAO:0000115 "The absolute filesystem path where a file is installed on the target system, such as /usr/bin/gcc or /usr/lib/libssl.so.3."@en ;
+    rdfs:comment "The filesystem path where the file is installed"@en ;
+    rdfs:domain :InstalledFile ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:installsFile a owl:ObjectProperty ;
+    rdfs:label "installs file"@en ;
+    IAO:0000115 "Associates a binary package with a file it installs on the target filesystem."@en ;
+    rdfs:comment "Links a binary package to a file it installs on the system"@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :InstalledFile .
+
+:isCurrent a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "is current"@en ;
+    IAO:0000115 "A boolean flag indicating whether this snapshot is the most recent for its data source. Used for tiered storage lifecycle management."@en ;
+    rdfs:comment "Whether this snapshot represents the current active data for its source."@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:boolean .
+
+:isProvidedBy a owl:ObjectProperty ;
+    rdfs:label "is provided by"@en ;
+    IAO:0000115 "The inverse relationship of provides, indicating that this package's functionality is offered by another package."@en ;
+    rdfs:comment "Indicates that this package's functionality is provided by another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :provides .
+
+:isReplacedBy a owl:ObjectProperty ;
+    rdfs:label "is replaced by"@en ;
+    IAO:0000115 "The inverse relationship of replaces, indicating that this package is superseded by another package."@en ;
+    rdfs:comment "Indicates that this package is replaced by another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :replaces .
+
+:isVendorOriginated a owl:DatatypeProperty ;
+    rdfs:label "is vendor originated"@en ;
+    IAO:0000115 "Indicates whether the upstream project was originated by the same organization that packages and distributes it, as opposed to being an independent community project."@en ;
+    rdfs:comment "Whether the upstream project was created by the packaging vendor"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:boolean .
+
+:isVersionOf a owl:ObjectProperty ;
+    rdfs:label "is version of"@en ;
+    IAO:0000115 "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package."@en ;
+    rdfs:comment "Links a versioned binary package to its version-agnostic package identity."@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageIdentity ;
+    owl:inverseOf :hasPackage .
+
+:isaSpecificCode a owl:DatatypeProperty ;
+    rdfs:label "ISA-specific code"@en ;
+    IAO:0000115 "Indicates whether the package contains processor-specific optimizations or machine code that is optimized for a particular instruction set architecture."@en ;
+    rdfs:comment "Indicates whether the package contains ISA-specific optimizations"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:boolean .
+
+:lastCommitDate a owl:DatatypeProperty ;
+    rdfs:label "last commit date"@en ;
+    IAO:0000115 "The date of the most recent commit to the upstream repository, indicating active development status."@en ;
+    rdfs:comment "The date of the most recent commit to the upstream repository"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:date .
+
+:lastReleaseDate a owl:DatatypeProperty ;
+    rdfs:label "last release date"@en ;
+    IAO:0000115 "The date of the most recent release or version of the package, enabling recency analysis and stale package detection."@en ;
+    rdfs:comment "The date of the most recent release or version"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:date .
+
+:licenseName a owl:DatatypeProperty ;
+    rdfs:label "license name"@en ;
+    IAO:0000115 "DEPRECATED: A string representation of the package's license. Use hasLicense to link to a License entity instead. The spdxId of the License entity linked via hasLicense is the canonical representation. This property is retained for backward compatibility with existing data but should not be used in new collectors."@en ;
+    rdfs:comment "DEPRECATED in favor of hasLicense. The SPDX license expression or license name string for the package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string ;
+    owl:deprecated true .
+
+:maintainedBy a owl:ObjectProperty ;
+    rdfs:label "maintained by"@en ;
+    IAO:0000115 "Convenience property linking a package directly to the person maintaining it. For detailed role metadata (role type, start date), use hasMaintenanceRole."@en ;
+    rdfs:comment "Links a package directly to the person maintaining it"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Person ;
+    rdfs:subPropertyOf prov:wasAttributedTo ;
+    owl:inverseOf :maintains .
+
+:maintainerSince a owl:DatatypeProperty ;
+    rdfs:label "maintainer since"@en ;
+    IAO:0000115 "Records when a maintainer began their maintenance responsibilities for a package."@en ;
+    rdfs:comment "Date when the maintainer started maintaining the package"@en ;
+    rdfs:domain :Maintainer ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:dateTime .
+
+:managedBy a owl:ObjectProperty ;
+    rdfs:label "managed by"@en ;
+    IAO:0000115 "A relationship that associates a package repository with the package management system that controls and provides access to it."@en ;
+    rdfs:comment "Links a repository to the package manager that manages it"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageManager ;
+    owl:inverseOf :manages .
+
+:memberOfPackageSet a owl:ObjectProperty ;
+    rdfs:label "member of package set"@en ;
+    IAO:0000115 "Associates a package with a named package set that it belongs to, enabling classification of packages into product-specific or distribution-specific groupings."@en ;
+    rdfs:comment "Links a package to a package set it belongs to"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageSet .
+
+:packageSize a owl:DatatypeProperty ;
+    rdfs:label "package size"@en ;
+    IAO:0000115 "The size of the package file or archive, measured in bytes, before installation or extraction."@en ;
+    rdfs:comment "The size of the package file"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:long .
+
+:packagingRepository a owl:ObjectProperty ;
+    rdfs:label "packaging repository"@en ;
+    IAO:0000115 "Associates a package identity with the distribution-specific repository that contains the packaging metadata (debian/ directory, spec files, patches). Distinct from the upstream repository — packaging repos are distro-specific while upstream repos are universal."@en ;
+    rdfs:comment "The distribution-specific packaging repository (e.g., Debian Salsa, Fedora dist-git). Contains packaging rules, patches, and build configuration."@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> .
+
+:partOfEcosystem a owl:ObjectProperty ;
+    rdfs:label "part of ecosystem"@en ;
+    IAO:0000115 "Associates a distribution with the broader package ecosystem it belongs to."@en ;
+    rdfs:comment "Links a distribution to its broader ecosystem"@en ;
+    rdfs:domain :Distribution ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Ecosystem .
+
+:performedBy a owl:ObjectProperty ;
+    rdfs:label "performed by"@en ;
+    IAO:0000115 "Associates a packaging activity with the agent (person, organization, or automated system) that performed it."@en ;
+    rdfs:comment "Links a packaging activity to the agent that performed it"@en ;
+    rdfs:domain :PackagingActivity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range prov:Agent ;
+    rdfs:subPropertyOf prov:wasAssociatedWith .
+
+:preDepends a owl:ObjectProperty ;
+    rdfs:label "pre-depends"@en ;
+    IAO:0000115 "A strict dependency that must be fully installed and configured before this package can even be unpacked. Stronger than regular depends. Used in Debian Pre-Depends tag for critical system dependencies."@en ;
+    rdfs:comment "Indicates a pre-installation dependency (stronger than regular depends)"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:projectRepository a owl:ObjectProperty ;
+    rdfs:label "project repository"@en ;
+    IAO:0000115 "Links an upstream project to its primary source code repository. Makes UpstreamProject the central hub for cross-ecosystem identity - connect all ecosystem packages to the project, then to the shared repository."@en ;
+    rdfs:comment "Links an upstream project to its VCS repository"@en ;
+    rdfs:domain :UpstreamProject ;
+    rdfs:isDefinedBy : ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> .
+
+:projectUrl a owl:DatatypeProperty ;
+    rdfs:label "project URL"@en ;
+    IAO:0000115 "The primary website or homepage URL for an upstream open source project."@en ;
+    rdfs:comment "The primary URL for the upstream project"@en ;
+    rdfs:domain :UpstreamProject ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:providesCapability a owl:ObjectProperty ;
+    rdfs:label "provides capability"@en ;
+    IAO:0000115 "Associates a package with a capability it provides, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what provides this .so' queries."@en ;
+    rdfs:comment "Links a package to a capability it provides"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Capability .
+
+:purl a owl:DatatypeProperty ;
+    rdfs:label "purl"@en ;
+    IAO:0000115 "Package URL (PURL) - a standardized, universal identifier for software packages across ecosystems (e.g., pkg:npm/lodash@4.17.21, pkg:pypi/requests@2.28.0). Enables cross-tool interoperability and SBOM generation."@en ;
+    rdfs:comment "Package URL (PURL) - standardized package identifier"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:recommends a owl:ObjectProperty ;
+    rdfs:label "recommends"@en ;
+    IAO:0000115 "A weak dependency relationship suggesting that installing the target package enhances functionality but is not required. Used in Debian Recommends and RPM Recommends tags. If package A recommends package B, A works without B but gains features when B is present."@en ;
+    rdfs:comment "Suggests installing another package for enhanced functionality"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:release a owl:DatatypeProperty ;
+    rdfs:label "release"@en ;
+    IAO:0000115 "An identifier for the packaging release of a specific version of the upstream software."@en ;
+    rdfs:comment "The release number of the package, often indicating a packaging-specific update."@en ;
+    rdfs:domain :Version ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:releaseCodename a owl:DatatypeProperty ;
+    rdfs:label "release codename"@en ;
+    IAO:0000115 "The informal name or codename of a distribution release, such as 'bookworm' for Debian 12 or 'noble' for Ubuntu 24.04."@en ;
+    rdfs:comment "The codename of the distribution release"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:releaseDate a owl:DatatypeProperty ;
+    rdfs:label "release date"@en ;
+    IAO:0000115 "The date when a distribution release was officially published or made available."@en ;
+    rdfs:comment "The date the distribution release was published"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:date .
+
+:releaseVersion a owl:DatatypeProperty ;
+    rdfs:label "release version"@en ;
+    IAO:0000115 "The version identifier of a distribution release, such as '12' for Debian 12 or '41' for Fedora 41."@en ;
+    rdfs:comment "The version number of the distribution release"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:repoSourceURL a owl:DatatypeProperty ;
+    rdfs:label "repository source URL"@en ;
+    IAO:0000115 "The HTTP/HTTPS URL of the package repository metadata that was used as the data source for collection. Enables traceability and re-collection."@en ;
+    rdfs:comment "The URL from which this repository data was collected"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:repoType a owl:DatatypeProperty ;
+    rdfs:label "repository type"@en ;
+    IAO:0000115 "Classifies the repository source type to enable proper comparison semantics. Release repos are composed for end-user installation. Build repos are Koji build targets. Updates are post-release patches."@en ;
+    rdfs:comment "The type of package repository (release, development, build, updates, updates-testing)"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:requiresCapability a owl:ObjectProperty ;
+    rdfs:label "requires capability"@en ;
+    IAO:0000115 "Associates a package with a capability it requires, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what requires this .so' queries and CVE blast radius analysis."@en ;
+    rdfs:comment "Links a package to a capability it requires"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Capability .
+
+:revision a owl:DatatypeProperty ;
+    rdfs:label "revision"@en ;
+    IAO:0000115 "A version component that specifies a minor update or packaging-specific revision."@en ;
+    rdfs:comment "The revision of the package, often indicating a minor packaging update or a source control revision."@en ;
+    rdfs:domain :Version ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:satisfiesCapability a owl:ObjectProperty ;
+    rdfs:label "satisfies capability"@en ;
+    IAO:0000115 "Links an installed file (typically a shared library .so artifact) to the abstract capability it satisfies, closing the loop between filesystem artifacts and package dependency requirements. This shortcut enables efficient queries for shared library resolution analysis: which specific file provides libssl.so.3?"@en ;
+    rdfs:comment "The abstract capability that this installed file satisfies (typically for shared libraries)"@en ;
+    rdfs:domain :InstalledFile ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Capability .
+
+:snapshotGraph a owl:DatatypeProperty ;
+    rdfs:label "snapshot graph"@en ;
+    IAO:0000115 "The URI of the named graph in Fuseki that contains this snapshot's data."@en ;
+    rdfs:comment "The named graph URI this snapshot was loaded into."@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
+:snapshotSource a owl:DatatypeProperty ;
+    rdfs:label "snapshot source"@en ;
+    IAO:0000115 "A string identifying the tool and data source that produced this snapshot."@en ;
+    rdfs:comment "Identifier of the data source that produced this snapshot (e.g., 'pg-collect debian', 'enricher-osv')."@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:snapshotTimestamp a owl:DatatypeProperty ;
+    rdfs:label "snapshot timestamp"@en ;
+    IAO:0000115 "The date and time when the data collection or enrichment run completed."@en ;
+    rdfs:comment "When this data snapshot was created."@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:dateTime .
+
+:suggests a owl:ObjectProperty ;
+    rdfs:label "suggests"@en ;
+    IAO:0000115 "An even weaker dependency relationship than recommends, indicating that the target package may be useful in certain contexts but is not typically needed. Used in Debian Suggests and RPM Suggests tags."@en ;
+    rdfs:comment "Suggests another package that may be useful in some scenarios"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:supplements a owl:ObjectProperty ;
+    rdfs:label "supplements"@en ;
+    IAO:0000115 "Indicates that this package supplements the functionality of another package, working in tandem with it. Used in some Debian-derived distributions."@en ;
+    rdfs:comment "Indicates that this package supplements another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :dependsOn .
+
+:supportedArchitecture a owl:ObjectProperty ;
+    rdfs:label "supported architecture"@en ;
+    IAO:0000115 "Associates a source package with an architecture it declares support for building, as declared in the source package control file."@en ;
+    rdfs:comment "An architecture that the source package can be built for"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Architecture .
+
+:targetArchitecture a owl:ObjectProperty ;
+    rdfs:label "target architecture"@en ;
+    IAO:0000115 "A relationship that associates a software package with the specific hardware or system architecture for which it has been compiled or designed."@en ;
+    rdfs:comment "Links a package to the architecture it targets"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Architecture .
+
+:upstreamEcosystem a owl:ObjectProperty ;
+    rdfs:label "upstream ecosystem"@en ;
+    IAO:0000115 "Links a package to the upstream software ecosystem it originates from, enabling ecosystem-level cross-referencing and analysis. The Ecosystem entity allows traversal to all packages from that ecosystem rather than matching string literals."@en ;
+    rdfs:comment "The upstream package ecosystem entity (cargo, pypi, npm, gomod, etc.)"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Ecosystem .
+
+:upstreamEquivalent a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "upstream equivalent"@en ;
+    IAO:0000115 "Symmetric relationship between package identities from different ecosystems that represent the same software (e.g., Debian python3-requests ↔ PyPI requests). Enables bidirectional cross-ecosystem identity queries."@en ;
+    rdfs:comment "This package identity is equivalent to another package identity from a different ecosystem"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageIdentity .
+
+:upstreamPackageIdentity a owl:ObjectProperty ;
+    rdfs:label "upstream package identity"@en ;
+    IAO:0000115 "Links a distribution package identity to the upstream package identity in the native ecosystem (e.g., Debian python3-requests → PyPI requests). Replaces dead-end upstreamPackageName literal with a traversable object property - critical for supply chain analysis."@en ;
+    rdfs:comment "Links to the upstream package identity in its native ecosystem"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageIdentity .
+
+:upstreamPackageName a owl:DatatypeProperty ;
+    rdfs:label "upstream package name"@en ;
+    IAO:0000115 "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking. Retained for backward compatibility - prefer upstreamPackageIdentity for new data."@en ;
+    rdfs:comment "The name of the package in its upstream ecosystem (e.g., crate name, PyPI name)"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:upstreamRepository a owl:ObjectProperty ;
+    rdfs:label "upstream repository"@en ;
+    IAO:0000115 "Associates a package identity with the canonical upstream source code repository. This is the primary cross-distribution identity anchor — packages from different distros that share the same upstream repository are the same software, regardless of package name."@en ;
+    rdfs:comment "The upstream VCS repository this package is built from. Derived from Homepage/URL when it points to a known forge, or from dist-git spec files."@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
+    owl:inverseOf <https://purl.org/packagegraph/ontology/vcs#hasPackage> .
+
+:usedDependency a owl:ObjectProperty ;
+    rdfs:label "used dependency"@en ;
+    IAO:0000115 "Associates a build activity with the packages or dependencies it required during the build process."@en ;
+    rdfs:comment "Links a build activity to dependencies it required"@en ;
+    rdfs:domain :BuildActivity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf prov:used .
+
+:usedSource a owl:ObjectProperty ;
+    rdfs:label "used source"@en ;
+    IAO:0000115 "Associates a packaging activity with the source code, files, or other materials it used as input."@en ;
+    rdfs:comment "Links a packaging activity to source materials it used"@en ;
+    rdfs:domain :PackagingActivity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range prov:Entity ;
+    rdfs:subPropertyOf prov:used .
+
+:versionConstraintOperator a owl:DatatypeProperty ;
+    rdfs:label "version constraint operator"@en ;
+    IAO:0000115 "The comparison operator that defines how the version constraint should be evaluated, such as greater than, equal to, or less than."@en ;
+    rdfs:comment "The comparison operator used in a version constraint (e.g., '>=', '=', '<=')"@en ;
+    rdfs:domain :VersionConstraint ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:versionConstraintValue a owl:DatatypeProperty ;
+    rdfs:label "version constraint value"@en ;
+    IAO:0000115 "The specific version string that the constraint is compared against using the constraint operator."@en ;
+    rdfs:comment "The version value used in a version constraint"@en ;
+    rdfs:domain :VersionConstraint ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:wasBuiltBy a owl:ObjectProperty ;
+    rdfs:label "was built by"@en ;
+    IAO:0000115 "Associates a package with the specific build activity that compiled and created it from source materials."@en ;
+    rdfs:comment "Links a package to the build activity that created it"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :BuildActivity ;
+    rdfs:subPropertyOf prov:wasGeneratedBy .
 
 xsd:duration a rdfs:Datatype .
 
-:pacmanConflicts a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyConflictsWith;
-  owl:equivalentProperty :conflicts;
-  rdfs:comment "Cross-format equivalence for Arch Linux conflicts relationships";
-  rdfs:label "equivalent to Arch conflicts";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package conflict relationships, allowing unified queries across different package management systems." .
-
-:pacmanDepends a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyDependsOn;
-  owl:equivalentProperty :dependsOn;
-  rdfs:comment "Cross-format equivalence for Arch Linux depends relationships";
-  rdfs:label "equivalent to Arch depends";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Arch Linux package dependency relationships, allowing unified queries across different package management systems." .
-
-:conflicts a owl:ObjectProperty;
-  owl:equivalentProperty :debConflicts, :rpmConflicts;
-  owl:inverseOf :isConflictWith;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that two packages cannot be installed simultaneously on the same system due to incompatibilities or resource conflicts.";
-  rdfs:comment "Indicates that a package cannot be installed alongside another package";
-  rdfs:label "conflicts" .
-
-:containedIn a owl:ObjectProperty;
-  owl:inverseOf :contains;
-  rdfs:domain :Package;
-  rdfs:range :Repository;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the repository where it is stored and made available for distribution.";
-  rdfs:comment "Links a package to the repository that contains it";
-  rdfs:label "contained in" .
-
-:contains a owl:ObjectProperty;
-  rdfs:domain :Repository;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a repository with the packages it hosts and makes available for distribution.";
-  rdfs:comment "Links a repository to the packages it contains";
-  rdfs:label "contains" .
-
-:contributorOrganization a owl:ObjectProperty;
-  rdfs:domain :Contributor;
-  rdfs:range foaf:Organization;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a contributor with the organization they are affiliated with, enabling analysis of contributor diversity and organizational representation in package maintenance.";
-  rdfs:comment "Links a contributor to their affiliated organization";
-  rdfs:label "contributor organization" .
-
-:debConflicts a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyConflictsWith;
-  rdfs:comment "Cross-format equivalence for Debian conflicts relationships";
-  rdfs:label "equivalent to Debian conflicts";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package conflict relationships, allowing unified queries across different package management systems." .
-
-:debDepends a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyDependsOn;
-  owl:equivalentProperty :dependsOn;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  rdfs:comment "Cross-format equivalence for Debian depends relationships";
-  rdfs:label "equivalent to Debian depends";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package dependency relationships, allowing unified queries across different package management systems." .
-
-:debProvides a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyProvides;
-  owl:equivalentProperty :provides;
-  rdfs:comment "Cross-format equivalence for Debian provides relationships";
-  rdfs:label "equivalent to Debian provides";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for Debian package provision relationships, allowing unified queries across different package management systems." .
-
-:dependsOn a owl:ObjectProperty;
-  owl:equivalentProperty :rpmRequires;
-  owl:inverseOf :isDependencyOf;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package requires another package to be present and functional in order to operate correctly.";
-  rdfs:comment "Indicates that a package requires another package to function";
-  rdfs:label "depends on" .
-
-:buildDependsOn a owl:ObjectProperty;
-  rdfs:subPropertyOf :dependsOn;
-  rdfs:domain :SourcePackage;
-  rdfs:range :Package;
-  rdfs:comment "Indicates a build-time dependency that is required to build the source package but not needed at runtime.";
-  rdfs:label "build depends on";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is required to compile or build a source package from its source code, but is not required for the resulting binary packages to function." .
-
-:derivedFrom a owl:ObjectProperty;
-  # Reserved for future use — fork/upstream derivation tracking
-  rdfs:domain :Distribution;
-  rdfs:range :Distribution;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Specifies that one distribution is based on or derived from another distribution's codebase and package set.";
-  rdfs:comment "Indicates that one distribution is derived from another";
-  rdfs:label "derived from" .
-
-:directlyConflictsWith a owl:ObjectProperty, owl:SymmetricProperty;
-  rdfs:subPropertyOf :conflicts;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A direct conflict relationship between packages, providing an efficient query path for identifying incompatible packages.";
-  rdfs:comment "Direct conflict relationship between packages for efficient querying";
-  rdfs:label "directly conflicts with" .
-
-:directlyDependsOn a owl:ObjectProperty, owl:TransitiveProperty;
-  rdfs:subPropertyOf :dependsOn;
-  owl:inverseOf :isDirectDependencyOf;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A direct dependency relationship between packages, providing an efficient query path that bypasses the detailed dependency metadata structure.";
-  rdfs:comment "Direct dependency relationship between packages for efficient querying";
-  rdfs:label "directly depends on" .
-
-:isDirectDependencyOf a owl:ObjectProperty;
-  rdfs:subPropertyOf :isDependencyOf;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of directlyDependsOn, indicating that this package is a direct dependency of another package. Critical for blast radius analysis - enables efficient queries for 'what directly depends on this package'.";
-  rdfs:comment "Indicates that this package is a direct dependency of another package";
-  rdfs:label "is direct dependency of" .
-
-:directlyProvides a owl:ObjectProperty;
-  rdfs:subPropertyOf :provides;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A direct provision relationship indicating that one package provides the functionality of another, optimized for efficient dependency resolution queries.";
-  rdfs:comment "Direct provision relationship between packages for efficient querying";
-  rdfs:label "directly provides" .
-
-:equivalentInDistribution a owl:ObjectProperty, owl:SymmetricProperty;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages from different distributions that provide equivalent functionality or serve the same purpose.";
-  rdfs:comment "Links packages that serve equivalent functions across distributions";
-  rdfs:label "equivalent in distribution" .
-
-:hasABI a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :ABI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with the application binary interface it conforms to.";
-  rdfs:comment "Links a package to its application binary interface";
-  rdfs:label "has ABI" .
-
-:hasISA a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :InstructionSetArchitecture;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a binary package with the specific instruction set architecture it was compiled for.";
-  rdfs:comment "Links a package to its instruction set architecture";
-  rdfs:label "has instruction set architecture" .
-
-:hasLicense a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :License;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the legal license under which it is distributed and may be used.";
-  rdfs:comment "Links a package to its license";
-  rdfs:label "has license" .
-
-:hasMaintainerRole a owl:ObjectProperty;
-  rdfs:domain :Maintainer;
-  rdfs:range :MaintainerRole;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a maintainer with their specific role and responsibilities for packages.";
-  rdfs:comment "Links a maintainer to their specific role";
-  rdfs:label "has maintainer role" .
-
-:hasVersion a owl:ObjectProperty;
-  owl:inverseOf :versionOf;
-  rdfs:domain :Package;
-  rdfs:range :Version;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with a specific version or release of that package.";
-  rdfs:comment "Links a package to one of its versions";
-  rdfs:label "has version" .
-
-:versionOf a owl:ObjectProperty;
-  rdfs:domain :Version;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of hasVersion, linking a version back to the package it belongs to. Critical for security queries that start from an affected version and need to find the package.";
-  rdfs:comment "Links a version to the package it belongs to";
-  rdfs:label "version of" .
-
-:hasVersionConstraint a owl:ObjectProperty;
-  rdfs:domain :Dependency;
-  rdfs:range :VersionConstraint;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a dependency with a structured version constraint that specifies acceptable version ranges.";
-  rdfs:comment "Links a dependency to a structured version constraint";
-  rdfs:label "has version constraint" .
-
-:isConflictWith a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of conflicts, enabling efficient queries for packages that are incompatible with a given package.";
-  rdfs:comment "Indicates that this package conflicts with another package";
-  rdfs:label "is conflict with" .
-
-:isDependencyOf a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of dependsOn, indicating that this package is required by another package.";
-  rdfs:comment "Indicates that this package is a dependency of another package";
-  rdfs:label "is dependency of" .
-
-:isProvidedBy a owl:ObjectProperty;
-  owl:inverseOf :provides;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of provides, indicating that this package's functionality is offered by another package.";
-  rdfs:comment "Indicates that this package's functionality is provided by another package";
-  rdfs:label "is provided by" .
-
-:isReplacedBy a owl:ObjectProperty;
-  owl:inverseOf :replaces;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of replaces, indicating that this package is superseded by another package.";
-  rdfs:comment "Indicates that this package is replaced by another package";
-  rdfs:label "is replaced by" .
-
-:maintainedBy a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasAttributedTo;
-  owl:inverseOf :maintains;
-  rdfs:domain :Package;
-  rdfs:range :Maintainer;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the person or organization responsible for its ongoing maintenance and development.";
-  rdfs:comment "Links a package to its maintainer";
-  rdfs:label "maintained by" .
-
-:maintains a owl:ObjectProperty;
-  rdfs:domain :Maintainer;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of maintainedBy, linking a maintainer to the packages they maintain. Enables efficient 'what does this maintainer maintain' queries.";
-  rdfs:comment "Links a maintainer to the packages they maintain";
-  rdfs:label "maintains" .
-
-:managedBy a owl:ObjectProperty;
-  owl:inverseOf :manages;
-  rdfs:domain :Repository;
-  rdfs:range :PackageManager;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a package repository with the package management system that controls and provides access to it.";
-  rdfs:comment "Links a repository to the package manager that manages it";
-  rdfs:label "managed by" .
-
-:manages a owl:ObjectProperty;
-  rdfs:domain :PackageManager;
-  rdfs:range :Repository;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a package manager with the repositories it controls and provides access to.";
-  rdfs:comment "Links a package manager to the repositories it manages";
-  rdfs:label "manages" .
-
-:memberOfPackageSet a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :PackageSet;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a named package set that it belongs to, enabling classification of packages into product-specific or distribution-specific groupings.";
-  rdfs:comment "Links a package to a package set it belongs to";
-  rdfs:label "member of package set" .
-
-:partOfDistribution a owl:ObjectProperty, owl:TransitiveProperty;
-  rdfs:range :Distribution;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages, repositories, or other components with their parent distribution.";
-  rdfs:comment "Links packages or repositories to their parent distribution";
-  rdfs:label "part of distribution" .
-
-:partOfEcosystem a owl:ObjectProperty;
-  rdfs:domain :Distribution;
-  rdfs:range :Ecosystem;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a distribution with the broader package ecosystem it belongs to.";
-  rdfs:comment "Links a distribution to its broader ecosystem";
-  rdfs:label "part of ecosystem" .
-
-:provides a owl:ObjectProperty;
-  owl:equivalentProperty :rpmProvides;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package offers the same functionality or interface as another package, potentially serving as a substitute or alternative implementation.";
-  rdfs:comment "Indicates that a package provides the functionality of another package";
-  rdfs:label "provides" .
-
-:providesCapability a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Capability;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a capability it provides, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what provides this .so' queries.";
-  rdfs:comment "Links a package to a capability it provides";
-  rdfs:label "provides capability" .
-
-:requiresCapability a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Capability;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a capability it requires, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what requires this .so' queries and CVE blast radius analysis.";
-  rdfs:comment "Links a package to a capability it requires";
-  rdfs:label "requires capability" .
-
-:replaces a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship indicating that one package is intended to supersede and replace another package, typically during system upgrades or package transitions.";
-  rdfs:comment "Indicates that a package replaces another package";
-  rdfs:label "replaces" .
-
-:rpmConflicts a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyConflictsWith;
-  rdfs:comment "Cross-format equivalence for RPM conflicts relationships";
-  rdfs:label "equivalent to RPM conflicts";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package conflict relationships, allowing unified queries across different package management systems." .
-
-:rpmProvides a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyProvides;
-  rdfs:comment "Cross-format equivalence for RPM provides relationships";
-  rdfs:label "equivalent to RPM provides";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package provision relationships, allowing unified queries across different package management systems." .
-
-:rpmRequires a owl:ObjectProperty;
-  rdfs:subPropertyOf :directlyDependsOn;
-  rdfs:comment "Cross-format equivalence for RPM requires relationships";
-  rdfs:label "equivalent to RPM requires";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides cross-format equivalence for RPM package dependency relationships, allowing unified queries across different package management systems." .
-
-:targetArchitecture a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Architecture;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A relationship that associates a software package with the specific hardware or system architecture for which it has been compiled or designed.";
-  rdfs:comment "Links a package to the architecture it targets";
-  rdfs:label "target architecture" .
-
-:contributesTo a owl:ObjectProperty;
-  owl:inverseOf :hasContributor;
-  rdfs:domain :Maintainer;
-  rdfs:range :Repository;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a maintainer with repositories they contribute to, enabling analysis of contributor activity across repositories.";
-  rdfs:comment "Links a maintainer to repositories they contribute to";
-  rdfs:label "contributes to" .
-
-:hasContributor a owl:ObjectProperty;
-  rdfs:domain :Repository;
-  rdfs:range :Maintainer;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of contributesTo, linking a repository to its contributors. Enables efficient 'who contributes to this repository' queries.";
-  rdfs:comment "Links a repository to its contributors";
-  rdfs:label "has contributor" .
-
-:derivedFromDistribution a owl:ObjectProperty;
-  rdfs:domain :Distribution;
-  rdfs:range :Distribution;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that one distribution is derived from another (e.g., Ubuntu from Debian, CentOS from RHEL), establishing distribution lineage for package tracking.";
-  rdfs:comment "Indicates that one distribution is derived from another";
-  rdfs:label "derived from distribution" .
-
-:supersededBy a owl:ObjectProperty;
-  owl:inverseOf :supersedes;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that this package's functionality has been absorbed into another package due to subpackage reorganization across architectures or builds. Used to track packages that exist on some arches but are merged into others on different arches.";
-  rdfs:comment "Indicates that this package's functionality has been absorbed into another package (subpackage reorganization)";
-  rdfs:label "superseded by" .
-
-:supersedes a owl:ObjectProperty;
-  owl:inverseOf :supersededBy;
-  rdfs:domain :Package;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates that this package absorbs the functionality of another package, typically due to subpackage consolidation or reorganization across architectures.";
-  rdfs:comment "Indicates that this package absorbs the functionality of another package";
-  rdfs:label "supersedes" .
-
-:excludedArchitecture a owl:ObjectProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range :Architecture;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates an architecture on which this package is known to be unavailable due to architectural constraints or hardware requirements, not build failures. Used to distinguish missing packages from architecturally impossible ones.";
-  rdfs:comment "Indicates an architecture on which this package is known to be unavailable due to architectural constraints";
-  rdfs:label "excluded architecture" .
-
-
-:usedDependency a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:used;
-  rdfs:domain :BuildActivity;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a build activity with the packages or dependencies it required during the build process.";
-  rdfs:comment "Links a build activity to dependencies it required";
-  rdfs:label "used dependency" .
-
-:usedSource a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:used;
-  rdfs:domain :PackagingActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a packaging activity with the source code, files, or other materials it used as input.";
-  rdfs:comment "Links a packaging activity to source materials it used";
-  rdfs:label "used source" .
-
-:wasBuiltBy a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasGeneratedBy;
-  rdfs:domain :Package;
-  rdfs:range :BuildActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with the specific build activity that compiled and created it from source materials.";
-  rdfs:comment "Links a package to the build activity that created it";
-  rdfs:label "was built by" .
-
-
-
-:performedBy a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasAssociatedWith;
-  rdfs:domain :PackagingActivity;
-  rdfs:range prov:Agent;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a packaging activity with the agent (person, organization, or automated system) that performed it.";
-  rdfs:comment "Links a packaging activity to the agent that performed it";
-  rdfs:label "performed by" .
-
-:builtFromSource a owl:ObjectProperty;
-  rdfs:subPropertyOf prov:wasDerivedFrom;
-  owl:inverseOf :producedBinary;
-  rdfs:domain :BinaryPackage;
-  rdfs:range :SourcePackage;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a binary package with the source package from which it was compiled, enabling grouping of related binary outputs.";
-  rdfs:comment "Links a binary package to the source package it was built from";
-  rdfs:label "built from source" .
-
-:producedBinary a owl:ObjectProperty;
-  rdfs:domain :SourcePackage;
-  rdfs:range :BinaryPackage;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with the binary packages produced by building it.";
-  rdfs:comment "Links a source package to binary packages it produces";
-  rdfs:label "produced binary" .
-
-:hasUpstreamProject a owl:ObjectProperty;
-  rdfs:domain :SourcePackage;
-  rdfs:range :UpstreamProject;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with the upstream open source project that it packages for distribution.";
-  rdfs:comment "Links a source package to the upstream project it packages";
-  rdfs:label "has upstream project" .
-
-:projectRepository a owl:ObjectProperty;
-  rdfs:domain :UpstreamProject;
-  rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository>;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Links an upstream project to its primary source code repository. Makes UpstreamProject the central hub for cross-ecosystem identity - connect all ecosystem packages to the project, then to the shared repository.";
-  rdfs:comment "Links an upstream project to its VCS repository";
-  rdfs:label "project repository" .
-
-:ecosystemPackage a owl:ObjectProperty;
-  rdfs:domain :UpstreamProject;
-  rdfs:range :PackageIdentity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Links an upstream project to package identities in various ecosystems (PyPI, npm, Cargo, etc.). Enables queries like 'what packages from different ecosystems come from the same project'.";
-  rdfs:comment "Links an upstream project to a package identity in a specific ecosystem";
-  rdfs:label "ecosystem package" .
-
-:hasDependency a owl:ObjectProperty;
-  rdfs:domain :Package;
-  rdfs:range :Dependency;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package with a structured dependency that captures the target package, version constraints, and dependency type.";
-  rdfs:comment "Links a package to a reified dependency relationship with version constraints";
-  rdfs:label "has dependency" .
-
-:dependencyTarget a owl:ObjectProperty;
-  rdfs:domain :Dependency;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the specific package that satisfies a dependency, linking the reified Dependency to its target Package.";
-  rdfs:comment "The package that a dependency relationship targets";
-  rdfs:label "dependency target" .
-
-:hasRelease a owl:ObjectProperty;
-  rdfs:domain :Distribution;
-  rdfs:range :DistributionRelease;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a distribution with a specific versioned release, such as Debian 12 or Fedora 41.";
-  rdfs:comment "Links a distribution to one of its releases";
-  rdfs:label "has release" .
-
-:partOfRelease a owl:ObjectProperty;
-  rdfs:subPropertyOf :partOfDistribution;
-  owl:inverseOf :releaseContains;
-  rdfs:range :DistributionRelease;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates packages, repositories, or other components with a specific versioned release of a distribution.";
-  rdfs:comment "Links packages or repositories to a specific distribution release";
-  rdfs:label "part of release" .
-
-:releaseContains a owl:ObjectProperty;
-  owl:inverseOf :partOfRelease;
-  rdfs:domain :DistributionRelease;
-  rdfs:range :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Links a distribution release to packages it contains, enabling efficient 'what packages are in this release' queries.";
-  rdfs:comment "Links a distribution release to packages it contains";
-  rdfs:label "release contains" .
-
-:hasAccount a owl:ObjectProperty;
-  rdfs:domain :Contributor;
-  rdfs:range :ContributorAccount;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a contributor with an account or identity on a specific platform such as GitHub, Debian, or Fedora, enabling cross-platform contributor identification.";
-  rdfs:comment "Links a contributor to an identity on a specific platform";
-  rdfs:label "has account" .
-
-:installsFile a owl:ObjectProperty;
-  rdfs:domain :BinaryPackage;
-  rdfs:range :InstalledFile;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a binary package with a file it installs on the target filesystem.";
-  rdfs:comment "Links a binary package to a file it installs on the system";
-  rdfs:label "installs file" .
-
-:supportedArchitecture a owl:ObjectProperty;
-  rdfs:domain :SourcePackage;
-  rdfs:range :Architecture;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a source package with an architecture it declares support for building, as declared in the source package control file.";
-  rdfs:comment "An architecture that the source package can be built for";
-  rdfs:label "supported architecture" .
-
-:activeContributor a owl:DatatypeProperty;
-  rdfs:domain :Contributor;
-  rdfs:range xsd:boolean;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether a contributor is currently active in package development or maintenance.";
-  rdfs:comment "Whether the contributor is currently active";
-  rdfs:label "active contributor" .
-
-:activityDuration a owl:DatatypeProperty;
-  rdfs:domain prov:Activity;
-  rdfs:range xsd:duration;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The total time duration required to complete a packaging-related activity.";
-  rdfs:comment "How long a packaging activity took to complete";
-  rdfs:label "activity duration" .
-
-:activityEndTime a owl:DatatypeProperty;
-  rdfs:subPropertyOf prov:endedAtTime;
-  rdfs:domain prov:Activity;
-  rdfs:range xsd:dateTime;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Records the date and time when a packaging-related activity was completed.";
-  rdfs:comment "When a packaging activity completed";
-  rdfs:label "activity end time" .
-
-:activityLogOutput a owl:DatatypeProperty;
-  rdfs:domain prov:Activity;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The textual log output generated during the execution of a packaging activity, useful for debugging and auditing.";
-  rdfs:comment "Log output generated during a packaging activity";
-  rdfs:label "activity log output" .
-
-:activityStartTime a owl:DatatypeProperty;
-  rdfs:subPropertyOf prov:startedAtTime;
-  rdfs:domain prov:Activity;
-  rdfs:range xsd:dateTime;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Records the date and time when a packaging-related activity was initiated.";
-  rdfs:comment "When a packaging activity began";
-  rdfs:label "activity start time" .
-
-:capabilityName a owl:DatatypeProperty;
-  rdfs:domain :Capability;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The identifier for a capability, such as a shared library name (libssl.so.3), virtual package name, or other capability identifier.";
-  rdfs:comment "The name or identifier of a capability";
-  rdfs:label "capability name" .
-
-:checksum a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A cryptographic hash value computed from the package file contents, used to verify the integrity and authenticity of the package during download and installation.";
-  rdfs:comment "A cryptographic hash of the package for integrity verification";
-  rdfs:label "checksum" .
-
-:checksumType a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The specific cryptographic hash algorithm used to compute the package checksum, such as MD5, SHA1, SHA256, or other hash functions.";
-  rdfs:comment "The algorithm used to generate the checksum (e.g., MD5, SHA256)";
-  rdfs:label "checksum type" .
-
-:dependencyWeight a owl:DatatypeProperty;
-  rdfs:domain :Dependency;
-  rdfs:range xsd:float;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Provides a numeric weight indicating the relative importance or strength of a dependency relationship.";
-  rdfs:comment "Relative weight or importance of a dependency";
-  rdfs:label "dependency weight" .
-
-:description a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A textual explanation of the package's purpose, functionality, and features, intended to help users understand what the package provides.";
-  rdfs:comment "A human-readable description of what the package does";
-  rdfs:label "description" .
-
-:downloadURL a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:anyURI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The web address from which the package file or archive can be directly downloaded or accessed.";
-  rdfs:comment "The URL from which the package can be downloaded";
-  rdfs:label "download URL" .
-
-:exitCode a owl:DatatypeProperty;
-  rdfs:domain prov:Activity;
-  rdfs:range xsd:int;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The numeric exit code returned by a packaging activity, indicating success (typically 0) or failure (non-zero).";
-  rdfs:comment "The exit code returned by a packaging activity";
-  rdfs:label "exit code" .
-
-:homepage a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:range xsd:anyURI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The web address of the main website or homepage associated with the software package or its development project.";
-  rdfs:comment "The homepage URL of the package or project";
-  rdfs:label "homepage" .
-
-:licenseName a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A string representation of the package's license, typically using SPDX license expression syntax. This is the direct collector output; for structured license objects, see hasLicense.";
-  rdfs:comment "The SPDX license expression or license name string for the package";
-  rdfs:label "license name" .
-
-:upstreamPackageName a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking. Retained for backward compatibility - prefer upstreamPackageIdentity for new data.";
-  rdfs:comment "The name of the package in its upstream ecosystem (e.g., crate name, PyPI name)";
-  rdfs:label "upstream package name" .
-
-:upstreamPackageIdentity a owl:ObjectProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range :PackageIdentity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Links a distribution package identity to the upstream package identity in the native ecosystem (e.g., Debian python3-requests → PyPI requests). Replaces dead-end upstreamPackageName literal with a traversable object property - critical for supply chain analysis.";
-  rdfs:comment "Links to the upstream package identity in its native ecosystem";
-  rdfs:label "upstream package identity" .
-
-:upstreamEquivalent a owl:ObjectProperty, owl:SymmetricProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range :PackageIdentity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Symmetric relationship between package identities from different ecosystems that represent the same software (e.g., Debian python3-requests ↔ PyPI requests). Enables bidirectional cross-ecosystem identity queries.";
-  rdfs:comment "This package identity is equivalent to another package identity from a different ecosystem";
-  rdfs:label "upstream equivalent" .
-
-:upstreamEcosystem a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the upstream software ecosystem that the package originates from, such as cargo (Rust crates), pypi (Python packages), npm (Node.js), or gomod (Go modules).";
-  rdfs:comment "The upstream package ecosystem (e.g., cargo, pypi, npm, gomod)";
-  rdfs:label "upstream ecosystem" .
-
-:installSize a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:long;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The amount of disk space, measured in bytes, that the package will occupy after being fully installed on the target system.";
-  rdfs:comment "The disk space required when the package is installed";
-  rdfs:label "install size" .
-
-:isMetaPackage a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:boolean;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether a package serves primarily as a meta-package that groups other packages through dependencies.";
-  rdfs:comment "Indicates whether this is a meta package";
-  rdfs:label "is meta package" .
-
-:isVendorOriginated a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:boolean;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether the upstream project was originated by the same organization that packages and distributes it, as opposed to being an independent community project.";
-  rdfs:comment "Whether the upstream project was created by the packaging vendor";
-  rdfs:label "is vendor originated" .
-
-:isaSpecificCode a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:boolean;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Indicates whether the package contains processor-specific optimizations or machine code that is optimized for a particular instruction set architecture.";
-  rdfs:comment "Indicates whether the package contains ISA-specific optimizations";
-  rdfs:label "ISA-specific code" .
-
-:maintainerSince a owl:DatatypeProperty;
-  rdfs:domain :Maintainer;
-  rdfs:range xsd:dateTime;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Records when a maintainer began their maintenance responsibilities for a package.";
-  rdfs:comment "Date when the maintainer started maintaining the package";
-  rdfs:label "maintainer since" .
-
-:packageName a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The unique identifier or name by which a software package is known within a package management system.";
-  rdfs:comment "The name of a package";
-  rdfs:label "package name" .
-
-:packageSize a owl:DatatypeProperty;
-  rdfs:domain :Package;
-  rdfs:range xsd:long;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The size of the package file or archive, measured in bytes, before installation or extraction.";
-  rdfs:comment "The size of the package file";
-  rdfs:label "package size" .
-
-:purl a owl:DatatypeProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range xsd:anyURI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Package URL (PURL) - a standardized, universal identifier for software packages across ecosystems (e.g., pkg:npm/lodash@4.17.21, pkg:pypi/requests@2.28.0). Enables cross-tool interoperability and SBOM generation.";
-  rdfs:comment "Package URL (PURL) - standardized package identifier";
-  rdfs:label "purl" .
-
-## upstreamProject DatatypeProperty removed in 0.4.0
-## Superseded by hasUpstreamProject ObjectProperty (Package → UpstreamProject)
-
-:versionConstraintOperator a owl:DatatypeProperty;
-  rdfs:domain :Dependency;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The comparison operator that defines how the version constraint should be evaluated, such as greater than, equal to, or less than.";
-  rdfs:comment "The comparison operator used in a version constraint (e.g., '>=', '=', '<=')";
-  rdfs:label "version constraint operator" .
-
-:versionConstraintValue a owl:DatatypeProperty;
-  rdfs:domain :Dependency;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The specific version string that the constraint is compared against using the constraint operator.";
-  rdfs:comment "The version value used in a version constraint";
-  rdfs:label "version constraint value" .
-
-:versionString a owl:DatatypeProperty, owl:FunctionalProperty;
-  rdfs:domain :Version;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A textual representation of a package version, typically following semantic versioning or other versioning schemes to indicate the release sequence and compatibility.";
-  rdfs:comment "The version identifier of a package";
-  rdfs:label "version string" .
-
-:lastReleaseDate a owl:DatatypeProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range xsd:date;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The date of the most recent release or version of the package, enabling recency analysis and stale package detection.";
-  rdfs:comment "The date of the most recent release or version";
-  rdfs:label "last release date" .
-
-:lastCommitDate a owl:DatatypeProperty;
-  rdfs:domain :PackageIdentity;
-  rdfs:range xsd:date;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The date of the most recent commit to the upstream repository, indicating active development status.";
-  rdfs:comment "The date of the most recent commit to the upstream repository";
-  rdfs:label "last commit date" .
-
-:epoch a owl:DatatypeProperty;
-  rdfs:domain :Version;
-  rdfs:range xsd:integer;
-  rdfs:comment "The epoch of the version, used in some systems to manage version comparison across different numbering schemes.";
-  rdfs:label "epoch";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A version component used to differentiate between incompatible versioning schemes or to correct mistakes in version ordering." .
-
-:release a owl:DatatypeProperty;
-  rdfs:domain :Version;
-  rdfs:range xsd:string;
-  rdfs:comment "The release number of the package, often indicating a packaging-specific update.";
-  rdfs:label "release";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An identifier for the packaging release of a specific version of the upstream software." .
-
-:revision a owl:DatatypeProperty;
-  rdfs:domain :Version;
-  rdfs:range xsd:string;
-  rdfs:comment "The revision of the package, often indicating a minor packaging update or a source control revision.";
-  rdfs:label "revision";
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A version component that specifies a minor update or packaging-specific revision." .
-
-:dependencyType a owl:DatatypeProperty;
-  rdfs:domain :Dependency;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Classifies the nature of a dependency relationship, such as runtime, build-time, recommended, suggested, or conflicting.";
-  rdfs:comment "The type of dependency relationship (runtime, build, recommends, suggests, conflicts)";
-  rdfs:label "dependency type" .
-
-:releaseVersion a owl:DatatypeProperty;
-  rdfs:domain :DistributionRelease;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The version identifier of a distribution release, such as '12' for Debian 12 or '41' for Fedora 41.";
-  rdfs:comment "The version number of the distribution release";
-  rdfs:label "release version" .
-
-:releaseCodename a owl:DatatypeProperty;
-  rdfs:domain :DistributionRelease;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The informal name or codename of a distribution release, such as 'bookworm' for Debian 12 or 'noble' for Ubuntu 24.04.";
-  rdfs:comment "The codename of the distribution release";
-  rdfs:label "release codename" .
-
-:releaseDate a owl:DatatypeProperty;
-  rdfs:domain :DistributionRelease;
-  rdfs:range xsd:date;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The date when a distribution release was officially published or made available.";
-  rdfs:comment "The date the distribution release was published";
-  rdfs:label "release date" .
-
-:endOfLifeDate a owl:DatatypeProperty;
-  rdfs:domain :DistributionRelease;
-  rdfs:range xsd:date;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The date when a distribution release ceases to receive security updates and support.";
-  rdfs:comment "The date when the distribution release reaches end of life";
-  rdfs:label "end of life date" .
-
-:accountPlatform a owl:DatatypeProperty;
-  rdfs:domain :ContributorAccount;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Identifies the platform or service where a contributor account is registered, such as GitHub, Debian, Fedora, or GitLab.";
-  rdfs:comment "The platform or service where the account exists";
-  rdfs:label "account platform" .
-
-:accountUsername a owl:DatatypeProperty;
-  rdfs:domain :ContributorAccount;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The username, login, or unique identifier of a contributor on a specific platform.";
-  rdfs:comment "The username or identifier on the platform";
-  rdfs:label "account username" .
-
-:accountUrl a owl:DatatypeProperty;
-  rdfs:domain :ContributorAccount;
-  rdfs:range xsd:anyURI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The web URL of a contributor's profile page on a specific platform.";
-  rdfs:comment "The URL of the contributor's profile on the platform";
-  rdfs:label "account URL" .
-
-:installedFilePath a owl:DatatypeProperty;
-  rdfs:domain :InstalledFile;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The absolute filesystem path where a file is installed on the target system, such as /usr/bin/gcc or /usr/lib/libssl.so.3.";
-  rdfs:comment "The filesystem path where the file is installed";
-  rdfs:label "installed file path" .
-
-:projectName a owl:DatatypeProperty;
-  rdfs:domain :UpstreamProject;
-  rdfs:range xsd:string;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The canonical or commonly used name of an upstream open source project, such as 'openssl' or 'gcc'.";
-  rdfs:comment "The canonical name of the upstream project";
-  rdfs:label "project name" .
-
-:projectUrl a owl:DatatypeProperty;
-  rdfs:domain :UpstreamProject;
-  rdfs:range xsd:anyURI;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The primary website or homepage URL for an upstream open source project.";
-  rdfs:comment "The primary URL for the upstream project";
-  rdfs:label "project URL" .
-
-:ABI a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The low-level binary interface that defines calling conventions, data layouts, and system call interfaces for a specific platform.";
-  rdfs:comment "The binary interface specification for a platform";
-  rdfs:label "Application Binary Interface" .
-
-:Architecture a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The specific hardware platform, instruction set, or system architecture for which a software package has been compiled or designed to run.";
-  rdfs:comment "The hardware or software architecture for which a package is built";
-  rdfs:label "Architecture" .
-
-:BuildActivity a owl:Class;
-  rdfs:subClassOf :PackagingActivity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An activity that compiles source code and creates executable binaries or libraries as part of the packaging process.";
-  rdfs:comment "The process of compiling and building software from source";
-  rdfs:label "Build Activity" .
-
-:ContributionType a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Categorizes the nature of contributions made to a package, such as code, documentation, packaging, or security updates.";
-  rdfs:comment "The type of contribution made to a package";
-  rdfs:label "Contribution Type" .
-
-:Contributor a owl:Class;
-  rdfs:subClassOf prov:Agent;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An individual or organization that contributes to the development, maintenance, or packaging of a software project.";
-  rdfs:comment "A person or organization that contributes to a software package or project";
-  rdfs:label "Contributor" .
-
-:Dependency a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A requirement relationship between software packages where one package needs another package to be present and functional in order to operate correctly.";
-  rdfs:comment "A relationship indicating that one package requires another package to function properly";
-  rdfs:label "Dependency" .
-
-:Capability a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A functional capability provided by or required by a package, such as a shared library (e.g., libssl.so.3), virtual package name, or other abstract functionality. Critical for shared library dependency resolution - enables blast radius analysis via .so linking.";
-  rdfs:comment "A capability provided or required by packages (shared library, virtual package, etc.)";
-  rdfs:label "Capability" .
-
-:Distribution a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A complete operating system distribution that packages and distributes software using specific package management systems.";
-  rdfs:comment "A specific Linux/Unix distribution";
-  rdfs:label "Distribution" .
-
-:Ecosystem a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A comprehensive package management ecosystem that may span multiple distributions, formats, and repositories, such as the Debian ecosystem including Ubuntu derivatives.";
-  rdfs:comment "A broader ecosystem encompassing multiple distributions and package formats";
-  rdfs:label "Package Ecosystem" .
-
-:InstallationActivity a owl:Class;
-  rdfs:subClassOf prov:Activity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An activity that deploys a package and its dependencies onto a target system, making the software available for use.";
-  rdfs:comment "The process of installing a package on a system";
-  rdfs:label "Installation Activity" .
-
-:InstructionSetArchitecture a owl:Class;
-  rdfs:subClassOf :Architecture;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "The processor instruction set architecture that defines the machine code interface, such as x86_64, ARM64, or RISC-V.";
-  rdfs:comment "The specific instruction set architecture (ISA) for binary packages";
-  rdfs:label "Instruction Set Architecture" .
-
-:License a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A legal document or agreement that specifies the terms and conditions under which a software package may be used, modified, and distributed.";
-  rdfs:comment "The legal license under which a package is distributed";
-  rdfs:label "License" .
-
-:Maintainer a owl:Class;
-  rdfs:subClassOf :Contributor;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An individual or organization that has responsibility for the ongoing development, maintenance, and support of a software package.";
-  rdfs:comment "A person or organization responsible for maintaining a package";
-  rdfs:label "Maintainer" .
-
-:MaintainerRole a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "Defines the specific responsibilities and authority level of a maintainer for a package, such as primary maintainer, co-maintainer, or sponsor.";
-  rdfs:comment "The specific role a maintainer plays for a package";
-  rdfs:label "Maintainer Role" .
-
-:MetaPackage a owl:Class;
-  rdfs:subClassOf :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A package that contains minimal or no files itself but serves to group related packages together through dependencies, commonly used for task-based installations.";
-  rdfs:comment "A package that exists primarily to depend on other packages";
-  rdfs:label "Meta Package" .
-
-:Package a owl:Class;
-  rdfs:subClassOf owl:Thing, prov:Entity, _:genid1, _:genid2, _:genid3, _:genid4, _:genid5,
-    _:genid6, _:genid7;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A discrete unit of software that can be installed, updated, or removed by a package management system, typically containing executable code, configuration files, documentation, and metadata.";
-  rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system";
-  rdfs:label "Package" .
-
-_:genid1 a owl:Restriction;
-  owl:minCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :hasLicense .
-
-_:genid2 a owl:Restriction;
-  owl:minCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :hasVersion .
-
-_:genid3 a owl:Restriction;
-  owl:minCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :maintainedBy .
-
-_:genid4 a owl:Restriction;
-  owl:cardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :packageName .
-
-_:genid5 a owl:Restriction;
-  owl:maxCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :checksum .
-
-_:genid6 a owl:Restriction;
-  owl:maxCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :downloadURL .
-
-_:genid7 a owl:Restriction;
-  owl:maxCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :homepage .
-
-:PackageManager a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A software application or system that automates the process of installing, upgrading, configuring, and removing software packages, including dependency resolution and conflict management.";
-  rdfs:comment "A software tool that manages the installation, updating, and removal of packages";
-  rdfs:label "Package Manager" .
-
-:PackageSet a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A named collection of packages within a distribution or product, used to define subsets such as base systems, application streams, or product-specific package sets.";
-  rdfs:comment "A named subset of packages within a distribution or product";
-  rdfs:label "Package Set" .
-
-:PackagingActivity a owl:Class;
-  rdfs:subClassOf prov:Activity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An activity that transforms source code, configuration files, and other materials into a distributable package format.";
-  rdfs:comment "The process of creating a package from source materials";
-  rdfs:label "Packaging Activity" .
-
-:PublishingActivity a owl:Class;
-  rdfs:subClassOf prov:Activity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An activity that uploads and makes a package available for distribution through a package repository.";
-  rdfs:comment "The process of making a package available in a repository";
-  rdfs:label "Publishing Activity" .
-
-:Repository a owl:Class;
-  rdfs:subClassOf owl:Thing, prov:Entity, _:genid8;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A centralized storage location where software packages are hosted and made available for distribution, typically accessible via network protocols and managed by package management systems.";
-  rdfs:comment "A storage location for packages, accessible through a package management system";
-  rdfs:label "Repository" .
-
-_:genid8 a owl:Restriction;
-  owl:minCardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :contains .
-
-:TestActivity a owl:Class;
-  rdfs:subClassOf prov:Activity;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An activity that executes test suites to verify the functionality and quality of a software package.";
-  rdfs:comment "The process of running tests on a package";
-  rdfs:label "Test Activity" .
-
-:Version a owl:Class;
-  rdfs:subClassOf owl:Thing, _:genid9;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A specific release or iteration of a software package, identified by a version string and representing a particular state of the package's development.";
-  rdfs:comment "A specific version or release of a package";
-  rdfs:label "Version" .
-
-_:genid9 a owl:Restriction;
-  owl:cardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :versionString .
-
-:VersionConstraint a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A structured specification that defines acceptable version ranges for package dependencies, including operators and target versions.";
-  rdfs:comment "A structured representation of version constraints for dependencies";
-  rdfs:label "Version Constraint" .
-
-:VirtualPackage a owl:Class;
-  rdfs:subClassOf :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An abstract package name that represents a functionality or interface that can be satisfied by multiple concrete package implementations.";
-  rdfs:comment "A package name that represents a capability provided by one or more real packages";
-  rdfs:label "Virtual Package" .
-
-:SourcePackage a owl:Class;
-  rdfs:subClassOf :Package;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A source package containing the original source code, build scripts, and packaging metadata required to produce one or more binary packages for distribution.";
-  rdfs:comment "A package containing source code that can be built into one or more binary packages";
-  rdfs:label "Source Package" .
-
-:BinaryPackage a owl:Class;
-  rdfs:subClassOf :Package, _:genid10;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A binary package containing compiled executables, libraries, or architecture-independent files, ready for installation on a target system.";
-  rdfs:comment "A compiled, installable package produced from a source package";
-  rdfs:label "Binary Package" .
-
-_:genid10 a owl:Restriction;
-  owl:cardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :builtFromSource .
-
-:UpstreamProject a owl:Class;
-  rdfs:subClassOf owl:Thing, _:genid11;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "An upstream software project that serves as the origin for packages across multiple distributions, enabling cross-distribution analysis through a shared identity.";
-  rdfs:comment "An upstream open source project that is packaged by one or more distributions";
-  rdfs:label "Upstream Project" .
-
-_:genid11 a owl:Restriction;
-  owl:cardinality "1"^^xsd:nonNegativeInteger;
-  owl:onProperty :projectName .
-
-:DistributionRelease a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A specific versioned release of a Linux distribution, such as Debian 12 (bookworm) or Fedora 41, containing a defined set of packages.";
-  rdfs:comment "A specific versioned release of a distribution";
-  rdfs:label "Distribution Release" .
-
-:ContributorAccount a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A platform-specific identity for a contributor, such as a GitHub username, Debian maintainer email, or Fedora Account System login, enabling cross-platform contributor identification.";
-  rdfs:comment "An identity or account for a contributor on a specific platform";
-  rdfs:label "Contributor Account" .
-
-:InstalledFile a owl:Class;
-  rdfs:subClassOf owl:Thing;
-  <http://purl.obolibrary.org/obo/IAO_0000115> "A file that is installed on the target filesystem when a binary package is installed, including executables, libraries, configuration files, and documentation.";
-  rdfs:comment "A file installed on the system by a binary package";
-  rdfs:label "Installed File" .
-
-###  https://purl.org/packagegraph/ontology/core#upstreamRepository
-:upstreamRepository a owl:ObjectProperty ;
-    owl:inverseOf <https://purl.org/packagegraph/ontology/vcs#hasPackage> ;
-    rdfs:domain :PackageIdentity ;
-    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
-    rdfs:label "upstream repository" ;
-    rdfs:comment "The upstream VCS repository this package is built from. Derived from Homepage/URL when it points to a known forge, or from dist-git spec files." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package identity with the canonical upstream source code repository. This is the primary cross-distribution identity anchor — packages from different distros that share the same upstream repository are the same software, regardless of package name." .
-
-###  https://purl.org/packagegraph/ontology/core#packagingRepository
-:packagingRepository a owl:ObjectProperty ;
-    rdfs:domain :PackageIdentity ;
-    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> ;
-    rdfs:label "packaging repository" ;
-    rdfs:comment "The distribution-specific packaging repository (e.g., Debian Salsa, Fedora dist-git). Contains packaging rules, patches, and build configuration." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a package identity with the distribution-specific repository that contains the packaging metadata (debian/ directory, spec files, patches). Distinct from the upstream repository — packaging repos are distro-specific while upstream repos are universal." .
-
-###  https://purl.org/packagegraph/ontology/core#PackageIdentity
-:PackageIdentity a owl:Class ;
-    rdfs:subClassOf owl:Thing ;
-    rdfs:label "Package Identity" ;
-    rdfs:comment "The version-agnostic identity of a package within a distribution and architecture. Dependency targets point to this instead of versioned instances." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "A stable, version-independent identifier for a package name within a specific distribution, release, and architecture. BinaryPackage instances link to their identity via isVersionOf. Dependencies point to the identity, enabling direct name-based joins without URI parsing." .
-
-###  https://purl.org/packagegraph/ontology/core#isVersionOf
-:isVersionOf a owl:ObjectProperty ;
-    owl:inverseOf :hasPackage ;
-    rdfs:domain :BinaryPackage ;
-    rdfs:range :PackageIdentity ;
-    rdfs:label "is version of" ;
-    rdfs:comment "Links a versioned binary package to its version-agnostic package identity." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package." .
-
-###  https://purl.org/packagegraph/ontology/core#hasPackage
-:hasPackage a owl:ObjectProperty ;
-    rdfs:domain :PackageIdentity ;
-    rdfs:range :BinaryPackage ;
-    rdfs:label "has package" ;
-    rdfs:comment "Links a package identity to its versioned binary package instances." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "The inverse relationship of isVersionOf, linking a package identity to all versioned binary packages that belong to it. Enables efficient 'list all versions of package X' queries from the identity node." .
-
-###  https://purl.org/packagegraph/ontology/core#DataSnapshot
-:DataSnapshot a owl:Class ;
-    rdfs:subClassOf <http://www.w3.org/ns/prov#Entity> ;
-    rdfs:label "Data Snapshot" ;
-    rdfs:comment "Metadata about a named graph — when it was collected, from what source, whether it is current." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "A record of a data collection or enrichment run, tracking the named graph URI, source identifier, timestamp, and currency status for graph lifecycle management." .
-
-###  https://purl.org/packagegraph/ontology/core#snapshotSource
-:snapshotSource a owl:DatatypeProperty ;
-    rdfs:domain :DataSnapshot ;
-    rdfs:range xsd:string ;
-    rdfs:label "snapshot source" ;
-    rdfs:comment "Identifier of the data source that produced this snapshot (e.g., 'pg-collect debian', 'enricher-osv')." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "A string identifying the tool and data source that produced this snapshot." .
-
-###  https://purl.org/packagegraph/ontology/core#snapshotTimestamp
-:snapshotTimestamp a owl:DatatypeProperty ;
-    rdfs:domain :DataSnapshot ;
-    rdfs:range xsd:dateTime ;
-    rdfs:label "snapshot timestamp" ;
-    rdfs:comment "When this data snapshot was created." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "The date and time when the data collection or enrichment run completed." .
-
-###  https://purl.org/packagegraph/ontology/core#snapshotGraph
-:snapshotGraph a owl:DatatypeProperty ;
-    rdfs:domain :DataSnapshot ;
-    rdfs:range xsd:anyURI ;
-    rdfs:label "snapshot graph" ;
-    rdfs:comment "The named graph URI this snapshot was loaded into." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "The URI of the named graph in Fuseki that contains this snapshot's data." .
-
-###  https://purl.org/packagegraph/ontology/core#isCurrent
-:isCurrent a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:domain :DataSnapshot ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "is current" ;
-    rdfs:comment "Whether this snapshot represents the current active data for its source." ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "A boolean flag indicating whether this snapshot is the most recent for its data source. Used for tiered storage lifecycle management." .
-
-###  https://purl.org/packagegraph/ontology/core#repoType
-:repoType a owl:DatatypeProperty ;
-    rdfs:domain :DistributionRelease ;
-    rdfs:range xsd:string ;
-    rdfs:label "repository type" ;
-    rdfs:comment "The type of package repository (release, development, build, updates, updates-testing)" ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "Classifies the repository source type to enable proper comparison semantics. Release repos are composed for end-user installation. Build repos are Koji build targets. Updates are post-release patches." .
-
-###  https://purl.org/packagegraph/ontology/core#repoSourceURL
-:repoSourceURL a owl:DatatypeProperty ;
-    rdfs:domain :DistributionRelease ;
-    rdfs:range xsd:anyURI ;
-    rdfs:label "repository source URL" ;
-    rdfs:comment "The URL from which this repository data was collected" ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "The HTTP/HTTPS URL of the package repository metadata that was used as the data source for collection. Enables traceability and re-collection." .
-
-###  https://purl.org/packagegraph/ontology/core#isPhantomPackage
-:isPhantomPackage a owl:DatatypeProperty ;
+:ABI a owl:Class ;
+    rdfs:label "Application Binary Interface"@en ;
+    IAO:0000115 "The low-level binary interface that defines calling conventions, data layouts, and system call interfaces for a specific platform."@en ;
+    rdfs:comment "The binary interface specification for a platform"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:InstructionSetArchitecture a owl:Class ;
+    rdfs:label "Instruction Set Architecture"@en ;
+    IAO:0000115 "The processor instruction set architecture that defines the machine code interface, such as x86_64, ARM64, or RISC-V."@en ;
+    rdfs:comment "The specific instruction set architecture (ISA) for binary packages"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Architecture .
+
+:MaintainerRole a owl:Class ;
+    rdfs:label "Maintainer Role"@en ;
+    IAO:0000115 "Defines the specific responsibilities and authority level of a maintainer for a package, such as primary maintainer, co-maintainer, or sponsor."@en ;
+    rdfs:comment "The specific role a maintainer plays for a package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:PackageSet a owl:Class ;
+    rdfs:label "Package Set"@en ;
+    IAO:0000115 "A named collection of packages within a distribution or product, used to define subsets such as base systems, application streams, or product-specific package sets."@en ;
+    rdfs:comment "A named subset of packages within a distribution or product"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:conflicts a owl:IrreflexiveProperty,
+        owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "conflicts"@en ;
+    IAO:0000115 "A symmetric relationship indicating that two packages cannot be installed simultaneously on the same system due to incompatibilities or resource conflicts. If package A conflicts with package B, then B conflicts with A."@en ;
+    rdfs:comment "Indicates that a package cannot be installed alongside another package (symmetric relationship)"@en ;
     rdfs:domain :Package ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "is phantom package" ;
-    rdfs:comment "Indicates that this package appears in repo metadata but has no installable files" ;
-    <http://purl.obolibrary.org/obo/IAO_0000115> "A boolean flag indicating that this package entry exists in the repository primary.xml metadata but has no corresponding files in filelists.xml, making it non-installable. Common for TeX Live virtual subpackages and generated meta-package entries." .
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:dependencyTarget a owl:ObjectProperty ;
+    rdfs:label "dependency target"@en ;
+    IAO:0000115 "Identifies the specific package that satisfies a dependency, linking the reified Dependency to its target Package."@en ;
+    rdfs:comment "The package that a dependency relationship targets"@en ;
+    rdfs:domain :Dependency ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:hasContributor a owl:ObjectProperty ;
+    rdfs:label "has contributor"@en ;
+    IAO:0000115 "Convenience property linking a repository directly to the persons contributing to it. For detailed role information, traverse via contribution role assignments."@en ;
+    rdfs:comment "Links a repository directly to contributing persons"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Person .
+
+:hasDependency a owl:ObjectProperty ;
+    rdfs:label "has dependency"@en ;
+    IAO:0000115 "Associates a package with a structured dependency that captures the target package, version constraints, and dependency type. Detailed dependency with type and version constraint. The directlyDependsOn shortcut provides a simpler graph traversal path for queries that don't need constraint details."@en ;
+    rdfs:comment "Links a package to a reified dependency relationship with version constraints. The directlyDependsOn property provides a materialized shortcut (via owl:propertyChainAxiom) for simpler traversal."@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Dependency .
+
+:hasPackage a owl:ObjectProperty ;
+    rdfs:label "has package"@en ;
+    IAO:0000115 "The inverse relationship of isVersionOf, linking a package identity to all versioned binary packages that belong to it. Enables efficient 'list all versions of package X' queries from the identity node."@en ;
+    rdfs:comment "Links a package identity to its versioned binary package instances."@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :BinaryPackage .
+
+:hasVersion a owl:ObjectProperty ;
+    rdfs:label "has version"@en ;
+    IAO:0000115 "A relationship that associates a software package with a specific version or release of that package."@en ;
+    rdfs:comment "Links a package to one of its versions"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Version ;
+    owl:inverseOf :versionOf .
+
+:holdsRole a owl:ObjectProperty ;
+    rdfs:label "holds role"@en ;
+    IAO:0000115 "Associates a person with a contribution or maintenance role assignment."@en ;
+    rdfs:comment "Links a person to a contributor or maintainer role they hold"@en ;
+    rdfs:domain :Person ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Contributor .
+
+:isDirectDependencyOf a owl:ObjectProperty ;
+    rdfs:label "is direct dependency of"@en ;
+    IAO:0000115 "The inverse relationship of directlyDependsOn, indicating that this package is a direct dependency of another package. Critical for blast radius analysis - enables efficient queries for 'what directly depends on this package'."@en ;
+    rdfs:comment "Indicates that this package is a direct dependency of another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    rdfs:subPropertyOf :isDependencyOf .
+
+:maintains a owl:ObjectProperty ;
+    rdfs:label "maintains"@en ;
+    IAO:0000115 "The inverse of maintainedBy, linking a person to the packages they maintain."@en ;
+    rdfs:comment "Links a person to the packages they maintain"@en ;
+    rdfs:domain :Person ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:manages a owl:ObjectProperty ;
+    rdfs:label "manages"@en ;
+    IAO:0000115 "A relationship that associates a package manager with the repositories it controls and provides access to."@en ;
+    rdfs:comment "Links a package manager to the repositories it manages"@en ;
+    rdfs:domain :PackageManager ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Repository .
+
+:packageName a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "package name"@en ;
+    IAO:0000115 "The unique identifier or name by which a software package is known within a package management system."@en ;
+    rdfs:comment "The name of a package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:partOfDistribution a owl:ObjectProperty ;
+    rdfs:label "part of distribution"@en ;
+    IAO:0000115 "Associates packages, repositories, or other components with their parent distribution."@en ;
+    rdfs:comment "Links packages or repositories to their parent distribution"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Distribution .
+
+:partOfRelease a owl:ObjectProperty ;
+    rdfs:label "part of release"@en ;
+    IAO:0000115 "Associates packages, repositories, or other components with a specific versioned release of a distribution."@en ;
+    rdfs:comment "Links packages or repositories to a specific distribution release"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :DistributionRelease ;
+    rdfs:subPropertyOf :partOfDistribution ;
+    owl:inverseOf :releaseContains .
+
+:producedBinary a owl:ObjectProperty ;
+    rdfs:label "produced binary"@en ;
+    IAO:0000115 "Associates a source package with the binary packages produced by building it."@en ;
+    rdfs:comment "Links a source package to binary packages it produces"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :BinaryPackage .
+
+:projectName a owl:DatatypeProperty ;
+    rdfs:label "project name"@en ;
+    IAO:0000115 "The canonical or commonly used name of an upstream open source project, such as 'openssl' or 'gcc'."@en ;
+    rdfs:comment "The canonical name of the upstream project"@en ;
+    rdfs:domain :UpstreamProject ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:releaseContains a owl:ObjectProperty ;
+    rdfs:label "release contains"@en ;
+    IAO:0000115 "Links a distribution release to packages it contains, enabling efficient 'what packages are in this release' queries."@en ;
+    rdfs:comment "Links a distribution release to packages it contains"@en ;
+    rdfs:domain :DistributionRelease ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :partOfRelease .
+
+:replaces a owl:AsymmetricProperty,
+        owl:IrreflexiveProperty,
+        owl:ObjectProperty ;
+    rdfs:label "replaces"@en ;
+    IAO:0000115 "An asymmetric relationship indicating that one package is intended to supersede and replace another package, typically during system upgrades or package transitions. If package A replaces package B, then package B does not replace package A."@en ;
+    rdfs:comment "Indicates that a package replaces another package (asymmetric relationship)"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:supersededBy a owl:ObjectProperty ;
+    rdfs:label "superseded by"@en ;
+    IAO:0000115 "Indicates that this package's functionality has been absorbed into another package due to subpackage reorganization across architectures or builds. Used to track packages that exist on some arches but are merged into others on different arches."@en ;
+    rdfs:comment "Indicates that this package's functionality has been absorbed into another package (subpackage reorganization)"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :supersedes .
+
+:supersedes a owl:ObjectProperty ;
+    rdfs:label "supersedes"@en ;
+    IAO:0000115 "Indicates that this package absorbs the functionality of another package, typically due to subpackage consolidation or reorganization across architectures."@en ;
+    rdfs:comment "Indicates that this package absorbs the functionality of another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :supersededBy .
+
+:versionOf a owl:ObjectProperty ;
+    rdfs:label "version of"@en ;
+    IAO:0000115 "The inverse relationship of hasVersion, linking a version back to the package it belongs to. Critical for security queries that start from an affected version and need to find the package."@en ;
+    rdfs:comment "Links a version to the package it belongs to"@en ;
+    rdfs:domain :Version ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:versionString a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "version string"@en ;
+    IAO:0000115 "A textual representation of a package version, typically following semantic versioning or other versioning schemes to indicate the release sequence and compatibility."@en ;
+    rdfs:comment "The version identifier of a package"@en ;
+    rdfs:domain :Version ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:BuildActivity a owl:Class ;
+    rdfs:label "Build Activity"@en ;
+    IAO:0000115 "An activity that compiles source code and creates executable binaries or libraries as part of the packaging process. Aligned with PROV-O Activity concept — builds are time-bounded activities with agents (builders) and entities (source/binary artifacts)."@en ;
+    rdfs:comment "The process of compiling and building software from source"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Activity,
+        :PackagingActivity .
+
+:Ecosystem a owl:Class ;
+    rdfs:label "Package Ecosystem"@en ;
+    IAO:0000115 "A comprehensive package management ecosystem that may span multiple distributions, formats, and repositories, such as the Debian ecosystem including Ubuntu derivatives."@en ;
+    rdfs:comment "A broader ecosystem encompassing multiple distributions and package formats"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:License a owl:Class ;
+    rdfs:label "License"@en ;
+    IAO:0000115 "A legal document or agreement that specifies the terms and conditions under which a software package may be used, modified, and distributed."@en ;
+    rdfs:comment "The legal license under which a package is distributed"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:PackageManager a owl:Class ;
+    rdfs:label "Package Manager"@en ;
+    IAO:0000115 "A software application or system that automates the process of installing, upgrading, configuring, and removing software packages, including dependency resolution and conflict management."@en ;
+    rdfs:comment "A software tool that manages the installation, updating, and removal of packages"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:contains a owl:ObjectProperty ;
+    rdfs:label "contains"@en ;
+    IAO:0000115 "A relationship that associates a repository with the packages it hosts and makes available for distribution."@en ;
+    rdfs:comment "Links a repository to the packages it contains"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:isDependencyOf a owl:ObjectProperty ;
+    rdfs:label "is dependency of"@en ;
+    IAO:0000115 "The inverse relationship of dependsOn, indicating that this package is required by another package."@en ;
+    rdfs:comment "Indicates that this package is a dependency of another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:provides a owl:ObjectProperty ;
+    rdfs:label "provides"@en ;
+    IAO:0000115 "A relationship indicating that one package offers the same functionality or interface as another package, potentially serving as a substitute or alternative implementation."@en ;
+    rdfs:comment "Indicates that a package provides the functionality of another package"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package .
+
+:Checksum a owl:Class ;
+    rdfs:label "Checksum"@en ;
+    IAO:0000115 "A reified checksum associating a cryptographic hash value with the algorithm used to compute it, enabling packages to carry multiple checksums of different types (e.g., SHA-256 and MD5 simultaneously)."@en ;
+    rdfs:comment "A cryptographic hash of a package file, pairing the hash value with its algorithm"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:InstalledFile a owl:Class ;
+    rdfs:label "Installed File"@en ;
+    IAO:0000115 "A file that is installed on the target filesystem when a binary package is installed, including executables, libraries, configuration files, and documentation."@en ;
+    rdfs:comment "A file installed on the system by a binary package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:Maintainer a owl:Class ;
+    rdfs:label "Maintainer"@en ;
+    IAO:0000115 "A maintenance role assignment linking a person to a package they maintain. This is an anti-rigid concept — a maintenance role assignment can begin or end without the person ceasing to exist."@en ;
+    rdfs:comment "A maintenance role assignment linking a person to a package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Contributor .
+
+:PackagingActivity a owl:Class ;
+    rdfs:label "Packaging Activity"@en ;
+    IAO:0000115 "An activity that transforms source code, configuration files, and other materials into a distributable package format."@en ;
+    rdfs:comment "The process of creating a package from source materials"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Activity .
+
+:VersionConstraint a owl:Class ;
+    rdfs:label "Version Constraint"@en ;
+    IAO:0000115 "A structured specification that defines acceptable version ranges for package dependencies, including operators and target versions."@en ;
+    rdfs:comment "A structured representation of version constraints for dependencies"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+xsd:date a rdfs:Datatype .
+
+:ContributorAccount a owl:Class ;
+    rdfs:label "Contributor Account"@en ;
+    IAO:0000115 "A platform-specific identity for a contributor, such as a GitHub username, Debian maintainer email, or Fedora Account System login, enabling cross-platform contributor identification."@en ;
+    rdfs:comment "An identity or account for a contributor on a specific platform"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:DataSnapshot a owl:Class ;
+    rdfs:label "Data Snapshot"@en ;
+    IAO:0000115 "A record of a data collection or enrichment run, tracking the named graph URI, source identifier, timestamp, and currency status for graph lifecycle management."@en ;
+    rdfs:comment "Metadata about a named graph — when it was collected, from what source, whether it is current."@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Entity .
+
+:UpstreamProject a owl:Class ;
+    rdfs:label "Upstream Project"@en ;
+    IAO:0000115 "An upstream software project that serves as the origin for packages across multiple distributions, enabling cross-distribution analysis through a shared identity. Aligned with DOAP (Description of a Project) vocabulary — upstream projects are software projects with maintainers, repositories, and releases."@en ;
+    rdfs:comment "An upstream open source project that is packaged by one or more distributions"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty :projectName ],
+        doap:Project,
+        owl:Thing .
+
+:Architecture a owl:Class ;
+    rdfs:label "Architecture"@en ;
+    IAO:0000115 "The specific hardware platform, instruction set, or system architecture for which a software package has been compiled or designed to run."@en ;
+    rdfs:comment "The hardware or software architecture for which a package is built"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:BinaryPackage a owl:Class ;
+    rdfs:label "Binary Package"@en ;
+    IAO:0000115 "A binary package containing compiled executables, libraries, or architecture-independent files, ready for installation on a target system."@en ;
+    rdfs:comment "A compiled, installable package produced from a source package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Package .
+
+:Capability a owl:Class ;
+    rdfs:label "Capability"@en ;
+    IAO:0000115 "A functional capability provided by or required by a package, such as a shared library (e.g., libssl.so.3), virtual package name, or other abstract functionality. Critical for shared library dependency resolution - enables blast radius analysis via .so linking."@en ;
+    rdfs:comment "A capability provided or required by packages (shared library, virtual package, etc.)"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:Contributor a owl:Class ;
+    rdfs:label "Contributor"@en ;
+    IAO:0000115 "A role assignment representing a person's contribution to a package or repository. This is an anti-rigid concept — a person can start or stop holding this role without ceasing to exist."@en ;
+    rdfs:comment "A contribution role assignment linking a person to a package or repository"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:Dependency a owl:Class ;
+    rdfs:label "Dependency"@en ;
+    IAO:0000115 "A requirement relationship between software packages where one package needs another package to be present and functional in order to operate correctly."@en ;
+    rdfs:comment "A relationship indicating that one package requires another package to function properly"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:Person a owl:Class ;
+    rdfs:label "Person"@en ;
+    IAO:0000115 "A rigid identity representing a human individual. Persons hold roles (Contributor, Maintainer) which are time-dependent and context-dependent. The same Person can maintain packages in multiple distributions and hold different roles over time."@en ;
+    rdfs:comment "A human individual who can hold contributor or maintainer roles across packages and distributions"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Agent ;
+    owl:equivalentClass foaf:Person .
+
+:SourcePackage a owl:Class ;
+    rdfs:label "Source Package"@en ;
+    IAO:0000115 "A source package containing the original source code, build scripts, and packaging metadata required to produce one or more binary packages for distribution."@en ;
+    rdfs:comment "A package containing source code that can be built into one or more binary packages"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf :Package .
+
+:Version a owl:Class ;
+    rdfs:label "Version"@en ;
+    IAO:0000115 "A specific release or iteration of a software package, identified by a version string and representing a particular state of the package's development."@en ;
+    rdfs:comment "A specific version or release of a package"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty :versionString ],
+        owl:Thing .
+
+:Repository a owl:Class ;
+    rdfs:label "Repository"@en ;
+    IAO:0000115 "A centralized storage location where software packages are hosted and made available for distribution, typically accessible via network protocols and managed by package management systems."@en ;
+    rdfs:comment "A storage location for packages, accessible through a package management system"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty :contains ],
+        owl:Thing,
+        prov:Entity .
+
+:dependsOn a owl:ObjectProperty ;
+    rdfs:label "depends on"@en ;
+    IAO:0000115 "A relationship indicating that one package requires another package to be present and functional in order to operate correctly."@en ;
+    rdfs:comment "Indicates that a package requires another package to function"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :Package ;
+    owl:inverseOf :isDependencyOf .
+
+:Distribution a owl:Class ;
+    rdfs:label "Distribution"@en ;
+    IAO:0000115 "A complete operating system distribution that packages and distributes software using specific package management systems."@en ;
+    rdfs:comment "A specific Linux/Unix distribution"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:DistributionRelease a owl:Class ;
+    rdfs:label "Distribution Release"@en ;
+    IAO:0000115 "A specific versioned release of a Linux distribution, such as Debian 12 (bookworm) or Fedora 41, containing a defined set of packages."@en ;
+    rdfs:comment "A specific versioned release of a distribution"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:PackageIdentity a owl:Class ;
+    rdfs:label "Package Identity"@en ;
+    IAO:0000115 "A stable, version-independent identifier for a package name within a specific distribution, release, and architecture. BinaryPackage instances link to their identity via isVersionOf. Dependencies point to the identity, enabling direct name-based joins without URI parsing."@en ;
+    rdfs:comment "The version-agnostic identity of a package within a distribution and architecture. Dependency targets point to this instead of versioned instances."@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:Package a owl:Class ;
+    rdfs:label "Package"@en ;
+    IAO:0000115 "A discrete unit of software represented in package repository metadata, typically containing executable code, configuration files, documentation, and metadata. Most packages can be installed, updated, or removed by a package management system, though some entries (such as phantom packages) exist only as metadata references."@en ;
+    rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:minCardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty :hasVersion ],
+        [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty :packageName ],
+        owl:Thing,
+        prov:Entity .
+
+: a owl:Ontology ;
+    rdfs:label "Package Management Core Ontology"@en ;
+    dcterms:abstract "PackageGraph Core defines the foundational classes and properties for representing software packages across Linux distributions and other package ecosystems. It models binary and source packages, versioned dependencies with constraints, maintainers, architectures, and distribution releases as a connected RDF graph. The ontology serves as the shared schema that distribution-specific extensions (Debian, RPM, Arch, etc.) specialize, enabling cross-distribution queries over a unified SPARQL endpoint." ;
+    dcterms:created "2025-09-05"^^xsd:date ;
+    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    dcterms:references <http://purl.obolibrary.org/obo/bfo.owl>,
+        <http://www.loa.istc.cnr.it/dolce/dolce-owl/DOLCEbasic> ;
+    dcterms:title "Package Management Core Ontology" ;
+    rdfs:comment "Core ontology for representing software packages and repositories across different package management systems. Upper ontology positioning: PackageGraph adopts lightweight alignment to established domain vocabularies (PROV-O, FOAF, SPDX, DOAP) rather than full BFO or DOLCE alignment. Software packages are informational artifacts whose lifecycle includes physical manifestations (installed files) and social roles (maintainers). BFO's material-entity/process distinction and DOLCE's cognitive/social focus do not cleanly categorize these hybrid entities. Our alignment strategy prioritizes semantic interoperability with domain-standard vocabularies over foundational ontology categorization. Multilingual metadata design: PackageGraph does not mandate @en language tags on data literals for graph efficiency — package names are technical identifiers, not translatable text, and adding language tags to 62.7M string literals increases storage cost and breaks existing SPARQL queries. However, the ontology acknowledges that multilingual package metadata is a real domain concern: Debian and Ubuntu maintain dedicated localisation teams (debian-l10n-english, ubuntu-translators) providing meticulously translated descriptions for packages like apache2, nginx, and postgresql. The RDF literal language tag mechanism remains available for collectors that ingest such translated metadata — the ontology does not prohibit language-tagged literals, it simply does not require them for monolingual English data."@en ;
+    rdfs:seeAlso <http://spdx.org/rdf/terms>,
+        doap:,
+        prov:,
+        foaf: ;
+    owl:versionInfo "0.5.0" .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :BinaryPackage :SourcePackage ) .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :Person :Package :Distribution :Repository ) .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :Dependency :Package :Version ) .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( :Package :Distribution :Repository :License :Architecture :Capability ) .
+
