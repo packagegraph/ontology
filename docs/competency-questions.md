@@ -920,7 +920,7 @@ LIMIT 100
 
 ### CQ-SCR-04: Maintainer Turnover Between Releases
 
-**Question:** Which packages changed maintainers between Fedora 42 and Fedora 43?
+**Question:** Which packages had their maintainer set change between Fedora 42 and Fedora 43 (any departure or arrival)?
 
 **SPARQL:**
 ```sparql
@@ -928,34 +928,46 @@ PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?packageName ?oldMaintainer ?newMaintainer
+SELECT DISTINCT ?packageName ?agentName ?changeType
 WHERE {
   ?identity pkg:identityName ?packageName .
 
   ?pkg42 pkg:isVersionOf ?identity ;
-         pkg:partOfRelease ?rel42 ;
-         pkg:maintainedBy ?old .
+         pkg:partOfRelease ?rel42 .
   ?rel42 ^pkg:hasRelease/rdfs:label "Fedora" ;
          pkg:releaseVersion "42" .
-  ?old foaf:name ?oldMaintainer .
 
   ?pkg43 pkg:isVersionOf ?identity ;
-         pkg:partOfRelease ?rel43 ;
-         pkg:maintainedBy ?new .
+         pkg:partOfRelease ?rel43 .
   ?rel43 ^pkg:hasRelease/rdfs:label "Fedora" ;
          pkg:releaseVersion "43" .
-  ?new foaf:name ?newMaintainer .
 
-  FILTER(?old != ?new)
+  {
+    # Departed: maintainer in 42 but not in 43
+    ?pkg42 pkg:maintainedBy ?agent .
+    FILTER NOT EXISTS { ?pkg43 pkg:maintainedBy ?agent }
+    BIND("departed" AS ?changeType)
+  }
+  UNION
+  {
+    # Joined: maintainer in 43 but not in 42
+    ?pkg43 pkg:maintainedBy ?agent .
+    FILTER NOT EXISTS { ?pkg42 pkg:maintainedBy ?agent }
+    BIND("joined" AS ?changeType)
+  }
+
+  ?agent foaf:name ?agentName .
 }
-ORDER BY ?packageName
+ORDER BY ?packageName ?changeType
 ```
 
-**Expected Columns:** packageName (string), oldMaintainer (string), newMaintainer (string)
+**Expected Columns:** packageName (string), agentName (string), changeType (string: "departed" or "joined")
 
-**Exercises:** PackageIdentity, identityName, isVersionOf, maintainedBy, cross-release comparison, turnover detection
+**Exercises:** PackageIdentity, identityName, isVersionOf, maintainedBy, set-difference via FILTER NOT EXISTS, UNION, turnover detection
 
 **Status:** PASS
+
+**Caveat:** Results depend on stable maintainer agent identity across releases. The collectors derive Person URIs from email addresses in package metadata (RPM `Packager:`, Debian `Maintainer:`). If the same human uses different emails across releases, they will appear as different agents, producing false positives.
 
 **Research context:** Maintainer turnover rate is a proxy for project health. High turnover can indicate governance problems, burnout cascades, or hostile takeover attempts (a known supply chain attack vector where malicious actors volunteer to maintain abandoned packages).
 
@@ -1030,7 +1042,7 @@ ORDER BY ?cveId ?patchLagDays
 
 ### CQ-SCR-07: Unpatched Critical Vulnerabilities Beyond Threshold
 
-**Question:** Which critical-severity vulnerabilities (CVSS ≥ 9.0) have been published more than 90 days ago without an advisory patch?
+**Question:** Which critical-severity vulnerabilities (CVSS ≥ 9.0) affecting a specific ecosystem have been published more than 90 days ago without an advisory for that ecosystem's packages?
 
 **SPARQL:**
 ```sparql
@@ -1046,14 +1058,16 @@ WHERE {
         sec:hasCVSSScore/sec:baseScore ?cvssScore ;
         sec:hasAffectedRange ?range .
   ?range sec:affectsPackageName ?packageName ;
-         sec:affectsEcosystem/rdfs:label ?ecosystem .
+         sec:affectsEcosystem ?eco .
+  ?eco rdfs:label ?ecosystem .
 
   FILTER(?cvssScore >= "9.0"^^xsd:decimal)
   FILTER(?pubDate < "2026-01-21T00:00:00Z"^^xsd:dateTime)
 
-  # No advisory exists for this vulnerability
+  # No advisory exists for this vulnerability in THIS ecosystem
   FILTER NOT EXISTS {
-    ?advisory sec:addressesVulnerability ?vuln .
+    ?advisory sec:addressesVulnerability ?vuln ;
+              sec:advisoryForPackage/pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem ?eco .
   }
 }
 ORDER BY ?pubDate
@@ -1061,9 +1075,11 @@ ORDER BY ?pubDate
 
 **Expected Columns:** cveId (string), cvssScore (decimal), pubDate (dateTime), packageName (string), ecosystem (string)
 
-**Exercises:** hasCVSSScore, baseScore, publishedDate, hasAffectedRange, negation, threshold filtering
+**Exercises:** hasCVSSScore, baseScore, publishedDate, hasAffectedRange, per-ecosystem negation, threshold filtering
 
-**Status:** PASS
+**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+
+**Semantic scope:** This query tests per-ecosystem patch absence — a CVE with a Fedora advisory but no Debian advisory will appear as unpatched *in the Debian ecosystem*. This is intentionally scoped: "unpatched" means "no advisory exists for packages in this specific ecosystem," not "no advisory exists anywhere globally." The required join shape is: `advisory → advisoryForPackage → package → partOfRelease → release → (inverse hasRelease) → distribution → partOfEcosystem → ecosystem`, matching the affected ecosystem from the vulnerability's AffectedRange.
 
 **Research context:** The "90-day window" is the de facto industry standard for responsible disclosure (Google Project Zero policy). Critical vulnerabilities exceeding this threshold without patches represent the highest-risk items in a software supply chain. This query directly supports the vulnerability management workflow described in NIST SP 800-40r4.
 
@@ -1101,7 +1117,7 @@ LIMIT 50
 
 ### CQ-SCR-09: Mean Time to Remediate (MTTR) by Distribution
 
-**Question:** What is the average, median-approximated, and maximum time from CVE publication to advisory issuance per distribution?
+**Question:** What is the average, minimum, and maximum time from CVE publication to advisory issuance per distribution?
 
 **SPARQL:**
 ```sparql
@@ -1791,13 +1807,13 @@ WHERE {
 | Licensing (LIC) | 3 | 3 | 0 |
 | Security / Vulnerability (SEC) | 8 | 8 | 0 |
 | Temporal Analysis (TEMP) | 3 | 3 | 0 |
-| Supply Chain Risk (SCR) | 9 | 6 | 3 |
+| Supply Chain Risk (SCR) | 9 | 5 | 4 |
 | Cross-Distribution Analysis (XD) | 5 | 5 | 0 |
 | Provenance / Build (PROV) | 4 | 4 | 0 |
 | Repository / VCS (VCS) | 2 | 2 | 0 |
 | Package Set (SET) | 1 | 1 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 |
-| **TOTAL** | **48** | **45** | **3** |
+| **TOTAL** | **48** | **44** | **4** |
 
 **Note:** All CQs now pass at the schema level. PASS status means the ontology vocabulary is sufficient to express the query. Actual result data depends on collector/enricher population.
 
