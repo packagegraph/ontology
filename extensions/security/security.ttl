@@ -44,8 +44,8 @@ sec:advisoryDate a owl:DatatypeProperty ;
 
 sec:advisoryForPackage a owl:ObjectProperty ;
     rdfs:label "advisory for package"@en ;
-    IAO:0000115 "Associates a security advisory with the package it applies to."@en ;
-    rdfs:comment "Links a security advisory to the package it applies to"@en ;
+    IAO:0000115 "Associates a security advisory with one or more concrete package instances in distribution and release context that the advisory fixes or updates. The target must be a versioned Package with release context (via partOfRelease), such as a BinaryPackage or, when the source data is source-package scoped, a SourcePackage. The target is not a version-agnostic PackageIdentity."@en ;
+    rdfs:comment "Links a security advisory to the concrete package(s) it fixes. Target must have release context — not a PackageIdentity."@en ;
     rdfs:domain sec:SecurityAdvisory ;
     rdfs:isDefinedBy sec: ;
     rdfs:range pkg:Package .
