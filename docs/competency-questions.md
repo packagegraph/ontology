@@ -29,14 +29,14 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?package ?name ?version
 WHERE {
-  ?release pkg:distributionName "Fedora" ;
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:releaseVersion "43" .
   ?package a pkg:BinaryPackage ;
            pkg:partOfRelease ?release ;
-           pkg:hasArchitecture ?arch ;
+           pkg:targetArchitecture ?arch ;
            pkg:packageName ?name ;
            pkg:hasVersion/pkg:versionString ?version .
-  ?arch pkg:architectureName "x86_64" .
+  ?arch rdfs:label "x86_64" .
 }
 ORDER BY ?name
 LIMIT 100
@@ -57,13 +57,14 @@ LIMIT 100
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?binary ?binaryName
 WHERE {
   ?source a pkg:SourcePackage ;
           pkg:packageName "glibc" ;
           pkg:partOfRelease ?release .
-  ?release pkg:distributionName "Fedora" ;
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:releaseVersion "43" .
   ?binary pkg:builtFromSource ?source ;
           pkg:packageName ?binaryName .
@@ -85,6 +86,7 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?provider ?providerName
 WHERE {
@@ -93,7 +95,7 @@ WHERE {
   ?provider pkg:provides ?capability ;
             pkg:packageName ?providerName ;
             pkg:partOfRelease ?release .
-  ?release pkg:distributionName "Debian" ;
+  ?release ^pkg:hasRelease/rdfs:label "Debian" ;
            pkg:releaseCodename "trixie" .
 }
 ```
@@ -106,6 +108,44 @@ WHERE {
 
 ---
 
+### CQ-PM-03b: Virtual Package and Capability Providers (UNION)
+
+**Question:** Which packages satisfy a dependency on `mail-transport-agent`, whether provided as a Package (via provides) or a Capability (via providesCapability)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?provider ?providerName
+WHERE {
+  {
+    # Path 1: Package provides another Package
+    ?virtual pkg:packageName "mail-transport-agent" .
+    ?provider pkg:provides ?virtual ;
+              pkg:packageName ?providerName .
+  }
+  UNION
+  {
+    # Path 2: Package provides a Capability
+    ?capability pkg:capabilityName "mail-transport-agent" .
+    ?provider pkg:providesCapability ?capability ;
+              pkg:packageName ?providerName .
+  }
+}
+ORDER BY ?providerName
+```
+
+**Expected Columns:** provider (URI), providerName (string)
+
+**Exercises:** VirtualPackage, Capability, provides, providesCapability, UNION (demonstrates query bifurcation)
+
+**Status:** PASS
+
+**Note:** This CQ demonstrates the VirtualPackage/Capability design choice documented in DD-VirtualPackage. Analysts must query both paths to catch all dependency satisfaction mechanisms.
+
+---
+
 ### CQ-PM-04: Dependency Chain Depth
 
 **Question:** What is the maximum dependency depth (transitive closure) for the `openssl` package in Fedora 43?
@@ -113,12 +153,13 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (COUNT(?dep) AS ?depth)
 WHERE {
   ?package pkg:packageName "openssl" ;
            pkg:partOfRelease ?release .
-  ?release pkg:distributionName "Fedora" ;
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:releaseVersion "43" .
   ?package pkg:directlyDependsOn+ ?dep .
 }
@@ -142,6 +183,7 @@ WHERE {
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?package ?packageName ?distro
 WHERE {
@@ -150,7 +192,7 @@ WHERE {
         pkg:heldBy ?person .
   ?package pkg:maintainedBy ?role ;
            pkg:packageName ?packageName ;
-           pkg:partOfRelease/pkg:partOfDistribution/rdfs:label ?distro .
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?distro .
 }
 ORDER BY ?distro ?packageName
 ```
@@ -170,14 +212,15 @@ ORDER BY ?distro ?packageName
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (COUNT(DISTINCT ?package) AS ?count)
 WHERE {
-  ?release pkg:distributionName "Fedora" ;
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:releaseVersion "43" .
   ?package pkg:partOfRelease ?release ;
-           pkg:hasArchitecture ?arch .
-  ?arch pkg:architectureName "aarch64" .
+           pkg:targetArchitecture ?arch .
+  ?arch rdfs:label "aarch64" .
 }
 ```
 
@@ -200,7 +243,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?license (COUNT(?package) AS ?count)
 WHERE {
-  ?release pkg:distributionName "Debian" ;
+  ?release ^pkg:hasRelease/rdfs:label "Debian" ;
            pkg:releaseCodename "trixie" .
   ?package pkg:partOfRelease ?release ;
            pkg:hasLicense ?licenseEntity .
@@ -226,10 +269,11 @@ LIMIT 20
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?filepath (COUNT(DISTINCT ?package) AS ?packageCount) (GROUP_CONCAT(?pkgName; separator=", ") AS ?packages)
 WHERE {
-  ?release pkg:distributionName "RHEL" ;
+  ?release ^pkg:hasRelease/rdfs:label "RHEL" ;
            pkg:releaseVersion "9" .
   ?package pkg:partOfRelease ?release ;
            pkg:installsFile ?file ;
@@ -258,10 +302,11 @@ LIMIT 50
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (AVG(?size) AS ?avgSize) (MIN(?size) AS ?minSize) (MAX(?size) AS ?maxSize)
 WHERE {
-  ?release pkg:distributionName "openSUSE" ;
+  ?release ^pkg:hasRelease/rdfs:label "openSUSE" ;
            pkg:releaseCodename "Tumbleweed" .
   ?package a rpm:BinaryRPM ;
            pkg:partOfRelease ?release ;
@@ -284,11 +329,12 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?packageName (COUNT(DISTINCT ?version) AS ?versionCount)
 WHERE {
-  ?release pkg:partOfDistribution ?dist .
-  ?dist pkg:distributionName "Fedora" .
+  ?release ^pkg:hasRelease ?dist .
+  ?dist rdfs:label "Fedora" .
   ?package pkg:packageName ?packageName ;
            pkg:partOfRelease ?release ;
            pkg:hasVersion ?versionEntity .
@@ -307,6 +353,103 @@ LIMIT 20
 
 ---
 
+## Domain: Licensing (LIC)
+
+### CQ-LIC-01: License Distribution by SPDX Identifier
+
+**Question:** What is the distribution of SPDX license types across all packages in Fedora 43?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?spdxId (COUNT(?package) AS ?count)
+WHERE {
+  ?package pkg:partOfRelease ?release ;
+           pkg:hasLicense ?license .
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
+           pkg:releaseVersion "43" .
+  ?license pkg:spdxId ?spdxId .
+}
+GROUP BY ?spdxId
+ORDER BY DESC(?count)
+LIMIT 20
+```
+
+**Expected Columns:** spdxId (string), count (integer)
+
+**Exercises:** License, hasLicense, spdxId, aggregation
+
+**Status:** PASS
+
+---
+
+### CQ-LIC-02: Packages with Non-SPDX Licenses
+
+**Question:** Which packages use licenses not in the SPDX License List (custom or non-standard license strings)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName ?licenseLabel
+WHERE {
+  ?package pkg:packageName ?packageName ;
+           pkg:hasLicense ?license .
+  ?license rdfs:label ?licenseLabel .
+  FILTER NOT EXISTS { ?license pkg:spdxId ?id }
+}
+LIMIT 100
+```
+
+**Expected Columns:** packageName (string), licenseLabel (string)
+
+**Exercises:** License, spdxId, negation
+
+**Status:** PASS
+
+---
+
+### CQ-LIC-03: Cross-Release License Changes
+
+**Question:** Which packages have changed licenses between Fedora 42 and Fedora 43?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName ?oldSpdx ?newSpdx
+WHERE {
+  ?identity pkg:identityName ?packageName .
+
+  ?pkg42 pkg:isVersionOf ?identity ;
+         pkg:partOfRelease ?release42 ;
+         pkg:hasLicense/pkg:spdxId ?oldSpdx .
+  ?release42 ^pkg:hasRelease/rdfs:label "Fedora" ;
+             pkg:releaseVersion "42" .
+
+  ?pkg43 pkg:isVersionOf ?identity ;
+         pkg:partOfRelease ?release43 ;
+         pkg:hasLicense/pkg:spdxId ?newSpdx .
+  ?release43 ^pkg:hasRelease/rdfs:label "Fedora" ;
+             pkg:releaseVersion "43" .
+
+  FILTER(?oldSpdx != ?newSpdx)
+}
+LIMIT 100
+```
+
+**Expected Columns:** packageName (string), oldSpdx (string), newSpdx (string)
+
+**Exercises:** License, spdxId, PackageIdentity, cross-release comparison
+
+**Status:** PASS
+
+---
+
 ## Domain: Security / Vulnerability (SEC)
 
 ### CQ-SEC-01: Affected Packages by CVE
@@ -317,6 +460,7 @@ LIMIT 20
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?package ?packageName ?ecosystem
 WHERE {
@@ -328,7 +472,7 @@ WHERE {
   OPTIONAL {
     ?package a pkg:Package ;
              pkg:packageName ?packageName ;
-             pkg:partOfRelease/pkg:ecosystem ?eco .
+             pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem ?eco .
   }
 }
 ```
@@ -337,7 +481,7 @@ WHERE {
 
 **Exercises:** Vulnerability, cveId, hasAffectedRange, AffectedRange, affectsEcosystem, affectsPackageName
 
-**Status:** BLOCKED — requires Task 3 (OSV alignment)
+**Status:** PASS (requires OSV data population)
 
 ---
 
@@ -349,6 +493,7 @@ WHERE {
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?cveId ?packageName ?cvssScore
 WHERE {
@@ -358,10 +503,10 @@ WHERE {
   ?cvss sec:baseScore ?cvssScore .
   FILTER(?cvssScore >= 7.0)
 
-  ?identity pkg:packageName ?packageName .
+  ?identity pkg:identityName ?packageName .
   ?package pkg:packageName ?packageName ;
            pkg:partOfRelease ?release .
-  ?release pkg:distributionName "Fedora" ;
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:releaseVersion "43" .
 
   # Not patched: no PatchActivity exists for this vulnerability + package
@@ -379,7 +524,7 @@ ORDER BY DESC(?cvssScore)
 
 **Exercises:** Vulnerability, PatchActivity, CVSSScore, affectsPackage, negation
 
-**Status:** BLOCKED — requires Task 3 (AffectedRange) and Task 4 (CVSSScore reification)
+**Status:** PASS (requires OSV and CVSSScore data population)
 
 ---
 
@@ -390,6 +535,7 @@ ORDER BY DESC(?cvssScore)
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?ecosystem ?introducedVersion ?fixedVersion
 WHERE {
@@ -400,11 +546,11 @@ WHERE {
          sec:hasRangeEvent ?event .
 
   OPTIONAL {
-    ?event sec:eventType "introduced" ;
+    ?event sec:eventType sec:event-introduced ;
            sec:eventVersion ?introducedVersion .
   }
   OPTIONAL {
-    ?event sec:eventType "fixed" ;
+    ?event sec:eventType sec:event-fixed ;
            sec:eventVersion ?fixedVersion .
   }
 }
@@ -414,7 +560,7 @@ WHERE {
 
 **Exercises:** AffectedRange, RangeEvent, eventType, eventVersion
 
-**Status:** BLOCKED — requires Task 3 (OSV alignment)
+**Status:** PASS (requires OSV data population)
 
 ---
 
@@ -425,6 +571,7 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?cveId (COUNT(DISTINCT ?advisory) AS ?advisoryCount) (GROUP_CONCAT(DISTINCT ?advId; separator=", ") AS ?advisories)
 WHERE {
@@ -454,6 +601,7 @@ LIMIT 20
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?cveId ?cvss2 ?cvss31 ((?cvss31 - ?cvss2) AS ?diff)
 WHERE {
@@ -472,7 +620,7 @@ LIMIT 50
 
 **Exercises:** CVSSScore, cvssVersion, baseScore, reification
 
-**Status:** BLOCKED — requires Task 4 (CVSS reification)
+**Status:** PASS (requires CVSSScore data population)
 
 ---
 
@@ -483,6 +631,7 @@ LIMIT 50
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?osvId ?severity ?ecosystem
 WHERE {
@@ -500,7 +649,7 @@ LIMIT 50
 
 **Exercises:** osvId, CVSSScore, AffectedRange, negation
 
-**Status:** BLOCKED — requires Task 3 (osvId) and Task 4 (CVSSScore)
+**Status:** PASS (requires OSV and CVSSScore data population)
 
 ---
 
@@ -541,6 +690,7 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?cweId (COUNT(?vuln) AS ?count)
 WHERE {
@@ -561,6 +711,105 @@ LIMIT 10
 
 ---
 
+## Domain: Temporal Analysis (TEMP)
+
+### CQ-TEMP-01: Vulnerability Window Analysis
+
+**Question:** How long between CVE publication and advisory patch availability across distributions?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?cveId ?ecosystem ((?advisoryDate - ?pubDate) AS ?windowDays)
+WHERE {
+  ?vuln sec:cveId ?cveId ;
+        sec:publishedDate ?pubDate .
+  ?advisory sec:addressesVulnerability ?vuln ;
+            sec:advisoryDate ?advisoryDate ;
+            sec:advisoryForPackage/pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem/rdfs:label ?ecosystem .
+  FILTER(?advisoryDate > ?pubDate)
+}
+ORDER BY DESC(?windowDays)
+LIMIT 50
+```
+
+**Expected Columns:** cveId (string), ecosystem (string), windowDays (dayTimeDuration)
+
+**Exercises:** sec:publishedDate, sec:advisoryDate, temporal arithmetic, cross-module joins
+
+**Status:** PASS
+
+---
+
+### CQ-TEMP-02: Package Obsolescence Between Releases
+
+**Question:** Which packages present in Fedora 42 were removed by Fedora 43?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?packageName ?lastSeenVersion
+WHERE {
+  ?pkg42 pkg:packageName ?packageName ;
+         pkg:partOfRelease ?release42 ;
+         pkg:hasVersion/pkg:versionString ?lastSeenVersion .
+  ?release42 ^pkg:hasRelease/rdfs:label "Fedora" ;
+             pkg:releaseVersion "42" .
+
+  FILTER NOT EXISTS {
+    ?pkg43 pkg:packageName ?packageName ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
+           pkg:partOfRelease/pkg:releaseVersion "43" .
+  }
+}
+ORDER BY ?packageName
+LIMIT 500
+```
+
+**Expected Columns:** packageName (string), lastSeenVersion (string)
+
+**Exercises:** pkg:partOfRelease, cross-release comparison, negation, obsolescence detection
+
+**Status:** PASS
+
+---
+
+### CQ-TEMP-03: Maintainer Tenure Analysis
+
+**Question:** What is the average maintainer tenure for packages currently maintained in Debian Trixie?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT (AVG(?tenureDays) AS ?avgTenure) (MIN(?tenureDays) AS ?minTenure) (MAX(?tenureDays) AS ?maxTenure)
+WHERE {
+  ?package pkg:partOfRelease ?release ;
+           pkg:hasMaintenanceRole ?role .
+  ?release ^pkg:hasRelease/rdfs:label "Debian" ;
+           pkg:releaseCodename "trixie" .
+  ?role pkg:maintainerSince ?startDate .
+  BIND((xsd:dateTime("2026-04-21T00:00:00Z") - ?startDate) AS ?tenureDays)
+  FILTER(?tenureDays > 0)
+}
+```
+
+**Expected Columns:** avgTenure (dayTimeDuration), minTenure (dayTimeDuration), maxTenure (dayTimeDuration)
+
+**Exercises:** pkg:maintainerSince, temporal computation, aggregation, role model
+
+**Status:** PASS
+
+---
+
 ## Domain: Cross-Distribution Analysis (XD)
 
 ### CQ-XD-01: Equivalent Packages Across Distributions
@@ -570,16 +819,17 @@ LIMIT 10
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?fedoraName ?debianName ?identity
 WHERE {
   ?identity a pkg:PackageIdentity .
   ?fedoraPkg pkg:packageName ?fedoraName ;
-             pkg:hasIdentity ?identity ;
-             pkg:partOfRelease/pkg:distributionName "Fedora" .
+             pkg:isVersionOf ?identity ;
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" .
   ?debianPkg pkg:packageName ?debianName ;
-             pkg:hasIdentity ?identity ;
-             pkg:partOfRelease/pkg:distributionName "Debian" .
+             pkg:isVersionOf ?identity ;
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" .
   FILTER(?fedoraName != ?debianName)
 }
 LIMIT 100
@@ -587,7 +837,7 @@ LIMIT 100
 
 **Expected Columns:** fedoraName (string), debianName (string), identity (URI)
 
-**Exercises:** PackageIdentity, hasIdentity, cross-distribution joins
+**Exercises:** PackageIdentity, isVersionOf, cross-distribution joins
 
 **Status:** PASS
 
@@ -600,22 +850,23 @@ LIMIT 100
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?packageName ?fedoraVersion ?debianVersion
 WHERE {
   ?identity a pkg:PackageIdentity ;
-            pkg:packageName ?packageName .
+            pkg:identityName ?packageName .
 
-  ?fedoraPkg pkg:hasIdentity ?identity ;
+  ?fedoraPkg pkg:isVersionOf ?identity ;
              pkg:partOfRelease ?fedoraRelease ;
              pkg:hasVersion/pkg:versionString ?fedoraVersion .
-  ?fedoraRelease pkg:distributionName "Fedora" ;
+  ?fedoraRelease ^pkg:hasRelease/rdfs:label "Fedora" ;
                  pkg:releaseVersion "43" .
 
-  ?debianPkg pkg:hasIdentity ?identity ;
+  ?debianPkg pkg:isVersionOf ?identity ;
              pkg:partOfRelease ?debianRelease ;
              pkg:hasVersion/pkg:versionString ?debianVersion .
-  ?debianRelease pkg:distributionName "Debian" ;
+  ?debianRelease ^pkg:hasRelease/rdfs:label "Debian" ;
                  pkg:releaseCodename "trixie" .
 
   FILTER(?fedoraVersion != ?debianVersion)
@@ -640,14 +891,15 @@ LIMIT 100
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?packageName
 WHERE {
   ?fedoraPkg pkg:packageName ?packageName ;
-             pkg:partOfRelease/pkg:distributionName "Fedora" .
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" .
   FILTER NOT EXISTS {
     ?debianPkg pkg:packageName ?packageName ;
-               pkg:partOfRelease/pkg:distributionName "Debian" .
+               pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" .
   }
 }
 ORDER BY ?packageName
@@ -669,13 +921,14 @@ LIMIT 500
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?projectName (COUNT(DISTINCT ?distro) AS ?distroCount) (GROUP_CONCAT(DISTINCT ?distroName; separator=", ") AS ?distros)
 WHERE {
   ?upstream a pkg:UpstreamProject ;
             pkg:projectName ?projectName .
-  ?package pkg:derivedFromProject ?upstream ;
-           pkg:partOfRelease/pkg:partOfDistribution ?distro .
+  ?package pkg:hasUpstreamProject ?upstream ;
+           pkg:partOfRelease/^pkg:hasRelease ?distro .
   ?distro rdfs:label ?distroName .
 }
 GROUP BY ?projectName
@@ -686,7 +939,7 @@ LIMIT 50
 
 **Expected Columns:** projectName (string), distroCount (integer), distros (string)
 
-**Exercises:** UpstreamProject, derivedFromProject, cross-distribution aggregation
+**Exercises:** UpstreamProject, hasUpstreamProject, cross-distribution aggregation
 
 **Status:** PASS
 
@@ -699,31 +952,32 @@ LIMIT 50
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?identity ?linuxName ?npmName ?pypiName ?brewName
 WHERE {
   ?identity a pkg:PackageIdentity .
 
   OPTIONAL {
-    ?linuxPkg pkg:hasIdentity ?identity ;
+    ?linuxPkg pkg:isVersionOf ?identity ;
               pkg:packageName ?linuxName ;
-              pkg:partOfRelease/pkg:distributionName ?linuxDist .
+              pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?linuxDist .
     FILTER(?linuxDist IN ("Fedora", "Debian", "Arch"))
   }
   OPTIONAL {
-    ?npmPkg pkg:hasIdentity ?identity ;
+    ?npmPkg pkg:isVersionOf ?identity ;
             pkg:packageName ?npmName ;
-            pkg:partOfRelease/pkg:ecosystem/rdfs:label "npm" .
+            pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem/rdfs:label "npm" .
   }
   OPTIONAL {
-    ?pypiPkg pkg:hasIdentity ?identity ;
+    ?pypiPkg pkg:isVersionOf ?identity ;
              pkg:packageName ?pypiName ;
-             pkg:partOfRelease/pkg:ecosystem/rdfs:label "PyPI" .
+             pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem/rdfs:label "PyPI" .
   }
   OPTIONAL {
-    ?brewPkg pkg:hasIdentity ?identity ;
+    ?brewPkg pkg:isVersionOf ?identity ;
              pkg:packageName ?brewName ;
-             pkg:partOfRelease/pkg:distributionName "Homebrew" .
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Homebrew" .
   }
 
   FILTER(BOUND(?linuxName) && (BOUND(?npmName) || BOUND(?pypiName) || BOUND(?brewName)))
@@ -733,7 +987,7 @@ LIMIT 100
 
 **Expected Columns:** identity (URI), linuxName, npmName, pypiName, brewName (strings or UNDEF)
 
-**Exercises:** PackageIdentity, hasIdentity, Ecosystem, cross-ecosystem joins
+**Exercises:** PackageIdentity, isVersionOf, Ecosystem, cross-ecosystem joins
 
 **Status:** PASS
 
@@ -756,10 +1010,10 @@ WHERE {
   ?binary a pkg:BinaryPackage ;
           pkg:packageName "openssl" ;
           pkg:partOfRelease/pkg:releaseVersion "43" ;
-          pkg:builtFromSource ?source .
+          pkg:builtFromSource ?source ;
+          pkg:wasBuiltBy ?buildActivity .
 
   ?buildActivity a pkg:BuildActivity ;
-                 pkg:wasBuiltBy ?buildActivity ;
                  prov:used ?source .
 
   OPTIONAL {
@@ -786,12 +1040,13 @@ LIMIT 1
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX slsa: <https://purl.org/packagegraph/ontology/slsa#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?packageName ?slsaLevel ?attestation
 WHERE {
   ?package a pkg:Package ;
            pkg:packageName ?packageName ;
-           pkg:partOfRelease/pkg:distributionName "Fedora" ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:partOfRelease/pkg:releaseVersion "43" ;
            slsa:hasProvenance ?attestation .
   ?attestation slsa:slsaLevel ?slsaLevel .
@@ -816,10 +1071,11 @@ ORDER BY DESC(?slsaLevel)
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?agent ?agentName (COUNT(?package) AS ?packageCount)
 WHERE {
-  ?package pkg:partOfRelease/pkg:distributionName "RHEL" ;
+  ?package pkg:partOfRelease/^pkg:hasRelease/rdfs:label "RHEL" ;
            pkg:partOfRelease/pkg:releaseVersion "9" ;
            prov:wasGeneratedBy ?buildActivity .
   ?buildActivity prov:wasAssociatedWith ?agent .
@@ -845,6 +1101,7 @@ ORDER BY DESC(?packageCount)
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?person ?name
 WHERE {
@@ -879,11 +1136,12 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (COUNT(DISTINCT ?direct) AS ?directCount) (COUNT(DISTINCT ?transitive) AS ?transitiveCount)
 WHERE {
   ?package pkg:packageName "python3" ;
-           pkg:partOfRelease/pkg:distributionName "Debian" ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" ;
            pkg:partOfRelease/pkg:releaseCodename "trixie" .
 
   OPTIONAL { ?package pkg:directlyDependsOn ?direct }
@@ -906,10 +1164,11 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?depType (COUNT(?dep) AS ?count)
 WHERE {
-  ?package pkg:partOfRelease/pkg:distributionName "Fedora" ;
+  ?package pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:partOfRelease/pkg:releaseVersion "43" ;
            pkg:hasDependency ?dep .
   ?dep pkg:dependencyType ?depType .
@@ -933,14 +1192,15 @@ ORDER BY DESC(?count)
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?sourcePkg ?targetPkg ?operator ?constraintVersion
 WHERE {
   ?sourcePkg pkg:hasDependency ?dep .
   ?dep pkg:dependencyTarget ?targetPkg ;
        pkg:hasVersionConstraint ?constraint .
-  ?constraint pkg:operator ?operator ;
-              pkg:constraintVersion ?constraintVersion .
+  ?constraint pkg:versionConstraintOperator ?operator ;
+              pkg:versionConstraintValue ?constraintVersion .
   ?sourcePkg pkg:packageName ?srcName .
   ?targetPkg pkg:packageName ?tgtName .
 }
@@ -949,7 +1209,7 @@ LIMIT 100
 
 **Expected Columns:** sourcePkg (URI), targetPkg (URI), operator (string), constraintVersion (string)
 
-**Exercises:** VersionConstraint, hasVersionConstraint, operator, constraintVersion
+**Exercises:** VersionConstraint, hasVersionConstraint, versionConstraintOperator, versionConstraintValue
 
 **Status:** PASS
 
@@ -962,11 +1222,12 @@ LIMIT 100
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?pkg1Name ?pkg2Name
 WHERE {
   ?pkg1 pkg:packageName ?pkg1Name ;
-        pkg:partOfRelease/pkg:distributionName "Arch Linux" ;
+        pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Arch Linux" ;
         pkg:directlyDependsOn ?pkg2 .
   ?pkg2 pkg:packageName ?pkg2Name ;
         pkg:directlyDependsOn ?pkg1 .
@@ -989,6 +1250,7 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?package ?packageName ?target
 WHERE {
@@ -1024,11 +1286,12 @@ LIMIT 50
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
 PREFIX met: <https://purl.org/packagegraph/ontology/metrics#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?language (COUNT(DISTINCT ?repo) AS ?repoCount)
 WHERE {
-  ?package pkg:partOfRelease/pkg:distributionName "Fedora" ;
-           pkg:derivedFromProject/pkg:hasRepository ?repo .
+  ?package pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
+           pkg:hasUpstreamProject/pkg:sourceCodeRepository ?repo .
   ?repo met:primaryLanguage ?language .
 }
 GROUP BY ?language
@@ -1038,7 +1301,7 @@ LIMIT 10
 
 **Expected Columns:** language (string), repoCount (integer)
 
-**Exercises:** Repository, hasRepository, Metrics module, primaryLanguage
+**Exercises:** Repository, sourceCodeRepository, Metrics module, primaryLanguage
 
 **Status:** PASS (if metrics data exists)
 
@@ -1052,12 +1315,13 @@ LIMIT 10
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?packageName ?commitHash ?branchName
 WHERE {
   ?package a pkg:SourcePackage ;
            pkg:packageName ?packageName ;
-           pkg:partOfRelease/pkg:distributionName "Debian" ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" ;
            pkg:partOfRelease/pkg:releaseCodename "trixie" ;
            pkg:derivedFromCommit ?commit .
   ?commit vcs:commitHash ?commitHash ;
@@ -1084,13 +1348,14 @@ LIMIT 100
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?packageName
 WHERE {
   ?set a pkg:PackageSet ;
        rdfs:label "BaseOS" .
   ?package pkg:memberOfPackageSet ?set ;
-           pkg:partOfRelease/pkg:distributionName "RHEL" ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "RHEL" ;
            pkg:partOfRelease/pkg:releaseVersion "9" ;
            pkg:packageName ?packageName .
 }
@@ -1143,12 +1408,13 @@ ORDER BY DESC(?sourceCount)
 ```sparql
 PREFIX deb: <https://purl.org/packagegraph/ontology/deb#>
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?section (COUNT(?package) AS ?count)
 WHERE {
   ?package a deb:BinaryDeb ;
            deb:section ?section ;
-           pkg:partOfRelease/pkg:distributionName "Debian" ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" ;
            pkg:partOfRelease/pkg:releaseCodename "trixie" .
 }
 GROUP BY ?section
@@ -1199,15 +1465,17 @@ WHERE {
 | Domain | CQ Count | Status: PASS | Status: BLOCKED |
 |--------|----------|--------------|-----------------|
 | Package Management (PM) | 10 | 10 | 0 |
-| Security / Vulnerability (SEC) | 8 | 3 | 5 |
+| Licensing (LIC) | 3 | 3 | 0 |
+| Security / Vulnerability (SEC) | 8 | 8 | 0 |
+| Temporal Analysis (TEMP) | 3 | 3 | 0 |
 | Cross-Distribution Analysis (XD) | 5 | 5 | 0 |
 | Provenance / Build (PROV) | 4 | 4 | 0 |
 | Repository / VCS (VCS) | 2 | 2 | 0 |
 | Package Set (SET) | 1 | 1 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 |
-| **TOTAL** | **33** | **28** | **5** |
+| **TOTAL** | **39** | **39** | **0** |
 
-**BLOCKED CQs:** All require OSV alignment (Task 3) and/or CVSS reification (Task 4). These are the queries that drive the schema changes — their failure is the specification.
+**Note:** All CQs now pass at the schema level. PASS status means the ontology vocabulary is sufficient to express the query. Actual result data depends on collector/enricher population.
 
 ---
 
@@ -1220,8 +1488,6 @@ The following CQs can be validated against local example files without Fuseki:
 - **CQ-PM-05** — packages by maintainer (uses Person/Maintainer examples)
 - **CQ-SEC-07** — patch provenance chain (uses security examples)
 - **CQ-DEP-03** — version constraints (uses dependency examples)
-
-BLOCKED CQs cannot be validated until schema changes are implemented.
 
 ---
 
@@ -1260,7 +1526,7 @@ BLOCKED CQs cannot be validated until schema changes are implemented.
 
 ### Properties Exercised (45+ properties)
 
-**Core:** packageName, hasVersion, versionString, partOfRelease, hasArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, operator, constraintVersion, hasIdentity, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, derivedFromProject, hasRepository, derivedFromCommit
+**Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, hasUpstreamProject, sourceCodeRepository, derivedFromCommit
 
 **Security:** cveId, osvId, hasAffectedRange, affectsEcosystem, affectsPackageName, rangeType, hasRangeEvent, eventType, eventVersion, hasCVSSScore, cvssVersion, baseScore, affectsPackage, patchAddresses, patchProducedVersion, patchedFrom, addressesVulnerability, hasCWE
 
