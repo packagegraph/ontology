@@ -56,6 +56,32 @@ validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
 
+# ─── Version Consistency ─────────────────────────────────────────────────────
+
+.PHONY: check-version
+check-version:
+	@echo "Checking version consistency across modules..."
+	@EXPECTED=$$(grep -m1 'owl:versionInfo' core/core.ttl | sed 's/.*"\(.*\)".*/\1/'); \
+	echo "Expected version: $$EXPECTED"; \
+	FAIL=0; \
+	for f in $(ONTOLOGY_FILES) references/alignments.ttl; do \
+		VER=$$(grep 'owl:versionInfo' "$$f" 2>/dev/null | sed 's/.*"\(.*\)".*/\1/'); \
+		VIRI=$$(grep 'owl:versionIRI' "$$f" 2>/dev/null | grep -o '/[0-9][^>]*' | sed 's|^/||'); \
+		if [ -z "$$VER" ]; then \
+			echo "  ✗ $$f — missing owl:versionInfo"; FAIL=1; \
+		elif [ "$$VER" != "$$EXPECTED" ]; then \
+			echo "  ✗ $$f — versionInfo '$$VER' != '$$EXPECTED'"; FAIL=1; \
+		elif [ -z "$$VIRI" ]; then \
+			echo "  ✗ $$f — missing owl:versionIRI"; FAIL=1; \
+		elif [ "$$VIRI" != "$$EXPECTED" ]; then \
+			echo "  ✗ $$f — versionIRI '$$VIRI' != '$$EXPECTED'"; FAIL=1; \
+		else \
+			echo "  ✓ $$f ($$VER)"; \
+		fi; \
+	done; \
+	if [ $$FAIL -eq 1 ]; then echo "Version check FAILED"; exit 1; fi; \
+	echo "All modules consistent at v$$EXPECTED"
+
 # ─── Statistics ───────────────────────────────────────────────────────────────
 
 .PHONY: stats
@@ -181,6 +207,7 @@ help:
 	@echo "  make validate-all    SHACL-validate every module"
 	@echo "  make validate-NAME   SHACL-validate one module"
 	@echo "                       (e.g., make validate-rpm)"
+	@echo "  make check-version   Verify owl:versionInfo/IRI consistency"
 	@echo "  make stats           Triple counts per module"
 	@echo "  make concat          Bundle all ontologies into x.ttl"
 	@echo "  make deploy          Full deployment (docs + serializations)"
