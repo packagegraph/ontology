@@ -453,13 +453,13 @@ sec: a owl:Ontology ;
     owl:imports pkg: ;
     dcterms:modified "2026-04-21"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/security/0.5.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/security/0.6.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/security/0.6.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/security/0.7.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/security/shapes> ;
 
-    owl:versionInfo "0.6.0" .
+    owl:versionInfo "0.7.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( pkg:Package sec:Vulnerability sec:SecurityAdvisory sec:AffectedRange sec:RangeEvent sec:CVSSScore sec:CVE sec:PatchActivity ) .

@@ -111,11 +111,11 @@ dq: a owl:Ontology ;
     owl:imports pkg: ;
     dcterms:modified "2026-04-21"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/dq/0.5.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/dq/0.6.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/dq/0.6.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/dq/0.7.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/dq/shapes> ;
 
-    owl:versionInfo "0.6.0" .
+    owl:versionInfo "0.7.0" .
 

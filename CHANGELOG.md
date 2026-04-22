@@ -5,6 +5,53 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-04-21
+
+Peer review remediation and academic hardening — resolves all findings from two independent ontological reviews.
+
+### Added
+- `pkg:identityName` — naming anchor for PackageIdentity (owl:FunctionalProperty)
+- `pkg:derivedFromCommit` — links Package to vcs:Commit for build traceability
+- `pkg:spdxId` — SPDX License List identifier on License class (was ghost property in SHACL)
+- `pkg:SoftwareAgent` — non-human contributor class (subClassOf prov:SoftwareAgent, disjointWith Person)
+- `ecosystems/redhat/redhat.shacl.ttl` — SHACL shapes for Red Hat module
+- 3 SKOS schemes: `sec:AdvisoryCategoryScheme`, `sec:EventTypeScheme`, `sec:RangeTypeScheme`
+- `sec:sev-none` concept added to existing SeverityScheme
+- 6 new competency questions: CQ-LIC-01/02/03 (license analysis), CQ-TEMP-01/02/03 (temporal analysis)
+- CQ-PM-03b — VirtualPackage UNION query demonstrating provides/providesCapability bifurcation
+- `owl:versionIRI` on all 35 module headers
+- `owl:priorVersion`, `dcterms:modified`, `rdfs:seeAlso` (SHACL shapes) on all headers
+- `dcterms:creator` as FOAF Organization IRI (was opaque string)
+- `<https://packagegraph.github.io/>` entity defined as foaf:Organization in core.ttl
+- Design decisions: DD-VirtualPackage, DD-crossDistributionAlternative, AR-2
+
+### Changed (BREAKING)
+- **`equivalentInDistribution` → `crossDistributionAlternative`** — renamed to signal non-transitive correspondence
+- **`heldBy`, `maintainedBy`, `hasContributor`, `maintains`, `holdsRole`** — range/domain widened from `pkg:Person` to `prov:Agent`
+- **`partOfRelease`** — removed `rdfs:subPropertyOf partOfDistribution` (range inference trap)
+- **`advisorySeverity`, `advisoryType`, `eventType`, `rangeType`** — DatatypeProperty → ObjectProperty with SKOS concept ranges
+- **All 6 CVSS score properties** — `xsd:float` → `xsd:decimal` (IEEE 754 precision fix)
+- **`deb:buildsFrom`, `pacman:builtFrom`** — `owl:equivalentProperty` downgraded to `rdfs:seeAlso`
+- **`pkg:Package`** — removed `owl:minCardinality 1` on `hasVersion` (PhantomPackage compatibility)
+- **`pkg:Repository`** — removed `owl:minCardinality 1` on `contains` (empty repo compatibility)
+- **`pkg:Package rdfs:subClassOf schema:SoftwareApplication`** — weakened to `rdfs:seeAlso`
+- **`contributesTo`/`hasContributor`** — removed `owl:inverseOf` (OntoClean role/identity collapse)
+- **`hasAccount`** — domain narrowed from Person+Contributor to Person only
+- **`cpan:CPANAuthor`** — subClassOf changed from Contributor to ContributorAccount
+- SHACL: ContributorShape, MaintainerShape, PackageShape updated for prov:Agent
+- SHACL: CPAN DistributionShape authorPAUSEID moved to new CPANAuthorShape
+- CQ suite: all 39 queries rewritten to use actual vocabulary (zero non-existent predicates)
+- CQ suite: 5 BLOCKED security CQs unblocked (schema now complete)
+- CQ suite: graph paths unified to use `^pkg:hasRelease` inverse traversal
+
+### Fixed
+- Debian git package example using Fedora maintainer (copy-paste error since initial commit)
+- CQ-PROV-01 wasBuiltBy self-referencing query
+- SPARQL PREFIX rdfs: missing from 40 query blocks
+- maintainedBy examples pointing at Maintainer role instead of Person
+
+---
+
 ## [0.6.0] - 2026-04-20
 
 Academic readiness release — comprehensive semantic audit and remediation across all 34 modules.
