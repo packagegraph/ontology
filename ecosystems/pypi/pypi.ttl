@@ -160,11 +160,20 @@ pypi:PythonPackage a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 pypi: a owl:Ontology ;
+    rdfs:isDefinedBy pypi: ;
     rdfs:label "PyPI Package Ontology"@en ;
     dcterms:abstract "Models PyPI packages including wheels, sdists, classifiers, extras, entry points, and PEP 517 build backends. Captures the Python-specific packaging metadata from pyproject.toml, setup.py, and PKG-INFO." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Python packages distributed through PyPI"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/pypi/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/pypi/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/pypi/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

@@ -146,11 +146,20 @@ conda:CondaPackage a owl:Class ;
     rdfs:subClassOf pkg:BinaryPackage .
 
 conda: a owl:Ontology ;
+    rdfs:isDefinedBy conda: ;
     rdfs:label "Conda Package Ontology"@en ;
     dcterms:abstract "Models the Conda ecosystem including packages from Anaconda defaults and conda-forge channels, environments, recipes, feedstocks, and noarch packages. Captures build strings, build numbers, and subdirectory/platform targeting." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Conda packages, channels, and environments"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/conda/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/conda/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/conda/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

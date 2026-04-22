@@ -117,11 +117,20 @@ apk:ApkPackage a owl:Class ;
     rdfs:subClassOf pkg:BinaryPackage .
 
 apk: a owl:Ontology ;
+    rdfs:isDefinedBy apk: ;
     rdfs:label "Alpine APK Package Ontology"@en ;
     dcterms:abstract "Models Alpine Linux packages including the APKINDEX format, abuild build system, virtual packages, install-if triggers, and the musl libc distinction. Alpine is the foundation of most container base images." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Alpine Linux packages and the apk-tools ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/apk/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/apk/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/apk/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

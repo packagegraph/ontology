@@ -144,11 +144,20 @@ snap:SnapPackage a owl:Class ;
     rdfs:subClassOf pkg:BinaryPackage .
 
 snap: a owl:Ontology ;
+    rdfs:isDefinedBy snap: ;
     rdfs:label "Snap Package Ontology"@en ;
     dcterms:abstract "Models the Snap ecosystem including confinement levels, interfaces (plugs and slots), channels/tracks, bases, and the Snap Store. Captures the security model and automatic update mechanism unique to Snaps." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Snap packages and the Snap Store"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/snap/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/snap/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/snap/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

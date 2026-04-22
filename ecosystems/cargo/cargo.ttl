@@ -153,11 +153,20 @@ cargo:Crate a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 cargo: a owl:Ontology ;
+    rdfs:isDefinedBy cargo: ;
     rdfs:label "Cargo Package Ontology"@en ;
     dcterms:abstract "Models Rust crates including features, editions, targets (lib/bin/test/bench), build scripts, categories, and the Cargo.lock dependency resolution. Captures Rust-specific concepts like feature flags and conditional compilation." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Rust crates from crates.io"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/cargo/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/cargo/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/cargo/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

@@ -85,11 +85,20 @@ hackage:HackagePackage a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 hackage: a owl:Ontology ;
+    rdfs:isDefinedBy hackage: ;
     rdfs:label "Hackage Package Ontology"@en ;
     dcterms:abstract "Models Hackage packages including Cabal metadata, GHC version compatibility, categories, stability levels, and build-depends relationships. Instances are dual-typed as both pkg:Package and hackage:HackagePackage." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Hackage packages and the Haskell ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/hackage/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/hackage/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/hackage/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

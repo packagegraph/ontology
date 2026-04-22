@@ -569,14 +569,23 @@ brew:Formula a owl:Class ;
         pkg:Package .
 
 brew: a owl:Ontology ;
+    rdfs:isDefinedBy brew: ;
     rdfs:label "Homebrew Package Ontology"@en ;
     dcterms:abstract "The Homebrew extension models macOS and Linuxbrew package management. It distinguishes formulae (source-built CLI tools) from casks (pre-built GUI applications), models taps (third-party repositories), bottles (pre-compiled binaries), and build specifications. Dependency types include build, test, recommended, and optional." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling Homebrew packages, formulae, casks, taps, and macOS application management including bottles, dependencies, and build specifications." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Homebrew Package Ontology" ;
     rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/homebrew/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/homebrew/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/homebrew/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

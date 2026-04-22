@@ -566,15 +566,24 @@ rpm:RPMPackage a owl:Class ;
         pkg:Package .
 
 rpm: a owl:Ontology ;
+    rdfs:isDefinedBy rpm: ;
     rdfs:label "RPM Package Ontology"@en ;
     dcterms:abstract "The RPM extension specializes PackageGraph Core for Fedora, RHEL, CentOS, and other RPM-based distributions. It models NEVRA (Name-Epoch-Version-Release-Architecture) identifiers, source RPMs, RPM groups, build changelogs, and file attributes. Packages are dual-typed as both pkg:BinaryPackage and rpm:BinaryRPM, enabling unified queries across RPM and Debian ecosystems." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling RPM packages, YUM/DNF repositories, NEVR identifiers, and RPM-specific metadata including build information, changelogs, and file attributes." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "RPM Package Ontology" ;
     rdfs:comment "Ontology for representing RPM packages and YUM/DNF repositories"@en ;
     owl:imports pkg:,
         vcs: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/rpm/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/rpm/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/rpm/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

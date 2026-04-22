@@ -124,11 +124,20 @@ flatpak:FlatpakApp a owl:Class ;
     rdfs:subClassOf pkg:BinaryPackage .
 
 flatpak: a owl:Ontology ;
+    rdfs:isDefinedBy flatpak: ;
     rdfs:label "Flatpak Application Ontology"@en ;
     dcterms:abstract "Models Flatpak's sandboxed application distribution including application IDs, runtimes, SDK extensions, finish-args (sandbox permissions), and Flathub remotes. Captures the application-level packaging model distinct from system-level package managers." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Flatpak applications, runtimes, and remotes"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/flatpak/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/flatpak/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/flatpak/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

@@ -610,14 +610,23 @@ nix:Derivation a owl:Class ;
         pkg:SourcePackage .
 
 nix: a owl:Ontology ;
+    rdfs:isDefinedBy nix: ;
     rdfs:label "Nix Package Ontology"@en ;
     dcterms:abstract "The Nix extension models the purely functional Nix package management ecosystem. It captures Nix derivations, store paths, flakes, build phases (configure, build, install, check), and language-specific builders (stdenv.mkDerivation, buildPythonPackage, buildGoModule). The ontology represents Nix's content-addressable store and reproducible build model." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling Nix packages, derivations, expressions, flakes, and the Nix package management ecosystem including store paths, build phases, and language-specific builders." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Nix Package Ontology" ;
     rdfs:comment "Ontology for representing Nix packages, derivations, and expressions"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/nix/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/nix/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/nix/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

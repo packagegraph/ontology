@@ -111,12 +111,21 @@ cran:CranRepository a owl:Class ;
     rdfs:subClassOf pkg:Repository .
 
 cran: a owl:Ontology ;
+    rdfs:isDefinedBy cran: ;
     rdfs:label "CRAN Package Ontology"@en ;
     dcterms:abstract "Models CRAN (Comprehensive R Archive Network) packages including compilation requirements, system dependencies, priority levels, Bioconductor views, and R-specific dependency types (Depends, Imports, Suggests, LinkingTo, Enhances). Instances are dual-typed as both pkg:Package and cran:CranPackage." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing CRAN packages and the R ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/cran/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/cran/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/cran/shapes> ;
+
     owl:versionInfo "0.6.0" .
 
 cran:CranPackage a owl:Class ;

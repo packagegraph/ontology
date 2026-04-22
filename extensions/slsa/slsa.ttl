@@ -269,10 +269,11 @@ slsa:ProvenanceAttestation a owl:Class ;
         prov:Entity .
 
 slsa: a owl:Ontology ;
+    rdfs:isDefinedBy slsa: ;
     rdfs:label "SLSA Supply Chain Security Ontology"@en ;
     dcterms:abstract "The SLSA ontology models supply chain provenance according to the SLSA v1.0 specification. It provides classes for provenance attestations, build environments, and SLSA level compliance, grounded in PROV-O. Attestations link to pkg:BuildActivity and pkg:DataSnapshot, enabling SPARQL queries such as finding all packages with SLSA L3 provenance or identifying packages built on unattested infrastructure." ;
     dcterms:created "2026-04-13"^^xsd:date ;
-    dcterms:creator "PackageGraph Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "Models SLSA provenance attestations, build levels, builder identity, and source-to-artifact verification chains for software supply chain security." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "SLSA Supply Chain Security Ontology" ;
@@ -280,5 +281,13 @@ slsa: a owl:Ontology ;
     owl:imports pkg:,
         sec:,
         vcs: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/slsa/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/slsa/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/slsa/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

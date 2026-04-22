@@ -125,11 +125,20 @@ gomod:GoModule a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 gomod: a owl:Ontology ;
+    rdfs:isDefinedBy gomod: ;
     rdfs:label "Go Modules Ontology"@en ;
     dcterms:abstract "Models Go modules including module paths, semantic import versioning, go.sum integrity hashes, replace/exclude directives, and the Go module proxy system. Captures the distinction between modules (versioned collections) and packages (importable units)." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Go modules and packages"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/gomod/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/gomod/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/gomod/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

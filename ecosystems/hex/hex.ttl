@@ -70,11 +70,20 @@ hex:HexPackage a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 hex: a owl:Ontology ;
+    rdfs:isDefinedBy hex: ;
     rdfs:label "Hex Package Ontology"@en ;
     dcterms:abstract "Models Hex.pm packages including Elixir/Erlang version requirements, build tools, retirement status, and hex-specific metadata. Instances are dual-typed as both pkg:Package and hex:HexPackage." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Hex packages and the Elixir/Erlang ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/hex/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/hex/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/hex/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

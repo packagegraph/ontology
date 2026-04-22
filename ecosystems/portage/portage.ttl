@@ -172,11 +172,20 @@ portage:Ebuild a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 portage: a owl:Ontology ;
+    rdfs:isDefinedBy portage: ;
     rdfs:label "Gentoo Portage Ontology"@en ;
     dcterms:abstract "Models Gentoo's source-based packaging system including ebuilds, USE flags, slots/subslots, keyword masking, EAPI versions, eclasses, and overlays. Gentoo's compile-from-source model with granular USE flag customization is unique among Linux distributions." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Gentoo packages, ebuilds, and the Portage system"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/portage/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/portage/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/portage/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

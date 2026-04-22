@@ -434,14 +434,23 @@ choco:ChocolateyPackage a owl:Class ;
         pkg:BinaryPackage .
 
 choco: a owl:Ontology ;
+    rdfs:isDefinedBy choco: ;
     rdfs:label "Chocolatey Package Ontology"@en ;
     dcterms:abstract "The Chocolatey extension models Windows package management through Chocolatey and NuGet. It captures NuSpec metadata, PowerShell install/uninstall scripts, installer types (MSI, EXE, InnoSetup), registry keys, and shim generation, enabling cross-platform package comparisons between Windows and Linux ecosystems." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling Chocolatey packages, NuGet packages, PowerShell scripts, and Windows software management including installation scripts, dependencies, and package metadata." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Chocolatey Package Ontology" ;
     rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/chocolatey/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/chocolatey/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/chocolatey/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

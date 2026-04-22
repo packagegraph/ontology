@@ -183,11 +183,20 @@ npm:NpmPackage a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 npm: a owl:Ontology ;
+    rdfs:isDefinedBy npm: ;
     rdfs:label "NPM Package Ontology"@en ;
     dcterms:abstract "Models NPM registry packages including scoped packages, semantic version ranges, scripts, peer dependencies, workspaces, and the package-lock.json dependency tree. Instances are dual-typed as both pkg:Package and npm:NpmPackage." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing NPM packages and the Node.js ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/npm/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/npm/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/npm/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

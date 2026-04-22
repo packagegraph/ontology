@@ -91,6 +91,7 @@ dq:DataQualityIssue a owl:Class ;
     rdfs:isDefinedBy dq: .
 
 dq: a owl:Ontology ;
+    rdfs:isDefinedBy dq: ;
     rdfs:label "Data Quality Ontology"@en ;
     dcterms:abstract """The Data Quality (DQ) ontology provides a structured way to record
         data quality issues discovered during ETL collection and enrichment.
@@ -103,10 +104,18 @@ dq: a owl:Ontology ;
         - Tracking invalid homepage URLs across distributions
         - Monitoring data quality trends over time""" ;
     dcterms:created "2026-04-14"^^xsd:date ;
-    dcterms:creator "PackageGraph Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Data Quality Ontology" ;
     rdfs:comment "Ontology for recording and querying data quality issues in the PackageGraph knowledge graph"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/dq/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/dq/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/dq/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

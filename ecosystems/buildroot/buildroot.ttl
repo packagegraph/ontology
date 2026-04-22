@@ -189,11 +189,20 @@ buildroot:BuildrootPackage a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 buildroot: a owl:Ontology ;
+    rdfs:isDefinedBy buildroot: ;
     rdfs:label "Buildroot Build System Ontology"@en ;
     dcterms:abstract "Models the Buildroot embedded Linux build system, including package definitions (.mk files), Kconfig-based configuration, download sites, install staging/target directives, and defconfig board configurations. Buildroot is optimized for minimal embedded Linux images with reproducible builds. Packages are defined via Makefile syntax with <PKGNAME>_ prefixed variables." ;
     dcterms:created "2026-04-17"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Buildroot packages and build configurations"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/buildroot/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/buildroot/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/buildroot/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

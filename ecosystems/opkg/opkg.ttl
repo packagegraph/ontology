@@ -254,11 +254,20 @@ opkg:OpkgPackage a owl:Class ;
     rdfs:subClassOf pkg:BinaryPackage .
 
 opkg: a owl:Ontology ;
+    rdfs:isDefinedBy opkg: ;
     rdfs:label "OpenWRT Package Ontology"@en ;
     dcterms:abstract "Models the OpenWRT/LEDE embedded Linux distribution for routers and IoT devices, including package feeds (packages, luci, routing, telephony), Makefile-based package definitions, kernel modules (kmod-*), UCI configuration integration, targets/subtargets for hardware, and opkg package format. OpenWRT Makefiles can define multiple sub-packages from a single source." ;
     dcterms:created "2026-04-17"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing OpenWRT packages and feed repositories"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/opkg/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/opkg/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/opkg/shapes> ;
+
     owl:versionInfo "0.6.0" .
 
