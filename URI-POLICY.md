@@ -71,7 +71,7 @@ Semantics locked. Name may change before 1.0 with a deprecation period (the old 
 
 **Classes:** `DataSnapshot`, `PackageSet`, `UpstreamProject`, `BuildActivity`, `MetaPackage`, `VirtualPackage`
 
-**Properties:** `snapshotSource`, `snapshotTimestamp`, `snapshotGraph`, `isCurrent`, `hasUpstreamProject`, `equivalentInDistribution`
+**Properties:** `snapshotSource`, `snapshotTimestamp`, `snapshotGraph`, `isCurrent`, `hasUpstreamProject`, `crossDistributionAlternative`
 
 ### Experimental
 

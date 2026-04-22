@@ -30,16 +30,18 @@ pkg:Maintainer  a owl:Class ;
 
 pkg:heldBy  a owl:ObjectProperty ;
     rdfs:domain pkg:Contributor ;
-    rdfs:range pkg:Person .
-    # Links the role assignment to the person holding it
+    rdfs:range prov:Agent .
+    # Links the role assignment to the agent (Person or SoftwareAgent) holding it
 ```
 
 **Why not make Maintainer a subclass of foaf:Person?** In OntoClean methodology, a class that is anti-rigid (instances can lose membership without ceasing to exist) cannot subsume a class that is rigid (instances cannot lose membership). A person can stop being a maintainer — the maintenance role ends, but the person continues to exist. Making Maintainer a subclass of Person would violate this constraint and cause a reasoner to infer that every Maintainer IS a Person, which conflates identity with role.
 
+**Non-human contributors:** The `heldBy` range was widened from `pkg:Person` to `prov:Agent` (v0.6.0) to support automated bot maintainers (Renovate, Dependabot, CI/CD pipelines). `pkg:SoftwareAgent rdfs:subClassOf prov:SoftwareAgent` is declared `owl:disjointWith :Person`, preserving OntoClean rigidity.
+
 **Traversal patterns:**
 
-- **Convenience (Person → Package):** `pkg:maintainedBy` — direct link from Package to Person who maintains it
-- **Detail (Person → Role → Package):** `pkg:hasMaintenanceRole` → Maintainer → `pkg:heldBy` → Person — captures role metadata (start date, role type)
+- **Convenience (Agent → Package):** `pkg:maintainedBy` — direct link from Package to the agent (Person or SoftwareAgent) maintaining it
+- **Detail (Agent → Role → Package):** `pkg:hasMaintenanceRole` → Maintainer → `pkg:heldBy` → Agent — captures role metadata (start date, role type)
 - **FOAF integration:** Only `pkg:Person` is `owl:equivalentClass foaf:Person`. Contributor and Maintainer are pure role assignments with no FOAF alignment.
 
 **Historical note:** An early version of `references/alignments.ttl` incorrectly declared `pkg:Maintainer rdfs:subClassOf schema:Person`. This was identified as an OntoClean violation in the v0.6.0 audit and corrected to `pkg:Person rdfs:subClassOf schema:Person`.
@@ -82,6 +84,18 @@ pkg:heldBy  a owl:ObjectProperty ;
 **Why better than SKOS:** Properties ARE the taxonomy. No parallel vocabulary needed.
 
 **Trade-off:** Requires OWL 2 punning (using property URIs as individuals). This is explicitly legal in OWL 2 but not in OWL 1.
+
+---
+
+### AR-2: Remove contributesTo/hasContributor Inverse Axiom
+
+**Audit Recommendation:** The `owl:inverseOf` between `:contributesTo` (domain: Contributor, range: Repository) and `:hasContributor` (domain: Repository, range: prov:Agent) causes OntoClean role/identity collapse. OWL inverse semantics infer that if X contributesTo Y, then Y hasContributor X — but hasContributor ranges over prov:Agent, so X is inferred as both Contributor AND Agent.
+
+**Decision:** ADOPTED — removed `owl:inverseOf :hasContributor` from `:contributesTo`.
+
+**Rationale:** The two properties have deliberately different ranges (Contributor vs prov:Agent, which encompasses both Person and SoftwareAgent) reflecting the OntoClean separation. Making them formal inverses forces OWL to collapse the distinction. Both properties are retained as independent convenience shortcuts.
+
+**Additional fix:** Removed `:Contributor` from `:hasAccount` domain (kept only `:Person`). In OntoClean, accounts belong to persons, not roles. Multiple rdfs:domain in OWL means the subject is inferred as ALL listed types (intersection), so listing both Contributor and Person as domains caused the same role/identity collapse.
 
 ---
 
@@ -198,3 +212,66 @@ pkg:heldBy  a owl:ObjectProperty ;
 **Exception acknowledged:** Package descriptions ARE natural language text. Debian and Ubuntu maintain dedicated localisation teams (`debian-l10n-english`, `ubuntu-translators`) providing meticulously translated descriptions for packages like `apache2`, `nginx`, and `postgresql`. The RDF literal language tag mechanism (`pkg:description "..."@fr`, `pkg:description "..."@de`) remains **available** for collectors that ingest such translated metadata. The ontology does not prohibit language-tagged description literals — it simply does not mandate them for the monolingual English metadata that comprises 99%+ of current production data.
 
 **Collector flexibility:** Collectors are free to emit `pkg:description "Le serveur web Apache"@fr` alongside `pkg:description "Apache web server"@en` when multilingual metadata is available. The ontology's schema does not constrain this — RDF's language tag mechanism is always available at the data layer.
+
+---
+
+## DD-VirtualPackage: provides vs providesCapability Bifurcation
+
+**Pattern:** Two distinct property paths for dependency satisfaction — `provides` (Package→Package) for virtual packages, `providesCapability` (Package→Capability) for named capabilities.
+
+**Why the split:**
+
+`VirtualPackage` is modeled as `rdfs:subClassOf :Capability`, not `rdfs:subClassOf :Package`. The ontological rationale (OntoClean): virtual packages are abstract capability promises without installable artifacts (no size, no checksum, no files). Real packages (`pkg:Package`) are concrete installable units.
+
+This creates a **query bifurcation**: dependency resolution queries must traverse both paths to catch all satisfaction mechanisms.
+
+**When to use each:**
+
+| Predicate | Domain | Range | Use Case |
+|---|---|---|---|
+| `provides` | Package | Package | Package X provides Package Y (e.g., `postfix` provides `mail-transport-agent` in Debian) — Y is a VirtualPackage that is ALSO typed as Capability |
+| `providesCapability` | Package | Capability | Package X provides shared library capability (e.g., `openssl` provides `libssl.so.3`) — capability is a named library, not a package |
+
+**SPARQL pattern for comprehensive dependency satisfaction:**
+
+```sparql
+SELECT DISTINCT ?provider
+WHERE {
+  {
+    ?target pkg:packageName "mail-transport-agent" .
+    ?provider pkg:provides ?target .
+  }
+  UNION
+  {
+    ?capability pkg:capabilityName "mail-transport-agent" .
+    ?provider pkg:providesCapability ?capability .
+  }
+}
+```
+
+See CQ-PM-03b for a working example.
+
+**Historical note:** An early version modeled VirtualPackage as a subclass of Package. This was rejected during the OntoClean audit because virtual packages lack the rigid properties (size, checksum) that define Package instances. Moving them to Capability eliminated the need for `owl:minCardinality 0` overrides on Package restrictions.
+
+---
+
+## DD-crossDistributionAlternative: Renamed from equivalentInDistribution
+
+**Rationale for rename:** Academic peer review feedback flagged that a property named `equivalentInDistribution` which is documented as **not transitive** creates reviewer confusion. In OWL/RDF semantics, "equivalent" strongly implies transitivity (A≡B and B≡C → A≡C), yet cross-distribution package equivalence is context-dependent and should NOT be transitive.
+
+**Why non-transitive:**
+
+Cross-distribution package correspondence is an approximation, not formal equivalence:
+- Debian `libssl-dev` ≈ Fedora `openssl-devel` (both provide OpenSSL development headers)
+- Fedora `openssl-devel` ≈ Alpine `openssl-dev` (same upstream, different ABI)
+- But Debian `libssl-dev` and Alpine `openssl-dev` may differ in ABI version, patch level, or enabled features
+
+Transitive closure would incorrectly infer that Debian and Alpine packages are equivalent just because they both correspond to the Fedora package. The property is **symmetric** (if A~B then B~A) but intentionally **not transitive**.
+
+**Property characteristics:**
+- `owl:SymmetricProperty` — yes
+- `owl:TransitiveProperty` — NO (intentionally omitted)
+
+**Renamed:** `crossDistributionAlternative` signals correspondence/alternative rather than formal equivalence.
+
+**Backward compatibility:** The rename is a breaking change from v0.5.x to v0.6.0, documented in CHANGELOG.md and tracked via `owl:priorVersion <.../0.5.0>` declarations.

@@ -232,15 +232,16 @@ ontology/
 
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?fedoraName ?debianName ?identity WHERE {
   ?identity a pkg:PackageIdentity .
-  ?fedoraPkg pkg:hasIdentity ?identity ;
+  ?fedoraPkg pkg:isVersionOf ?identity ;
              pkg:packageName ?fedoraName ;
-             pkg:partOfRelease/pkg:distributionName "Fedora" .
-  ?debianPkg pkg:hasIdentity ?identity ;
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" .
+  ?debianPkg pkg:isVersionOf ?identity ;
              pkg:packageName ?debianName ;
-             pkg:partOfRelease/pkg:distributionName "Debian" .
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Debian" .
   FILTER(?fedoraName != ?debianName)
 }
 ```
@@ -284,7 +285,7 @@ See CQ-PROV-01 for the full provenance chain query (upstream commit → source �
 
 ### OWL 2 Features
 
-- **Property characteristics:** Symmetric (conflicts, equivalentInDistribution), Asymmetric (replaces, builtFromSource), Irreflexive (enforced via SHACL SPARQL, not OWL characteristic for chain-derived properties)
+- **Property characteristics:** Symmetric (conflicts, crossDistributionAlternative), Asymmetric (replaces, builtFromSource), Irreflexive (enforced via SHACL SPARQL, not OWL characteristic for chain-derived properties)
 - **Property chain axioms:** directlyDependsOn derived from hasDependency → dependencyTarget
 - **Disjointness constraints:** owl:AllDisjointClasses groups prevent type confusion
 - **Punning:** Property URIs used as individuals in dependencyType values

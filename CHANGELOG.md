@@ -26,6 +26,18 @@ Academic readiness release — comprehensive semantic audit and remediation acro
 - **Production validation framework:** SHACL validation script for Fuseki data
 
 ### Changed
+- **BREAKING: equivalentInDistribution → crossDistributionAlternative** — renamed to signal non-transitive correspondence assertion (symmetric but intentionally NOT transitive). The old name "equivalent" misleadingly implied transitivity.
+- **BREAKING: heldBy, maintainedBy, hasContributor, maintains** — range/domain widened from pkg:Person to prov:Agent to support non-human contributors (bots, CI pipelines). pkg:SoftwareAgent class added (disjoint with Person).
+- **BREAKING: partOfRelease** — removed rdfs:subPropertyOf partOfDistribution (range inference trap: DistributionRelease ≠ Distribution)
+- **Package cardinality:** removed owl:minCardinality 1 on hasVersion from Package (PhantomPackage compatibility)
+- **Repository cardinality:** removed owl:minCardinality 1 on contains (empty repository compatibility)
+- **contributesTo/hasContributor:** removed owl:inverseOf (OntoClean role/identity collapse fix)
+- **hasAccount:** domain narrowed from Person+Contributor to Person only
+- **Security properties:** advisorySeverity, advisoryType, eventType, rangeType changed from DatatypeProperty (xsd:string) to ObjectProperty (skos:Concept)
+- **CVSS scores:** all 6 score properties changed from xsd:float to xsd:decimal (IEEE 754 precision fix)
+- **deb:buildsFrom, pacman:builtFrom:** owl:equivalentProperty downgraded to rdfs:seeAlso (incompatible ranges)
+- **Package → SoftwareApplication:** rdfs:subClassOf weakened to rdfs:seeAlso in alignments.ttl
+- **CPANAuthor:** subClassOf changed from Contributor to ContributorAccount
 - **Package definition:** weakened from "can be installed" to "represented in repository metadata" (OntoClean fix)
 - **conflicts:** now owl:SymmetricProperty; isConflictWith removed (redundant)
 - **replaces:** added owl:AsymmetricProperty
