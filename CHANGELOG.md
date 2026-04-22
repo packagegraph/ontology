@@ -57,7 +57,7 @@ Peer review remediation and academic hardening — resolves all findings from tw
 Academic readiness release — comprehensive semantic audit and remediation across all 34 modules.
 
 ### Added
-- **Competency questions:** 33 CQs formalized as SPARQL queries across 7 domains
+- **Competency questions:** CQs formalized as SPARQL queries across multiple domains
 - **OSV vulnerability model:** AffectedRange, RangeEvent, CVSSScore classes with full OSV schema alignment
 - **Properties-as-taxonomy:** dependencyType uses property URIs (OWL 2 punning) instead of magic strings
 - **6 new dependency shortcut properties:** recommends, suggests, enhances, supplements, checkRequires, preDepends

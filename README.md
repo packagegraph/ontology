@@ -27,8 +27,8 @@ PackageGraph is an **analytical ontology** designed for research queries that SB
 
 ```bash
 # Validate all ontology modules
-make lint                  # Parse all 77 .ttl files
-make validate-all          # Run SHACL validation on 30 modules
+make lint                  # Parse all .ttl files
+make validate-all          # Run SHACL validation on all modules
 
 # Statistics
 make stats                 # Show triple counts per module
@@ -53,17 +53,17 @@ uv pip install rdflib pyshacl
 
 ## What's New in v0.6.0
 
-**Academic readiness release** — journal-level semantic rigor across all 34 modules:
+**Academic readiness release** — journal-level semantic rigor across all modules:
 
-- ✅ **33 competency questions** formalized as SPARQL (7 domains) → [docs/competency-questions.md](docs/competency-questions.md)
+- ✅ **Competency questions** formalized as SPARQL across multiple domains → [docs/competency-questions.md](docs/competency-questions.md)
 - ✅ **OSV-aligned vulnerability model** (AffectedRange, RangeEvent, CVSSScore) → aligned with OSV schema 1.6
 - ✅ **Properties-as-taxonomy** for dependencyType (OWL 2 punning) → harmonizes dual-model (reified + shortcut)
 - ✅ **OntoClean compliance** (rigid/anti-rigid distinction, Person/Maintainer role model)
 - ✅ **OWL 2 DL decidability** (SROIQ violations eliminated, property chain axioms)
 - ✅ **Upper ontology alignment** (PROV-O, FOAF, SPDX, DOAP) → lightweight vocabulary integration
-- ✅ **29 SHACL shapes** (100% core coverage) → structural integrity validation
-- ✅ **3,568 @en language tags** on schema definitions → internationalization support
-- ✅ **1,161 rdfs:isDefinedBy** declarations → Linked Data dereferenceability
+- ✅ **SHACL shapes** with full core coverage → structural integrity validation
+- ✅ **@en language tags** on schema definitions → internationalization support
+- ✅ **rdfs:isDefinedBy** on all entities → Linked Data dereferenceability
 - ✅ **Design decisions documented** → [docs/design-decisions.md](docs/design-decisions.md)
 - ✅ **Evaluation comparison** → [vs SPDX/CycloneDX/OSV](docs/reports/2026-04-20-evaluation-comparison.md)
 
@@ -167,9 +167,9 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 ### Validation & Quality
 
-- **30 modules with SHACL shapes** — 98 NodeShapes enforce structural constraints
-- **Validation passing** — all 77 .ttl files parse, all 30 modules SHACL valid
-- **33 competency questions** — specification of what the ontology can answer
+- **SHACL shapes across all modules** — NodeShapes enforce structural constraints
+- **Validation passing** — all modules lint and SHACL validate (`make lint && make validate-all`)
+- **Competency questions** — formal specification of what the ontology can answer → [docs/competency-questions.md](docs/competency-questions.md)
 - **Production validation framework** — scripts/production_shacl_validate.py for Fuseki data
 
 ---
@@ -211,7 +211,7 @@ ontology/
 │   └── fix_ecosystem_patterns.py   # Ecosystem anti-pattern remediation
 │
 ├── docs/
-│   ├── competency-questions.md     # 33 CQs as formal specification
+│   ├── competency-questions.md     # CQs as formal specification
 │   ├── design-decisions.md         # Adopted patterns + documented rejections
 │   └── reports/
 │       ├── 2026-04-20-evaluation-comparison.md  # vs SPDX/CycloneDX/OSV
@@ -246,7 +246,7 @@ SELECT ?fedoraName ?debianName ?identity WHERE {
 }
 ```
 
-**Answer:** PackageIdentity enables cross-distribution joins. See [33 competency questions](docs/competency-questions.md) for more examples.
+**Answer:** PackageIdentity enables cross-distribution joins. See [competency questions](docs/competency-questions.md) for more examples.
 
 ### 2. Vulnerability Impact Analysis
 
@@ -292,8 +292,8 @@ See CQ-PROV-01 for the full provenance chain query (upstream commit → source �
 
 ### SHACL Validation
 
-- **98 NodeShapes** across core + security modules
-- **100% core class coverage** (all 36 core classes have shapes)
+- **NodeShapes** across core, security, and ecosystem modules
+- **Full core class coverage** — all core classes have shapes
 - **SKOS enforcement:** sh:in constraints on enumerations (advisorySeverity, advisoryType, dependencyType)
 - **SPARQL constraints:** IrreflexiveDependsOnShape, DependencyConsistencyShape
 - **All examples pass validation** — pyshacl with RDFS inference
@@ -353,7 +353,7 @@ uv run python scripts/production_shacl_validate.py \
 ## Documentation
 
 - **[CHANGELOG.md](CHANGELOG.md)** — version history and release notes
-- **[Competency Questions](docs/competency-questions.md)** — 33 CQs as formal specification
+- **[Competency Questions](docs/competency-questions.md)** — formal SPARQL specification of ontology capabilities
 - **[Design Decisions](docs/design-decisions.md)** — adopted patterns, documented rejections
 - **[Evaluation Comparison](docs/reports/2026-04-20-evaluation-comparison.md)** — PackageGraph vs SPDX vs CycloneDX vs OSV
 - **[Production Validation Report](docs/reports/2026-04-20-production-shacl-validation.md)** — conformance framework

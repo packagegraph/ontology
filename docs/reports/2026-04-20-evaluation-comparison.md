@@ -304,7 +304,7 @@ The following table shows which CQs from the PackageGraph catalog can be answere
 3. **OSV-aligned vulnerability model** — Direct mapping from OSV schema (Task 3), richer than SPDX VEX
 4. **Provenance depth** — Complete lifecycle from upstream commit to installed file (CQ-PROV-01)
 5. **Dual dependency model** — Reified detail + traversal shortcuts (unique to PackageGraph)
-6. **SPARQL queryability** — 33 competency questions demonstrating analytical power
+6. **SPARQL queryability** — comprehensive competency question suite demonstrating analytical power
 
 ### PackageGraph Weaknesses
 
@@ -420,7 +420,7 @@ In addition to DL reasoning, all 34 ontology modules (core + 29 ecosystems + 5 e
 
 ### Competency Question Validation
 
-33 competency questions formalized as SPARQL queries are syntactically valid (verified by rdflib `prepareQuery`). The queries span 7 domains:
+All competency questions are formalized as SPARQL queries and syntactically valid (verified by rdflib `prepareQuery`). The queries span multiple domains:
 
 | Domain | CQ Count | Status |
 |--------|----------|--------|
