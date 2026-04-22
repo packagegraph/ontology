@@ -29,7 +29,11 @@ dcterms:title a owl:AnnotationProperty ;
 
 <https://packagegraph.github.io/> a foaf:Organization ;
     foaf:name "PackageGraph Project" ;
-    foaf:homepage <https://github.com/packagegraph> .
+    foaf:homepage <https://github.com/packagegraph> ;
+    foaf:member <https://orcid.org/0009-0000-4478-8141> .
+
+<https://orcid.org/0009-0000-4478-8141> a foaf:Person ;
+    foaf:name "Brian 'redbeard' Harrington" .
 
 :ContributionType a owl:Class ;
     rdfs:label "Contribution Type"@en ;

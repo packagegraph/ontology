@@ -404,12 +404,12 @@ If you use PackageGraph in academic work, please cite:
 @misc{packagegraph2026,
   title        = {{PackageGraph}: An {OWL} 2 Ontology for Cross-Distribution
                   Software Package Analysis},
-  author       = {{PackageGraph Project}},
+  author       = {Harrington, Brian ``redbeard''},
   year         = {2026},
   howpublished = {\url{https://purl.org/packagegraph/ontology/core}},
-  note         = {Version 0.6.0. 34 modules, 253 classes, 29 ecosystem
-                  extensions. OWL 2 DL, OntoClean compliant, SHACL validated.
-                  Licensed under CC0 1.0 Universal.},
+  note         = {OWL 2 DL, OntoClean compliant, SHACL validated.
+                  Licensed under CC0 1.0 Universal.
+                  ORCID: 0009-0000-4478-8141},
   url          = {https://purl.org/packagegraph/ontology/core}
 }
 ```
