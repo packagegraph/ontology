@@ -810,6 +810,329 @@ WHERE {
 
 ---
 
+## Domain: Supply Chain Risk (SCR)
+
+### CQ-SCR-01: Bus Factor — Single-Maintainer Packages
+
+**Question:** Which packages in Fedora 43 have exactly one maintainer (single point of failure)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName (COUNT(DISTINCT ?agent) AS ?maintainerCount)
+WHERE {
+  ?package pkg:packageName ?packageName ;
+           pkg:partOfRelease ?release ;
+           pkg:maintainedBy ?agent .
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
+           pkg:releaseVersion "43" .
+}
+GROUP BY ?packageName
+HAVING (COUNT(DISTINCT ?agent) = 1)
+ORDER BY ?packageName
+```
+
+**Expected Columns:** packageName (string), maintainerCount (integer — always 1)
+
+**Exercises:** maintainedBy, aggregation, HAVING filter, bus factor analysis
+
+**Status:** PASS
+
+**Research context:** The "bus factor" — the minimum number of maintainers whose departure would leave a package unmaintained — is a critical supply chain risk metric. A bus factor of 1 means a single resignation, burnout event, or account compromise can orphan the package.
+
+---
+
+### CQ-SCR-02: Maintainer Overload — Most Packages Per Person
+
+**Question:** Which maintainers are responsible for the most packages across all distributions (burnout risk)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?person ?name (COUNT(DISTINCT ?package) AS ?packageCount) (GROUP_CONCAT(DISTINCT ?distro; separator=", ") AS ?distributions)
+WHERE {
+  ?package pkg:maintainedBy ?person .
+  ?person foaf:name ?name .
+  ?package pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?distro .
+}
+GROUP BY ?person ?name
+ORDER BY DESC(?packageCount)
+LIMIT 50
+```
+
+**Expected Columns:** person (URI), name (string), packageCount (integer), distributions (string)
+
+**Exercises:** maintainedBy, foaf:name, cross-distribution aggregation, workload analysis
+
+**Status:** PASS
+
+**Research context:** Maintainer overload is a leading indicator of burnout. Individuals maintaining 100+ packages across multiple distributions face unsustainable review, security patching, and compatibility testing burdens. This query identifies the humans (and bots) carrying disproportionate load.
+
+---
+
+### CQ-SCR-03: Orphan Risk — Stale Maintainership Without Recent Releases
+
+**Question:** Which packages have a maintainer assigned more than 5 years ago but no release in the last 2 years?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName ?maintainerName ?maintainerSince ?lastRelease
+WHERE {
+  ?package pkg:packageName ?packageName ;
+           pkg:hasMaintenanceRole ?role .
+  ?role pkg:heldBy ?person ;
+        pkg:maintainerSince ?maintainerSince .
+  ?person foaf:name ?maintainerName .
+
+  # Maintainer assigned > 5 years ago
+  FILTER(?maintainerSince < "2021-04-21T00:00:00Z"^^xsd:dateTime)
+
+  # Find latest release date for this package identity
+  ?package pkg:isVersionOf ?identity .
+  ?identity pkg:lastReleaseDate ?lastRelease .
+
+  # No release in last 2 years
+  FILTER(?lastRelease < "2024-04-21"^^xsd:date)
+}
+ORDER BY ?lastRelease
+LIMIT 100
+```
+
+**Expected Columns:** packageName (string), maintainerName (string), maintainerSince (dateTime), lastRelease (date)
+
+**Exercises:** maintainerSince, lastReleaseDate, temporal filtering, orphan detection
+
+**Status:** BLOCKED — requires `pkg:maintainerSince` data (no authoritative source identified) and `pkg:lastReleaseDate` (Phase 2 enrichment)
+
+**Research context:** Long-tenured maintainers of inactive packages signal potential abandonment. These packages may still be installed on production systems but receive no security patches — a silent supply chain risk that compound vulnerability analysis (CQ-SCR-07) can quantify.
+
+---
+
+### CQ-SCR-04: Maintainer Turnover Between Releases
+
+**Question:** Which packages changed maintainers between Fedora 42 and Fedora 43?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName ?oldMaintainer ?newMaintainer
+WHERE {
+  ?identity pkg:identityName ?packageName .
+
+  ?pkg42 pkg:isVersionOf ?identity ;
+         pkg:partOfRelease ?rel42 ;
+         pkg:maintainedBy ?old .
+  ?rel42 ^pkg:hasRelease/rdfs:label "Fedora" ;
+         pkg:releaseVersion "42" .
+  ?old foaf:name ?oldMaintainer .
+
+  ?pkg43 pkg:isVersionOf ?identity ;
+         pkg:partOfRelease ?rel43 ;
+         pkg:maintainedBy ?new .
+  ?rel43 ^pkg:hasRelease/rdfs:label "Fedora" ;
+         pkg:releaseVersion "43" .
+  ?new foaf:name ?newMaintainer .
+
+  FILTER(?old != ?new)
+}
+ORDER BY ?packageName
+```
+
+**Expected Columns:** packageName (string), oldMaintainer (string), newMaintainer (string)
+
+**Exercises:** PackageIdentity, identityName, isVersionOf, maintainedBy, cross-release comparison, turnover detection
+
+**Status:** PASS
+
+**Research context:** Maintainer turnover rate is a proxy for project health. High turnover can indicate governance problems, burnout cascades, or hostile takeover attempts (a known supply chain attack vector where malicious actors volunteer to maintain abandoned packages).
+
+---
+
+### CQ-SCR-05: Cross-Distribution Maintainer Overlap
+
+**Question:** Which persons maintain the same upstream package across multiple distributions?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?person ?name ?upstreamProject (COUNT(DISTINCT ?distro) AS ?distroCount) (GROUP_CONCAT(DISTINCT ?distro; separator=", ") AS ?distributions)
+WHERE {
+  ?package pkg:maintainedBy ?person ;
+           pkg:isVersionOf/pkg:upstreamRepository ?repo ;
+           pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?distro .
+  ?person foaf:name ?name .
+  ?repo rdfs:label ?upstreamProject .
+}
+GROUP BY ?person ?name ?upstreamProject
+HAVING (COUNT(DISTINCT ?distro) >= 2)
+ORDER BY DESC(?distroCount)
+LIMIT 50
+```
+
+**Expected Columns:** person (URI), name (string), upstreamProject (string), distroCount (integer), distributions (string)
+
+**Exercises:** maintainedBy, isVersionOf, upstreamRepository, cross-distribution identity resolution
+
+**Status:** PASS
+
+**Research context:** When a single person maintains the same package across Fedora, Debian, and SUSE, their compromise or burnout affects multiple ecosystems simultaneously. This cross-distribution single-point-of-failure analysis is unique to knowledge graph approaches — relational databases cannot traverse these links efficiently.
+
+---
+
+### CQ-SCR-06: Patch Lag by Distribution — Comparative Time-to-Fix
+
+**Question:** For a given CVE, how long did each distribution take to issue a patch compared to others?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?cveId ?distro ?advisoryId ((?advisoryDate - ?pubDate) AS ?patchLagDays)
+WHERE {
+  ?vuln sec:cveId ?cveId ;
+        sec:publishedDate ?pubDate .
+  ?advisory sec:addressesVulnerability ?vuln ;
+            sec:advisoryId ?advisoryId ;
+            sec:advisoryDate ?advisoryDate ;
+            sec:advisoryForPackage ?pkg .
+  ?pkg pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?distro .
+}
+ORDER BY ?cveId ?patchLagDays
+```
+
+**Expected Columns:** cveId (string), distro (string), advisoryId (string), patchLagDays (dayTimeDuration)
+
+**Exercises:** sec:publishedDate, sec:advisoryDate, sec:advisoryForPackage, temporal arithmetic, cross-distribution comparison
+
+**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+
+**Research context:** Patch lag — the time between CVE publication and distribution-specific advisory — is the primary metric in vulnerability window research. This query enables direct comparison: "Debian patched CVE-2024-1234 in 3 days; Fedora took 12 days." The knowledge graph makes this join trivial; in flat databases it requires manual cross-referencing of NVD, RHSA, DSA, and USN feeds.
+
+---
+
+### CQ-SCR-07: Unpatched Critical Vulnerabilities Beyond Threshold
+
+**Question:** Which critical-severity vulnerabilities (CVSS ≥ 9.0) have been published more than 90 days ago without an advisory patch?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?cveId ?cvssScore ?pubDate ?packageName ?ecosystem
+WHERE {
+  ?vuln sec:cveId ?cveId ;
+        sec:publishedDate ?pubDate ;
+        sec:hasCVSSScore/sec:baseScore ?cvssScore ;
+        sec:hasAffectedRange ?range .
+  ?range sec:affectsPackageName ?packageName ;
+         sec:affectsEcosystem/rdfs:label ?ecosystem .
+
+  FILTER(?cvssScore >= "9.0"^^xsd:decimal)
+  FILTER(?pubDate < "2026-01-21T00:00:00Z"^^xsd:dateTime)
+
+  # No advisory exists for this vulnerability
+  FILTER NOT EXISTS {
+    ?advisory sec:addressesVulnerability ?vuln .
+  }
+}
+ORDER BY ?pubDate
+```
+
+**Expected Columns:** cveId (string), cvssScore (decimal), pubDate (dateTime), packageName (string), ecosystem (string)
+
+**Exercises:** hasCVSSScore, baseScore, publishedDate, hasAffectedRange, negation, threshold filtering
+
+**Status:** PASS
+
+**Research context:** The "90-day window" is the de facto industry standard for responsible disclosure (Google Project Zero policy). Critical vulnerabilities exceeding this threshold without patches represent the highest-risk items in a software supply chain. This query directly supports the vulnerability management workflow described in NIST SP 800-40r4.
+
+---
+
+### CQ-SCR-08: Vulnerability Density — Most Affected Packages
+
+**Question:** Which packages have the highest number of distinct CVEs across all ecosystems?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?packageName ?ecosystem (COUNT(DISTINCT ?vuln) AS ?cveCount)
+WHERE {
+  ?vuln sec:hasAffectedRange ?range .
+  ?range sec:affectsPackageName ?packageName ;
+         sec:affectsEcosystem/rdfs:label ?ecosystem .
+}
+GROUP BY ?packageName ?ecosystem
+ORDER BY DESC(?cveCount)
+LIMIT 50
+```
+
+**Expected Columns:** packageName (string), ecosystem (string), cveCount (integer)
+
+**Exercises:** hasAffectedRange, affectsPackageName, affectsEcosystem, aggregation, vulnerability density
+
+**Status:** PASS
+
+**Research context:** Vulnerability density (CVEs per package) combined with dependency depth (CQ-PM-04) yields transitive risk scores. A package with 50 CVEs that is a transitive dependency of 10,000 packages represents catastrophic supply chain exposure — the pattern behind Log4Shell, xz-utils, and similar incidents.
+
+---
+
+### CQ-SCR-09: Mean Time to Remediate (MTTR) by Distribution
+
+**Question:** What is the average, median-approximated, and maximum time from CVE publication to advisory issuance per distribution?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?distro (AVG(?lagDays) AS ?avgMTTR) (MIN(?lagDays) AS ?bestCase) (MAX(?lagDays) AS ?worstCase) (COUNT(?advisory) AS ?advisoryCount)
+WHERE {
+  ?vuln sec:publishedDate ?pubDate .
+  ?advisory sec:addressesVulnerability ?vuln ;
+            sec:advisoryDate ?advisoryDate ;
+            sec:advisoryForPackage ?pkg .
+  ?pkg pkg:partOfRelease/^pkg:hasRelease/rdfs:label ?distro .
+  BIND((?advisoryDate - ?pubDate) AS ?lagDays)
+  FILTER(?lagDays > 0)
+}
+GROUP BY ?distro
+ORDER BY ?avgMTTR
+```
+
+**Expected Columns:** distro (string), avgMTTR (dayTimeDuration), bestCase (dayTimeDuration), worstCase (dayTimeDuration), advisoryCount (integer)
+
+**Exercises:** temporal arithmetic, aggregation, per-distribution MTTR, supply chain benchmarking
+
+**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+
+**Research context:** Mean Time to Remediate is the primary KPI in vulnerability management frameworks (NIST CSF, ISO 27001). Comparing MTTR across distributions reveals systemic differences in security response capability — a Fedora MTTR of 5 days vs. a Debian MTTR of 14 days signals different organizational priorities and resourcing levels that affect downstream consumers' risk posture.
+
+---
+
 ## Domain: Cross-Distribution Analysis (XD)
 
 ### CQ-XD-01: Equivalent Packages Across Distributions
@@ -1468,12 +1791,13 @@ WHERE {
 | Licensing (LIC) | 3 | 3 | 0 |
 | Security / Vulnerability (SEC) | 8 | 8 | 0 |
 | Temporal Analysis (TEMP) | 3 | 3 | 0 |
+| Supply Chain Risk (SCR) | 9 | 6 | 3 |
 | Cross-Distribution Analysis (XD) | 5 | 5 | 0 |
 | Provenance / Build (PROV) | 4 | 4 | 0 |
 | Repository / VCS (VCS) | 2 | 2 | 0 |
 | Package Set (SET) | 1 | 1 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 |
-| **TOTAL** | **39** | **39** | **0** |
+| **TOTAL** | **48** | **45** | **3** |
 
 **Note:** All CQs now pass at the schema level. PASS status means the ontology vocabulary is sufficient to express the query. Actual result data depends on collector/enricher population.
 
@@ -1524,7 +1848,7 @@ The following CQs can be validated against local example files without Fuseki:
 - Repository (VCS) ✓
 - Commit (VCS) ✓
 
-### Properties Exercised (45+ properties)
+### Properties Exercised (55+ properties)
 
 **Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, hasUpstreamProject, sourceCodeRepository, derivedFromCommit
 
