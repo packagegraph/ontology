@@ -15,11 +15,18 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 <https://purl.org/packagegraph/ontology/alignments> a owl:Ontology ;
+    rdfs:isDefinedBy <https://purl.org/packagegraph/ontology/alignments> ;
     rdfs:label "PackageGraph External Alignments" ;
     rdfs:comment "Formal alignment declarations between PackageGraph ontology and external standards (PROV-O, SPDX, Schema.org)" ;
     dcterms:created "2026-04-18"^^xsd:date ;
-    dcterms:creator "PackageGraph Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "Maps PackageGraph classes and properties to their equivalents in PROV-O, SPDX 3.0, and Schema.org, enabling federated querying and SBOM generation." ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/alignments/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/alignments/0.6.0> ;
+
     owl:versionInfo "0.6.0" .
 
 # =============================================================================
@@ -56,7 +63,9 @@ pkg:downloadURL owl:equivalentProperty spdx:downloadLocation .
 pkg:description owl:equivalentProperty schema:description .
 pkg:homepage owl:equivalentProperty schema:url .
 pkg:Person rdfs:subClassOf schema:Person .
-pkg:Package rdfs:subClassOf schema:SoftwareApplication .
+pkg:Package rdfs:seeAlso schema:SoftwareApplication .
+# Not subClassOf because Package includes source packages, meta packages, and
+# phantom packages that are not applications in Schema.org terms.
 pkg:packageName owl:equivalentProperty schema:name .
 pkg:versionString owl:equivalentProperty schema:version .
 

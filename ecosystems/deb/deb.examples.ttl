@@ -41,7 +41,8 @@ ex:glibc-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:description "GNU C Library (Debian binary package: libc6)" ;
   pkg:homepage <https://sourceware.org/glibc/sources.html> ;
   pkg:downloadURL <https://salsa.debian.org/glibc-team/glibc> ;
-  pkg:maintainedBy ex:glibc-deb-maintainer ;
+  pkg:maintainedBy ex:person-debian-glibc-team ;
+  pkg:hasMaintenanceRole ex:glibc-deb-maintainer ;
   pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (Debian binary package: libc6)" ;
   doap:repository [ a doap:GitRepository ;
@@ -73,7 +74,8 @@ ex:wget-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:hasVersion ex:wget-deb-version ;
   pkg:description "Internet file retriever - Debian binary package" ;
   pkg:downloadURL <https://salsa.debian.org/debian/wget> ;
-  pkg:maintainedBy ex:wget-deb-maintainer ;
+  pkg:maintainedBy ex:person-noel-torres ;
+  pkg:hasMaintenanceRole ex:wget-deb-maintainer ;
   pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (Debian binary package)" .
 
@@ -90,6 +92,14 @@ ex:wget-deb-maintainer a pkg:Maintainer ;
     pkg:heldBy ex:person-noel-torres .
 
 # git (Debian packaging on Salsa)
+ex:person-jonathan-nieder a pkg:Person ;
+    foaf:name "Jonathan Nieder" ;
+    foaf:mbox <mailto:jrnieder@gmail.com> .
+
+ex:git-deb-maintainer a pkg:Maintainer ;
+    rdfs:label "Jonathan Nieder (git Debian maintainer role)" ;
+    pkg:heldBy ex:person-jonathan-nieder .
+
 ex:git-source-deb a pkg:SourcePackage ;
   pkg:packageName "git" ;
   pkg:hasVersion ex:git-deb-version ;
@@ -101,7 +111,8 @@ ex:git-deb a pkg:BinaryPackage, deb:BinaryPackage ;
   pkg:hasVersion ex:git-deb-version ;
   pkg:description "Fast, scalable, distributed revision control system - Debian binary package" ;
   pkg:downloadURL <https://salsa.debian.org/debian/git> ;
-  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:maintainedBy ex:person-jonathan-nieder ;
+  pkg:hasMaintenanceRole ex:git-deb-maintainer ;
   pkg:hasLicense spdxl:GPL-2.0-only ;
   rdfs:label "Git version control (Debian binary package)" .
 

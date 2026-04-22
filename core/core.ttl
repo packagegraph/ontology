@@ -27,6 +27,10 @@ dcterms:license a owl:AnnotationProperty ;
 dcterms:title a owl:AnnotationProperty ;
     rdfs:isDefinedBy : .
 
+<https://packagegraph.github.io/> a foaf:Organization ;
+    foaf:name "PackageGraph Project" ;
+    foaf:homepage <https://github.com/packagegraph> .
+
 :ContributionType a owl:Class ;
     rdfs:label "Contribution Type"@en ;
     IAO:0000115 "Categorizes the nature of contributions made to a package, such as code, documentation, packaging, or security updates."@en ;
@@ -217,11 +221,10 @@ dcterms:title a owl:AnnotationProperty ;
 :contributesTo a owl:ObjectProperty ;
     rdfs:label "contributes to"@en ;
     IAO:0000115 "Associates a contributor role with repositories it contributes to, enabling analysis of contributor activity across repositories."@en ;
-    rdfs:comment "Links a contributor role to repositories it contributes to"@en ;
+    rdfs:comment "Links a contributor role to repositories it contributes to. Conceptually related to hasContributor (Repository→Agent convenience shortcut), but not formally inverse to avoid OntoClean role/identity collapse."@en ;
     rdfs:domain :Contributor ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Repository ;
-    owl:inverseOf :hasContributor .
+    rdfs:range :Repository .
 
 :contributorOrganization a owl:ObjectProperty ;
     rdfs:label "contributor organization"@en ;
@@ -261,6 +264,15 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:domain :Distribution ;
     rdfs:isDefinedBy : ;
     rdfs:range :Distribution .
+
+:derivedFromCommit a owl:ObjectProperty ;
+    rdfs:label "derived from commit"@en ;
+    IAO:0000115 "Associates a package with the specific VCS commit from which it was built, enabling precise source-to-binary traceability and build reproducibility verification."@en ;
+    rdfs:comment "Links a package to the VCS commit it was built from"@en ;
+    rdfs:domain :Package ;
+    rdfs:isDefinedBy : ;
+    rdfs:range <https://purl.org/packagegraph/ontology/vcs#Commit> ;
+    rdfs:subPropertyOf prov:wasDerivedFrom .
 
 :description a owl:DatatypeProperty ;
     rdfs:label "description"@en ;
@@ -341,11 +353,11 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:integer .
 
-:equivalentInDistribution a owl:ObjectProperty,
+:crossDistributionAlternative a owl:ObjectProperty,
         owl:SymmetricProperty ;
-    rdfs:label "equivalent in distribution"@en ;
-    IAO:0000115 "Associates packages from different distributions that provide equivalent functionality or serve the same purpose."@en ;
-    rdfs:comment "Links packages that serve equivalent functions across distributions"@en ;
+    rdfs:label "cross-distribution alternative"@en ;
+    IAO:0000115 "Associates packages from different distributions that provide similar functionality or serve analogous purposes. This is a correspondence assertion, not formal equivalence — it is symmetric but intentionally NOT transitive, as cross-distribution package equivalence is context-dependent (e.g., Debian libssl-dev corresponds to Fedora openssl-devel, but Alpine equivalents may differ in ABI or capabilities)."@en ;
+    rdfs:comment "Links packages that serve similar functions across distributions. Intentionally non-transitive: A~B and B~C does not imply A~C."@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
     rdfs:range :Package .
@@ -376,12 +388,9 @@ dcterms:title a owl:AnnotationProperty ;
 
 :hasAccount a owl:ObjectProperty ;
     rdfs:label "has account"@en ;
-    IAO:0000115 "Associates a contributor with an account or identity on a specific platform such as GitHub, Debian, or Fedora, enabling cross-platform contributor identification."@en,
-        "Associates a person with a ContributorAccount representing their identity on a specific platform (e.g., GitHub username, Fedora Account System login, Debian maintainer email)."@en ;
-    rdfs:comment "Links a contributor to an identity on a specific platform"@en,
-        "Links a person to their platform account identifier"@en ;
-    rdfs:domain :Contributor,
-        :Person ;
+    IAO:0000115 "Associates a person with a ContributorAccount representing their identity on a specific platform (e.g., GitHub username, Fedora Account System login, Debian maintainer email)."@en ;
+    rdfs:comment "Links a person to their platform account identifier"@en ;
+    rdfs:domain :Person ;
     rdfs:isDefinedBy : ;
     rdfs:range :ContributorAccount .
 
@@ -419,7 +428,7 @@ dcterms:title a owl:AnnotationProperty ;
 
 :hasMaintenanceRole a owl:ObjectProperty ;
     rdfs:label "has maintenance role"@en ;
-    IAO:0000115 "Associates a package with a Maintainer role assignment, providing access to role type (via hasMaintainerRole), start date (via maintainerSince), and the person holding the role (via heldBy)."@en ;
+    IAO:0000115 "Associates a package with a Maintainer role assignment, providing access to role type (via hasMaintainerRole), start date (via maintainerSince), and the agent holding the role (via heldBy)."@en ;
     rdfs:comment "Links a package to a maintenance role assignment providing detailed role metadata"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
@@ -451,11 +460,11 @@ dcterms:title a owl:AnnotationProperty ;
 
 :heldBy a owl:ObjectProperty ;
     rdfs:label "held by"@en ;
-    IAO:0000115 "The inverse of holdsRole — links a role assignment to the person holding it."@en ;
-    rdfs:comment "Links a role assignment back to the person who holds it"@en ;
+    IAO:0000115 "The inverse of holdsRole — links a role assignment to the agent (Person or SoftwareAgent) holding it, enabling representation of both human maintainers and automated bot contributors."@en ;
+    rdfs:comment "Links a role assignment back to the agent (person or software agent) who holds it"@en ;
     rdfs:domain :Contributor ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Person ;
+    rdfs:range prov:Agent ;
     owl:inverseOf :holdsRole .
 
 :homepage a owl:DatatypeProperty ;
@@ -534,6 +543,15 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:range :PackageIdentity ;
     owl:inverseOf :hasPackage .
 
+:identityName a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "identity name"@en ;
+    IAO:0000115 "The package name as used for the version-agnostic identity within a distribution and architecture context. This provides a lexical anchor for PackageIdentity instances, distinct from the versioned packageName on Package instances."@en ;
+    rdfs:comment "The name of the package identity"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
 :isaSpecificCode a owl:DatatypeProperty ;
     rdfs:label "ISA-specific code"@en ;
     IAO:0000115 "Indicates whether the package contains processor-specific optimizations or machine code that is optimized for a particular instruction set architecture."@en ;
@@ -569,11 +587,11 @@ dcterms:title a owl:AnnotationProperty ;
 
 :maintainedBy a owl:ObjectProperty ;
     rdfs:label "maintained by"@en ;
-    IAO:0000115 "Convenience property linking a package directly to the person maintaining it. For detailed role metadata (role type, start date), use hasMaintenanceRole."@en ;
-    rdfs:comment "Links a package directly to the person maintaining it"@en ;
+    IAO:0000115 "Convenience property linking a package directly to the agent (Person or SoftwareAgent) maintaining it. For detailed role metadata (role type, start date), use hasMaintenanceRole."@en ;
+    rdfs:comment "Links a package directly to the agent (person or software agent) maintaining it"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Person ;
+    rdfs:range prov:Agent ;
     rdfs:subPropertyOf prov:wasAttributedTo ;
     owl:inverseOf :maintains .
 
@@ -950,11 +968,11 @@ xsd:duration a rdfs:Datatype .
 
 :hasContributor a owl:ObjectProperty ;
     rdfs:label "has contributor"@en ;
-    IAO:0000115 "Convenience property linking a repository directly to the persons contributing to it. For detailed role information, traverse via contribution role assignments."@en ;
-    rdfs:comment "Links a repository directly to contributing persons"@en ;
+    IAO:0000115 "Convenience property linking a repository directly to the agents (Person or SoftwareAgent) contributing to it. For detailed role information, traverse via contribution role assignments."@en ;
+    rdfs:comment "Links a repository directly to contributing agents (persons or software agents). Conceptually related to contributesTo (Contributor→Repository), but not formally inverse to avoid OntoClean role/identity collapse."@en ;
     rdfs:domain :Repository ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Person .
+    rdfs:range prov:Agent .
 
 :hasDependency a owl:ObjectProperty ;
     rdfs:label "has dependency"@en ;
@@ -983,9 +1001,9 @@ xsd:duration a rdfs:Datatype .
 
 :holdsRole a owl:ObjectProperty ;
     rdfs:label "holds role"@en ;
-    IAO:0000115 "Associates a person with a contribution or maintenance role assignment."@en ;
-    rdfs:comment "Links a person to a contributor or maintainer role they hold"@en ;
-    rdfs:domain :Person ;
+    IAO:0000115 "Associates an agent (Person or SoftwareAgent) with a contribution or maintenance role assignment."@en ;
+    rdfs:comment "Links an agent (person or software agent) to a contributor or maintainer role they hold"@en ;
+    rdfs:domain prov:Agent ;
     rdfs:isDefinedBy : ;
     rdfs:range :Contributor .
 
@@ -1000,9 +1018,9 @@ xsd:duration a rdfs:Datatype .
 
 :maintains a owl:ObjectProperty ;
     rdfs:label "maintains"@en ;
-    IAO:0000115 "The inverse of maintainedBy, linking a person to the packages they maintain."@en ;
-    rdfs:comment "Links a person to the packages they maintain"@en ;
-    rdfs:domain :Person ;
+    IAO:0000115 "The inverse of maintainedBy, linking an agent (Person or SoftwareAgent) to the packages they maintain."@en ;
+    rdfs:comment "Links an agent (person or software agent) to the packages they maintain"@en ;
+    rdfs:domain prov:Agent ;
     rdfs:isDefinedBy : ;
     rdfs:range :Package .
 
@@ -1036,7 +1054,6 @@ xsd:duration a rdfs:Datatype .
     rdfs:comment "Links packages or repositories to a specific distribution release"@en ;
     rdfs:isDefinedBy : ;
     rdfs:range :DistributionRelease ;
-    rdfs:subPropertyOf :partOfDistribution ;
     owl:inverseOf :releaseContains .
 
 :producedBinary a owl:ObjectProperty ;
@@ -1073,6 +1090,15 @@ xsd:duration a rdfs:Datatype .
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
     rdfs:range :Package .
+
+:spdxId a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "SPDX identifier"@en ;
+    IAO:0000115 "The SPDX License List identifier for this license (e.g., 'GPL-2.0-only', 'MIT', 'Apache-2.0'), enabling mechanically queryable license classification and compatibility analysis."@en ;
+    rdfs:comment "The SPDX license identifier"@en ;
+    rdfs:domain :License ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
 
 :supersededBy a owl:ObjectProperty ;
     rdfs:label "superseded by"@en ;
@@ -1267,6 +1293,14 @@ xsd:date a rdfs:Datatype .
     rdfs:subClassOf prov:Agent ;
     owl:equivalentClass foaf:Person .
 
+:SoftwareAgent a owl:Class ;
+    rdfs:label "Software Agent"@en ;
+    IAO:0000115 "An automated software system that performs package maintenance tasks, such as dependency update bots (Renovate, Dependabot), CI/CD pipelines, or automated security patchers. Distinguished from Person to preserve OntoClean rigidity — a bot is not a foaf:Person."@en ;
+    rdfs:comment "An automated software agent performing package maintenance tasks"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:SoftwareAgent ;
+    owl:disjointWith :Person .
+
 :SourcePackage a owl:Class ;
     rdfs:label "Source Package"@en ;
     IAO:0000115 "A source package containing the original source code, build scripts, and packaging metadata required to produce one or more binary packages for distribution."@en ;
@@ -1289,10 +1323,7 @@ xsd:date a rdfs:Datatype .
     IAO:0000115 "A centralized storage location where software packages are hosted and made available for distribution, typically accessible via network protocols and managed by package management systems."@en ;
     rdfs:comment "A storage location for packages, accessible through a package management system"@en ;
     rdfs:isDefinedBy : ;
-    rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality "1"^^xsd:nonNegativeInteger ;
-            owl:onProperty :contains ],
-        owl:Thing,
+    rdfs:subClassOf owl:Thing,
         prov:Entity .
 
 :dependsOn a owl:ObjectProperty ;
@@ -1331,9 +1362,6 @@ xsd:date a rdfs:Datatype .
     rdfs:comment "A software package that can be installed, maintained, or distributed through a package management system"@en ;
     rdfs:isDefinedBy : ;
     rdfs:subClassOf [ a owl:Restriction ;
-            owl:minCardinality "1"^^xsd:nonNegativeInteger ;
-            owl:onProperty :hasVersion ],
-        [ a owl:Restriction ;
             owl:cardinality "1"^^xsd:nonNegativeInteger ;
             owl:onProperty :packageName ],
         owl:Thing,
@@ -1343,19 +1371,29 @@ xsd:date a rdfs:Datatype .
     rdfs:label "Package Management Core Ontology"@en ;
     dcterms:abstract "PackageGraph Core defines the foundational classes and properties for representing software packages across Linux distributions and other package ecosystems. It models binary and source packages, versioned dependencies with constraints, maintainers, architectures, and distribution releases as a connected RDF graph. The ontology serves as the shared schema that distribution-specific extensions (Debian, RPM, Arch, etc.) specialize, enabling cross-distribution queries over a unified SPARQL endpoint." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:references <http://purl.obolibrary.org/obo/bfo.owl>,
         <http://www.loa.istc.cnr.it/dolce/dolce-owl/DOLCEbasic> ;
     dcterms:title "Package Management Core Ontology" ;
     rdfs:comment "Core ontology for representing software packages and repositories across different package management systems. Upper ontology positioning: PackageGraph adopts lightweight alignment to established domain vocabularies (PROV-O, FOAF, SPDX, DOAP) rather than full BFO or DOLCE alignment. Software packages are informational artifacts whose lifecycle includes physical manifestations (installed files) and social roles (maintainers). BFO's material-entity/process distinction and DOLCE's cognitive/social focus do not cleanly categorize these hybrid entities. Our alignment strategy prioritizes semantic interoperability with domain-standard vocabularies over foundational ontology categorization. Multilingual metadata design: PackageGraph does not mandate @en language tags on data literals for graph efficiency — package names are technical identifiers, not translatable text, and adding language tags to 62.7M string literals increases storage cost and breaks existing SPARQL queries. However, the ontology acknowledges that multilingual package metadata is a real domain concern: Debian and Ubuntu maintain dedicated localisation teams (debian-l10n-english, ubuntu-translators) providing meticulously translated descriptions for packages like apache2, nginx, and postgresql. The RDF literal language tag mechanism remains available for collectors that ingest such translated metadata — the ontology does not prohibit language-tagged literals, it simply does not require them for monolingual English data."@en ;
+    rdfs:isDefinedBy : ;
     rdfs:seeAlso <http://spdx.org/rdf/terms>,
         <https://packagegraph.github.io/ontology/>,
+        <https://purl.org/packagegraph/ontology/alignments>,
         doap:,
         prov:,
         foaf: ;
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/core/shapes> ;
+
     owl:versionInfo "0.6.0" .
 
 [] a owl:AllDisjointClasses ;

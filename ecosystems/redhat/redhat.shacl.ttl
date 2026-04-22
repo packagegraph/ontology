@@ -1,0 +1,19 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rh: <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+rh:ACGLifecycleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 4 ;
+            sh:message "ACG lifecycle level must be an integer from 0 to 4."@en ;
+            sh:minInclusive 0 ;
+            sh:path rh:acgLifecycleLevel ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "ACG lifecycle level label must be a single string."@en ;
+            sh:path rh:acgLifecycleLevelLabel ] ;
+    sh:targetSubjectsOf rh:acgLifecycleLevel .
+

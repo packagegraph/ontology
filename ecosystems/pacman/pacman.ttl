@@ -86,11 +86,11 @@ pacman:buildFlags a owl:DatatypeProperty ;
 pacman:builtFrom a owl:ObjectProperty ;
     rdfs:label "built from"@en ;
     IAO:0000115 "Relates an Arch package to the PKGBUILD file that was used to build it."@en ;
-    rdfs:comment "Links a package to the PKGBUILD it was built from"@en ;
+    rdfs:comment "Links a package to the PKGBUILD it was built from. Conceptually related to vcs:packagedFromTag (both express 'built from source material') but semantically incompatible ranges (pacman:PKGBUILD vs vcs:Tag)."@en ;
     rdfs:domain pacman:PacmanPackage ;
     rdfs:isDefinedBy pacman: ;
     rdfs:range pacman:PKGBUILD ;
-    owl:equivalentProperty vcs:packagedFromTag .
+    rdfs:seeAlso vcs:packagedFromTag .
 
 pacman:changelog a owl:DatatypeProperty ;
     rdfs:label "changelog"@en ;
@@ -497,15 +497,24 @@ pacman:PacmanPackage a owl:Class ;
         pkg:Package .
 
 pacman: a owl:Ontology ;
+    rdfs:isDefinedBy pacman: ;
     rdfs:label "Arch Linux Package Ontology"@en ;
     dcterms:abstract "The Arch Linux extension models Pacman packages, PKGBUILD build scripts, split packages, package groups, and the Arch User Repository (AUR). It captures Arch-specific metadata such as build options, checksums, packager signatures, and repository tiers (core, extra, multilib)." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling Arch Linux packages, PKGBUILD files, AUR packages, and Pacman repositories including build dependencies, split packages, and package groups." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Arch Linux Package Ontology" ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories"@en ;
     owl:imports pkg:,
         vcs: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/pacman/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/pacman/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/pacman/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

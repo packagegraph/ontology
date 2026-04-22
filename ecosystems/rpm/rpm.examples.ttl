@@ -36,7 +36,8 @@ ex:glibc-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:description "GNU C Library - standard C library (RPM package)" ;
   pkg:homepage <https://sourceware.org/glibc/sources.html> ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/glibc> ;
-  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:maintainedBy ex:person-fedora-releng ;
+  pkg:hasMaintenanceRole ex:maintainer-fedora ;
   pkg:hasLicense spdxl:LGPL-2.1-only ;
   rdfs:label "GNU C Library (RPM package)" ;
   doap:repository [ a doap:GitRepository ;
@@ -60,7 +61,8 @@ ex:wget-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:hasVersion ex:wget-rpm-version ;
   pkg:description "Internet file retriever utility (RPM package)" ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/wget> ;
-  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:maintainedBy ex:person-fedora-releng ;
+  pkg:hasMaintenanceRole ex:maintainer-fedora ;
   pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Wget (RPM package)" .
 
@@ -80,7 +82,8 @@ ex:bash-rpm a pkg:BinaryPackage, rpm:BinaryRPM ;
   pkg:hasVersion ex:bash-rpm-version ;
   pkg:description "GNU Bourne Again Shell (RPM package)" ;
   pkg:downloadURL <https://src.fedoraproject.org/rpms/bash> ;
-  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:maintainedBy ex:person-fedora-releng ;
+  pkg:hasMaintenanceRole ex:maintainer-fedora ;
   pkg:hasLicense spdxl:GPL-3.0-or-later ;
   rdfs:label "GNU Bash (RPM package)" .
 
@@ -96,7 +99,8 @@ ex:bash-rpm-version a pkg:Version ;
 ex:glibc-srpm a rpm:SourceRPM, pkg:SourcePackage ;
   pkg:packageName "glibc" ;
   pkg:hasVersion ex:glibc-rpm-version ;
-  pkg:maintainedBy ex:maintainer-fedora ;
+  pkg:maintainedBy ex:person-fedora-releng ;
+  pkg:hasMaintenanceRole ex:maintainer-fedora ;
   pkg:hasLicense spdxl:LGPL-2.1-only ;
   rpm:patchCount 45 ;
   rpm:hasPatch ex:glibc-patch-1, ex:glibc-patch-2 ;

@@ -137,6 +137,57 @@ sec:sev-moderate a skos:Concept ;
     skos:notation 2 ;
     skos:prefLabel "moderate" .
 
+sec:sev-none a skos:Concept ;
+    skos:definition "No known severity or not applicable." ;
+    skos:inScheme sec:SeverityScheme ;
+    skos:notation 0 ;
+    skos:prefLabel "none" .
+
+sec:cat-bugfix a skos:Concept ;
+    skos:definition "Advisory addressing a non-security software defect." ;
+    skos:inScheme sec:AdvisoryCategoryScheme ;
+    skos:prefLabel "bugfix" .
+
+sec:cat-enhancement a skos:Concept ;
+    skos:definition "Advisory introducing new functionality or improvement." ;
+    skos:inScheme sec:AdvisoryCategoryScheme ;
+    skos:prefLabel "enhancement" .
+
+sec:cat-security a skos:Concept ;
+    skos:definition "Advisory addressing a security vulnerability." ;
+    skos:inScheme sec:AdvisoryCategoryScheme ;
+    skos:prefLabel "security" .
+
+sec:event-fixed a skos:Concept ;
+    skos:definition "The version in which the vulnerability was fixed." ;
+    skos:inScheme sec:EventTypeScheme ;
+    skos:prefLabel "fixed" .
+
+sec:event-introduced a skos:Concept ;
+    skos:definition "The version in which the vulnerability was introduced." ;
+    skos:inScheme sec:EventTypeScheme ;
+    skos:prefLabel "introduced" .
+
+sec:event-last-affected a skos:Concept ;
+    skos:definition "The last known version affected by the vulnerability." ;
+    skos:inScheme sec:EventTypeScheme ;
+    skos:prefLabel "last_affected" .
+
+sec:range-ecosystem a skos:Concept ;
+    skos:definition "Ecosystem-specific versioning scheme (e.g., deb, rpm version comparison)." ;
+    skos:inScheme sec:RangeTypeScheme ;
+    skos:prefLabel "ECOSYSTEM" .
+
+sec:range-git a skos:Concept ;
+    skos:definition "Git commit hash-based version range." ;
+    skos:inScheme sec:RangeTypeScheme ;
+    skos:prefLabel "GIT" .
+
+sec:range-semver a skos:Concept ;
+    skos:definition "Semantic versioning scheme (MAJOR.MINOR.PATCH)." ;
+    skos:inScheme sec:RangeTypeScheme ;
+    skos:prefLabel "SEMVER" .
+
 pkg:dep-strong a skos:Concept ;
     skos:definition "Dependencies that are mandatory for package function." ;
     skos:inScheme pkg:DependencyTypeScheme ;
@@ -168,13 +219,35 @@ sec:AdvisoryTypeScheme a skos:ConceptScheme ;
         sec:advtype-rhsa,
         sec:advtype-usa .
 
+sec:AdvisoryCategoryScheme a skos:ConceptScheme ;
+    rdfs:label "Advisory Category"@en ;
+    dcterms:description "Classification of advisory purpose: security fix, bugfix, or enhancement. Distinct from AdvisoryTypeScheme which classifies vendor advisory formats (DSA, RHSA)." ;
+    skos:hasTopConcept sec:cat-bugfix,
+        sec:cat-enhancement,
+        sec:cat-security .
+
+sec:EventTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Vulnerability Event Types"@en ;
+    dcterms:description "OSV-aligned event types marking when a vulnerability was introduced, fixed, or last affected" ;
+    skos:hasTopConcept sec:event-fixed,
+        sec:event-introduced,
+        sec:event-last-affected .
+
+sec:RangeTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Affected Range Versioning Schemes"@en ;
+    dcterms:description "OSV-aligned versioning scheme types for affected version ranges" ;
+    skos:hasTopConcept sec:range-ecosystem,
+        sec:range-git,
+        sec:range-semver .
+
 sec:SeverityScheme a skos:ConceptScheme ;
     rdfs:label "Vulnerability Severity Levels"@en ;
     dcterms:description "CVSS-aligned severity classification for security vulnerabilities" ;
     skos:hasTopConcept sec:sev-critical,
         sec:sev-important,
         sec:sev-low,
-        sec:sev-moderate .
+        sec:sev-moderate,
+        sec:sev-none .
 
 pkg:dep-weak a skos:Concept ;
     skos:definition "Dependencies that are optional or enhancing." ;

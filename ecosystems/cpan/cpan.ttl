@@ -78,10 +78,10 @@ cpan:CPANRepository a owl:Class ;
 
 cpan:CPANAuthor a owl:Class ;
     rdfs:label "CPAN Author"@en ;
-    IAO:0000115 "A developer registered on PAUSE (Perl Authors Upload Server) who can upload distributions to CPAN."@en ;
-    rdfs:comment "A CPAN author with a PAUSE ID"@en ;
+    IAO:0000115 "A PAUSE account (Perl Authors Upload Server) representing a developer's identity on CPAN. Modeled as a ContributorAccount rather than a Contributor role, since a PAUSE ID is an account identifier, not a role assignment."@en ;
+    rdfs:comment "A CPAN author account with a PAUSE ID"@en ;
     rdfs:isDefinedBy cpan: ;
-    rdfs:subClassOf pkg:Contributor .
+    rdfs:subClassOf pkg:ContributorAccount .
 
 cpan:Module a owl:Class ;
     rdfs:label "Module"@en ;
@@ -97,11 +97,20 @@ cpan:Distribution a owl:Class ;
     rdfs:subClassOf pkg:SourcePackage .
 
 cpan: a owl:Ontology ;
+    rdfs:isDefinedBy cpan: ;
     rdfs:label "CPAN Package Ontology"@en ;
     dcterms:abstract "Models CPAN (Comprehensive Perl Archive Network) distributions including modules, PAUSE author IDs, maturity levels, and CPAN-specific metadata. Instances are dual-typed as both pkg:Package and cpan:Distribution." ;
     dcterms:created "2026-04-14"^^xsd:date ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing CPAN distributions and the Perl ecosystem"@en ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/cpan/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/cpan/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/cpan/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

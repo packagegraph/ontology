@@ -79,9 +79,9 @@ pkg:ContributorAccountShape a sh:NodeShape ;
     sh:targetClass pkg:ContributorAccount .
 
 pkg:ContributorShape a sh:NodeShape ;
-    sh:property [ sh:class pkg:Person ;
+    sh:property [ sh:class prov:Agent ;
             sh:maxCount 1 ;
-            sh:message "A contributor role must be held by exactly one person."@en ;
+            sh:message "A contributor role must be held by exactly one agent (Person or SoftwareAgent)."@en ;
             sh:minCount 1 ;
             sh:path pkg:heldBy ] ;
     sh:targetClass pkg:Contributor .
@@ -212,9 +212,9 @@ pkg:MaintainerRoleShape a sh:NodeShape ;
     sh:targetClass pkg:MaintainerRole .
 
 pkg:MaintainerShape a sh:NodeShape ;
-    sh:property [ sh:class pkg:Person ;
+    sh:property [ sh:class prov:Agent ;
             sh:maxCount 1 ;
-            sh:message "A maintainer role must be held by exactly one person."@en ;
+            sh:message "A maintainer role must be held by exactly one agent (Person or SoftwareAgent)."@en ;
             sh:minCount 1 ;
             sh:path pkg:heldBy ] ;
     sh:targetClass pkg:Maintainer .
@@ -241,6 +241,11 @@ pkg:PackageIdentityShape a sh:NodeShape ;
             sh:message "A package identity must have exactly one PURL."@en ;
             sh:minCount 1 ;
             sh:path pkg:purl ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A package identity must have exactly one identity name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:identityName ],
         [ sh:message "A package identity must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
@@ -271,8 +276,8 @@ pkg:PackageShape a sh:NodeShape ;
         [ sh:maxCount 1 ;
             sh:message "A package can have at most one download URL."@en ;
             sh:path pkg:downloadURL ],
-        [ sh:class pkg:Person ;
-            sh:message "The value of pkg:maintainedBy must be a pkg:Person (convenience shortcut). For role details, use hasMaintenanceRole."@en ;
+        [ sh:class prov:Agent ;
+            sh:message "The value of pkg:maintainedBy must be a prov:Agent (Person or SoftwareAgent). For role details, use hasMaintenanceRole."@en ;
             sh:path pkg:maintainedBy ] ;
     sh:targetClass pkg:Package .
 

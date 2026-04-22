@@ -6,6 +6,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix spdx: <http://spdx.org/rdf/terms#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -49,21 +50,21 @@ sec:advisoryForPackage a owl:ObjectProperty ;
     rdfs:isDefinedBy sec: ;
     rdfs:range pkg:Package .
 
-sec:advisorySeverity a owl:DatatypeProperty ;
+sec:advisorySeverity a owl:ObjectProperty ;
     rdfs:label "advisory severity"@en ;
-    IAO:0000115 "The overall severity level assigned to the advisory."@en ;
+    IAO:0000115 "The overall severity level assigned to the advisory, as a SKOS concept from sec:SeverityScheme."@en ;
     rdfs:comment "The overall severity level of the advisory"@en ;
     rdfs:domain sec:SecurityAdvisory ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:string .
+    rdfs:range skos:Concept .
 
-sec:advisoryType a owl:DatatypeProperty ;
+sec:advisoryType a owl:ObjectProperty ;
     rdfs:label "advisory type"@en ;
-    IAO:0000115 "The type of advisory: security, bugfix, or enhancement."@en ;
-    rdfs:comment "The type of advisory"@en ;
+    IAO:0000115 "The category of advisory (security, bugfix, or enhancement), as a SKOS concept from sec:AdvisoryCategoryScheme."@en ;
+    rdfs:comment "The category of advisory"@en ;
     rdfs:domain sec:SecurityAdvisory ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:string .
+    rdfs:range skos:Concept .
 
 sec:affectsEcosystem a owl:ObjectProperty ;
     rdfs:label "affects ecosystem"@en ;
@@ -105,7 +106,7 @@ sec:baseScore a owl:DatatypeProperty ;
     rdfs:comment "The CVSS base score (0.0-10.0)"@en ;
     rdfs:domain sec:CVSSScore ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float .
+    rdfs:range xsd:decimal .
 
 sec:cpeId a owl:DatatypeProperty ;
     rdfs:label "CPE identifier"@en ;
@@ -128,7 +129,7 @@ sec:cvssScore a owl:DatatypeProperty ;
     rdfs:comment "DEPRECATED: Use hasCVSSScore to link to a CVSSScore entity instead. The flat cvssScore property cannot represent multiple CVSS versions (v2, v3.1) for the same vulnerability."@en ;
     rdfs:domain sec:Vulnerability ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float ;
+    rdfs:range xsd:decimal ;
     owl:deprecated true .
 
 sec:cvssVector a owl:DatatypeProperty ;
@@ -162,15 +163,15 @@ sec:environmentalScore a owl:DatatypeProperty ;
     rdfs:comment "The CVSS environmental score customized for a specific IT environment"@en ;
     rdfs:domain sec:CVSSScore ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float .
+    rdfs:range xsd:decimal .
 
-sec:eventType a owl:DatatypeProperty ;
+sec:eventType a owl:ObjectProperty ;
     rdfs:label "event type"@en ;
-    IAO:0000115 "Indicates whether this event marks when the vulnerability was introduced into the codebase, when it was fixed, or the last known affected version. Maps to OSV schema's affected[].ranges[].events[].{introduced|fixed|last_affected} field names."@en ;
+    IAO:0000115 "Indicates whether this event marks when the vulnerability was introduced into the codebase, when it was fixed, or the last known affected version, as a SKOS concept from sec:EventTypeScheme. Maps to OSV schema's affected[].ranges[].events[].{introduced|fixed|last_affected} field names."@en ;
     rdfs:comment "The type of range event: introduced, fixed, or last_affected"@en ;
     rdfs:domain sec:RangeEvent ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:string .
+    rdfs:range skos:Concept .
 
 sec:eventVersion a owl:DatatypeProperty ;
     rdfs:label "event version"@en ;
@@ -186,7 +187,7 @@ sec:exploitabilityScore a owl:DatatypeProperty ;
     rdfs:comment "The CVSS exploitability sub-score"@en ;
     rdfs:domain sec:Vulnerability ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float .
+    rdfs:range xsd:decimal .
 
 sec:fixedInVersion a owl:ObjectProperty ;
     rdfs:label "fixed in version"@en ;
@@ -257,7 +258,7 @@ sec:impactScore a owl:DatatypeProperty ;
     rdfs:comment "The CVSS impact sub-score"@en ;
     rdfs:domain sec:Vulnerability ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float .
+    rdfs:range xsd:decimal .
 
 sec:osvId a owl:DatatypeProperty ;
     rdfs:label "OSV identifier"@en ;
@@ -301,13 +302,13 @@ sec:publishedDate a owl:DatatypeProperty ;
     rdfs:isDefinedBy sec: ;
     rdfs:range xsd:dateTime .
 
-sec:rangeType a owl:DatatypeProperty ;
+sec:rangeType a owl:ObjectProperty ;
     rdfs:label "range type"@en ;
-    IAO:0000115 "The versioning scheme: SEMVER (semantic versioning), ECOSYSTEM (ecosystem-specific), or GIT (git commit hashes). Maps to OSV schema's affected[].ranges[].type field."@en ;
+    IAO:0000115 "The versioning scheme: SEMVER (semantic versioning), ECOSYSTEM (ecosystem-specific), or GIT (git commit hashes), as a SKOS concept from sec:RangeTypeScheme. Maps to OSV schema's affected[].ranges[].type field."@en ;
     rdfs:comment "The versioning scheme used in this affected range"@en ;
     rdfs:domain sec:AffectedRange ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:string .
+    rdfs:range skos:Concept .
 
 sec:severity a owl:DatatypeProperty ;
     rdfs:label "severity"@en ;
@@ -331,7 +332,7 @@ sec:temporalScore a owl:DatatypeProperty ;
     rdfs:comment "The CVSS temporal score accounting for exploit availability and remediation level"@en ;
     rdfs:domain sec:CVSSScore ;
     rdfs:isDefinedBy sec: ;
-    rdfs:range xsd:float .
+    rdfs:range xsd:decimal .
 
 sec:updatedDate a owl:DatatypeProperty ;
     rdfs:label "updated date"@en ;
@@ -439,16 +440,25 @@ sec:Vulnerability a owl:Class ;
         owl:Thing .
 
 sec: a owl:Ontology ;
+    rdfs:isDefinedBy sec: ;
     rdfs:label "Package Security Ontology"@en ;
     dcterms:abstract "The Security ontology models CVE vulnerabilities, vendor security advisories (RHSA, DSA, GLSA), and CVSS severity scores. It links vulnerabilities to affected and fixed package versions, enabling SPARQL queries such as finding all packages in a distribution affected by a given CVE, or listing unpatched vulnerabilities for a release." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "PackageGraph Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling security vulnerabilities (CVEs), vendor security advisories (RHSA, DSA, GLSA), severity scoring, and their relationships to affected and fixed package versions." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Package Security Ontology" ;
     rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages"@en ;
     rdfs:seeAlso <http://spdx.org/rdf/terms> ;
     owl:imports pkg: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/security/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/security/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/security/shapes> ;
+
     owl:versionInfo "0.6.0" .
 
 [] a owl:AllDisjointClasses ;

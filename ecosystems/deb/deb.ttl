@@ -53,11 +53,11 @@ deb:buildDependsIndep a owl:ObjectProperty ;
 deb:buildsFrom a owl:ObjectProperty ;
     rdfs:label "builds from"@en ;
     IAO:0000115 "Indicates the source package from which this binary package was compiled and built."@en ;
-    rdfs:comment "Links a binary package to the source package it was built from"@en ;
+    rdfs:comment "Links a binary package to the source package it was built from. Conceptually related to vcs:packagedFromTag (both express 'built from source material') but semantically incompatible ranges (deb:SourcePackage vs vcs:Tag)."@en ;
     rdfs:domain deb:BinaryPackage ;
     rdfs:isDefinedBy deb: ;
     rdfs:range deb:SourcePackage ;
-    owl:equivalentProperty vcs:packagedFromTag .
+    rdfs:seeAlso vcs:packagedFromTag .
 
 deb:conflicts a owl:ObjectProperty ;
     rdfs:label "conflicts"@en ;
@@ -406,15 +406,24 @@ deb:DebPackage a owl:Class ;
         pkg:Package .
 
 deb: a owl:Ontology ;
+    rdfs:isDefinedBy deb: ;
     rdfs:label "Debian Package Ontology"@en ;
     dcterms:abstract "The Debian extension specializes PackageGraph Core for the Debian and Ubuntu ecosystem. It adds classes for suites (stable, testing, unstable), components (main, contrib, non-free), sections, and priorities, and models Debian-specific dependency types (Depends, Pre-Depends, Recommends, Suggests, Conflicts, Breaks, Enhances, Provides). Instances are dual-typed as both pkg:BinaryPackage and deb:BinaryPackage for cross-distribution interoperability." ;
     dcterms:created "2025-09-05"^^xsd:date ;
-    dcterms:creator "Package Management Ontology Project" ;
+    dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling Debian packages, APT repositories, package dependencies, and Debian-specific metadata including suites, components, sections, and priorities." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     dcterms:title "Debian Package Ontology" ;
     rdfs:comment "Ontology for representing Debian packages (.deb) and APT repositories"@en ;
     owl:imports pkg:,
         vcs: ;
+    dcterms:modified "2026-04-21"^^xsd:date ;
+
+    owl:priorVersion <https://purl.org/packagegraph/ontology/deb/0.5.0> ;
+
+    owl:versionIRI <https://purl.org/packagegraph/ontology/deb/0.6.0> ;
+
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/deb/shapes> ;
+
     owl:versionInfo "0.6.0" .
 

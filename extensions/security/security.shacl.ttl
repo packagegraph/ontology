@@ -3,13 +3,13 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 sec:AffectedRangeShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:in ( "SEMVER" "ECOSYSTEM" "GIT" ) ;
+    sh:property [ sh:in ( sec:range-semver sec:range-ecosystem sec:range-git ) ;
             sh:maxCount 1 ;
-            sh:message "An affected range must have exactly one range type: SEMVER, ECOSYSTEM, or GIT."@en ;
+            sh:message "An affected range must have exactly one range type: sec:range-semver, sec:range-ecosystem, or sec:range-git."@en ;
             sh:minCount 1 ;
             sh:path sec:rangeType ],
         [ sh:class sec:RangeEvent ;
@@ -42,7 +42,7 @@ sec:CVSSScoreShape a sh:NodeShape ;
             sh:message "A CVSS score must have exactly one version: 2.0, 3.0, 3.1, or 4.0."@en ;
             sh:minCount 1 ;
             sh:path sec:cvssVersion ],
-        [ sh:datatype xsd:float ;
+        [ sh:datatype xsd:decimal ;
             sh:maxCount 1 ;
             sh:maxInclusive 10.0 ;
             sh:message "A CVSS score must have exactly one base score between 0.0 and 10.0."@en ;
@@ -63,10 +63,9 @@ sec:PatchActivityShape a sh:NodeShape ;
     sh:targetClass sec:PatchActivity .
 
 sec:RangeEventShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:string ;
-            sh:in ( "introduced" "fixed" "last_affected" ) ;
+    sh:property [ sh:in ( sec:event-introduced sec:event-fixed sec:event-last-affected ) ;
             sh:maxCount 1 ;
-            sh:message "A range event must have exactly one event type: introduced, fixed, or last_affected."@en ;
+            sh:message "A range event must have exactly one event type: sec:event-introduced, sec:event-fixed, or sec:event-last-affected."@en ;
             sh:minCount 1 ;
             sh:path sec:eventType ],
         [ sh:datatype xsd:string ;
@@ -82,15 +81,13 @@ sec:SecurityAdvisoryShape a sh:NodeShape ;
             sh:message "A security advisory must have exactly one advisory identifier."@en ;
             sh:minCount 1 ;
             sh:path sec:advisoryId ],
-        [ sh:datatype xsd:string ;
-            sh:in ( "critical" "high" "medium" "low" "none" ) ;
+        [ sh:in ( sec:sev-critical sec:sev-important sec:sev-moderate sec:sev-low sec:sev-none ) ;
             sh:maxCount 1 ;
-            sh:message "Advisory severity must be one of: critical, high, medium, low, none."@en ;
+            sh:message "Advisory severity must be a SKOS concept from sec:SeverityScheme."@en ;
             sh:path sec:advisorySeverity ],
-        [ sh:datatype xsd:string ;
-            sh:in ( "security" "bugfix" "enhancement" ) ;
+        [ sh:in ( sec:cat-security sec:cat-bugfix sec:cat-enhancement ) ;
             sh:maxCount 1 ;
-            sh:message "Advisory type must be one of: security, bugfix, enhancement."@en ;
+            sh:message "Advisory type must be a SKOS concept from sec:AdvisoryCategoryScheme."@en ;
             sh:path sec:advisoryType ] ;
     sh:targetClass sec:SecurityAdvisory .
 
@@ -103,7 +100,7 @@ sec:VulnerabilityShape a sh:NodeShape ;
             sh:message "A vulnerability must have at least one rdfs:label (the canonical OSV or CVE identifier)."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
-        [ sh:datatype xsd:float ;
+        [ sh:datatype xsd:decimal ;
             sh:maxCount 1 ;
             sh:message "A vulnerability can have at most one CVSS score (deprecated — use hasCVSSScore for multi-version support)."@en ;
             sh:path sec:cvssScore ],
