@@ -290,7 +290,7 @@ LIMIT 50
 
 **Exercises:** InstalledFile, installedFilePath, installsFile, aggregation
 
-**Status:** PASS (if installsFile data exists)
+**Status:** PASS
 
 ---
 
@@ -481,7 +481,9 @@ WHERE {
 
 **Exercises:** Vulnerability, cveId, hasAffectedRange, AffectedRange, affectsEcosystem, affectsPackageName
 
-**Status:** PASS (requires OSV data population)
+**Dependency contract:** Vulnerability-side only. Requires `sec:cveId`, `sec:hasAffectedRange`, `sec:affectsEcosystem`, `sec:affectsPackageName` on vulnerability entities. Advisory cross-references (`sec:addressesVulnerability`, `sec:advisoryForPackage`) do not satisfy this CQ — it operates entirely on the vulnerability/affected-range model.
+
+**Status:** PASS
 
 ---
 
@@ -524,7 +526,7 @@ ORDER BY DESC(?cvssScore)
 
 **Exercises:** Vulnerability, PatchActivity, CVSSScore, affectsPackage, negation
 
-**Status:** PASS (requires OSV and CVSSScore data population)
+**Status:** PASS
 
 ---
 
@@ -560,7 +562,7 @@ WHERE {
 
 **Exercises:** AffectedRange, RangeEvent, eventType, eventVersion
 
-**Status:** PASS (requires OSV data population)
+**Status:** PASS
 
 ---
 
@@ -620,7 +622,7 @@ LIMIT 50
 
 **Exercises:** CVSSScore, cvssVersion, baseScore, reification
 
-**Status:** PASS (requires CVSSScore data population)
+**Status:** PASS
 
 ---
 
@@ -649,7 +651,7 @@ LIMIT 50
 
 **Exercises:** osvId, CVSSScore, AffectedRange, negation
 
-**Status:** PASS (requires OSV and CVSSScore data population)
+**Status:** PASS
 
 ---
 
@@ -707,7 +709,7 @@ LIMIT 10
 
 **Exercises:** hasCWE, CWE, affectsEcosystem
 
-**Status:** PASS (if hasCWE property exists)
+**Status:** PASS
 
 ---
 
@@ -741,7 +743,9 @@ LIMIT 50
 
 **Exercises:** sec:publishedDate, sec:advisoryDate, temporal arithmetic, cross-module joins
 
-**Status:** PASS
+**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryDate`, `sec:advisoryForPackage` (satisfied for Fedora 43 via RPM updateinfo). Vulnerability side: `sec:publishedDate` on the same vulnerability entities linked by `sec:addressesVulnerability` (requires CVE publication metadata for the relevant ecosystem — currently available for language ecosystems via OSV bulk, NOT for distro ecosystems where the OSV collector returns None).
+
+**Status:** ADVISORY-SIDE SATISFIED — advisory dates available for Fedora 43 (280 advisories). Vulnerability-side `sec:publishedDate` not yet available for distro-ecosystem CVEs.
 
 ---
 
@@ -1034,7 +1038,9 @@ ORDER BY ?cveId ?patchLagDays
 
 **Exercises:** sec:publishedDate, sec:advisoryDate, sec:advisoryForPackage, temporal arithmetic, cross-distribution comparison
 
-**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryForPackage` (concrete release-scoped packages), `sec:advisoryDate`, `sec:addressesVulnerability` (ADVISORY-SIDE SATISFIED for Fedora 43 via RPM updateinfo). Vulnerability side: `sec:publishedDate` on vulnerability entities reachable via `sec:addressesVulnerability` (requires CVE publication metadata — canonical CVE backbone or distro-aware OSV ingestion).
+
+**Status:** ADVISORY-SIDE SATISFIED — advisory→package links exist for Fedora 43 (1,822 links). Vulnerability-side `sec:publishedDate` not yet available for distro-ecosystem CVEs. End-to-end query not yet demonstrated.
 
 **Research context:** Patch lag — the time between CVE publication and distribution-specific advisory — is the primary metric in vulnerability window research. This query enables direct comparison: "Debian patched CVE-2024-1234 in 3 days; Fedora took 12 days." The knowledge graph makes this join trivial; in flat databases it requires manual cross-referencing of NVD, RHSA, DSA, and USN feeds.
 
@@ -1077,7 +1083,9 @@ ORDER BY ?pubDate
 
 **Exercises:** hasCVSSScore, baseScore, publishedDate, hasAffectedRange, per-ecosystem negation, threshold filtering
 
-**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryForPackage` for per-ecosystem negation (ADVISORY-SIDE SATISFIED for Fedora 43). Vulnerability side: `sec:hasCVSSScore`/`sec:baseScore` (requires CVSS data on vulnerability entities), `sec:publishedDate` (requires CVE publication metadata), `sec:hasAffectedRange`/`sec:affectsEcosystem` (requires distro-aware affected-range data).
+
+**Status:** ADVISORY-SIDE SATISFIED — advisory→package links exist for Fedora 43. Vulnerability-side requires CVSS scores, publication dates, and affected-range ecosystem data on the same vulnerability entities. End-to-end query not yet demonstrated.
 
 **Semantic scope:** This query tests per-ecosystem patch absence — a CVE with a Fedora advisory but no Debian advisory will appear as unpatched *in the Debian ecosystem*. This is intentionally scoped: "unpatched" means "no advisory exists for packages in this specific ecosystem," not "no advisory exists anywhere globally." The required join shape is: `advisory → advisoryForPackage → package → partOfRelease → release → (inverse hasRelease) → distribution → partOfEcosystem → ecosystem`, matching the affected ecosystem from the vulnerability's AffectedRange.
 
@@ -1143,7 +1151,9 @@ ORDER BY ?avgMTTR
 
 **Exercises:** temporal arithmetic, aggregation, per-distribution MTTR, supply chain benchmarking
 
-**Status:** BLOCKED — requires `sec:advisoryForPackage` to emit concrete release-scoped packages (enricher contract not yet implemented)
+**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryForPackage`, `sec:advisoryDate`, `sec:addressesVulnerability` (ADVISORY-SIDE SATISFIED for Fedora 43 via RPM updateinfo). Vulnerability side: `sec:publishedDate` on vulnerability entities reachable via `sec:addressesVulnerability` (requires CVE publication metadata).
+
+**Status:** ADVISORY-SIDE SATISFIED — advisory→package links and advisory dates exist for Fedora 43 (280 advisories, 1,822 package links). Vulnerability-side `sec:publishedDate` not yet available for distro-ecosystem CVEs. End-to-end query not yet demonstrated.
 
 **Research context:** Mean Time to Remediate is the primary KPI in vulnerability management frameworks (NIST CSF, ISO 27001). Comparing MTTR across distributions reveals systemic differences in security response capability — a Fedora MTTR of 5 days vs. a Debian MTTR of 14 days signals different organizational priorities and resourcing levels that affect downstream consumers' risk posture.
 
@@ -1398,7 +1408,7 @@ ORDER BY DESC(?slsaLevel)
 
 **Exercises:** SLSA module, hasProvenance, slsaLevel
 
-**Status:** PASS (if SLSA data exists)
+**Status:** PASS
 
 ---
 
@@ -1462,7 +1472,7 @@ WHERE {
 
 **Exercises:** Contributor, contributesTo, Maintainer, Person, OntoClean role model, negation
 
-**Status:** PASS (requires Task 6 for contributesTo domain fix)
+**Status:** PASS
 
 ---
 
@@ -1642,7 +1652,7 @@ LIMIT 10
 
 **Exercises:** Repository, sourceCodeRepository, Metrics module, primaryLanguage
 
-**Status:** PASS (if metrics data exists)
+**Status:** PASS
 
 ---
 
@@ -1674,7 +1684,7 @@ LIMIT 100
 
 **Exercises:** derivedFromCommit, Commit, Branch, onBranch
 
-**Status:** PASS (if VCS data exists)
+**Status:** PASS
 
 ---
 
@@ -1735,7 +1745,7 @@ ORDER BY DESC(?sourceCount)
 
 **Exercises:** RPM module, SourceRPM, hasSpecSource
 
-**Status:** PASS (if RPM spec metadata exists)
+**Status:** PASS
 
 ---
 
@@ -1801,21 +1811,56 @@ WHERE {
 
 ## Summary Statistics
 
-| Domain | CQ Count | Status: PASS | Status: BLOCKED |
-|--------|----------|--------------|-----------------|
-| Package Management (PM) | 10 | 10 | 0 |
-| Licensing (LIC) | 3 | 3 | 0 |
-| Security / Vulnerability (SEC) | 8 | 8 | 0 |
-| Temporal Analysis (TEMP) | 3 | 3 | 0 |
-| Supply Chain Risk (SCR) | 9 | 5 | 4 |
-| Cross-Distribution Analysis (XD) | 5 | 5 | 0 |
-| Provenance / Build (PROV) | 4 | 4 | 0 |
-| Repository / VCS (VCS) | 2 | 2 | 0 |
-| Package Set (SET) | 1 | 1 | 0 |
-| Ecosystem-Specific (ECO) | 3 | 3 | 0 |
-| **TOTAL** | **48** | **44** | **4** |
+| Domain | CQ Count | PASS | ADVISORY-SIDE | BLOCKED |
+|--------|----------|------|---------------|---------|
+| Package Management (PM) | 10 | 10 | 0 | 0 |
+| Licensing (LIC) | 3 | 3 | 0 | 0 |
+| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 |
+| Temporal Analysis (TEMP) | 3 | 2 | 1 | 0 |
+| Supply Chain Risk (SCR) | 9 | 5 | 3 | 1 |
+| Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 |
+| Provenance / Build (PROV) | 4 | 4 | 0 | 0 |
+| Repository / VCS (VCS) | 2 | 2 | 0 | 0 |
+| Package Set (SET) | 1 | 1 | 0 | 0 |
+| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 |
+| **TOTAL** | **48** | **43** | **4** | **1** |
 
-**Note:** All CQs now pass at the schema level. PASS status means the ontology vocabulary is sufficient to express the query. Actual result data depends on collector/enricher population.
+**Note:** PASS, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
+
+---
+
+## Status Vocabulary
+
+CQ statuses use the following terms. Platform reports should use the same vocabulary when claiming CQ support.
+
+| Status | Meaning |
+|--------|---------|
+| **PASS** | The ontology vocabulary supports the query and data sources for all required properties are expected to be available or already populated. Does not guarantee end-to-end execution against production — use the validation harness for that. |
+| **ADVISORY-SIDE SATISFIED** | Two-sided CQ where advisory-side data is populated (e.g., `advisoryForPackage`, `advisoryDate`), but vulnerability-side prerequisites (`publishedDate`, `hasCVSSScore`, `hasAffectedRange`) are not yet available for the relevant ecosystem. |
+| **VULNERABILITY-SIDE SATISFIED** | Two-sided CQ where vulnerability-side data is populated, but advisory-side prerequisites are not yet available. |
+| **BLOCKED** | A required data source has no authoritative provider identified, or a required property is formally unsupported. |
+
+**Two-sided CQs:** CQs that join advisory data with vulnerability data (TEMP-01, SCR-06, SCR-07, SCR-09) require BOTH sides to be satisfied before claiming PASS. Advisory-side progress (e.g., "1,822 advisoryForPackage links loaded") does not constitute end-to-end CQ support if the vulnerability side is missing.
+
+**Vulnerability-only CQs:** CQs that operate entirely on the vulnerability/affected-range model (SEC-01) are not helped by advisory collector improvements. Do not credit advisory work to these CQs.
+
+---
+
+## Multi-Source Data Architecture
+
+CQ answers may come from joins across triples populated by different collectors and enrichers. This is expected and valid.
+
+**Canonical vulnerability identity:** Shared CVE URIs are the integration backbone. A single vulnerability entity may be enriched from multiple sources — one providing canonical metadata (`sec:cveId`, `sec:publishedDate`, `sec:hasCVSSScore`), another providing affected-range data (`sec:hasAffectedRange`, `sec:affectsEcosystem`), and a third providing advisory linkage (`sec:advisoryForPackage`, `sec:advisoryDate`). The ontology does not prescribe which named graphs these triples reside in — that is platform infrastructure.
+
+**CQ satisfaction rule:** A CQ is satisfied when the required predicates exist and join correctly — regardless of which collector or enricher contributed each predicate. For two-sided CQs (TEMP-01, SCR-06, SCR-07, SCR-09):
+
+- Advisory-side data may come from one collector (e.g., RPM updateinfo)
+- Publication/CVSS metadata may come from a different source (e.g., NVD, OSV)
+- This is valid as long as both sides reference the same vulnerability entity via shared CVE URI
+
+**Evidence rubric:** The validation harness checks predicate presence and join completeness across the queryable dataset. It does not require all predicates to originate from a single collector.
+
+**Source provenance:** Source attribution is not tracked at the property level in v1. If source-level trust analysis becomes a requirement, a lightweight provenance pattern can be added without schema changes.
 
 ---
 
