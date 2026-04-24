@@ -692,13 +692,16 @@ WHERE {
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?cweId (COUNT(?vuln) AS ?count)
+SELECT ?cweId (COUNT(DISTINCT ?vuln) AS ?count)
 WHERE {
-  ?vuln sec:hasAffectedRange/sec:affectsEcosystem ?eco ;
-        sec:hasCWE/sec:cweId ?cweId .
-  ?eco rdfs:label "PyPI" .
+  GRAPH <https://packagegraph.github.io/graph/security/osv> {
+    ?vuln sec:hasAffectedRange ?range .
+    ?range sec:affectsEcosystem <https://packagegraph.github.io/d/ecosystem/pypi> .
+  }
+  GRAPH <https://packagegraph.github.io/graph/cve/nvd> {
+    ?vuln sec:cweId ?cweId .
+  }
 }
 GROUP BY ?cweId
 ORDER BY DESC(?count)
@@ -707,9 +710,9 @@ LIMIT 10
 
 **Expected Columns:** cweId (string), count (integer)
 
-**Exercises:** hasCWE, CWE, affectsEcosystem
+**Exercises:** sec:hasAffectedRange, sec:affectsEcosystem, sec:cweId, cross-graph CVE joins
 
-**Status:** PASS
+**Status:** PASS — OSV provides affected ranges with ecosystem links, NVD enricher provides CWE classifications. Join key is the shared CVE entity URI.
 
 ---
 
@@ -722,30 +725,34 @@ LIMIT 10
 **SPARQL:**
 ```sparql
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
-PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?cveId ?ecosystem ((?advisoryDate - ?pubDate) AS ?windowDays)
+SELECT ?cveId ((?aDate - ?pubDate) AS ?window)
 WHERE {
-  ?vuln sec:cveId ?cveId ;
-        sec:publishedDate ?pubDate .
-  ?advisory sec:addressesVulnerability ?vuln ;
-            sec:advisoryDate ?advisoryDate ;
-            sec:advisoryForPackage/pkg:partOfRelease/^pkg:hasRelease/pkg:partOfEcosystem/rdfs:label ?ecosystem .
-  FILTER(?advisoryDate > ?pubDate)
+  GRAPH <https://packagegraph.github.io/graph/cve/nvd> {
+    ?vuln sec:cveId ?cveId ;
+          sec:publishedDate ?pubDate .
+  }
+  GRAPH ?g {
+    ?adv sec:addressesVulnerability ?vuln ;
+         sec:advisoryDate ?advisoryDate .
+  }
+  BIND(xsd:dateTime(?advisoryDate) AS ?aDate)
+  FILTER(?aDate > ?pubDate)
 }
-ORDER BY DESC(?windowDays)
+ORDER BY DESC(?window)
 LIMIT 50
 ```
 
-**Expected Columns:** cveId (string), ecosystem (string), windowDays (dayTimeDuration)
+**Expected Columns:** cveId (string), window (duration)
 
-**Exercises:** sec:publishedDate, sec:advisoryDate, temporal arithmetic, cross-module joins
+**Exercises:** sec:publishedDate, sec:advisoryDate, temporal arithmetic, cross-graph joins, type casting
 
-**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryDate`, `sec:advisoryForPackage` (satisfied for Fedora 43 via RPM updateinfo). Vulnerability side: `sec:publishedDate` on the same vulnerability entities linked by `sec:addressesVulnerability` (requires CVE publication metadata for the relevant ecosystem — currently available for language ecosystems via OSV bulk, NOT for distro ecosystems where the OSV collector returns None).
+**Dependency contract:** Two-sided join. Advisory side: `sec:advisoryDate` (satisfied via RHSA/DSA collectors). Vulnerability side: `sec:publishedDate` on CVE entities in `graph/cve/nvd` (satisfied via NVD enricher — 50,750 CVEs). Join key: `sec:addressesVulnerability`.
 
-**Status:** ADVISORY-SIDE SATISFIED — advisory dates available for Fedora 43 (280 advisories). Vulnerability-side `sec:publishedDate` not yet available for distro-ecosystem CVEs.
+**Note:** The original query included an `?ecosystem` column derived from `sec:advisoryForPackage` property path. This column is deferred pending workstream 5 (advisory-to-package resolution). The simplified query still answers the core CQ: vulnerability window duration between CVE publication and distro advisory.
+
+**Status:** PASS — NVD enrichment provides 50K CVE publishedDate values, advisory graphs provide advisoryDate. Type casting handles string vs dateTime mismatch.
 
 ---
 
@@ -1188,7 +1195,7 @@ LIMIT 100
 
 **Exercises:** PackageIdentity, isVersionOf, cross-distribution joins
 
-**Status:** PASS
+**Status:** BLOCKED — Requires cross-distro equivalence data. Current `pkg:isVersionOf` links use distro-specific identity URIs (e.g., `d/pkg/fedora/43/x86_64/0ad`) that don't cross distribution boundaries. Needs Repology enrichment to populate shared cross-distro PackageIdentity entities, or materialized equivalence view. See Deferred Ideas in `platform/docs/plans/2026-04-24-cq-query-and-harness-fast-pass.md`.
 
 ---
 
