@@ -46,10 +46,78 @@ vcs:ReleaseShape a sh:NodeShape ;
             sh:path vcs:releaseDate ] ;
     sh:targetClass vcs:Release .
 
+vcs:ForgeShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A forge instance must have exactly one base URL."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:forgeUrl ],
+        [ sh:class vcs:ForgeSoftware ;
+            sh:minCount 1 ;
+            sh:maxCount 1 ;
+            sh:message "A forge instance must specify exactly one forge software product."@en ;
+            sh:path vcs:forgeSoftware ],
+        [ sh:class vcs:ForgeVersionObservation ;
+            sh:message "Version observations on a forge must be ForgeVersionObservation entities."@en ;
+            sh:path vcs:hasVersionObservation ] ;
+    sh:targetClass vcs:Forge .
+
+vcs:ForgeSoftwareShape a sh:NodeShape ;
+    sh:property [ sh:message "A forge software product must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass vcs:ForgeSoftware .
+
+vcs:ForgeSoftwareVersionShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A forge software version must have exactly one version string."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:versionString ],
+        [ sh:class vcs:ForgeSoftware ;
+            sh:maxCount 1 ;
+            sh:message "A forge software version must belong to exactly one forge software product."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:versionOfSoftware ],
+        [ sh:class vcs:VersionControlSystem ;
+            sh:message "supportedVcs must reference a VersionControlSystem individual."@en ;
+            sh:path vcs:supportedVcs ] ;
+    sh:targetClass vcs:ForgeSoftwareVersion .
+
+vcs:VersionControlSystemShape a sh:NodeShape ;
+    sh:property [ sh:message "A version control system must have at least one label."@en ;
+            sh:minCount 1 ;
+            sh:path rdfs:label ] ;
+    sh:targetClass vcs:VersionControlSystem .
+
+# Integrity constraint NOT expressible in core SHACL:
+# The ForgeSoftwareVersion referenced by observedSoftwareVersion must have
+# versionOfSoftware matching the Forge's forgeSoftware. This cross-entity
+# consistency check requires SPARQL or must be enforced by the enricher
+# and validated at query time. Same constraint class as author≠committer
+# mismatch (see plan doc).
+
+vcs:ForgeVersionObservationShape a sh:NodeShape ;
+    sh:property [ sh:class vcs:ForgeSoftwareVersion ;
+            sh:maxCount 1 ;
+            sh:message "A version observation must reference exactly one forge software version."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:observedSoftwareVersion ],
+        [ sh:datatype xsd:date ;
+            sh:maxCount 1 ;
+            sh:message "A version observation must have exactly one observation date."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:observedAt ] ;
+    sh:targetClass vcs:ForgeVersionObservation .
+
 vcs:RepositoryShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
             sh:message "A repository should have a repository URL."@en ;
-            sh:path vcs:repositoryURL ] ;
+            sh:path vcs:repositoryURL ],
+        [ sh:class vcs:Forge ;
+            sh:maxCount 1 ;
+            sh:message "A repository may be hosted on at most one forge instance."@en ;
+            sh:path vcs:hostedOn ] ;
     sh:targetClass vcs:Repository .
 
 vcs:TagShape a sh:NodeShape ;

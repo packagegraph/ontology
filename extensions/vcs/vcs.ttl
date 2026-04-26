@@ -7,21 +7,35 @@
 @prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-vcs:Bazaar a owl:NamedIndividual ;
+vcs:Bazaar a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "Bazaar"@en ;
     rdfs:comment "Bazaar version control system"@en .
 
-vcs:Bitbucket a owl:NamedIndividual ;
-    rdfs:label "Bitbucket"@en ;
-    rdfs:comment "Bitbucket hosting platform"@en .
+vcs:BitbucketCloud a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
+    rdfs:label "Bitbucket Cloud"@en ;
+    rdfs:comment "Atlassian Bitbucket Cloud — SaaS forge at bitbucket.org (continuously deployed, no user-visible version numbers)"@en .
 
-vcs:CVS a owl:NamedIndividual ;
+vcs:BitbucketDataCenter a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
+    rdfs:label "Bitbucket Data Center"@en ;
+    rdfs:comment "Atlassian Bitbucket Data Center — self-hosted enterprise forge (versioned releases, distinct codebase from Bitbucket Cloud)"@en .
+
+vcs:CVS a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "CVS"@en ;
     rdfs:comment "Concurrent Versions System"@en .
 
-vcs:Codeberg a owl:NamedIndividual ;
-    rdfs:label "Codeberg"@en ;
-    rdfs:comment "Codeberg hosting platform"@en .
+vcs:Forgejo a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
+    rdfs:label "Forgejo"@en ;
+    rdfs:comment "Forgejo forge platform (community fork of Gitea, self-hosted)"@en .
+
+vcs:Gitea a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
+    rdfs:label "Gitea"@en ;
+    rdfs:comment "Gitea forge platform (self-hosted)"@en .
 
 vcs:Diff a owl:Class ;
     rdfs:label "Diff"@en ;
@@ -30,21 +44,25 @@ vcs:Diff a owl:Class ;
     rdfs:isDefinedBy vcs: ;
     rdfs:subClassOf owl:Thing .
 
-vcs:Fossil a owl:NamedIndividual ;
+vcs:Fossil a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "Fossil"@en ;
     rdfs:comment "Fossil distributed version control system"@en .
 
-vcs:Git a owl:NamedIndividual ;
+vcs:Git a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "Git"@en ;
     rdfs:comment "Git version control system"@en .
 
-vcs:GitHub a owl:NamedIndividual ;
+vcs:GitHub a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
     rdfs:label "GitHub"@en ;
-    rdfs:comment "GitHub hosting platform"@en .
+    rdfs:comment "GitHub forge platform (SaaS at github.com, self-hosted as GitHub Enterprise Server)"@en .
 
-vcs:GitLab a owl:NamedIndividual ;
+vcs:GitLab a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
     rdfs:label "GitLab"@en ;
-    rdfs:comment "GitLab hosting platform"@en .
+    rdfs:comment "GitLab forge platform (SaaS at gitlab.com, self-hosted as GitLab CE/EE)"@en .
 
 vcs:Issue a owl:Class ;
     rdfs:label "Issue"@en ;
@@ -53,7 +71,8 @@ vcs:Issue a owl:Class ;
     rdfs:isDefinedBy vcs: ;
     rdfs:subClassOf owl:Thing .
 
-vcs:Mercurial a owl:NamedIndividual ;
+vcs:Mercurial a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "Mercurial"@en ;
     rdfs:comment "Mercurial version control system"@en .
 
@@ -71,17 +90,97 @@ vcs:ReleaseCandidate a owl:Class ;
     rdfs:isDefinedBy vcs: ;
     rdfs:subClassOf vcs:Release .
 
-vcs:Savannah a owl:NamedIndividual ;
+vcs:Savannah a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
     rdfs:label "GNU Savannah"@en ;
-    rdfs:comment "GNU Savannah hosting platform"@en .
+    rdfs:comment "GNU Savannah forge platform (self-hosted by GNU project)"@en .
 
-vcs:SourceHut a owl:NamedIndividual ;
+vcs:SourceHut a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
     rdfs:label "SourceHut"@en ;
-    rdfs:comment "SourceHut hosting platform"@en .
+    rdfs:comment "SourceHut forge platform (SaaS at sr.ht, self-hostable)"@en .
 
-vcs:Subversion a owl:NamedIndividual ;
+vcs:cgit a owl:NamedIndividual,
+        vcs:ForgeSoftware ;
+    rdfs:label "cgit"@en ;
+    rdfs:comment "cgit — lightweight Git repository viewer (Sourceware, kernel.org)"@en .
+
+vcs:Subversion a owl:NamedIndividual,
+        vcs:VersionControlSystem ;
     rdfs:label "Subversion"@en ;
     rdfs:comment "Apache Subversion version control system"@en .
+
+vcs:forgeUrl a owl:DatatypeProperty ;
+    rdfs:label "forge URL"@en ;
+    IAO:0000115 "The base URL of a forge instance, such as https://github.com or https://gitlab.gnome.org."@en ;
+    rdfs:comment "Base URL of the forge instance"@en ;
+    rdfs:domain vcs:Forge ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:anyURI .
+
+vcs:forgeSoftware a owl:ObjectProperty ;
+    rdfs:label "forge software"@en ;
+    IAO:0000115 "The forge software product running on this instance, such as GitLab, Forgejo, or GitHub."@en ;
+    rdfs:comment "The forge software product this instance runs"@en ;
+    rdfs:domain vcs:Forge ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:ForgeSoftware .
+
+vcs:hasVersionObservation a owl:ObjectProperty ;
+    rdfs:label "has version observation"@en ;
+    IAO:0000115 "Associates a forge instance with a recorded observation of its software version at a point in time."@en ;
+    rdfs:comment "Links a forge to a version observation"@en ;
+    rdfs:domain vcs:Forge ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:ForgeVersionObservation .
+
+vcs:supportedVcs a owl:ObjectProperty ;
+    rdfs:label "supported VCS"@en ;
+    IAO:0000115 "Associates a forge software version with the version control systems it supports. VCS support is a capability of a specific versioned release, not of the product line as a whole — a forge product may add or drop VCS support across versions."@en ;
+    rdfs:comment "VCS types supported by this forge software version"@en ;
+    rdfs:domain vcs:ForgeSoftwareVersion ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:VersionControlSystem .
+
+vcs:versionOfSoftware a owl:ObjectProperty ;
+    rdfs:label "version of software"@en ;
+    IAO:0000115 "Associates a forge software version with the product it belongs to."@en ;
+    rdfs:comment "The forge software product this version belongs to"@en ;
+    rdfs:domain vcs:ForgeSoftwareVersion ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:ForgeSoftware .
+
+vcs:observedSoftwareVersion a owl:ObjectProperty ;
+    rdfs:label "observed software version"@en ;
+    IAO:0000115 "Associates a forge version observation with the specific software version that was running on the forge instance at the time of observation."@en ;
+    rdfs:comment "The software version observed running on the forge"@en ;
+    rdfs:domain vcs:ForgeVersionObservation ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:ForgeSoftwareVersion .
+
+vcs:versionString a owl:DatatypeProperty ;
+    rdfs:label "version string"@en ;
+    IAO:0000115 "The version identifier string for a forge software version, e.g., 17.1.0, 14.5.1."@en ;
+    rdfs:comment "Version identifier (e.g., 17.1.0)"@en ;
+    rdfs:domain vcs:ForgeSoftwareVersion ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:string .
+
+vcs:hostedOn a owl:ObjectProperty ;
+    rdfs:label "hosted on"@en ;
+    IAO:0000115 "Associates a repository with the forge instance where it is hosted."@en ;
+    rdfs:comment "The forge instance hosting this repository"@en ;
+    rdfs:domain vcs:Repository ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:Forge .
+
+vcs:observedAt a owl:DatatypeProperty ;
+    rdfs:label "observed at"@en ;
+    IAO:0000115 "The date when a forge version observation was recorded."@en ;
+    rdfs:comment "Date the version observation was recorded"@en ;
+    rdfs:domain vcs:ForgeVersionObservation ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:date .
 
 vcs:addedFile a owl:ObjectProperty ;
     rdfs:label "added file"@en ;
@@ -649,6 +748,41 @@ vcs:Branch a owl:Class ;
             owl:onProperty vcs:branchName ],
         prov:Entity .
 
+vcs:Forge a owl:Class ;
+    rdfs:label "Forge Instance"@en ;
+    IAO:0000115 "A specific deployment of forge software at a URL, hosting one or more VCS repositories. Distinguishes between SaaS platforms (github.com), public community instances (codeberg.org), and self-hosted instances (gitlab.gnome.org). The same forge software (e.g., GitLab) may run on many independent instances."@en ;
+    rdfs:comment "A deployed forge instance hosting repositories"@en ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:subClassOf owl:Thing .
+
+vcs:ForgeSoftware a owl:Class ;
+    rdfs:label "Forge Software"@en ;
+    IAO:0000115 "A forge product family used to host VCS repositories. Identifies the software platform — GitHub, GitLab, Forgejo, Gitea, SourceHut, cgit, etc. — regardless of whether a particular instance is SaaS, self-hosted, or both. Multiple forge instances may run the same software. This class enables software-level concentration and vulnerability analysis across all instances of the same product."@en ;
+    rdfs:comment "A forge product family (GitHub, GitLab, Forgejo, etc.)"@en ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:subClassOf owl:Thing .
+
+vcs:ForgeSoftwareVersion a owl:Class ;
+    rdfs:label "Forge Software Version"@en ;
+    IAO:0000115 "A specific versioned release of a forge software product, representing its capability surface at that version. VCS support, features, and known vulnerabilities are properties of the version, not the product line. Multiple forge instances may run the same version. Shared across observations — if five instances run GitLab 17.1, they all reference the same ForgeSoftwareVersion entity."@en ;
+    rdfs:comment "A versioned release of a forge software product (e.g., GitLab 17.1, Forgejo 14.5.1)"@en ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:subClassOf owl:Thing .
+
+vcs:ForgeVersionObservation a owl:Class ;
+    rdfs:label "Forge Version Observation"@en ;
+    IAO:0000115 "A recorded observation of what software version a forge instance was running at a specific point in time. Enables temporal correlation between forge software vulnerabilities and repository activity during the vulnerable window."@en ;
+    rdfs:comment "A timestamped observation of a forge instance's software version"@en ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:subClassOf prov:Entity .
+
+vcs:VersionControlSystem a owl:Class ;
+    rdfs:label "Version Control System"@en ;
+    IAO:0000115 "A class of version control systems. Individuals represent specific VCS types such as Git, Subversion, Mercurial, Bazaar, CVS, and Fossil. Used as the range of vcs:supportedVcs to formally constrain which VCS types a forge software version supports."@en ;
+    rdfs:comment "A version control system type (Git, SVN, Mercurial, etc.)"@en ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:subClassOf owl:Thing .
+
 vcs:Milestone a owl:Class ;
     rdfs:label "Milestone"@en ;
     IAO:0000115 "A significant point in the development timeline marking the completion of specific features or goals."@en ;
@@ -722,7 +856,7 @@ vcs: a owl:Ontology ;
     dcterms:title "Version Control System Ontology" ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-25"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/vcs/0.6.0> ;
 

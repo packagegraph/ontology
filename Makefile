@@ -56,6 +56,12 @@ validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
 
+# Cross-module integration validation
+.PHONY: validate-integration
+validate-integration:
+	@echo "Cross-module integration validation..."
+	@$(PYTHON) scripts/validate_integration.py
+
 # ─── Version Consistency ─────────────────────────────────────────────────────
 
 .PHONY: check-version
