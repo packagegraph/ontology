@@ -1,4 +1,5 @@
 @prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix att: <https://purl.org/packagegraph/ontology/attestation#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
@@ -49,6 +50,30 @@ slsa:attestsBuildActivity a owl:ObjectProperty ;
     rdfs:isDefinedBy slsa: ;
     rdfs:range pkg:BuildActivity ;
     rdfs:subPropertyOf prov:wasDerivedFrom .
+
+slsa:buildType a owl:DatatypeProperty ;
+    rdfs:label "build type"@en ;
+    IAO:0000115 "The URI identifying the build type from the SLSA Provenance v1 predicate, such as https://github.com/slsa-framework/slsa-github-generator/generic@v1. Indicates the build platform and configuration used."@en ;
+    rdfs:comment "SLSA Provenance v1 buildType URI"@en ;
+    rdfs:domain slsa:ProvenanceAttestation ;
+    rdfs:isDefinedBy slsa: ;
+    rdfs:range xsd:anyURI .
+
+slsa:buildInvocationId a owl:DatatypeProperty ;
+    rdfs:label "build invocation ID"@en ;
+    IAO:0000115 "A unique identifier for the specific build invocation that produced the artifact, from the SLSA Provenance v1 predicate. Typically a CI/CD run URL or ID."@en ;
+    rdfs:comment "Unique identifier for the build invocation (CI/CD run URL)"@en ;
+    rdfs:domain slsa:ProvenanceAttestation ;
+    rdfs:isDefinedBy slsa: ;
+    rdfs:range xsd:string .
+
+slsa:workflowRef a owl:DatatypeProperty ;
+    rdfs:label "workflow ref"@en ;
+    IAO:0000115 "The reference to the build workflow definition, from the SLSA Provenance v1 predicate. Typically a repository path and git ref identifying the CI/CD workflow file that executed the build."@en ;
+    rdfs:comment "Reference to the CI/CD workflow definition (repo path + ref)"@en ;
+    rdfs:domain slsa:ProvenanceAttestation ;
+    rdfs:isDefinedBy slsa: ;
+    rdfs:range xsd:string .
 
 slsa:buildImage a owl:DatatypeProperty ;
     rdfs:label "build image"@en ;
@@ -192,11 +217,12 @@ slsa:usedBuildEnvironment a owl:ObjectProperty ;
 
 slsa:verificationStatus a owl:DatatypeProperty ;
     rdfs:label "verification status"@en ;
-    IAO:0000115 "The verification status of the attestation signature: verified, unverified, or failed."@en ;
+    IAO:0000115 "The verification status of the attestation signature: verified, unverified, or failed. This is a flat shortcut for simple queries. For structured signature metadata (method, certificate, transparency log), use att:hasSignature to link to an att:DigitalSignature entity, which carries att:signatureStatus with the same value vocabulary."@en ;
     rdfs:comment "Whether the attestation signature has been verified"@en ;
     rdfs:domain slsa:ProvenanceAttestation ;
     rdfs:isDefinedBy slsa: ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+    rdfs:seeAlso att:signatureStatus .
 
 slsa:attestationTimestamp a owl:DatatypeProperty,
         owl:FunctionalProperty ;

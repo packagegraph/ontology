@@ -1,0 +1,245 @@
+@prefix att: <https://purl.org/packagegraph/ontology/attestation#> .
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix slsa: <https://purl.org/packagegraph/ontology/slsa#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# Example 1: Sigstore Keyless — npm package signed via
+#   GitHub Actions with Fulcio + Rekor
+# ============================================================
+
+# The npm package has a SLSA provenance attestation (from slsa.ttl)
+# that is cryptographically signed via Sigstore keyless flow.
+
+ex:sigstore-npm-signature a att:DigitalSignature ;
+    att:signatureMethod att:SigstoreKeyless ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "ECDSA-P256-SHA256" ;
+    att:signedAt "2026-04-20T14:30:00Z"^^xsd:dateTime ;
+    att:oidcIssuer "https://token.actions.githubusercontent.com"^^xsd:anyURI ;
+    att:oidcIdentity "https://github.com/expressjs/express/.github/workflows/publish.yml@refs/tags/v5.1.0" ;
+    att:hasOIDCProvider att:GitHubActionsOIDC ;
+    att:hasCertificate ex:sigstore-npm-fulcio-cert ;
+    att:hasTransparencyLogEntry ex:sigstore-npm-rekor-entry ;
+    att:signedDigest "sha256:a1b2c3d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef01" ;
+    rdfs:label "Sigstore signature for express@5.1.0 npm provenance" .
+
+ex:sigstore-npm-fulcio-cert a att:SigningCertificate ;
+    att:certificateFingerprint "sha256:cafe0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab" ;
+    att:certificateIssuer att:SigstoreFulcio ;
+    att:certificateSubject "https://github.com/expressjs/express/.github/workflows/publish.yml@refs/tags/v5.1.0" ;
+    att:certificateNotBefore "2026-04-20T14:29:55Z"^^xsd:dateTime ;
+    att:certificateNotAfter "2026-04-20T14:39:55Z"^^xsd:dateTime ;
+    att:isEphemeralCertificate true ;
+    att:fulcioIssuerV2 "https://token.actions.githubusercontent.com"^^xsd:anyURI ;
+    att:buildSignerURI "https://github.com/expressjs/express/.github/workflows/publish.yml@refs/tags/v5.1.0"^^xsd:anyURI ;
+    att:buildSignerDigest "abc123def456789" ;
+    att:runnerEnvironment "github-hosted" ;
+    att:sourceRepositoryURI "https://github.com/expressjs/express"^^xsd:anyURI ;
+    att:sourceRepositoryDigest "def456abc789012" ;
+    rdfs:label "Fulcio certificate for express@5.1.0 publish" .
+
+ex:sigstore-npm-rekor-entry a att:TransparencyLogEntry ;
+    att:logIndex "98765432"^^xsd:long ;
+    att:logId "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d" ;
+    att:entryUUID "24296fb24b8ad77a8e1f5b12c8e6a9d1f0e3b4c5d6e7f8a9b0c1d2e3f4a5b6c7" ;
+    att:integratedTime "2026-04-20T14:30:02Z"^^xsd:dateTime ;
+    att:inTransparencyLog att:SigstorePublicGood ;
+    rdfs:label "Rekor entry for express@5.1.0 signature" .
+
+# Link from SLSA provenance attestation to the signature
+ex:express-npm-provenance a slsa:ProvenanceAttestation ;
+    slsa:attestsBuildLevel slsa:L2 ;
+    slsa:attestationTimestamp "2026-04-20T14:30:00Z"^^xsd:dateTime ;
+    slsa:attestationDigest "sha256:a1b2c3d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef01" ;
+    slsa:predicateType <https://slsa.dev/provenance/v1> ;
+    slsa:verificationStatus "verified" ;
+    att:hasSignature ex:sigstore-npm-signature ;
+    rdfs:label "SLSA L2 provenance for express@5.1.0" .
+
+# ============================================================
+# Example 2: Gitsign — Git commit signed via Sigstore keyless
+# ============================================================
+
+# A developer signs a commit using gitsign, which uses their
+# Google account OIDC identity via Fulcio + Rekor.
+
+ex:gitsign-commit a vcs:Commit ;
+    vcs:commitHash "abc123def456789012345678901234567890abcd" ;
+    vcs:commitTimestamp "2026-04-18T09:15:00Z"^^xsd:dateTime ;
+    vcs:commitMessage "feat: add OIDC token validation endpoint" ;
+    att:hasSignature ex:gitsign-signature ;
+    rdfs:label "Gitsign-signed commit abc123d" .
+
+ex:gitsign-signature a att:DigitalSignature ;
+    att:signatureMethod att:SigstoreKeyless ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "ECDSA-P256-SHA256" ;
+    att:signedAt "2026-04-18T09:15:00Z"^^xsd:dateTime ;
+    att:oidcIssuer "https://accounts.google.com"^^xsd:anyURI ;
+    att:oidcIdentity "developer@example.com" ;
+    att:hasOIDCProvider att:GoogleAccountsOIDC ;
+    att:hasCertificate ex:gitsign-fulcio-cert ;
+    att:hasTransparencyLogEntry ex:gitsign-rekor-entry ;
+    rdfs:label "Gitsign signature by developer@example.com" .
+
+ex:gitsign-fulcio-cert a att:SigningCertificate ;
+    att:certificateFingerprint "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef" ;
+    att:certificateIssuer att:SigstoreFulcio ;
+    att:certificateSubject "developer@example.com" ;
+    att:certificateNotBefore "2026-04-18T09:14:55Z"^^xsd:dateTime ;
+    att:certificateNotAfter "2026-04-18T09:24:55Z"^^xsd:dateTime ;
+    att:isEphemeralCertificate true ;
+    att:fulcioIssuerV2 "https://accounts.google.com"^^xsd:anyURI ;
+    rdfs:label "Fulcio certificate for developer@example.com" .
+
+ex:gitsign-rekor-entry a att:TransparencyLogEntry ;
+    att:logIndex "87654321"^^xsd:long ;
+    att:logId "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d" ;
+    att:entryUUID "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210" ;
+    att:integratedTime "2026-04-18T09:15:03Z"^^xsd:dateTime ;
+    att:inTransparencyLog att:SigstorePublicGood ;
+    rdfs:label "Rekor entry for gitsign commit abc123d" .
+
+# ============================================================
+# Example 3: GPG-signed Git commit (traditional key-based)
+# ============================================================
+
+ex:gpg-signed-commit a vcs:Commit ;
+    vcs:commitHash "deadbeef01234567890123456789012345678901" ;
+    vcs:commitTimestamp "2026-04-15T16:42:00Z"^^xsd:dateTime ;
+    vcs:commitMessage "security: patch CVE-2026-1234 in TLS handler" ;
+    att:hasSignature ex:gpg-commit-signature ;
+    rdfs:label "GPG-signed commit deadbeef" .
+
+ex:gpg-commit-signature a att:DigitalSignature ;
+    att:signatureMethod att:GPG ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "RSA-SHA256" ;
+    att:signedAt "2026-04-15T16:42:00Z"^^xsd:dateTime ;
+    att:signingKeyFingerprint "ABCD1234EFGH5678IJKL9012MNOP3456QRST7890" ;
+    att:signingKeyTrustLevel "full" ;
+    rdfs:label "GPG signature by key ABCD...7890" .
+
+# ============================================================
+# Example 4: SSH-signed Git commit
+# ============================================================
+
+ex:ssh-signed-commit a vcs:Commit ;
+    vcs:commitHash "cafebabe01234567890123456789012345678901" ;
+    vcs:commitTimestamp "2026-04-22T11:00:00Z"^^xsd:dateTime ;
+    vcs:commitMessage "chore: update CI configuration for arm64" ;
+    att:hasSignature ex:ssh-commit-signature ;
+    rdfs:label "SSH-signed commit cafebabe" .
+
+ex:ssh-commit-signature a att:DigitalSignature ;
+    att:signatureMethod att:SSH ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "Ed25519" ;
+    att:signedAt "2026-04-22T11:00:00Z"^^xsd:dateTime ;
+    att:signingKeyFingerprint "SHA256:jKl9m2nO3pQrStUvWxYz0123456789aBcDeFgHiJ" ;
+    rdfs:label "SSH signature by Ed25519 key" .
+
+# ============================================================
+# Example 5: OpenPubkey — keyless signing without a CA
+# ============================================================
+# OpenPubkey binds a public key directly to an OIDC token
+# without issuing a separate certificate. The OIDC provider's
+# signature on the ID token IS the trust anchor.
+
+ex:openpubkey-signature a att:DigitalSignature ;
+    att:signatureMethod att:OpenPubkey ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "ECDSA-P256-SHA256" ;
+    att:signedAt "2026-04-24T08:30:00Z"^^xsd:dateTime ;
+    att:oidcIssuer "https://accounts.google.com"^^xsd:anyURI ;
+    att:oidcIdentity "signer@example.com" ;
+    att:hasOIDCProvider att:GoogleAccountsOIDC ;
+    att:signedDigest "sha256:9876543210abcdef9876543210abcdef9876543210abcdef9876543210abcdef" ;
+    rdfs:label "OpenPubkey signature by signer@example.com" .
+
+# Note: no att:hasCertificate — OpenPubkey is certificate-less.
+# The OIDC token itself is the trust anchor.
+
+# ============================================================
+# Example 6: GitHub Artifact Attestation (Sigstore under the hood)
+# ============================================================
+# GitHub's artifact attestation uses Sigstore infrastructure
+# but adds GitHub-specific Fulcio certificate extensions.
+
+ex:gh-artifact-attestation-sig a att:DigitalSignature ;
+    att:signatureMethod att:SigstoreKeyless ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "ECDSA-P256-SHA256" ;
+    att:signedAt "2026-04-23T19:00:00Z"^^xsd:dateTime ;
+    att:oidcIssuer "https://token.actions.githubusercontent.com"^^xsd:anyURI ;
+    att:oidcIdentity "https://github.com/kubernetes/kubernetes/.github/workflows/release.yml@refs/tags/v1.32.0" ;
+    att:hasOIDCProvider att:GitHubActionsOIDC ;
+    att:hasCertificate ex:gh-artifact-fulcio-cert ;
+    att:hasTransparencyLogEntry ex:gh-artifact-rekor-entry ;
+    att:signedDigest "sha256:fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210" ;
+    rdfs:label "GitHub Artifact Attestation for kubernetes v1.32.0" .
+
+ex:gh-artifact-fulcio-cert a att:SigningCertificate ;
+    att:certificateFingerprint "sha256:aabbccdd11223344aabbccdd11223344aabbccdd11223344aabbccdd11223344" ;
+    att:certificateIssuer att:SigstoreFulcio ;
+    att:certificateSubject "https://github.com/kubernetes/kubernetes/.github/workflows/release.yml@refs/tags/v1.32.0" ;
+    att:certificateNotBefore "2026-04-23T18:59:55Z"^^xsd:dateTime ;
+    att:certificateNotAfter "2026-04-23T19:09:55Z"^^xsd:dateTime ;
+    att:isEphemeralCertificate true ;
+    att:fulcioIssuerV2 "https://token.actions.githubusercontent.com"^^xsd:anyURI ;
+    att:buildSignerURI "https://github.com/kubernetes/kubernetes/.github/workflows/release.yml@refs/tags/v1.32.0"^^xsd:anyURI ;
+    att:buildSignerDigest "999888777666555444333222111000aaa" ;
+    att:runnerEnvironment "github-hosted" ;
+    att:sourceRepositoryURI "https://github.com/kubernetes/kubernetes"^^xsd:anyURI ;
+    att:sourceRepositoryDigest "111222333444555666777888999000aaa" ;
+    rdfs:label "Fulcio certificate for kubernetes v1.32.0 release" .
+
+ex:gh-artifact-rekor-entry a att:TransparencyLogEntry ;
+    att:logIndex "112233445"^^xsd:long ;
+    att:logId "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d" ;
+    att:entryUUID "aa11bb22cc33dd44ee55ff66aa11bb22cc33dd44ee55ff66aa11bb22cc33dd44" ;
+    att:integratedTime "2026-04-23T19:00:05Z"^^xsd:dateTime ;
+    att:inTransparencyLog att:SigstorePublicGood ;
+    rdfs:label "Rekor entry for kubernetes v1.32.0 attestation" .
+
+# ============================================================
+# Example 7: in-toto Witness / Archivista transparency log
+# ============================================================
+# Shows a non-Rekor transparency log (Archivista) for in-toto
+# attestations collected via the Witness project.
+
+ex:witness-signature a att:DigitalSignature ;
+    att:signatureMethod att:X509 ;
+    att:signatureStatus "verified" ;
+    att:signatureAlgorithm "RSA-SHA256" ;
+    att:signedAt "2026-04-21T10:00:00Z"^^xsd:dateTime ;
+    att:hasCertificate ex:witness-cert ;
+    att:hasTransparencyLogEntry ex:archivista-entry ;
+    att:signedDigest "sha256:0000111122223333444455556666777788889999aaaabbbbccccddddeeeeffff" ;
+    rdfs:label "Witness X.509 signature with Archivista log" .
+
+ex:witness-cert a att:SigningCertificate ;
+    att:certificateFingerprint "sha256:eeeeffffaaaabbbb0000111122223333444455556666777788889999ccccdddd" ;
+    att:certificateIssuer ex:enterprise-ca ;
+    att:certificateSubject "CN=build-service.internal.example.com" ;
+    att:certificateNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+    att:certificateNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
+    att:isEphemeralCertificate false ;
+    rdfs:label "Enterprise X.509 certificate for build service" .
+
+ex:enterprise-ca a att:CertificateAuthority ;
+    att:caUri "https://pki.internal.example.com"^^xsd:anyURI ;
+    att:issuesEphemeralCertificates false ;
+    rdfs:label "Example Corp Internal CA" .
+
+ex:archivista-entry a att:TransparencyLogEntry ;
+    att:logIndex "5432"^^xsd:long ;
+    att:entryUUID "witness-entry-5432-uuid" ;
+    att:integratedTime "2026-04-21T10:00:03Z"^^xsd:dateTime ;
+    att:inTransparencyLog att:InTotoArchivista ;
+    rdfs:label "Archivista entry for Witness attestation" .

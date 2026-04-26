@@ -1,0 +1,243 @@
+@prefix att: <https://purl.org/packagegraph/ontology/attestation#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# SHACL Shapes — Attestation Module
+# ============================================================
+
+att:DigitalSignatureShape a sh:NodeShape ;
+    sh:targetClass att:DigitalSignature ;
+    sh:property [
+        sh:path att:signatureMethod ;
+        sh:class att:SignatureMethod ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A digital signature must specify exactly one signature method."@en ;
+    ] ;
+    sh:property [
+        sh:path att:signatureStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "verified" "failed" "unverified" ) ;
+        sh:message "A digital signature must have exactly one status: verified, failed, or unverified. Unsigned artifacts have no att:DigitalSignature entity — absence of att:hasSignature indicates unsigned."@en ;
+    ] ;
+    sh:property [
+        sh:path att:signedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "A digital signature may have at most one signing timestamp."@en ;
+    ] ;
+    sh:property [
+        sh:path att:signatureAlgorithm ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "A digital signature may specify at most one algorithm."@en ;
+    ] ;
+    sh:or (
+        att:KeyBasedSignatureProfile
+        att:SigstoreSignatureProfile
+        att:OpenPubkeySignatureProfile
+        att:X509SignatureProfile
+    ) ;
+    sh:message "A digital signature must conform to at least one method profile (key-based, Sigstore, OpenPubkey, or X.509)."@en .
+
+# ── Method-Specific Profiles (core SHACL, no sh:sparql) ──────
+# These are non-targeted shapes used by DigitalSignatureShape
+# via sh:or to validate method-specific property expectations.
+
+att:KeyBasedSignatureProfile a sh:NodeShape ;
+    sh:description "Profile for key-based signatures (GPG, SSH): expects a signing key fingerprint."@en ;
+    sh:property [
+        sh:path att:signatureMethod ;
+        sh:in ( att:GPG att:SSH ) ;
+    ] ;
+    sh:property [
+        sh:path att:signingKeyFingerprint ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Key-based signature (GPG/SSH) should have a signing key fingerprint."@en ;
+    ] .
+
+att:SigstoreSignatureProfile a sh:NodeShape ;
+    sh:description "Profile for Sigstore keyless signatures: expects a Fulcio certificate, Rekor log entry, and OIDC identity."@en ;
+    sh:property [
+        sh:path att:signatureMethod ;
+        sh:hasValue att:SigstoreKeyless ;
+    ] ;
+    sh:property [
+        sh:path att:hasCertificate ;
+        sh:minCount 1 ;
+        sh:class att:SigningCertificate ;
+        sh:message "Sigstore keyless signature should have a signing certificate (Fulcio)."@en ;
+    ] ;
+    sh:property [
+        sh:path att:hasTransparencyLogEntry ;
+        sh:minCount 1 ;
+        sh:class att:TransparencyLogEntry ;
+        sh:message "Sigstore keyless signature should have a transparency log entry (Rekor)."@en ;
+    ] ;
+    sh:property [
+        sh:path att:oidcIssuer ;
+        sh:minCount 1 ;
+        sh:datatype xsd:anyURI ;
+        sh:message "Sigstore keyless signature should have an OIDC issuer."@en ;
+    ] ;
+    sh:property [
+        sh:path att:oidcIdentity ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Sigstore keyless signature should have an OIDC identity."@en ;
+    ] ;
+    sh:property [
+        sh:path att:hasOIDCProvider ;
+        sh:minCount 1 ;
+        sh:class att:OIDCProvider ;
+        sh:message "Sigstore keyless signature should reference an OIDC provider."@en ;
+    ] .
+
+att:OpenPubkeySignatureProfile a sh:NodeShape ;
+    sh:description "Profile for OpenPubkey signatures: expects OIDC identity, forbids certificates (certificate-less by design)."@en ;
+    sh:property [
+        sh:path att:signatureMethod ;
+        sh:hasValue att:OpenPubkey ;
+    ] ;
+    sh:property [
+        sh:path att:hasCertificate ;
+        sh:maxCount 0 ;
+        sh:message "OpenPubkey signatures must not have a certificate — OpenPubkey is certificate-less by design."@en ;
+    ] ;
+    sh:property [
+        sh:path att:oidcIssuer ;
+        sh:minCount 1 ;
+        sh:datatype xsd:anyURI ;
+        sh:message "OpenPubkey signature should have an OIDC issuer."@en ;
+    ] ;
+    sh:property [
+        sh:path att:oidcIdentity ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "OpenPubkey signature should have an OIDC identity."@en ;
+    ] ;
+    sh:property [
+        sh:path att:hasOIDCProvider ;
+        sh:minCount 1 ;
+        sh:class att:OIDCProvider ;
+        sh:message "OpenPubkey signature should reference an OIDC provider."@en ;
+    ] .
+
+att:X509SignatureProfile a sh:NodeShape ;
+    sh:description "Profile for X.509/S/MIME signatures: expects a signing certificate."@en ;
+    sh:property [
+        sh:path att:signatureMethod ;
+        sh:hasValue att:X509 ;
+    ] ;
+    sh:property [
+        sh:path att:hasCertificate ;
+        sh:minCount 1 ;
+        sh:class att:SigningCertificate ;
+        sh:message "X.509 signature should have a signing certificate."@en ;
+    ] .
+
+att:SigningCertificateShape a sh:NodeShape ;
+    sh:targetClass att:SigningCertificate ;
+    sh:property [
+        sh:path att:certificateFingerprint ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "A certificate may have at most one fingerprint."@en ;
+    ] ;
+    sh:property [
+        sh:path att:certificateIssuer ;
+        sh:class att:CertificateAuthority ;
+        sh:maxCount 1 ;
+        sh:message "A certificate may have at most one issuing CA."@en ;
+    ] ;
+    sh:property [
+        sh:path att:certificateNotBefore ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "A certificate may have at most one validity start."@en ;
+    ] ;
+    sh:property [
+        sh:path att:certificateNotAfter ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "A certificate may have at most one validity end."@en ;
+    ] ;
+    sh:property [
+        sh:path att:isEphemeralCertificate ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "A certificate may have at most one ephemeral flag."@en ;
+    ] .
+
+att:TransparencyLogEntryShape a sh:NodeShape ;
+    sh:targetClass att:TransparencyLogEntry ;
+    sh:property [
+        sh:path att:logIndex ;
+        sh:datatype xsd:long ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A transparency log entry must have exactly one log index."@en ;
+    ] ;
+    sh:property [
+        sh:path att:integratedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A transparency log entry must have exactly one integrated time."@en ;
+    ] ;
+    sh:property [
+        sh:path att:inTransparencyLog ;
+        sh:class att:TransparencyLog ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A transparency log entry must belong to exactly one log."@en ;
+    ] ;
+    sh:property [
+        sh:path att:entryUUID ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "A transparency log entry may have at most one UUID."@en ;
+    ] .
+
+att:CertificateAuthorityShape a sh:NodeShape ;
+    sh:targetClass att:CertificateAuthority ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "A certificate authority must have at least one label."@en ;
+    ] .
+
+att:TransparencyLogShape a sh:NodeShape ;
+    sh:targetClass att:TransparencyLog ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "A transparency log must have at least one label."@en ;
+    ] .
+
+att:OIDCProviderShape a sh:NodeShape ;
+    sh:targetClass att:OIDCProvider ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "An OIDC provider must have at least one label."@en ;
+    ] ;
+    sh:property [
+        sh:path att:oidcIssuerUri ;
+        sh:datatype xsd:anyURI ;
+        sh:maxCount 1 ;
+        sh:message "An OIDC provider may have at most one issuer URI."@en ;
+    ] .
+
+att:SignatureMethodShape a sh:NodeShape ;
+    sh:targetClass att:SignatureMethod ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "A signature method must have at least one label."@en ;
+    ] .

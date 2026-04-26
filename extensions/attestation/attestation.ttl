@@ -1,0 +1,507 @@
+@prefix IAO: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix att: <https://purl.org/packagegraph/ontology/attestation#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# Ontology Declaration
+# ============================================================
+
+att: a owl:Ontology ;
+    rdfs:isDefinedBy att: ;
+    rdfs:label "Attestation and Signing Infrastructure Ontology"@en ;
+    dcterms:abstract "The Attestation ontology models cryptographic signing infrastructure used across software supply chains. It provides classes for digital signatures, signing certificates, transparency logs, certificate authorities, and identity binding mechanisms. This module is signing-method-agnostic, supporting GPG/PGP, SSH, X.509/S/MIME, Sigstore (Fulcio/Rekor), and OpenPubkey. Both VCS commit signing (vcs.ttl) and build provenance signing (slsa.ttl) reference this module for structured signature metadata." ;
+    dcterms:created "2026-04-25"^^xsd:date ;
+    dcterms:creator <https://packagegraph.github.io/> ;
+    dcterms:description "Models cryptographic signing infrastructure: digital signatures, certificates, transparency logs, OIDC identity binding, and verification metadata for software supply chain attestation." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    dcterms:modified "2026-04-25"^^xsd:date ;
+    dcterms:title "Attestation and Signing Infrastructure Ontology" ;
+    rdfs:comment "Ontology for representing cryptographic signing methods, certificates, transparency logs, and identity binding across GPG, SSH, X.509, Sigstore, and OpenPubkey"@en ;
+    owl:imports pkg: ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/attestation/0.7.0> ;
+    owl:versionInfo "0.7.0" ;
+    rdfs:seeAlso <https://purl.org/packagegraph/ontology/attestation/shapes> .
+
+# ============================================================
+# Classes
+# ============================================================
+
+att:SignatureMethod a owl:Class ;
+    rdfs:label "Signature Method"@en ;
+    IAO:0000115 "A class of cryptographic signing methods used to produce digital signatures. Instances represent specific methods such as GPG, SSH key signing, X.509/S/MIME, Sigstore keyless signing, and OpenPubkey."@en ;
+    rdfs:comment "A cryptographic signing method (GPG, SSH, X.509, Sigstore, OpenPubkey)"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf owl:Thing .
+
+att:DigitalSignature a owl:Class ;
+    rdfs:label "Digital Signature"@en ;
+    IAO:0000115 "A cryptographic signature applied to a software artifact, VCS commit, or attestation document. This is the central entity connecting the signed object to the signing method, identity, certificate (if any), and transparency log entry (if any). A signature may be key-based (GPG, SSH) or keyless (Sigstore, OpenPubkey) with identity established through OIDC."@en ;
+    rdfs:comment "A cryptographic signature on an artifact, commit, or attestation"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Entity .
+
+att:SigningCertificate a owl:Class ;
+    rdfs:label "Signing Certificate"@en ;
+    IAO:0000115 "A cryptographic certificate binding a public key to an identity, used to verify a digital signature. May be long-lived (traditional X.509 from a CA) or short-lived/ephemeral (Sigstore Fulcio certificates, typically valid for 10 minutes, tied to an OIDC identity)."@en ;
+    rdfs:comment "A certificate binding a signing key to an identity (ephemeral or long-lived)"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Entity .
+
+att:TransparencyLog a owl:Class ;
+    rdfs:label "Transparency Log"@en ;
+    IAO:0000115 "An append-only, cryptographically verifiable log that records signing events for public auditability. Examples include Sigstore Rekor, Certificate Transparency (CT) logs, and in-toto Archivista. The log provides a tamper-evident record that a signing event occurred at a specific time."@en ;
+    rdfs:comment "An append-only, publicly auditable log of signing events"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Agent .
+
+att:TransparencyLogEntry a owl:Class ;
+    rdfs:label "Transparency Log Entry"@en ;
+    IAO:0000115 "An individual entry in a transparency log, providing an immutable, timestamped record that a specific signing event occurred. Each entry includes a monotonically increasing index, the log's identity, and a signed timestamp proving inclusion."@en ;
+    rdfs:comment "An immutable entry in a transparency log recording a signing event"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Entity .
+
+att:CertificateAuthority a owl:Class ;
+    rdfs:label "Certificate Authority"@en ;
+    IAO:0000115 "An entity that issues signing certificates. May be a traditional X.509 CA with long-lived certificates or a keyless CA like Sigstore Fulcio that issues short-lived certificates bound to OIDC identities."@en ;
+    rdfs:comment "An entity that issues signing certificates (Fulcio, traditional X.509 CAs)"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Agent .
+
+att:OIDCProvider a owl:Class ;
+    rdfs:label "OIDC Provider"@en ;
+    IAO:0000115 "An OpenID Connect identity provider that establishes signer identity in keyless signing flows. In Sigstore, the OIDC provider authenticates the signer and Fulcio embeds the OIDC claims in the signing certificate. Examples include GitHub Actions (token.actions.githubusercontent.com), Google Accounts, and Microsoft Entra ID."@en ;
+    rdfs:comment "An OpenID Connect identity provider used for keyless signing identity"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:subClassOf prov:Agent .
+
+# ============================================================
+# Named Individuals — Signature Methods
+# ============================================================
+
+att:GPG a owl:NamedIndividual,
+        att:SignatureMethod ;
+    rdfs:label "GPG/PGP"@en ;
+    rdfs:comment "GNU Privacy Guard / Pretty Good Privacy — long-lived key pair signing with web-of-trust or keyserver identity model"@en .
+
+att:SSH a owl:NamedIndividual,
+        att:SignatureMethod ;
+    rdfs:label "SSH"@en ;
+    rdfs:comment "SSH key signing (Git 2.34+) — uses existing SSH key pairs with allowed_signers file for identity verification"@en .
+
+att:X509 a owl:NamedIndividual,
+        att:SignatureMethod ;
+    rdfs:label "X.509/S/MIME"@en ;
+    rdfs:comment "X.509 certificate-based signing (S/MIME) — uses certificate chains from traditional certificate authorities"@en .
+
+att:SigstoreKeyless a owl:NamedIndividual,
+        att:SignatureMethod ;
+    rdfs:label "Sigstore Keyless"@en ;
+    rdfs:comment "Sigstore keyless signing via Fulcio ephemeral certificates and Rekor transparency log — identity established through OIDC, no long-lived keys"@en .
+
+att:OpenPubkey a owl:NamedIndividual,
+        att:SignatureMethod ;
+    rdfs:label "OpenPubkey"@en ;
+    rdfs:comment "OpenPubkey signing — uses OIDC identity tokens directly as signing credentials without a certificate authority, binding public keys to OIDC identities via the provider's signature on the ID token"@en .
+
+# ============================================================
+# Named Individuals — Well-Known Infrastructure
+# ============================================================
+
+att:SigstorePublicGood a owl:NamedIndividual,
+        att:TransparencyLog ;
+    rdfs:label "Sigstore Public Good Rekor"@en ;
+    rdfs:comment "The Sigstore project's public-good Rekor transparency log instance at rekor.sigstore.dev"@en .
+
+att:SigstoreFulcio a owl:NamedIndividual,
+        att:CertificateAuthority ;
+    rdfs:label "Sigstore Fulcio"@en ;
+    rdfs:comment "Sigstore's Fulcio certificate authority — issues short-lived (10-minute) signing certificates bound to OIDC identities"@en .
+
+att:GitHubActionsOIDC a owl:NamedIndividual,
+        att:OIDCProvider ;
+    rdfs:label "GitHub Actions OIDC"@en ;
+    rdfs:comment "GitHub Actions OIDC provider (token.actions.githubusercontent.com) — provides workflow identity tokens for keyless signing in CI/CD"@en .
+
+att:GoogleAccountsOIDC a owl:NamedIndividual,
+        att:OIDCProvider ;
+    rdfs:label "Google Accounts OIDC"@en ;
+    rdfs:comment "Google Accounts OIDC provider (accounts.google.com) — provides identity tokens for individual developer keyless signing"@en .
+
+att:MicrosoftEntraOIDC a owl:NamedIndividual,
+        att:OIDCProvider ;
+    rdfs:label "Microsoft Entra ID OIDC"@en ;
+    rdfs:comment "Microsoft Entra ID (formerly Azure AD) OIDC provider — enterprise identity for keyless signing"@en .
+
+att:InTotoArchivista a owl:NamedIndividual,
+        att:TransparencyLog ;
+    rdfs:label "in-toto Archivista"@en ;
+    rdfs:comment "Archivista — in-toto's transparency log and attestation store, used by the Witness project"@en .
+
+# ============================================================
+# Properties — DigitalSignature (the hub entity)
+# ============================================================
+
+att:signatureMethod a owl:ObjectProperty ;
+    rdfs:label "signature method"@en ;
+    IAO:0000115 "The cryptographic signing method used to produce this signature."@en ;
+    rdfs:comment "The signing method used (GPG, SSH, X.509, Sigstore, OpenPubkey)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:SignatureMethod .
+
+att:signatureStatus a owl:DatatypeProperty ;
+    rdfs:label "signature status"@en ;
+    IAO:0000115 "The verification result for this signature: verified (signature valid, identity confirmed), failed (signature invalid or tampered), or unverified (verification not attempted). Aligned with slsa:verificationStatus vocabulary. Unsigned artifacts are modeled by the absence of an att:hasSignature link, not by a DigitalSignature with status unverified."@en ;
+    rdfs:comment "Verification result: verified, failed, or unverified"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:signedAt a owl:DatatypeProperty ;
+    rdfs:label "signed at"@en ;
+    IAO:0000115 "The date and time when the signature was created."@en ;
+    rdfs:comment "Timestamp when the signature was created"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:dateTime .
+
+att:signatureValue a owl:DatatypeProperty ;
+    rdfs:label "signature value"@en ;
+    IAO:0000115 "The raw cryptographic signature value, typically base64-encoded."@en ;
+    rdfs:comment "The raw signature bytes (base64-encoded)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:signatureAlgorithm a owl:DatatypeProperty ;
+    rdfs:label "signature algorithm"@en ;
+    IAO:0000115 "The cryptographic algorithm used to produce the signature, e.g., RSA-SHA256, ECDSA-P256-SHA256, Ed25519."@en ;
+    rdfs:comment "Cryptographic algorithm used (RSA-SHA256, ECDSA-P256, Ed25519, etc.)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:hasCertificate a owl:ObjectProperty ;
+    rdfs:label "has certificate"@en ;
+    IAO:0000115 "Associates a digital signature with the signing certificate used to produce it. Present for X.509 and Sigstore signatures, absent for GPG and SSH key-based signatures."@en ;
+    rdfs:comment "The signing certificate used (Sigstore Fulcio, X.509)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:SigningCertificate .
+
+att:hasTransparencyLogEntry a owl:ObjectProperty ;
+    rdfs:label "has transparency log entry"@en ;
+    IAO:0000115 "Associates a digital signature with its entry in a transparency log, providing a tamper-evident record that the signing event occurred."@en ;
+    rdfs:comment "The transparency log entry recording this signing event"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:TransparencyLogEntry .
+
+# ---- Key-based identity (GPG, SSH) ----
+
+att:signingKeyFingerprint a owl:DatatypeProperty ;
+    rdfs:label "signing key fingerprint"@en ;
+    IAO:0000115 "The fingerprint of the cryptographic key used to produce the signature. For GPG, this is the key fingerprint; for SSH, the key's SHA256 fingerprint."@en ;
+    rdfs:comment "Fingerprint of the signing key (GPG key ID, SSH key fingerprint)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:signingKeyTrustLevel a owl:DatatypeProperty ;
+    rdfs:label "signing key trust level"@en ;
+    IAO:0000115 "The trust level assigned to the signing key in GPG's web of trust model: ultimate, full, marginal, undefined, or never."@en ;
+    rdfs:comment "GPG trust level: ultimate, full, marginal, undefined, never"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ---- OIDC identity (Sigstore, OpenPubkey) ----
+
+att:oidcIssuer a owl:DatatypeProperty ;
+    rdfs:label "OIDC issuer"@en ;
+    IAO:0000115 "The URI of the OpenID Connect provider that authenticated the signer's identity. For Sigstore, this is embedded in the Fulcio certificate's issuer extension. For OpenPubkey, it is the issuer of the OIDC token used as the signing credential. Examples: https://token.actions.githubusercontent.com, https://accounts.google.com."@en ;
+    rdfs:comment "OIDC provider URI that authenticated the signer"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:oidcIdentity a owl:DatatypeProperty ;
+    rdfs:label "OIDC identity"@en ;
+    IAO:0000115 "The identity claim from the OIDC token — the authenticated identity of the signer. For individual developers this is typically an email address. For CI/CD workflows this is a structured URI identifying the workflow, e.g., https://github.com/owner/repo/.github/workflows/release.yml@refs/heads/main."@en ;
+    rdfs:comment "The authenticated identity (email, workflow URI, service account)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:hasOIDCProvider a owl:ObjectProperty ;
+    rdfs:label "has OIDC provider"@en ;
+    IAO:0000115 "Associates a digital signature with the OIDC provider that authenticated the signer's identity."@en ;
+    rdfs:comment "The OIDC provider used for identity verification"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:OIDCProvider .
+
+# ============================================================
+# Properties — SigningCertificate
+# ============================================================
+
+att:certificateFingerprint a owl:DatatypeProperty ;
+    rdfs:label "certificate fingerprint"@en ;
+    IAO:0000115 "The SHA-256 fingerprint of the signing certificate, used for unique identification."@en ;
+    rdfs:comment "SHA-256 fingerprint of the certificate"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:certificateIssuer a owl:ObjectProperty ;
+    rdfs:label "certificate issuer"@en ;
+    IAO:0000115 "The certificate authority that issued this signing certificate."@en ;
+    rdfs:comment "The CA that issued this certificate"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:CertificateAuthority .
+
+att:certificateSubject a owl:DatatypeProperty ;
+    rdfs:label "certificate subject"@en ;
+    IAO:0000115 "The subject distinguished name or subject alternative name (SAN) of the certificate. For Fulcio certificates, this contains the OIDC identity (email or workflow URI)."@en ;
+    rdfs:comment "Subject DN or SAN of the certificate"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:certificateNotBefore a owl:DatatypeProperty ;
+    rdfs:label "certificate not before"@en ;
+    IAO:0000115 "The start of the certificate's validity period. For Fulcio ephemeral certificates, this is the moment the certificate was issued."@en ;
+    rdfs:comment "Start of certificate validity window"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:dateTime .
+
+att:certificateNotAfter a owl:DatatypeProperty ;
+    rdfs:label "certificate not after"@en ;
+    IAO:0000115 "The end of the certificate's validity period. For Fulcio ephemeral certificates, this is typically 10 minutes after issuance."@en ;
+    rdfs:comment "End of certificate validity window"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:dateTime .
+
+att:isEphemeralCertificate a owl:DatatypeProperty ;
+    rdfs:label "is ephemeral certificate"@en ;
+    IAO:0000115 "Whether this is a short-lived, ephemeral certificate (e.g., Sigstore Fulcio, typically valid for 10 minutes) as opposed to a traditional long-lived X.509 certificate. Ephemeral certificates rely on transparency log timestamps for post-expiry verification."@en ;
+    rdfs:comment "Whether the certificate is ephemeral (Fulcio) vs long-lived (X.509)"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:boolean .
+
+att:certificateChain a owl:DatatypeProperty ;
+    rdfs:label "certificate chain"@en ;
+    IAO:0000115 "The PEM-encoded certificate chain from the signing certificate to the root CA, used for offline verification."@en ;
+    rdfs:comment "PEM-encoded certificate chain to root CA"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ---- Fulcio-specific certificate extensions ----
+
+att:fulcioIssuerV2 a owl:DatatypeProperty ;
+    rdfs:label "Fulcio issuer (v2)"@en ;
+    IAO:0000115 "The OIDC issuer URI embedded in the Fulcio certificate's 1.3.6.1.4.1.57264.1.8 extension (v2 format). This identifies which OIDC provider authenticated the signer."@en ;
+    rdfs:comment "OIDC issuer from Fulcio certificate extension 1.3.6.1.4.1.57264.1.8"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:buildSignerURI a owl:DatatypeProperty ;
+    rdfs:label "build signer URI"@en ;
+    IAO:0000115 "For CI/CD-triggered Sigstore signatures, the URI identifying the build workflow or service that performed the signing. Typically the GitHub Actions workflow file path with ref, embedded in Fulcio certificate extension 1.3.6.1.4.1.57264.1.9."@en ;
+    rdfs:comment "URI of the CI/CD workflow that signed (Fulcio extension 1.3.6.1.4.1.57264.1.9)"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:buildSignerDigest a owl:DatatypeProperty ;
+    rdfs:label "build signer digest"@en ;
+    IAO:0000115 "The commit SHA of the CI/CD workflow definition that produced the signature, embedded in Fulcio certificate extension 1.3.6.1.4.1.57264.1.10. This pins the exact workflow version used."@en ;
+    rdfs:comment "Commit SHA of the workflow definition (Fulcio extension 1.3.6.1.4.1.57264.1.10)"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:runnerEnvironment a owl:DatatypeProperty ;
+    rdfs:label "runner environment"@en ;
+    IAO:0000115 "The environment type where the CI/CD runner executed: github-hosted or self-hosted. Embedded in Fulcio certificate extension 1.3.6.1.4.1.57264.1.11. Self-hosted runners are a supply chain risk factor."@en ;
+    rdfs:comment "CI/CD runner environment: github-hosted or self-hosted"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:sourceRepositoryURI a owl:DatatypeProperty ;
+    rdfs:label "source repository URI"@en ;
+    IAO:0000115 "The URI of the source repository being built, embedded in Fulcio certificate extension 1.3.6.1.4.1.57264.1.12."@en ;
+    rdfs:comment "URI of the source repo from Fulcio certificate"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:sourceRepositoryDigest a owl:DatatypeProperty ;
+    rdfs:label "source repository digest"@en ;
+    IAO:0000115 "The commit SHA of the source repository at the time of signing, embedded in Fulcio certificate extension 1.3.6.1.4.1.57264.1.13."@en ;
+    rdfs:comment "Commit SHA of the source repo at signing time"@en ;
+    rdfs:domain att:SigningCertificate ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ============================================================
+# Properties — TransparencyLogEntry
+# ============================================================
+
+att:logIndex a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "log index"@en ;
+    IAO:0000115 "The monotonically increasing integer index of this entry within the transparency log. Unique within a single log instance."@en ;
+    rdfs:comment "Monotonically increasing entry index within the log"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:long .
+
+att:logId a owl:DatatypeProperty ;
+    rdfs:label "log ID"@en ;
+    IAO:0000115 "The unique identifier (typically a hex-encoded hash of the log's public key) of the transparency log shard containing this entry."@en ;
+    rdfs:comment "Identifier of the transparency log shard"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:entryUUID a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "entry UUID"@en ;
+    IAO:0000115 "The globally unique identifier for this transparency log entry."@en ;
+    rdfs:comment "Globally unique ID for this log entry"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:integratedTime a owl:DatatypeProperty ;
+    rdfs:label "integrated time"@en ;
+    IAO:0000115 "The timestamp when this entry was integrated (persisted) into the transparency log. This is the authoritative timestamp proving that the signing event occurred before this time, critical for verifying ephemeral certificates after they expire."@en ;
+    rdfs:comment "When the entry was persisted in the log (authoritative timestamp)"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:dateTime .
+
+att:signedEntryTimestamp a owl:DatatypeProperty ;
+    rdfs:label "signed entry timestamp"@en ;
+    IAO:0000115 "The Signed Entry Timestamp (SET) — a cryptographic proof from the transparency log that the entry was included at a specific time. Base64-encoded."@en ;
+    rdfs:comment "Signed Entry Timestamp (SET) proving log inclusion"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:inTransparencyLog a owl:ObjectProperty ;
+    rdfs:label "in transparency log"@en ;
+    IAO:0000115 "Associates a transparency log entry with the transparency log instance it belongs to."@en ;
+    rdfs:comment "The transparency log containing this entry"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:TransparencyLog .
+
+att:entryBody a owl:DatatypeProperty ;
+    rdfs:label "entry body"@en ;
+    IAO:0000115 "The body of the transparency log entry, typically containing the signing artifact type and the base64-encoded signed payload."@en ;
+    rdfs:comment "The log entry body (signing payload)"@en ;
+    rdfs:domain att:TransparencyLogEntry ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ============================================================
+# Properties — CertificateAuthority
+# ============================================================
+
+att:caUri a owl:DatatypeProperty ;
+    rdfs:label "CA URI"@en ;
+    IAO:0000115 "The URI of the certificate authority's endpoint or identity."@en ;
+    rdfs:comment "URI identifying the certificate authority"@en ;
+    rdfs:domain att:CertificateAuthority ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:caRootCertFingerprint a owl:DatatypeProperty ;
+    rdfs:label "CA root certificate fingerprint"@en ;
+    IAO:0000115 "The SHA-256 fingerprint of the certificate authority's root certificate, used to anchor the trust chain."@en ;
+    rdfs:comment "SHA-256 fingerprint of the CA root certificate"@en ;
+    rdfs:domain att:CertificateAuthority ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+att:issuesEphemeralCertificates a owl:DatatypeProperty ;
+    rdfs:label "issues ephemeral certificates"@en ;
+    IAO:0000115 "Whether this CA issues short-lived ephemeral certificates (true for Fulcio) or traditional long-lived certificates."@en ;
+    rdfs:comment "Whether the CA issues ephemeral (short-lived) certificates"@en ;
+    rdfs:domain att:CertificateAuthority ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:boolean .
+
+# ============================================================
+# Properties — OIDCProvider
+# ============================================================
+
+att:oidcIssuerUri a owl:DatatypeProperty ;
+    rdfs:label "OIDC issuer URI"@en ;
+    IAO:0000115 "The canonical issuer URI of the OIDC provider, matching the 'iss' claim in tokens it issues."@en ;
+    rdfs:comment "The canonical issuer URI matching the 'iss' claim"@en ;
+    rdfs:domain att:OIDCProvider ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:oidcProviderType a owl:DatatypeProperty ;
+    rdfs:label "OIDC provider type"@en ;
+    IAO:0000115 "The type of OIDC provider: cicd (GitHub Actions, GitLab CI), cloud (Google, Microsoft, AWS), or enterprise (corporate IdP)."@en ;
+    rdfs:comment "Provider type: cicd, cloud, or enterprise"@en ;
+    rdfs:domain att:OIDCProvider ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ============================================================
+# Properties — TransparencyLog
+# ============================================================
+
+att:logUri a owl:DatatypeProperty ;
+    rdfs:label "log URI"@en ;
+    IAO:0000115 "The base URI of the transparency log's API endpoint."@en ;
+    rdfs:comment "API endpoint URI of the transparency log"@en ;
+    rdfs:domain att:TransparencyLog ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:anyURI .
+
+att:logPublicKey a owl:DatatypeProperty ;
+    rdfs:label "log public key"@en ;
+    IAO:0000115 "The PEM-encoded public key of the transparency log, used to verify Signed Entry Timestamps (SETs)."@en ;
+    rdfs:comment "PEM-encoded public key for SET verification"@en ;
+    rdfs:domain att:TransparencyLog ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .
+
+# ============================================================
+# Cross-Module Linking Properties
+# ============================================================
+
+att:hasSignature a owl:ObjectProperty ;
+    rdfs:label "has signature"@en ;
+    IAO:0000115 "Associates any entity (commit, artifact, attestation) with a digital signature. This is the primary cross-module link — vcs:Commit, slsa:ProvenanceAttestation, and pkg:Package can all use this property."@en ;
+    rdfs:comment "Links any entity to its digital signature"@en ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range att:DigitalSignature .
+
+att:signedDigest a owl:DatatypeProperty ;
+    rdfs:label "signed digest"@en ;
+    IAO:0000115 "The cryptographic digest (e.g., sha256:abc123...) of the artifact or content that was signed. Enables verification that the signature covers the expected content."@en ;
+    rdfs:comment "Digest of the signed content (sha256:...)"@en ;
+    rdfs:domain att:DigitalSignature ;
+    rdfs:isDefinedBy att: ;
+    rdfs:range xsd:string .

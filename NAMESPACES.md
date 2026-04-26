@@ -28,6 +28,7 @@ Ontology modules with TTL files and registered PURLs.
 | `vcs#` | `vcs.ttl` | `/packagegraph/ontology/vcs` | Version control systems |
 | `security#` | `security.ttl` | `/packagegraph/ontology/security` | Vulnerabilities and advisories |
 | `slsa#` | `slsa.ttl` | `/packagegraph/ontology/slsa` | SLSA supply chain attestation |
+| `att#` | `attestation.ttl` | `/packagegraph/ontology/attestation` | Cryptographic signing infrastructure (Sigstore, GPG, SSH, X.509, OpenPubkey) |
 | `metrics#` | `metrics.ttl` | `/packagegraph/ontology/metrics` | Code metrics and analysis |
 | `redhat#` | `redhat.ttl` | `/packagegraph/ontology/redhat` | Red Hat vendor extension (AppCompat, RHEL sets) |
 | `dq#` | `dq.ttl` | `/packagegraph/ontology/dq` | Data quality issues (ETL validation) |

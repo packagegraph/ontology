@@ -19,6 +19,7 @@
 @prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
 @prefix met:   <https://purl.org/packagegraph/ontology/metrics#> .
 @prefix rh:    <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix att:   <https://purl.org/packagegraph/ontology/attestation#> .
 @prefix slsa:  <https://purl.org/packagegraph/ontology/slsa#> .
 @prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix prov:  <http://www.w3.org/ns/prov#> .
@@ -93,3 +94,49 @@ ex:openssl-fedora-srpm a rpm:SourceRPM, pkg:SourcePackage ;
   pkg:maintainedBy ex:maintainer-fedora ;
   pkg:hasLicense spdxl:Apache-2.0 ;
   rdfs:label "openssl Fedora source RPM" .
+
+# ============================================================
+# SLSA + Attestation Integration Example
+# ============================================================
+# Demonstrates both the flat shortcut (slsa:verificationStatus)
+# and the structured signature path (att:hasSignature) on the
+# same ProvenanceAttestation. Both forms coexist — the shortcut
+# is for simple queries, the structured form enables full
+# signature chain traversal.
+
+ex:npm-express-provenance a slsa:ProvenanceAttestation ;
+  slsa:attestsBuildLevel slsa:L2 ;
+  slsa:attestationTimestamp "2026-04-20T14:30:00Z"^^xsd:dateTime ;
+  slsa:attestationDigest "sha256:a1b2c3d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef01" ;
+  slsa:predicateType <https://slsa.dev/provenance/v1> ;
+  # Flat shortcut — simple "is it verified?" queries
+  slsa:verificationStatus "verified" ;
+  # Structured path — full signature chain (method, certificate, log, OIDC identity)
+  att:hasSignature ex:npm-express-signature ;
+  rdfs:label "SLSA L2 provenance for express@5.1.0 (dual-path example)" .
+
+ex:npm-express-signature a att:DigitalSignature ;
+  att:signatureMethod att:SigstoreKeyless ;
+  att:signatureStatus "verified" ;
+  att:signatureAlgorithm "ECDSA-P256-SHA256" ;
+  att:signedAt "2026-04-20T14:30:00Z"^^xsd:dateTime ;
+  att:oidcIssuer "https://token.actions.githubusercontent.com"^^xsd:anyURI ;
+  att:oidcIdentity "https://github.com/expressjs/express/.github/workflows/publish.yml@refs/tags/v5.1.0" ;
+  att:hasOIDCProvider att:GitHubActionsOIDC ;
+  att:hasCertificate ex:npm-express-fulcio-cert ;
+  att:hasTransparencyLogEntry ex:npm-express-rekor-entry ;
+  rdfs:label "Sigstore signature for express@5.1.0" .
+
+ex:npm-express-fulcio-cert a att:SigningCertificate ;
+  att:certificateIssuer att:SigstoreFulcio ;
+  att:certificateSubject "https://github.com/expressjs/express/.github/workflows/publish.yml@refs/tags/v5.1.0" ;
+  att:certificateNotBefore "2026-04-20T14:29:55Z"^^xsd:dateTime ;
+  att:certificateNotAfter "2026-04-20T14:39:55Z"^^xsd:dateTime ;
+  att:isEphemeralCertificate true ;
+  rdfs:label "Fulcio certificate for express@5.1.0" .
+
+ex:npm-express-rekor-entry a att:TransparencyLogEntry ;
+  att:logIndex "98765432"^^xsd:long ;
+  att:integratedTime "2026-04-20T14:30:02Z"^^xsd:dateTime ;
+  att:inTransparencyLog att:SigstorePublicGood ;
+  rdfs:label "Rekor entry for express@5.1.0" .
