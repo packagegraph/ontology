@@ -23,11 +23,11 @@
     dcterms:description "Maps PackageGraph classes and properties to their equivalents in PROV-O, SPDX 3.0, and Schema.org, enabling federated querying and SBOM generation." ;
     dcterms:modified "2026-04-21"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/alignments/0.6.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/alignments/0.7.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/alignments/0.7.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/alignments/0.8.0> ;
 
-    owl:versionInfo "0.7.0" .
+    owl:versionInfo "0.8.0" .
 
 # =============================================================================
 # PROV-O Alignment

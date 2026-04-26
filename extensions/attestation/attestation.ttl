@@ -23,8 +23,8 @@ att: a owl:Ontology ;
     dcterms:title "Attestation and Signing Infrastructure Ontology" ;
     rdfs:comment "Ontology for representing cryptographic signing methods, certificates, transparency logs, and identity binding across GPG, SSH, X.509, Sigstore, and OpenPubkey"@en ;
     owl:imports pkg: ;
-    owl:versionIRI <https://purl.org/packagegraph/ontology/attestation/0.7.0> ;
-    owl:versionInfo "0.7.0" ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/attestation/0.8.0> ;
+    owl:versionInfo "0.8.0" ;
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/attestation/shapes> .
 
 # ============================================================

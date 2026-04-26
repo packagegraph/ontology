@@ -1392,13 +1392,13 @@ xsd:date a rdfs:Datatype .
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
     dcterms:modified "2026-04-21"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.6.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.7.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.7.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.8.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/core/shapes> ;
 
-    owl:versionInfo "0.7.0" .
+    owl:versionInfo "0.8.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :BinaryPackage :SourcePackage ) .
