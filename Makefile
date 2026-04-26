@@ -51,7 +51,7 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all
+validate: validate-all validate-integration
 validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
