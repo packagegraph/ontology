@@ -13,6 +13,7 @@ NS_TO_PATH = {
     "https://purl.org/packagegraph/ontology/metrics#": "extensions/metrics/metrics.ttl",
     "https://purl.org/packagegraph/ontology/slsa#": "extensions/slsa/slsa.ttl",
     "https://purl.org/packagegraph/ontology/dq#": "extensions/dq/dq.ttl",
+    "https://purl.org/packagegraph/ontology/attestation#": "extensions/attestation/attestation.ttl",
     "https://purl.org/packagegraph/ontology/rpm#": "ecosystems/rpm/rpm.ttl",
 }
 
@@ -39,17 +40,25 @@ def find_module_files(module_name):
 
 
 def resolve_imports(ontology_path):
-    """Parse owl:imports from a file and return paths to imported ontologies."""
-    import re
-    content = Path(ontology_path).read_text()
-    imports = re.findall(r'owl:imports\s+(<[^>]+>(?:\s*,\s*<[^>]+>)*)', content)
+    """Parse owl:imports from a file using rdflib and return paths to imported ontologies.
+
+    Ontology files use prefixed names for imports (e.g. ``owl:imports att:, pkg:``),
+    so regex on raw text cannot resolve them.  Parsing the file with rdflib expands
+    prefixed names to full URIs, which we then look up in NS_TO_PATH.
+    """
+    from rdflib import OWL
+
+    g = Graph()
+    g.parse(str(ontology_path), format="turtle")
     paths = []
-    for imp_block in imports:
-        uris = re.findall(r'<([^>]+)>', imp_block)
-        for uri in uris:
-            path = NS_TO_PATH.get(uri)
-            if path and Path(path).exists():
-                paths.append(path)
+    for _, _, imported in g.triples((None, OWL.imports, None)):
+        uri = str(imported)
+        path = NS_TO_PATH.get(uri)
+        if not path:
+            # Try with trailing # (namespace form vs ontology IRI)
+            path = NS_TO_PATH.get(uri + "#")
+        if path and Path(path).exists():
+            paths.append(path)
     return paths
 
 
