@@ -101,7 +101,7 @@ slsa:builderVersion a owl:DatatypeProperty ;
 
 slsa:builtBy a owl:ObjectProperty ;
     rdfs:label "built by"@en ;
-    IAO:0000115 "Associates a build activity with the specific builder (CI/CD platform or build service) that executed it."@en ;
+    IAO:0000115 "Associates a build activity with the specific builder (CI/CD platform or build service) that executed it. Enrichers that lack detailed build metadata (e.g., npm provenance where only the builder identity is known) may create a minimal pkg:BuildActivity entity with just this builtBy link and no timing or environment data. The BuildActivity intermediary is required for the ProvenanceAttestation → attestsBuildActivity → BuildActivity → builtBy → Builder chain."@en ;
     rdfs:comment "Links a build activity to the builder that performed it"@en ;
     rdfs:domain pkg:BuildActivity ;
     rdfs:isDefinedBy slsa: ;
@@ -126,9 +126,8 @@ slsa:hasSourceAttestation a owl:ObjectProperty ;
 
 slsa:hasSourceCommit a owl:ObjectProperty ;
     rdfs:label "has source commit"@en ;
-    IAO:0000115 "Associates a source attestation with the specific VCS commit that was used as the source for the build."@en ;
-    rdfs:comment "Links a source attestation to the specific commit used"@en ;
-    rdfs:domain slsa:SourceAttestation ;
+    IAO:0000115 "Associates an attestation with the specific VCS commit used as the source for the build. Domain is intentionally open — usable on both slsa:SourceAttestation (when a separate source attestation document exists) and slsa:ProvenanceAttestation (when source info is bundled directly in the provenance predicate, as in npm registry attestations). The full chain (ProvenanceAttestation → hasSourceAttestation → SourceAttestation → hasSourceCommit → Commit) and the direct path (ProvenanceAttestation → hasSourceCommit → Commit) can coexist."@en ;
+    rdfs:comment "Links an attestation to the specific commit used as source"@en ;
     rdfs:isDefinedBy slsa: ;
     rdfs:range vcs:Commit .
 
@@ -290,7 +289,7 @@ slsa:ProvenanceAttestation a owl:Class ;
             owl:cardinality 1 ;
             owl:onProperty slsa:attestsBuildLevel ],
         [ a owl:Restriction ;
-            owl:cardinality 1 ;
+            owl:maxCardinality 1 ;
             owl:onProperty slsa:attestationTimestamp ],
         prov:Entity .
 

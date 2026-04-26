@@ -275,3 +275,21 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 **Renamed:** `crossDistributionAlternative` signals correspondence/alternative rather than formal equivalence.
 
 **Backward compatibility:** The rename is a breaking change from v0.5.x to v0.6.0, documented in CHANGELOG.md and tracked via `owl:priorVersion <.../0.5.0>` declarations.
+
+---
+
+### DD-SignatureStatusStrings: String Enums for Small Fixed Value Sets
+
+**Decision:** `att:signatureStatus` and `slsa:verificationStatus` use `xsd:string` with `sh:in` SHACL constraints rather than SKOS concept schemes.
+
+**Context:** v0.7.0 converted `sec:advisorySeverity` (5 values) and `sec:advisoryType` (3 values) from string literals to SKOS ObjectProperties. The attestation module (v0.8.0) introduces `att:signatureStatus` with 3 values (`verified`, `failed`, `unverified`) using the string-with-sh:in pattern.
+
+**Rationale:**
+- The v0.7.0 SKOS conversion was driven by security domain requirements — severity levels have ordering semantics (critical > high > medium > low) and advisory types have hierarchical relationships that benefit from concept scheme modeling.
+- Signature verification status is a flat 3-value result with no ordering or hierarchy. The string-with-sh:in pattern is simpler for both producers and consumers.
+- `slsa:verificationStatus` already uses the same string vocabulary and predates the SKOS direction. Alignment between the two properties was a design goal.
+- The sh:in constraint catches value errors during SHACL validation. Query-time typos (e.g., "Verified" vs "verified") are a known trade-off — SKOS concepts prevent this class of bug but add 3 named individuals, a concept scheme, and an ObjectProperty change for a 3-value enum.
+
+**Alternative considered:** SKOS concepts for all enums. Rejected for signature status due to disproportionate modeling overhead relative to the enum size and lack of ordering/hierarchy semantics.
+
+**Revisit trigger:** If `att:signatureStatus` grows beyond 5 values, or if ordering semantics are needed (e.g., "verified > partially_verified > unverified"), convert to SKOS at that point.

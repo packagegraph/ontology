@@ -36,8 +36,7 @@ slsa:ProvenanceAttestationShape a sh:NodeShape ;
             sh:path slsa:attestsBuildLevel ],
         [ sh:datatype xsd:dateTime ;
             sh:maxCount 1 ;
-            sh:message "A provenance attestation must have exactly one timestamp."@en ;
-            sh:minCount 1 ;
+            sh:message "A provenance attestation may have at most one timestamp."@en ;
             sh:path slsa:attestationTimestamp ],
         [ sh:datatype xsd:string ;
             sh:message "A provenance attestation must have at least one artifact digest."@en ;

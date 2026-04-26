@@ -31,8 +31,10 @@ Attestation signing infrastructure and forge modeling — new extension module f
 - **Existing forge individuals retyped** — `vcs:GitHub`, `vcs:GitLab`, `vcs:Savannah`, `vcs:SourceHut` changed from bare `owl:NamedIndividual` to `vcs:ForgeSoftware`
 - **`vcs:Bitbucket` split** — replaced by `vcs:BitbucketCloud` (SaaS) and `vcs:BitbucketDataCenter` (self-hosted) as separate `vcs:ForgeSoftware` individuals (distinct codebases with independent version lines)
 - **VCS system individuals retyped** — `vcs:Git`, `vcs:Subversion`, `vcs:Mercurial`, `vcs:Bazaar`, `vcs:CVS`, `vcs:Fossil` changed from bare `owl:NamedIndividual` to `vcs:VersionControlSystem`
-- **`vcs:Codeberg` removed** — Codeberg is a forge instance (codeberg.org running Forgejo), not a forge software product; replaced by `vcs:Forgejo` as the software individual
+- **`vcs:Codeberg` removed** — Codeberg is a forge instance (codeberg.org running Forgejo), not a forge software product; replaced by `vcs:Forgejo` as the software individual. **Migration:** existing data with `vcs:Codeberg` should be updated via `DELETE { ?s ?p vcs:Codeberg } INSERT { ?s ?p vcs:Forgejo } WHERE { ?s ?p vcs:Codeberg }`
 - **`slsa:verificationStatus`** — added `rdfs:seeAlso att:signatureStatus` cross-reference and documentation noting it as a flat shortcut with the same value vocabulary (verified/unverified/failed)
+- **`slsa:hasSourceCommit`** — domain restriction removed (was `slsa:SourceAttestation`, now open). Usable on both `SourceAttestation` and `ProvenanceAttestation` to avoid OWL open-world type inference. See definition for rationale.
+- **`slsa:attestationTimestamp`** — cardinality relaxed from `owl:cardinality 1` to `owl:maxCardinality 1`. Attestations without extractable timestamps are incomplete but valid.
 
 ### Fixed
 - **`scripts/validate_module.py`** — `resolve_imports` rewritten from regex to rdflib-based parsing. The regex never matched prefixed `owl:imports` (e.g., `owl:imports pkg:, vcs:`) so import resolution was silently broken for all modules since inception. All modules now properly load their imports during SHACL validation.
