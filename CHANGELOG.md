@@ -5,6 +5,40 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-04-25
+
+Attestation signing infrastructure and forge modeling — new extension module for cryptographic signing across GPG, SSH, X.509, Sigstore, and OpenPubkey; four-level forge model for supply chain concentration and vulnerability analysis.
+
+### Added
+- **`extensions/attestation/` module** (`att:` namespace) — cryptographic signing infrastructure
+  - 7 classes: `DigitalSignature`, `SignatureMethod`, `SigningCertificate`, `TransparencyLog`, `TransparencyLogEntry`, `CertificateAuthority`, `OIDCProvider`
+  - 41 properties (7 object + 34 datatype) covering signatures, certificates, OIDC identity, transparency logs, Fulcio extensions
+  - 11 named individuals: 5 signature methods (`GPG`, `SSH`, `X509`, `SigstoreKeyless`, `OpenPubkey`), 6 infrastructure (`SigstorePublicGood`, `SigstoreFulcio`, `GitHubActionsOIDC`, `GoogleAccountsOIDC`, `MicrosoftEntraOIDC`, `InTotoArchivista`)
+  - 9 SHACL shapes with `sh:or` method profiles (core SHACL only, no `sh:sparql`)
+  - 7 examples: Sigstore npm provenance, gitsign commit, GPG commit, SSH commit, OpenPubkey, GitHub Artifact Attestation, Witness/Archivista
+- **Four-level forge model** for supply chain concentration and vulnerability analysis:
+  - `vcs:ForgeSoftware` — product family (GitHub, GitLab, Forgejo, etc.)
+  - `vcs:ForgeSoftwareVersion` — versioned release with capability surface (VCS support is version-dependent)
+  - `vcs:Forge` — deployed instance at a URL (github.com, gitlab.gnome.org)
+  - `vcs:ForgeVersionObservation` — timestamped observation that an instance was running a specific version
+- **Forge properties:** `vcs:hostedOn` (Repository→Forge), `vcs:forgeSoftware` (Forge→ForgeSoftware), `vcs:forgeUrl`, `vcs:hasVersionObservation`, `vcs:observedSoftwareVersion` (Observation→ForgeSoftwareVersion), `vcs:observedAt`, `vcs:versionOfSoftware` (ForgeSoftwareVersion→ForgeSoftware), `vcs:supportedVcs` (ForgeSoftwareVersion→VCS), `vcs:versionString`
+- **`vcs:VersionControlSystem`** — class for VCS types, enabling typed `vcs:supportedVcs` range and SHACL constraints
+- New forge software individuals: `vcs:Forgejo`, `vcs:Gitea`, `vcs:cgit`
+- 5 SHACL shapes: `ForgeShape`, `ForgeSoftwareShape`, `ForgeSoftwareVersionShape`, `ForgeVersionObservationShape`, `VersionControlSystemShape`
+- `att#` registered in `NAMESPACES.md`
+
+### Changed
+- **Existing forge individuals retyped** — `vcs:GitHub`, `vcs:GitLab`, `vcs:Savannah`, `vcs:SourceHut` changed from bare `owl:NamedIndividual` to `vcs:ForgeSoftware`
+- **`vcs:Bitbucket` split** — replaced by `vcs:BitbucketCloud` (SaaS) and `vcs:BitbucketDataCenter` (self-hosted) as separate `vcs:ForgeSoftware` individuals (distinct codebases with independent version lines)
+- **VCS system individuals retyped** — `vcs:Git`, `vcs:Subversion`, `vcs:Mercurial`, `vcs:Bazaar`, `vcs:CVS`, `vcs:Fossil` changed from bare `owl:NamedIndividual` to `vcs:VersionControlSystem`
+- **`vcs:Codeberg` removed** — Codeberg is a forge instance (codeberg.org running Forgejo), not a forge software product; replaced by `vcs:Forgejo` as the software individual
+- **`slsa:verificationStatus`** — added `rdfs:seeAlso att:signatureStatus` cross-reference and documentation noting it as a flat shortcut with the same value vocabulary (verified/unverified/failed)
+
+### Fixed
+- **`scripts/validate_module.py`** — `resolve_imports` rewritten from regex to rdflib-based parsing. The regex never matched prefixed `owl:imports` (e.g., `owl:imports pkg:, vcs:`) so import resolution was silently broken for all modules since inception. All modules now properly load their imports during SHACL validation.
+
+---
+
 ## [0.7.0] - 2026-04-21
 
 Peer review remediation and academic hardening — resolves all findings from two independent ontological reviews.
