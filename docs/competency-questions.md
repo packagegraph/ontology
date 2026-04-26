@@ -1166,6 +1166,53 @@ ORDER BY ?avgMTTR
 
 ---
 
+### CQ-SCR-10: Forge Version Vulnerability Exposure
+
+**Question:** Which packages have upstream source repositories on forge instances that were observed running a CVE-affected forge software version on or after the CVE disclosure date?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?packageName ?forgeName ?forgeUrl ?version ?cveId ?observedDate ?cvePublished
+WHERE {
+  ?package a pkg:Package ;
+           pkg:packageName ?packageName ;
+           pkg:isVersionOf/pkg:upstreamRepository ?repo .
+  ?repo vcs:hostedOn ?forge .
+  ?forge vcs:forgeUrl ?forgeUrl ;
+         vcs:hasVersionObservation ?obs ;
+         rdfs:label ?forgeName .
+  ?obs vcs:observedSoftwareVersion ?forgeVersion ;
+       vcs:observedAt ?observedDate .
+  ?forgeVersion vcs:versionString ?version .
+  ?vuln sec:affectsForgeSoftwareVersion ?forgeVersion ;
+        sec:cveId ?cveId ;
+        sec:publishedDate ?cvePublished .
+  FILTER(?observedDate >= xsd:date(?cvePublished))
+}
+ORDER BY ?cveId ?forgeName
+```
+
+**Expected Columns:** packageName (string), forgeName (string), forgeUrl (anyURI), version (string), cveId (string), observedDate (date), cvePublished (dateTime)
+
+**Exercises:** Forge four-level model (Repository→Forge→ForgeVersionObservation→ForgeSoftwareVersion), security module CVE linkage, upstreamRepository join, temporal filtering against vulnerability window
+
+**Status:** BLOCKED — requires three prerequisites:
+1. `sec:affectsForgeSoftwareVersion` property (Vulnerability → ForgeSoftwareVersion) not yet defined in security.ttl — `sec:affectsVersion` targets `pkg:Version`, not `vcs:ForgeSoftwareVersion`
+2. No forge version observation producer exists yet (forge library emits `vcs:hostedOn` but not version observations)
+3. No forge software CVE data source integrated (NVD/OSV data for GitLab, Forgejo, etc.)
+
+**Temporal caveat:** A version observation is a point-in-time snapshot, not proof of continuous exposure. The query identifies forges observed running a CVE-affected version on or after the disclosure date. This indicates the forge was running a known-vulnerable version at the observation time — not that it was running it continuously since disclosure or before. Multiple observations strengthen the signal; a single observation is a risk indicator, not proof of sustained exposure.
+
+**Research context:** Forge infrastructure is a supply chain dependency for every hosted repository. A CVE in Forgejo's push authorization (e.g., allowing unauthorized force pushes) affects every repository on every Forgejo instance running the vulnerable version. This CQ enables identifying the downstream package blast radius of forge-level vulnerabilities — a supply chain risk that current package-focused CVE analysis misses entirely.
+
+---
+
 ## Domain: Cross-Distribution Analysis (XD)
 
 ### CQ-XD-01: Equivalent Packages Across Distributions
@@ -1390,7 +1437,7 @@ LIMIT 1
 
 ### CQ-PROV-02: SLSA Provenance Level
 
-**Question:** Which packages in Fedora 43 have SLSA level 3 or higher build attestations?
+**Question:** Which packages in Fedora 43 have SLSA level 3 build attestations?
 
 **SPARQL:**
 ```sparql
@@ -1398,24 +1445,25 @@ PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX slsa: <https://purl.org/packagegraph/ontology/slsa#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?packageName ?slsaLevel ?attestation
+SELECT ?packageName ?levelLabel ?attestation
 WHERE {
   ?package a pkg:Package ;
            pkg:packageName ?packageName ;
            pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
            pkg:partOfRelease/pkg:releaseVersion "43" ;
            slsa:hasProvenance ?attestation .
-  ?attestation slsa:slsaLevel ?slsaLevel .
-  FILTER(?slsaLevel >= 3)
+  ?attestation slsa:attestsBuildLevel ?level .
+  ?level rdfs:label ?levelLabel .
+  VALUES ?level { slsa:L3 }
 }
-ORDER BY DESC(?slsaLevel)
+ORDER BY ?packageName
 ```
 
-**Expected Columns:** packageName (string), slsaLevel (integer), attestation (URI)
+**Expected Columns:** packageName (string), levelLabel (string), attestation (URI)
 
-**Exercises:** SLSA module, hasProvenance, slsaLevel
+**Exercises:** SLSA module, hasProvenance, attestsBuildLevel, BuildLevel named individuals
 
-**Status:** PASS
+**Status:** BLOCKED — `slsa:hasProvenance` not emitted by any current producer. npm-provenance enricher emits `slsa:hasAttestation` (wrong predicate, platform fix pending).
 
 ---
 
@@ -1647,7 +1695,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?language (COUNT(DISTINCT ?repo) AS ?repoCount)
 WHERE {
   ?package pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" ;
-           pkg:hasUpstreamProject/pkg:sourceCodeRepository ?repo .
+           pkg:isVersionOf/pkg:upstreamRepository ?repo .
   ?repo met:primaryLanguage ?language .
 }
 GROUP BY ?language
@@ -1657,7 +1705,7 @@ LIMIT 10
 
 **Expected Columns:** language (string), repoCount (integer)
 
-**Exercises:** Repository, sourceCodeRepository, Metrics module, primaryLanguage
+**Exercises:** Repository, upstreamRepository, PackageIdentity, Metrics module, primaryLanguage
 
 **Status:** PASS
 
@@ -1689,9 +1737,9 @@ LIMIT 100
 
 **Expected Columns:** packageName (string), commitHash (string), branchName (string)
 
-**Exercises:** derivedFromCommit, Commit, Branch, onBranch
+**Exercises:** derivedFromCommit, Commit, Branch
 
-**Status:** PASS
+**Status:** BLOCKED — `pkg:derivedFromCommit` exists in ontology but no producer emits it. `vcs:onBranch` is not defined in vcs.ttl. Requires: (1) specfile collector to emit derivedFromCommit triples, (2) branch-commit linkage model in vcs.ttl.
 
 ---
 
