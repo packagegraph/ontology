@@ -63,8 +63,24 @@ Producers and consumers using v0.7.0 individuals should update references:
 
 SPARQL migration for existing graph data:
 ```sparql
-# Bitbucket: only applies to forgeSoftware triples (software identity).
-# hostedOn triples should point to a vcs:Forge instance, not ForgeSoftware.
+# Bitbucket: in the old model, vcs:Bitbucket was used as a hosting
+# platform individual. In the new model, Bitbucket Cloud and Data Center
+# are separate ForgeSoftware products, and hostedOn must point to a
+# vcs:Forge instance.
+#
+# Step 1: Create the Bitbucket Cloud forge instance (run once)
+# (Adjust for Data Center instances as needed)
+INSERT DATA {
+  <https://packagegraph.github.io/d/forge/bitbucket.org> a vcs:Forge ;
+    vcs:forgeUrl "https://bitbucket.org"^^xsd:anyURI ;
+    vcs:forgeSoftware vcs:BitbucketCloud ;
+    rdfs:label "Bitbucket Cloud" .
+} ;
+# Step 2: Repoint hostedOn triples from old individual to new instance
+DELETE { ?s vcs:hostedOn vcs:Bitbucket }
+INSERT { ?s vcs:hostedOn <https://packagegraph.github.io/d/forge/bitbucket.org> }
+WHERE  { ?s vcs:hostedOn vcs:Bitbucket } ;
+# Step 3: Repoint any forgeSoftware triples
 DELETE { ?s vcs:forgeSoftware vcs:Bitbucket }
 INSERT { ?s vcs:forgeSoftware vcs:BitbucketCloud }
 WHERE  { ?s vcs:forgeSoftware vcs:Bitbucket } ;
