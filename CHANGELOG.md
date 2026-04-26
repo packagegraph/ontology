@@ -31,7 +31,7 @@ Attestation signing infrastructure and forge modeling — new extension module f
 - **Existing forge individuals retyped** — `vcs:GitHub`, `vcs:GitLab`, `vcs:Savannah`, `vcs:SourceHut` changed from bare `owl:NamedIndividual` to `vcs:ForgeSoftware`
 - **`vcs:Bitbucket` split** — replaced by `vcs:BitbucketCloud` (SaaS) and `vcs:BitbucketDataCenter` (self-hosted) as separate `vcs:ForgeSoftware` individuals (distinct codebases with independent version lines)
 - **VCS system individuals retyped** — `vcs:Git`, `vcs:Subversion`, `vcs:Mercurial`, `vcs:Bazaar`, `vcs:CVS`, `vcs:Fossil` changed from bare `owl:NamedIndividual` to `vcs:VersionControlSystem`
-- **`vcs:Codeberg` removed** — Codeberg is a forge instance (codeberg.org running Forgejo), not a forge software product; replaced by `vcs:Forgejo` as the software individual. **Migration:** existing data with `vcs:Codeberg` should be updated via `DELETE { ?s ?p vcs:Codeberg } INSERT { ?s ?p vcs:Forgejo } WHERE { ?s ?p vcs:Codeberg }`
+- **`vcs:Codeberg` removed** — Codeberg is a forge instance (codeberg.org running Forgejo), not a forge software product; replaced by `vcs:Forgejo` as the software individual. **Migration:** see Migration Guide below — `hostedOn` triples must point to a new Forge instance entity, not directly to `vcs:Forgejo`
 - **`slsa:verificationStatus`** — added `rdfs:seeAlso att:signatureStatus` cross-reference and documentation noting it as a flat shortcut with the same value vocabulary (verified/unverified/failed)
 - **`slsa:hasSourceCommit`** — domain restriction removed (was `slsa:SourceAttestation`, now open). Usable on both `SourceAttestation` and `ProvenanceAttestation` to avoid OWL open-world type inference. See definition for rationale.
 - **`slsa:attestationTimestamp`** — cardinality relaxed from `owl:cardinality 1` to `owl:maxCardinality 1`. Attestations without extractable timestamps are incomplete but valid.
@@ -63,11 +63,32 @@ Producers and consumers using v0.7.0 individuals should update references:
 
 SPARQL migration for existing graph data:
 ```sparql
-# Bitbucket → BitbucketCloud (adjust if targeting Data Center instances)
-DELETE { ?s ?p vcs:Bitbucket } INSERT { ?s ?p vcs:BitbucketCloud } WHERE { ?s ?p vcs:Bitbucket } ;
+# Bitbucket: only applies to forgeSoftware triples (software identity).
+# hostedOn triples should point to a vcs:Forge instance, not ForgeSoftware.
+DELETE { ?s vcs:forgeSoftware vcs:Bitbucket }
+INSERT { ?s vcs:forgeSoftware vcs:BitbucketCloud }
+WHERE  { ?s vcs:forgeSoftware vcs:Bitbucket } ;
 
-# Codeberg → Forgejo
-DELETE { ?s ?p vcs:Codeberg } INSERT { ?s ?p vcs:Forgejo } WHERE { ?s ?p vcs:Codeberg }
+# Codeberg: in the old model, vcs:Codeberg was used as a hosting platform
+# individual. In the new model, Codeberg is a forge INSTANCE running
+# Forgejo SOFTWARE. The migration must create a Forge instance entity,
+# not blindly replace Codeberg with Forgejo.
+#
+# Step 1: Create the Codeberg forge instance (run once)
+INSERT DATA {
+  <https://packagegraph.github.io/d/forge/codeberg.org> a vcs:Forge ;
+    vcs:forgeUrl "https://codeberg.org"^^xsd:anyURI ;
+    vcs:forgeSoftware vcs:Forgejo ;
+    rdfs:label "Codeberg" .
+} ;
+# Step 2: Repoint hostedOn triples from the old individual to the new instance
+DELETE { ?s vcs:hostedOn vcs:Codeberg }
+INSERT { ?s vcs:hostedOn <https://packagegraph.github.io/d/forge/codeberg.org> }
+WHERE  { ?s vcs:hostedOn vcs:Codeberg } ;
+# Step 3: Repoint any forgeSoftware triples (if Codeberg was used as software)
+DELETE { ?s vcs:forgeSoftware vcs:Codeberg }
+INSERT { ?s vcs:forgeSoftware vcs:Forgejo }
+WHERE  { ?s vcs:forgeSoftware vcs:Codeberg }
 ```
 
 ---
