@@ -47,7 +47,7 @@ CQ statuses now distinguish three layers: ontology-complete (vocabulary exists),
 |----|----------|----------|-------|-------|
 | VCS-01 | Yes | Yes | **Fixed in v0.8.0** | Rewritten from ghost `hasUpstreamProject` chain to `isVersionOf/upstreamRepository` |
 | VCS-02 | Partial | No | Broken | `derivedFromCommit` exists but `vcs:onBranch` undefined; no producer |
-| PROV-02 | Yes | No | **Fixed in v0.8.0** | Rewritten from phantom `slsa:slsaLevel` to `attestsBuildLevel` with named individuals |
+| PROV-02 | Yes | Partial | **Fixed in v0.8.0** | Rewritten from phantom `slsa:slsaLevel` to `attestsBuildLevel`. npm enricher emits L2 attestations for 6 packages; Koji emits Builder+builtBy chains. CQ queries for L3 specifically — no L3 data exists yet. |
 | SCR-03 | Yes | No | OK | Blocked on `maintainerSince` / `lastReleaseDate` producer |
 | SCR-10 | Partial | No | OK | New CQ — requires `sec:affectsForgeSoftwareVersion` property |
 | XD-01 | Yes | No | OK | Blocked on Repology cross-distro equivalence data |

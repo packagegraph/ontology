@@ -1483,7 +1483,7 @@ ORDER BY ?packageName
 
 **Exercises:** SLSA module, hasProvenance, attestsBuildLevel, BuildLevel named individuals
 
-**Status:** BLOCKED — `slsa:hasProvenance` not emitted by any current producer. npm-provenance enricher emits `slsa:hasAttestation` (wrong predicate, platform fix pending).
+**Status:** PARTIAL — ontology-complete and pipeline-partial. npm-provenance enricher emits `slsa:hasProvenance` → `slsa:ProvenanceAttestation` with `slsa:attestsBuildLevel slsa:L2` for 6 packages. Koji enricher emits `slsa:Builder` + `builtBy` chains. However, this CQ queries for L3 specifically — no L3 attestations exist in the dataset. Changing `VALUES ?level { slsa:L3 }` to `VALUES ?level { slsa:L2 slsa:L3 }` would return results for L2 packages.
 
 ---
 
