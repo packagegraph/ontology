@@ -39,6 +39,37 @@ Attestation signing infrastructure and forge modeling — new extension module f
 ### Fixed
 - **`scripts/validate_module.py`** — `resolve_imports` rewritten from regex to rdflib-based parsing. The regex never matched prefixed `owl:imports` (e.g., `owl:imports pkg:, vcs:`) so import resolution was silently broken for all modules since inception. All modules now properly load their imports during SHACL validation.
 
+### CQ Readiness (v0.8.0)
+
+CQ statuses now distinguish three layers: ontology-complete (vocabulary exists), pipeline-complete (producer emits data), and query-complete (SPARQL uses correct predicates). See `docs/competency-questions.md` for the full legend.
+
+| CQ | Ontology | Pipeline | Query | Notes |
+|----|----------|----------|-------|-------|
+| VCS-01 | Yes | Yes | **Fixed in v0.8.0** | Rewritten from ghost `hasUpstreamProject` chain to `isVersionOf/upstreamRepository` |
+| VCS-02 | Partial | No | Broken | `derivedFromCommit` exists but `vcs:onBranch` undefined; no producer |
+| PROV-02 | Yes | No | **Fixed in v0.8.0** | Rewritten from phantom `slsa:slsaLevel` to `attestsBuildLevel` with named individuals |
+| SCR-03 | Yes | No | OK | Blocked on `maintainerSince` / `lastReleaseDate` producer |
+| SCR-10 | Partial | No | OK | New CQ — requires `sec:affectsForgeSoftwareVersion` property |
+| XD-01 | Yes | No | OK | Blocked on Repology cross-distro equivalence data |
+
+### Migration Guide
+
+Producers and consumers using v0.7.0 individuals should update references:
+
+| v0.7.0 | v0.8.0 | Action |
+|--------|--------|--------|
+| `vcs:Bitbucket` | `vcs:BitbucketCloud` or `vcs:BitbucketDataCenter` | Replace based on target instance. SaaS (bitbucket.org) → `BitbucketCloud`. Self-hosted → `BitbucketDataCenter`. |
+| `vcs:Codeberg` | `vcs:Forgejo` | Codeberg is an instance running Forgejo, not a software product. Replace the software individual; model codeberg.org as a `vcs:Forge` instance with `vcs:forgeSoftware vcs:Forgejo`. |
+
+SPARQL migration for existing graph data:
+```sparql
+# Bitbucket → BitbucketCloud (adjust if targeting Data Center instances)
+DELETE { ?s ?p vcs:Bitbucket } INSERT { ?s ?p vcs:BitbucketCloud } WHERE { ?s ?p vcs:Bitbucket } ;
+
+# Codeberg → Forgejo
+DELETE { ?s ?p vcs:Codeberg } INSERT { ?s ?p vcs:Forgejo } WHERE { ?s ?p vcs:Codeberg }
+```
+
 ---
 
 ## [0.7.0] - 2026-04-21

@@ -293,3 +293,24 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 **Alternative considered:** SKOS concepts for all enums. Rejected for signature status due to disproportionate modeling overhead relative to the enum size and lack of ordering/hierarchy semantics.
 
 **Revisit trigger:** If `att:signatureStatus` grows beyond 5 values, or if ordering semantics are needed (e.g., "verified > partially_verified > unverified"), convert to SKOS at that point.
+
+---
+
+### DD-ForgeSoftwareVsVCS: ForgeSoftware and VersionControlSystem Are Independent
+
+**Decision:** `vcs:ForgeSoftware` and `vcs:VersionControlSystem` are independent classes with no subclass or equivalence relationship.
+
+**Context:** Both classes live in the `vcs:` namespace and their individuals appear near each other in `vcs.ttl`. Downstream code may conflate them because platforms like GitHub are strongly associated with Git. But "GitHub" and "Git" are different things — one is a hosting platform, the other is a version control system.
+
+**Class responsibilities:**
+
+| Class | What it represents | Examples | Used by |
+|-------|-------------------|----------|---------|
+| `vcs:VersionControlSystem` | A VCS type (the tool) | Git, Subversion, Mercurial, Bazaar, CVS, Fossil | `vcs:supportedVcs` range (on ForgeSoftwareVersion), future `vcs:vcsType` replacement |
+| `vcs:ForgeSoftware` | A forge product family (the hosting platform) | GitHub, GitLab, Forgejo, Gitea, SourceHut, cgit | `vcs:forgeSoftware` range (on Forge instance) |
+
+**Connection between them:** `vcs:ForgeSoftwareVersion → supportedVcs → VersionControlSystem`. A forge software version supports one or more VCS types. This is a has-a relationship (capability), not an is-a relationship (inheritance).
+
+**Why no inheritance:** GitHub is not a kind of Git. GitLab is not a kind of Git. Savannah supports Git AND Subversion AND Mercurial — it cannot be a subclass of any single VCS. The relationship is version-dependent capability, not type hierarchy.
+
+**Downstream guidance:** If your code checks `?x a vcs:ForgeSoftware`, you get forge platforms. If your code checks `?x a vcs:VersionControlSystem`, you get VCS types. These will never overlap. To find what VCS a forge supports: `?version vcs:versionOfSoftware ?forge ; vcs:supportedVcs ?vcs`.

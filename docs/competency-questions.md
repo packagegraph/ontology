@@ -10,6 +10,26 @@ This document defines the competency questions (CQs) that the PackageGraph ontol
 
 **Methodology:** NeOn/METHONTOLOGY — CQs drive schema design. A CQ that fails exposes a schema gap.
 
+### Status Legend
+
+Each CQ has a **Status** field. The following terms distinguish ontology readiness from data pipeline readiness:
+
+| Status | Meaning |
+|--------|---------|
+| **PASS** | Ontology vocabulary exists and the query is structurally correct. Does NOT guarantee results on live data — many PASS CQs were validated against example data, not production graphs. |
+| **BLOCKED** | Either the ontology vocabulary is incomplete (missing property/class) or no producer emits the required data. The blocking reason is stated. |
+| **ADVISORY-SIDE SATISFIED** | Partial pipeline readiness — one side of a multi-source join has data, the other does not. |
+
+To distinguish readiness layers:
+
+| Layer | Question | Who owns it |
+|-------|----------|-------------|
+| **Ontology-complete** | Do the required classes, properties, and relationships exist in the schema? | Ontology team |
+| **Pipeline-complete** | Does a producer actually emit the required triples into a live graph? | Platform team |
+| **Query-complete** | Does the SPARQL query use the correct predicates and join paths for the emitted shape? | Both |
+
+A CQ may be ontology-complete but not pipeline-complete (vocabulary exists, no producer). Or it may be pipeline-complete but not query-complete (data exists but the frozen query uses wrong predicates — e.g., VCS-01 before rewrite). All three layers must be satisfied for a CQ to return results on live data.
+
 **References:**
 - Grüninger, M., & Fox, M. S. (1995). *Methodology for the Design and Evaluation of Ontologies.* IJCAI-95 Workshop on Basic Ontological Issues in Knowledge Sharing.
 - Ren, Y., et al. (2014). *Towards Competency Question-driven Ontology Authoring.* ESWC 2014.
