@@ -41,6 +41,11 @@ slsa:ProvenanceAttestationShape a sh:NodeShape ;
         [ sh:datatype xsd:string ;
             sh:message "A provenance attestation must have at least one artifact digest."@en ;
             sh:minCount 1 ;
-            sh:path slsa:attestationDigest ] ;
+            sh:path slsa:attestationDigest ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:in ( "verified" "unverified" "failed" ) ;
+            sh:message "Verification status must be one of: verified, unverified, or failed."@en ;
+            sh:path slsa:verificationStatus ] ;
     sh:targetClass slsa:ProvenanceAttestation .
 
