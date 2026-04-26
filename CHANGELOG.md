@@ -5,7 +5,7 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.8.0] - 2026-04-25
+## [0.8.0] - Unreleased
 
 Attestation signing infrastructure and forge modeling — new extension module for cryptographic signing across GPG, SSH, X.509, Sigstore, and OpenPubkey; four-level forge model for supply chain concentration and vulnerability analysis.
 
