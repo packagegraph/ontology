@@ -91,6 +91,13 @@ opkg:inFeed a owl:ObjectProperty ;
     rdfs:isDefinedBy opkg: ;
     rdfs:range opkg:Feed .
 
+opkg:installedSize a owl:DatatypeProperty ;
+    rdfs:label "installed size"@en ;
+    IAO:0000115 "The installed size in bytes of the binary .ipk package on the target filesystem."@en ;
+    rdfs:domain opkg:OpkgPackage ;
+    rdfs:isDefinedBy opkg: ;
+    rdfs:range xsd:integer .
+
 opkg:maintainer a owl:DatatypeProperty ;
     rdfs:label "maintainer"@en ;
     IAO:0000115 "The package maintainer from PKG_MAINTAINER variable (name and email)."@en ;
@@ -102,6 +109,13 @@ opkg:maintainer a owl:DatatypeProperty ;
 opkg:menu a owl:DatatypeProperty ;
     rdfs:label "menu"@en ;
     IAO:0000115 "The Kconfig menu path where this package appears in menuconfig."@en ;
+    rdfs:domain opkg:OpkgPackage ;
+    rdfs:isDefinedBy opkg: ;
+    rdfs:range xsd:string .
+
+opkg:opkgFilename a owl:DatatypeProperty ;
+    rdfs:label "opkg filename"@en ;
+    IAO:0000115 "The filename of the binary .ipk package as listed in the opkg Packages index."@en ;
     rdfs:domain opkg:OpkgPackage ;
     rdfs:isDefinedBy opkg: ;
     rdfs:range xsd:string .
@@ -248,10 +262,10 @@ opkg:DeviceProfile a owl:Class ;
 
 opkg:OpkgPackage a owl:Class ;
     rdfs:label "OpenWRT Package"@en ;
-    IAO:0000115 "A package defined in an OpenWRT feed repository via a Makefile, compiled as an opkg (.ipk) binary for router/IoT targets. A single Makefile can define multiple sub-packages via separate 'define Package/<name>' blocks, all sharing the same upstream source."@en ;
+    IAO:0000115 "A source package recipe defined in an OpenWRT feed repository via a Makefile, describing how one or more opkg (.ipk) binaries are built for router and IoT targets. A single Makefile can define multiple sub-packages via separate 'define Package/<name>' blocks, all sharing the same upstream source."@en ;
     rdfs:comment "An OpenWRT package from a feed repository"@en ;
     rdfs:isDefinedBy opkg: ;
-    rdfs:subClassOf pkg:BinaryPackage .
+    rdfs:subClassOf pkg:SourcePackage .
 
 opkg: a owl:Ontology ;
     rdfs:isDefinedBy opkg: ;
@@ -270,4 +284,3 @@ opkg: a owl:Ontology ;
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/opkg/shapes> ;
 
     owl:versionInfo "0.8.0" .
-

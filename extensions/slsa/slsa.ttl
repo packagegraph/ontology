@@ -133,9 +133,8 @@ slsa:hasSourceCommit a owl:ObjectProperty ;
 
 slsa:hasSourceVcsRepository a owl:ObjectProperty ;
     rdfs:label "has source VCS repository"@en ;
-    IAO:0000115 "Associates a source attestation with the version control repository from which the source was obtained."@en ;
-    rdfs:comment "Links a source attestation to the VCS repository"@en ;
-    rdfs:domain slsa:SourceAttestation ;
+    IAO:0000115 "Associates an attestation with the version control repository from which the source was obtained. Domain is intentionally open — usable on both slsa:SourceAttestation (when a separate source attestation document exists) and slsa:ProvenanceAttestation (when source repository information is embedded directly in the provenance predicate). The full chain (ProvenanceAttestation → hasSourceAttestation → SourceAttestation → hasSourceVcsRepository → Repository) and the direct path (ProvenanceAttestation → hasSourceVcsRepository → Repository) can coexist."@en ;
+    rdfs:comment "Links an attestation to the VCS repository used as source"@en ;
     rdfs:isDefinedBy slsa: ;
     rdfs:range vcs:Repository .
 
@@ -315,4 +314,3 @@ slsa: a owl:Ontology ;
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/slsa/shapes> ;
 
     owl:versionInfo "0.8.0" .
-

@@ -109,6 +109,7 @@ ex:npm-express-provenance a slsa:ProvenanceAttestation ;
   slsa:attestationTimestamp "2026-04-20T14:30:00Z"^^xsd:dateTime ;
   slsa:attestationDigest "sha256:a1b2c3d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef01" ;
   slsa:predicateType <https://slsa.dev/provenance/v1> ;
+  slsa:hasSourceVcsRepository ex:express-upstream-repo ;
   # Flat shortcut — simple "is it verified?" queries
   slsa:verificationStatus "verified" ;
   # Structured path — full signature chain (method, certificate, log, OIDC identity)
@@ -140,3 +141,8 @@ ex:npm-express-rekor-entry a att:TransparencyLogEntry ;
   att:integratedTime "2026-04-20T14:30:02Z"^^xsd:dateTime ;
   att:inTransparencyLog att:SigstorePublicGood ;
   rdfs:label "Rekor entry for express@5.1.0" .
+
+ex:express-upstream-repo a vcs:Repository ;
+  vcs:cloneUrl <https://github.com/expressjs/express.git> ;
+  vcs:defaultBranch "master" ;
+  rdfs:label "express upstream repository" .
