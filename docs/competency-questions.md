@@ -112,7 +112,7 @@ SELECT ?provider ?providerName
 WHERE {
   ?capability a pkg:Capability ;
               pkg:capabilityName "libssl.so.3" .
-  ?provider pkg:provides ?capability ;
+  ?provider pkg:providesCapability ?capability ;
             pkg:packageName ?providerName ;
             pkg:partOfRelease ?release .
   ?release ^pkg:hasRelease/rdfs:label "Debian" ;

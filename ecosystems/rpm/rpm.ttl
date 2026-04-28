@@ -212,6 +212,14 @@ rpm:hasPatch a owl:ObjectProperty ;
     rdfs:isDefinedBy rpm: ;
     rdfs:range rpm:Patch .
 
+rpm:hasSpecSource a owl:DatatypeProperty ;
+    rdfs:label "has spec source"@en ;
+    IAO:0000115 "A Source URL from a spec file (Source0:, Source1:, etc.). May contain unresolved RPM macros like %{version} or %{name}. This is the raw spec file text, not a fully resolved download URL."@en ;
+    rdfs:comment "Source URL from spec file (may contain macros)"@en ;
+    rdfs:domain rpm:SourceRPM ;
+    rdfs:isDefinedBy rpm: ;
+    rdfs:range xsd:string .
+
 rpm:hasTag a owl:ObjectProperty ;
     rdfs:label "has tag"@en ;
     IAO:0000115 "Associates an RPM package with its metadata tags stored in the package header."@en ;
