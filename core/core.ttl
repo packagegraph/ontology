@@ -540,9 +540,9 @@ dcterms:title a owl:AnnotationProperty ;
 
 :isVersionOf a owl:ObjectProperty ;
     rdfs:label "is version of"@en ;
-    IAO:0000115 "Associates a specific versioned binary package with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package."@en ;
-    rdfs:comment "Links a versioned binary package to its version-agnostic package identity."@en ;
-    rdfs:domain :BinaryPackage ;
+    IAO:0000115 "Associates a specific versioned package (source or binary) with the canonical package identity it belongs to. Enables queries that traverse from a versioned instance to all other versions of the same package."@en ;
+    rdfs:comment "Links a versioned package to its version-agnostic package identity."@en ;
+    rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
     rdfs:range :PackageIdentity ;
     owl:inverseOf :hasPackage .
@@ -988,11 +988,11 @@ xsd:duration a rdfs:Datatype .
 
 :hasPackage a owl:ObjectProperty ;
     rdfs:label "has package"@en ;
-    IAO:0000115 "The inverse relationship of isVersionOf, linking a package identity to all versioned binary packages that belong to it. Enables efficient 'list all versions of package X' queries from the identity node."@en ;
-    rdfs:comment "Links a package identity to its versioned binary package instances."@en ;
+    IAO:0000115 "The inverse relationship of isVersionOf, linking a package identity to all versioned packages (source or binary) that belong to it. Enables efficient 'list all versions of package X' queries from the identity node."@en ;
+    rdfs:comment "Links a package identity to its versioned package instances."@en ;
     rdfs:domain :PackageIdentity ;
     rdfs:isDefinedBy : ;
-    rdfs:range :BinaryPackage .
+    rdfs:range :Package .
 
 :hasVersion a owl:ObjectProperty ;
     rdfs:label "has version"@en ;
@@ -1390,15 +1390,15 @@ xsd:date a rdfs:Datatype .
         prov:,
         foaf: ;
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.7.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.8.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.8.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.9.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/core/shapes> ;
 
-    owl:versionInfo "0.8.0" .
+    owl:versionInfo "0.9.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :BinaryPackage :SourcePackage ) .

@@ -34,6 +34,34 @@ opkg:KernelModuleShape a sh:NodeShape ;
             sh:path opkg:autoload ] ;
     sh:targetClass opkg:KernelModule .
 
+opkg:BinaryAPKShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary APK must have exactly one package name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "A binary APK can have at most one installed size."@en ;
+            sh:path opkg:installedSize ] ;
+    sh:targetClass opkg:BinaryAPK .
+
+opkg:BinaryIPKShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary IPK must have exactly one package name."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:packageName ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "A binary IPK can have at most one installed size."@en ;
+            sh:path opkg:installedSize ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary IPK can have at most one opkg filename."@en ;
+            sh:path opkg:opkgFilename ] ;
+    sh:targetClass opkg:BinaryIPK .
+
 opkg:OpkgPackageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:boolean ;
             sh:maxCount 1 ;
@@ -48,18 +76,10 @@ opkg:OpkgPackageShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:message "An OpenWRT package can belong to at most one feed."@en ;
             sh:path opkg:feed ],
-        [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:message "An OpenWRT package can have at most one installed size."@en ;
-            sh:path opkg:installedSize ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:message "An OpenWRT package can have at most one category."@en ;
             sh:path opkg:category ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:message "An OpenWRT package can have at most one opkg filename."@en ;
-            sh:path opkg:opkgFilename ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:message "An OpenWRT package can have at most one title."@en ;

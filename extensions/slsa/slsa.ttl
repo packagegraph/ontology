@@ -305,12 +305,12 @@ slsa: a owl:Ontology ;
     owl:imports pkg:,
         sec:,
         vcs: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/slsa/0.7.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/slsa/0.8.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/slsa/0.8.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/slsa/0.9.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/slsa/shapes> ;
 
-    owl:versionInfo "0.8.0" .
+    owl:versionInfo "0.9.0" .

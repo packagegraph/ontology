@@ -5,6 +5,49 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-04-27
+
+OpenWrt class hierarchy correction and SLSA/core domain widenings — reclassifies source-defined packages, introduces binary IPK and APK classes for the opkg-to-apk transition, and removes domain constraints that blocked legitimate property usage.
+
+### Changed (BREAKING)
+- **`opkg:OpkgPackage`** — `rdfs:subClassOf` changed from `pkg:BinaryPackage` to `pkg:SourcePackage`. OpenWrt Makefile-defined packages are source-level build recipes (upstream URL, build deps, sub-package definitions), not compiled binaries. This was the only source-defined ecosystem misclassified as binary — all seven analogues (BitBake, Gentoo, Arch, BSD Ports, Buildroot, Homebrew, Cargo) correctly subclass `SourcePackage`. The reclassification unblocks `pkg:hasUpstreamProject`, `pkg:buildDependsOn`, `pkg:checkRequires`, `pkg:supportedArchitecture`, and `pkg:producedBinary` (all domain: `SourcePackage`) for OpenWrt packages. **No production data affected** — no OpenWrt data exists in the graph yet. See `docs/reports/2026-04-27-ontology-changes-justification.md` for full rationale.
+- **`pkg:isVersionOf`** — domain widened from `pkg:BinaryPackage` to `pkg:Package`. The version-to-identity mapping applies equally to source and binary packages. The `BinaryPackage` restriction was an oversight from early versions that modeled only binary package indexes. Affects all 10 `SourcePackage` ecosystems, not only OpenWrt. Strictly backwards compatible (superclass replaces subclass).
+- **`pkg:hasPackage`** — range widened from `pkg:BinaryPackage` to `pkg:Package` (inverse of `isVersionOf`; range follows domain change).
+- **`slsa:hasSourceVcsRepository`** — `rdfs:domain` removed (was `slsa:SourceAttestation`, now open). Mirrors the `slsa:hasSourceCommit` pattern established in v0.8.0. Both properties serve the same purpose (linking attestations to source origins) and should have the same domain treatment. The restricted domain forced artificial `SourceAttestation` intermediary nodes when source info is embedded directly in provenance predicates (GitHub Attestations API, npm registry). Resolves existing domain violation in the npm provenance enricher and completes the `slsa:sourceRepository` → `slsa:hasSourceVcsRepository` migration path.
+
+### Added
+- **`opkg:BinaryIPK`** class (`rdfs:subClassOf pkg:BinaryPackage`) — compiled `.ipk` binary packages from opkg Packages.gz indexes (pre-24.10). Mirrors the Debian model (`DebianSourcePackage` / `DebianBinaryPackage`). Connected to source recipes via `pkg:builtFromSource`: `BinaryIPK --builtFromSource--> OpkgPackage`.
+- **`opkg:BinaryAPK`** class (`rdfs:subClassOf pkg:BinaryPackage`) — compiled `.apk` binary packages from apk-tools APKINDEX feeds (24.10+). OpenWrt 24.10 switched from opkg to apk-tools as the default package manager. The Makefile source layer (`OpkgPackage`) is unchanged — only the binary output format changed. `BinaryAPK` is a separate class from `apk:AlpinePackage` because the provenance chain differs (OpenWrt Makefiles vs Alpine APKBUILDs).
+- **`opkg:installedSize`** (DatatypeProperty, domain: `pkg:BinaryPackage`, range: `xsd:integer`) — installed size in bytes on target filesystem, currently sourced from Packages.gz `Installed-Size` for BinaryIPK. Domain is `pkg:BinaryPackage` (not `BinaryIPK`) so both binary classes can use it without domain violation. Distinct from `pkg:packageSize` (archive/download size).
+- **`opkg:opkgFilename`** (DatatypeProperty, domain: `BinaryIPK`, range: `xsd:string`) — binary `.ipk` filename from Packages.gz `Filename` field.
+- **`opkg:BinaryIPKShape`** SHACL shape — validates `installedSize`, `opkgFilename`, `packageName` on `BinaryIPK` instances.
+- **`opkg:BinaryAPKShape`** SHACL shape — validates `installedSize`, `packageName` on `BinaryAPK` instances.
+
+### Fixed
+- **`opkg.shacl.ttl`** — `OpkgPackageShape` was validating `opkg:installedSize` and `opkg:opkgFilename`, but neither property had an OWL definition in `opkg.ttl` (SHACL referenced undefined properties). Properties now defined with correct domain (`BinaryIPK`); SHACL constraints relocated from `OpkgPackageShape` to new `BinaryIPKShape`.
+
+### Migration Guide
+
+**OpkgPackage reclassification:** No data migration needed — no OpenWrt triples exist in the production graph. Consumers with SPARQL queries matching `?x a pkg:BinaryPackage` that expect OpenWrt packages must update to `?x a pkg:SourcePackage` or `?x a opkg:OpkgPackage`.
+
+**isVersionOf / hasPackage widening:** No data migration needed. Existing `BinaryPackage` instances remain valid (`BinaryPackage` is a subclass of `Package`). Source packages can now use `isVersionOf` without domain violations.
+
+**hasSourceVcsRepository domain removal:** No data migration needed. Existing triples on `SourceAttestation` subjects remain valid. `ProvenanceAttestation` subjects can now use `hasSourceVcsRepository` directly instead of routing through an artificial `SourceAttestation` intermediary. The deprecated `slsa:sourceRepository` can be migrated with:
+
+```sparql
+# Migrate deprecated sourceRepository (DatatypeProperty) to
+# hasSourceVcsRepository (ObjectProperty → vcs:Repository)
+DELETE { ?att slsa:sourceRepository ?repoUri }
+INSERT { ?att slsa:hasSourceVcsRepository ?repo }
+WHERE {
+  ?att slsa:sourceRepository ?repoUri .
+  ?repo a vcs:Repository ;
+        vcs:repositoryUrl ?repoUri .
+}
+```
+
+---
+
 ## [0.8.0] - 2026-04-26
 
 Attestation signing infrastructure and forge modeling — new extension module for cryptographic signing across GPG, SSH, X.509, Sigstore, and OpenPubkey; four-level forge model for supply chain concentration and vulnerability analysis.
@@ -259,6 +302,9 @@ Academic readiness release — comprehensive semantic audit and remediation acro
 - VCS and SLSA extension modules
 - SHACL validation shapes and example instances
 
+[0.9.0]: https://github.com/packagegraph/ontology/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/packagegraph/ontology/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/packagegraph/ontology/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/packagegraph/ontology/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/packagegraph/ontology/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/packagegraph/ontology/compare/v0.3.0...v0.5.0

@@ -93,8 +93,8 @@ opkg:inFeed a owl:ObjectProperty ;
 
 opkg:installedSize a owl:DatatypeProperty ;
     rdfs:label "installed size"@en ;
-    IAO:0000115 "The installed size in bytes of the binary .ipk package on the target filesystem."@en ;
-    rdfs:domain opkg:OpkgPackage ;
+    IAO:0000115 "The installed size in bytes of the binary package on the target filesystem. Distinct from archive/download size (pkg:packageSize). Currently sourced from the opkg Packages.gz Installed-Size field for BinaryIPK packages."@en ;
+    rdfs:domain pkg:BinaryPackage ;
     rdfs:isDefinedBy opkg: ;
     rdfs:range xsd:integer .
 
@@ -116,7 +116,7 @@ opkg:menu a owl:DatatypeProperty ;
 opkg:opkgFilename a owl:DatatypeProperty ;
     rdfs:label "opkg filename"@en ;
     IAO:0000115 "The filename of the binary .ipk package as listed in the opkg Packages index."@en ;
-    rdfs:domain opkg:OpkgPackage ;
+    rdfs:domain opkg:BinaryIPK ;
     rdfs:isDefinedBy opkg: ;
     rdfs:range xsd:string .
 
@@ -260,10 +260,24 @@ opkg:DeviceProfile a owl:Class ;
     rdfs:isDefinedBy opkg: ;
     rdfs:subClassOf prov:Entity .
 
+opkg:BinaryAPK a owl:Class ;
+    rdfs:label "Binary APK Package"@en ;
+    IAO:0000115 "A compiled .apk binary package produced from an OpenWRT Makefile recipe, as indexed in an apk APKINDEX feed. OpenWRT 24.10+ switched from opkg (.ipk) to apk-tools (.apk) as the default package manager. The binary format differs from opkg:BinaryIPK but the source Makefile recipe (opkg:OpkgPackage) is the same."@en ;
+    rdfs:comment "A compiled .apk binary from an OpenWRT apk-tools feed (24.10+)"@en ;
+    rdfs:isDefinedBy opkg: ;
+    rdfs:subClassOf pkg:BinaryPackage .
+
+opkg:BinaryIPK a owl:Class ;
+    rdfs:label "Binary IPK Package"@en ;
+    IAO:0000115 "A compiled .ipk binary package produced from an OpenWRT Makefile recipe, as indexed in an opkg Packages.gz feed. Used in OpenWRT releases prior to 24.10. Contains installed size, filename, architecture, and checksums."@en ;
+    rdfs:comment "A compiled .ipk binary from an opkg package feed (pre-24.10)"@en ;
+    rdfs:isDefinedBy opkg: ;
+    rdfs:subClassOf pkg:BinaryPackage .
+
 opkg:OpkgPackage a owl:Class ;
     rdfs:label "OpenWRT Package"@en ;
-    IAO:0000115 "A source package recipe defined in an OpenWRT feed repository via a Makefile, describing how one or more opkg (.ipk) binaries are built for router and IoT targets. A single Makefile can define multiple sub-packages via separate 'define Package/<name>' blocks, all sharing the same upstream source."@en ;
-    rdfs:comment "An OpenWRT package from a feed repository"@en ;
+    IAO:0000115 "A source-level build recipe defined in an OpenWRT feed repository via a Makefile, specifying upstream source, build dependencies, and sub-package definitions. A single Makefile can define multiple sub-packages via separate 'define Package/<name>' blocks, all sharing the same upstream source. The Makefile layer is stable across the opkg-to-apk transition (24.10+) — only the binary output format changes. Analogous to bitbake:BitBakeRecipe, portage:Ebuild, and pacman:PKGBUILD."@en ;
+    rdfs:comment "An OpenWRT source package recipe from a feed repository"@en ;
     rdfs:isDefinedBy opkg: ;
     rdfs:subClassOf pkg:SourcePackage .
 
@@ -275,12 +289,12 @@ opkg: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing OpenWRT packages and feed repositories"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/opkg/0.7.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/opkg/0.8.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/opkg/0.8.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/opkg/0.9.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/opkg/shapes> ;
 
-    owl:versionInfo "0.8.0" .
+    owl:versionInfo "0.9.0" .
