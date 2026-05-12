@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix pypi: <https://purl.org/packagegraph/ontology/pypi#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# PYPI Example — requests 2.32.3
+# ============================================================
+
+ex:pypi-requests-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "requests" .
+
+ex:pypi-requests-2-32-3
+    a pkg:Package, pkg:SourcePackage, pypi:PythonPackage ;
+    pkg:packageName "requests" ;
+    pkg:isVersionOf ex:pypi-requests-identity ;
+    pkg:hasVersion ex:pypi-requests-ver-2-32-3 ;
+    pypi:requiresPython ">=3.8" ;
+    pypi:yanked false .
+
+ex:pypi-requests-ver-2-32-3
+    a pkg:Version ;
+    pkg:versionString "2.32.3" .

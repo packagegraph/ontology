@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix gomod: <https://purl.org/packagegraph/ontology/gomod#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# GOMOD Example — golang.org/x/net 0.30.0
+# ============================================================
+
+ex:gomod-xnet-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "golang.org/x/net" .
+
+ex:gomod-xnet-0-30-0
+    a pkg:Package, pkg:SourcePackage, gomod:GoModule ;
+    pkg:packageName "golang.org/x/net" ;
+    pkg:isVersionOf ex:gomod-xnet-identity ;
+    pkg:hasVersion ex:gomod-xnet-ver-0-30-0 ;
+    gomod:goVersion "1.18" ;
+    gomod:modulePath "golang.org/x/net" .
+
+ex:gomod-xnet-ver-0-30-0
+    a pkg:Version ;
+    pkg:versionString "0.30.0" .

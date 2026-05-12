@@ -222,7 +222,12 @@ ex:glibc-deb-version pkg:versionOf ex:glibc-deb .
 ex:wget-glibc-dep a pkg:Dependency ;
   pkg:dependencyTarget ex:glibc-deb ;
   pkg:dependencyType pkg:dependsOn ;
+  pkg:hasVersionConstraint ex:wget-glibc-constraint ;
   rdfs:label "wget requires libc6" .
+
+ex:wget-glibc-constraint a pkg:VersionConstraint ;
+  pkg:versionConstraintOperator ">=" ;
+  pkg:versionConstraintValue "2.17" .
 
 ex:wget-deb pkg:hasDependency ex:wget-glibc-dep ;
             pkg:directlyDependsOn ex:glibc-deb .

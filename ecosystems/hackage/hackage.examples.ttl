@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix hackage: <https://purl.org/packagegraph/ontology/hackage#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# HACKAGE Example — aeson 2.2.3.0
+# ============================================================
+
+ex:hackage-aeson-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "aeson" .
+
+ex:hackage-aeson-2-2-3-0
+    a pkg:Package, pkg:SourcePackage, hackage:HackagePackage ;
+    pkg:packageName "aeson" ;
+    pkg:isVersionOf ex:hackage-aeson-identity ;
+    pkg:hasVersion ex:hackage-aeson-ver-2-2-3-0 ;
+    hackage:category "JSON, Web, Text" ;
+    hackage:synopsis "Fast JSON parsing and encoding" .
+
+ex:hackage-aeson-ver-2-2-3-0
+    a pkg:Version ;
+    pkg:versionString "2.2.3.0" .

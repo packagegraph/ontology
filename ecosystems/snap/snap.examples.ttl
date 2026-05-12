@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix snap: <https://purl.org/packagegraph/ontology/snap#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# SNAP Example — firefox 131
+# ============================================================
+
+ex:snap-firefox-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "firefox" .
+
+ex:snap-firefox-131
+    a pkg:Package, pkg:BinaryPackage, snap:SnapPackage ;
+    pkg:packageName "firefox" ;
+    pkg:isVersionOf ex:snap-firefox-identity ;
+    pkg:hasVersion ex:snap-firefox-ver-131 ;
+    snap:confinement "strict" ;
+    snap:grade "stable" .
+
+ex:snap-firefox-ver-131
+    a pkg:Version ;
+    pkg:versionString "131" .

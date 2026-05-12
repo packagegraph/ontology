@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix rubygems: <https://purl.org/packagegraph/ontology/rubygems#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# RUBYGEMS Example — rails 7.2.1
+# ============================================================
+
+ex:rubygems-rails-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "rails" .
+
+ex:rubygems-rails-7-2-1
+    a pkg:Package, pkg:SourcePackage, rubygems:Gem ;
+    pkg:packageName "rails" ;
+    pkg:isVersionOf ex:rubygems-rails-identity ;
+    pkg:hasVersion ex:rubygems-rails-ver-7-2-1 ;
+    rubygems:requiredRubyVersion ">= 3.1.0" ;
+    rubygems:platform "ruby" .
+
+ex:rubygems-rails-ver-7-2-1
+    a pkg:Version ;
+    pkg:versionString "7.2.1" .

@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix cpan: <https://purl.org/packagegraph/ontology/cpan#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# CPAN Example — Moose 2.2207
+# ============================================================
+
+ex:cpan-moose-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "Moose" .
+
+ex:cpan-moose-2-2207
+    a pkg:Package, pkg:SourcePackage, cpan:Distribution ;
+    pkg:packageName "Moose" ;
+    pkg:isVersionOf ex:cpan-moose-identity ;
+    pkg:hasVersion ex:cpan-moose-ver-2-2207 ;
+    cpan:mainModule "Moose" ;
+    cpan:maturity "released" .
+
+ex:cpan-moose-ver-2-2207
+    a pkg:Version ;
+    pkg:versionString "2.2207" .

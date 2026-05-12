@@ -59,13 +59,11 @@ Data loaded into Fuseki across 3 graphs:
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT DISTINCT ?cveId ?severity WHERE {
-  GRAPH ?g {
-    ?vuln sec:hasAffectedRange ?range .
+      ?vuln sec:hasAffectedRange ?range .
     ?range sec:affectsPackageName "org.springframework:spring-beans" ;
            sec:affectsEcosystem/rdfs:label "Maven" .
     ?vuln sec:cveId ?cveId .
     OPTIONAL { ?vuln sec:hasCVSSScore/sec:baseScore ?severity }
-  }
 } ORDER BY DESC(?severity)
 ```
 
@@ -91,15 +89,13 @@ Two affected version ranges: `[0, 5.2.20.RELEASE)` and `[5.3.0, 5.3.18)`. GIT ra
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?introducedVersion ?fixedVersion WHERE {
-  GRAPH ?g {
-    ?vuln sec:cveId "CVE-2022-22965" ; sec:hasAffectedRange ?range .
+      ?vuln sec:cveId "CVE-2022-22965" ; sec:hasAffectedRange ?range .
     ?range sec:affectsPackageName "org.springframework:spring-beans" ;
            sec:affectsEcosystem/rdfs:label "Maven" ;
            sec:rangeType ?rt ; sec:hasRangeEvent ?event .
     FILTER(?rt IN (sec:range-ecosystem, sec:range-semver))
     OPTIONAL { ?event sec:eventType sec:event-introduced ; sec:eventVersion ?introducedVersion . }
     OPTIONAL { ?event sec:eventType sec:event-fixed ; sec:eventVersion ?fixedVersion . }
-  }
 }
 ```
 
@@ -123,14 +119,12 @@ No GIT-range data for this CVE in OSV (Spring4Shell only has ECOSYSTEM ranges). 
 PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
 SELECT ?fixedVersion ?commitHash WHERE {
-  GRAPH ?g {
-    ?vuln sec:cveId "CVE-2022-22965" ; sec:hasAffectedRange ?range .
+      ?vuln sec:cveId "CVE-2022-22965" ; sec:hasAffectedRange ?range .
     ?range sec:affectsPackageName "org.springframework:spring-beans" ;
            sec:affectsEcosystem/rdfs:label "Maven" ; sec:hasRangeEvent ?event .
     ?event sec:eventType sec:event-fixed .
     OPTIONAL { ?event sec:eventVersion ?fixedVersion }
     OPTIONAL { ?event sec:eventCommit ?c . ?c vcs:commitHash ?commitHash . }
-  }
 }
 ```
 
@@ -196,14 +190,12 @@ SELECT ?artifactId ?currentVersion ?diffUrl ?linesAdded ?linesDeleted ?filesChan
             pkg:isVersionOf ?identity .
   ?verEntity pkg:versionString ?currentVersion .
   ?identity pkg:upstreamRepository ?repo .
-  GRAPH ?g {
-    ?release vcs:correspondingPackageVersion ?verEntity ;
+      ?release vcs:correspondingPackageVersion ?verEntity ;
              vcs:hasDiff ?diff .
     ?diff vcs:diffUrl ?diffUrl .
     OPTIONAL { ?diff vcs:linesAdded ?linesAdded }
     OPTIONAL { ?diff vcs:linesDeleted ?linesDeleted }
     OPTIONAL { ?diff vcs:filesChanged ?filesChanged }
-  }
 }
 ```
 

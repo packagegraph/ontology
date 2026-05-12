@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix portage: <https://purl.org/packagegraph/ontology/portage#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# PORTAGE Example — dev-libs/openssl 3.3.2
+# ============================================================
+
+ex:portage-openssl-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "dev-libs/openssl" .
+
+ex:portage-openssl-3-3-2
+    a pkg:Package, pkg:BinaryPackage, portage:PortagePackage ;
+    pkg:packageName "dev-libs/openssl" ;
+    pkg:isVersionOf ex:portage-openssl-identity ;
+    pkg:hasVersion ex:portage-openssl-ver-3-3-2 ;
+    portage:slot "0/3" ;
+    portage:subslot "3" .
+
+ex:portage-openssl-ver-3-3-2
+    a pkg:Version ;
+    pkg:versionString "3.3.2" .

@@ -1,0 +1,26 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix flatpak: <https://purl.org/packagegraph/ontology/flatpak#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# FLATPAK Example — org.mozilla.firefox 131.0
+# ============================================================
+
+ex:flatpak-firefox-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "org.mozilla.firefox" .
+
+ex:flatpak-firefox-131-0
+    a pkg:Package, pkg:BinaryPackage, flatpak:FlatpakApp ;
+    pkg:packageName "org.mozilla.firefox" ;
+    pkg:isVersionOf ex:flatpak-firefox-identity ;
+    pkg:hasVersion ex:flatpak-firefox-ver-131-0 ;
+    flatpak:appId "org.mozilla.Firefox" ;
+    flatpak:branch "stable" ;
+    flatpak:command "firefox" .
+
+ex:flatpak-firefox-ver-131-0
+    a pkg:Version ;
+    pkg:versionString "131.0" .

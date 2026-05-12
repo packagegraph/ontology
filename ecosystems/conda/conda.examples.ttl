@@ -1,0 +1,26 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix conda: <https://purl.org/packagegraph/ontology/conda#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# CONDA Example — numpy 1.26.4
+# ============================================================
+
+ex:conda-numpy-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "numpy" .
+
+ex:conda-numpy-1-26-4
+    a pkg:Package, pkg:BinaryPackage, conda:CondaPackage ;
+    pkg:packageName "numpy" ;
+    pkg:isVersionOf ex:conda-numpy-identity ;
+    pkg:hasVersion ex:conda-numpy-ver-1-26-4 ;
+    conda:buildNumber 0 ;
+    conda:buildString "py312h1234567_0" ;
+    conda:subdirectory "linux-64" .
+
+ex:conda-numpy-ver-1-26-4
+    a pkg:Version ;
+    pkg:versionString "1.26.4" .

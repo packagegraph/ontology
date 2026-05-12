@@ -2118,6 +2118,8 @@ CQ answers may come from joins across triples populated by different collectors 
 
 **Evidence rubric:** The validation harness checks predicate presence and join completeness across the queryable dataset. It does not require all predicates to originate from a single collector.
 
+**Graph model requirement:** All CQ SPARQL queries assume a **union default graph** — they use no `GRAPH` clauses. The Fuseki dataset must be configured with `tdb2:unionDefaultGraph true` so that triples in named graphs (used for lifecycle management: load, drop, reload per distribution) are queryable through the default graph. Named graphs serve data management, not query scoping. CQs that need provenance ("which collector produced this triple?") should use the `DataSnapshot` class, not graph URIs.
+
 **Source provenance:** Source attribution is not tracked at the property level in v1. If source-level trust analysis becomes a requirement, a lightweight provenance pattern can be added without schema changes.
 
 ---

@@ -314,3 +314,22 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 **Why no inheritance:** GitHub is not a kind of Git. GitLab is not a kind of Git. Savannah supports Git AND Subversion AND Mercurial — it cannot be a subclass of any single VCS. The relationship is version-dependent capability, not type hierarchy.
 
 **Downstream guidance:** If your code checks `?x a vcs:ForgeSoftware`, you get forge platforms. If your code checks `?x a vcs:VersionControlSystem`, you get VCS types. These will never overlap. To find what VCS a forge supports: `?version vcs:versionOfSoftware ?forge ; vcs:supportedVcs ?vcs`.
+
+---
+
+### DD-UO-1: Upper Ontology Non-Alignment
+
+**Decision:** PackageGraph does not align with BFO or DOLCE. It references them as evaluated alternatives, not as imports or formal alignments.
+
+**Rationale:**
+- BFO's `material-entity` / `process` / `disposition` hierarchy does not cleanly categorize software packages, which are informational artifacts with physical manifestations (installed files) and social roles (maintainers)
+- DOLCE's cognitive/social focus treats roles as dependent on agents, but package maintenance roles are organizational constructs, not cognitive states
+- Domain vocabularies (PROV-O for provenance, FOAF for people, SPDX for licensing, DOAP for projects) provide the interoperability that matters for this domain — foundational ontology categorization does not
+
+**What we use instead:**
+- `prov:Agent`, `prov:Entity`, `prov:Activity` for provenance chains
+- `foaf:Person` equivalence for contributor identity
+- `spdx:Vulnerability` cross-reference for security alignment
+- `doap:Project` superclass for upstream projects
+
+**Historical note:** Early versions (pre-v0.6.0) included `dcterms:references` to BFO and DOLCE OWL files, which was misinterpreted by reviewers as claiming formal alignment. Changed to `rdfs:comment` attribution in v0.9.0.

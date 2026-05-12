@@ -1,0 +1,26 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix nuget: <https://purl.org/packagegraph/ontology/nuget#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# NUGET Example — Newtonsoft.Json 13.0.3
+# ============================================================
+
+ex:nuget-newtonsoft-json-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "Newtonsoft.Json" .
+
+ex:nuget-newtonsoft-json-13-0-3
+    a pkg:Package, pkg:BinaryPackage, nuget:NuGetPackage ;
+    pkg:packageName "Newtonsoft.Json" ;
+    pkg:isVersionOf ex:nuget-newtonsoft-json-identity ;
+    pkg:hasVersion ex:nuget-newtonsoft-json-ver-13-0-3 ;
+    nuget:packageId "Newtonsoft.Json" ;
+    nuget:isPrerelease false ;
+    nuget:listed true .
+
+ex:nuget-newtonsoft-json-ver-13-0-3
+    a pkg:Version ;
+    pkg:versionString "13.0.3" .

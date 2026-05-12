@@ -1378,10 +1378,9 @@ xsd:date a rdfs:Datatype .
     dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "A comprehensive ontology for modeling software packages, dependencies, repositories, and package management systems across different platforms and ecosystems." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    dcterms:references <http://purl.obolibrary.org/obo/bfo.owl>,
-        <http://www.loa.istc.cnr.it/dolce/dolce-owl/DOLCEbasic> ;
     dcterms:title "Package Management Core Ontology" ;
-    rdfs:comment "Core ontology for representing software packages and repositories across different package management systems. Upper ontology positioning: PackageGraph adopts lightweight alignment to established domain vocabularies (PROV-O, FOAF, SPDX, DOAP) rather than full BFO or DOLCE alignment. Software packages are informational artifacts whose lifecycle includes physical manifestations (installed files) and social roles (maintainers). BFO's material-entity/process distinction and DOLCE's cognitive/social focus do not cleanly categorize these hybrid entities. Our alignment strategy prioritizes semantic interoperability with domain-standard vocabularies over foundational ontology categorization. Multilingual metadata design: PackageGraph does not mandate @en language tags on data literals for graph efficiency — package names are technical identifiers, not translatable text, and adding language tags to 62.7M string literals increases storage cost and breaks existing SPARQL queries. However, the ontology acknowledges that multilingual package metadata is a real domain concern: Debian and Ubuntu maintain dedicated localisation teams (debian-l10n-english, ubuntu-translators) providing meticulously translated descriptions for packages like apache2, nginx, and postgresql. The RDF literal language tag mechanism remains available for collectors that ingest such translated metadata — the ontology does not prohibit language-tagged literals, it simply does not require them for monolingual English data."@en ;
+    rdfs:comment "Upper ontology evaluation: PackageGraph was evaluated against BFO (http://purl.obolibrary.org/obo/bfo.owl) and DOLCE (http://www.loa.istc.cnr.it/dolce/dolce-owl/DOLCEbasic) but adopts lightweight alignment to domain vocabularies (PROV-O, FOAF, SPDX, DOAP) instead. See design-decisions.md DD-UO-1."@en ;
+    rdfs:comment "Core ontology for representing software packages and repositories across different package management systems. Multilingual metadata design: PackageGraph does not mandate @en language tags on data literals for graph efficiency — package names are technical identifiers, not translatable text, and adding language tags to 62.7M string literals increases storage cost and breaks existing SPARQL queries. However, the ontology acknowledges that multilingual package metadata is a real domain concern: Debian and Ubuntu maintain dedicated localisation teams (debian-l10n-english, ubuntu-translators) providing meticulously translated descriptions for packages like apache2, nginx, and postgresql. The RDF literal language tag mechanism remains available for collectors that ingest such translated metadata — the ontology does not prohibit language-tagged literals, it simply does not require them for monolingual English data."@en ;
     rdfs:isDefinedBy : ;
     rdfs:seeAlso <http://spdx.org/rdf/terms>,
         <https://packagegraph.github.io/ontology/>,
@@ -1390,7 +1389,7 @@ xsd:date a rdfs:Datatype .
         prov:,
         foaf: ;
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
-    dcterms:modified "2026-04-27"^^xsd:date ;
+    dcterms:modified "2026-05-12"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.8.0> ;
 

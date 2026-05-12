@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix hex: <https://purl.org/packagegraph/ontology/hex#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# HEX Example — phoenix 1.7.14
+# ============================================================
+
+ex:hex-phoenix-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "phoenix" .
+
+ex:hex-phoenix-1-7-14
+    a pkg:Package, pkg:SourcePackage, hex:HexPackage ;
+    pkg:packageName "phoenix" ;
+    pkg:isVersionOf ex:hex-phoenix-identity ;
+    pkg:hasVersion ex:hex-phoenix-ver-1-7-14 ;
+    hex:buildTools "mix" ;
+    hex:elixirVersion "~> 1.14" .
+
+ex:hex-phoenix-ver-1-7-14
+    a pkg:Version ;
+    pkg:versionString "1.7.14" .

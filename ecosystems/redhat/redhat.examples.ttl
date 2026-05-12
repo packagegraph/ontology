@@ -1,0 +1,26 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix rh: <https://purl.org/packagegraph/ontology/redhat#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# REDHAT Example — openssl 3.0.7-28.el9
+# ============================================================
+
+ex:rh-openssl-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "openssl" .
+
+ex:rh-openssl-3-0-7-28-el9
+    a pkg:Package, pkg:BinaryPackage, rpm:RPMPackage ;
+    pkg:packageName "openssl" ;
+    pkg:isVersionOf ex:rh-openssl-identity ;
+    pkg:hasVersion ex:rh-openssl-ver-3-0-7-28-el9 ;
+    rh:acgLifecycleLevel 1 ;
+    rh:acgLifecycleLevelLabel "high" .
+
+ex:rh-openssl-ver-3-0-7-28-el9
+    a pkg:Version ;
+    pkg:versionString "3.0.7-28.el9" .

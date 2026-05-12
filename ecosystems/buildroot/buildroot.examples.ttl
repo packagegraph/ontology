@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix buildroot: <https://purl.org/packagegraph/ontology/buildroot#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# BUILDROOT Example — busybox 1.36.1
+# ============================================================
+
+ex:buildroot-busybox-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "busybox" .
+
+ex:buildroot-busybox-1-36-1
+    a pkg:Package, pkg:SourcePackage, buildroot:BuildrootPackage ;
+    pkg:packageName "busybox" ;
+    pkg:isVersionOf ex:buildroot-busybox-identity ;
+    pkg:hasVersion ex:buildroot-busybox-ver-1-36-1 ;
+    buildroot:installTarget true ;
+    buildroot:licenseFiles "LICENSE" .
+
+ex:buildroot-busybox-ver-1-36-1
+    a pkg:Version ;
+    pkg:versionString "1.36.1" .

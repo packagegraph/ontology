@@ -1,0 +1,25 @@
+@prefix ex: <https://purl.org/packagegraph/ontology/examples#> .
+@prefix opkg: <https://purl.org/packagegraph/ontology/opkg#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================
+# OPKG Example — busybox 1.36.1-1
+# ============================================================
+
+ex:opkg-busybox-identity
+    a pkg:PackageIdentity ;
+    pkg:identityName "busybox" .
+
+ex:opkg-busybox-1-36-1-1
+    a pkg:Package, pkg:SourcePackage, opkg:OpkgPackage ;
+    pkg:packageName "busybox" ;
+    pkg:isVersionOf ex:opkg-busybox-identity ;
+    pkg:hasVersion ex:opkg-busybox-ver-1-36-1-1 ;
+    opkg:title "Core utilities for embedded Linux" ;
+    opkg:sourceUrl "https://busybox.net/downloads/busybox-1.36.1.tar.bz2" .
+
+ex:opkg-busybox-ver-1-36-1-1
+    a pkg:Version ;
+    pkg:versionString "1.36.1-1" .
