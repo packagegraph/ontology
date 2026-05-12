@@ -269,6 +269,30 @@ vcs:developmentStatus a owl:DatatypeProperty ;
     rdfs:isDefinedBy vcs: ;
     rdfs:range xsd:string .
 
+vcs:diffFrom a owl:ObjectProperty ;
+    rdfs:label "diff from"@en ;
+    IAO:0000115 "The older commit in the comparison, representing the base state before the changes."@en ;
+    rdfs:comment "The starting commit of the diff comparison"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:Commit .
+
+vcs:diffTo a owl:ObjectProperty ;
+    rdfs:label "diff to"@en ;
+    IAO:0000115 "The newer commit in the comparison, representing the state after the changes."@en ;
+    rdfs:comment "The ending commit of the diff comparison"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:Commit .
+
+vcs:diffUrl a owl:DatatypeProperty ;
+    rdfs:label "diff URL"@en ;
+    IAO:0000115 "The URL to view the diff on the forge, such as a GitHub compare view (e.g., https://github.com/org/repo/compare/v1.0...v1.1)."@en ;
+    rdfs:comment "Forge URL showing the diff between two commits or tags"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:anyURI .
+
 vcs:encoding a owl:DatatypeProperty ;
     rdfs:label "encoding"@en ;
     IAO:0000115 "The character encoding format used for the file content, such as UTF-8, ASCII, or ISO-8859-1."@en ;
@@ -300,6 +324,14 @@ vcs:fileSize a owl:DatatypeProperty ;
     rdfs:domain vcs:File ;
     rdfs:isDefinedBy vcs: ;
     rdfs:range xsd:long .
+
+vcs:filesChanged a owl:DatatypeProperty ;
+    rdfs:label "files changed"@en ;
+    IAO:0000115 "The total number of files modified, added, or deleted in this diff."@en ;
+    rdfs:comment "Number of files changed in the diff"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:int .
 
 vcs:firstCommitDate a owl:DatatypeProperty,
         owl:FunctionalProperty ;
@@ -333,6 +365,14 @@ vcs:hasCommit a owl:ObjectProperty ;
     rdfs:domain vcs:Repository ;
     rdfs:isDefinedBy vcs: ;
     rdfs:range vcs:Commit .
+
+vcs:hasDiff a owl:ObjectProperty ;
+    rdfs:label "has diff"@en ;
+    IAO:0000115 "Associates a release with the diff from its previous release, enabling version-to-version change analysis."@en ;
+    rdfs:comment "Links a release to the diff from the previous release"@en ;
+    rdfs:domain vcs:Release ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range vcs:Diff .
 
 vcs:hasFile a owl:ObjectProperty ;
     rdfs:label "has file"@en ;
@@ -452,6 +492,22 @@ vcs:lastActivity a owl:DatatypeProperty ;
     rdfs:domain vcs:Repository ;
     rdfs:isDefinedBy vcs: ;
     rdfs:range xsd:dateTime .
+
+vcs:linesAdded a owl:DatatypeProperty ;
+    rdfs:label "lines added"@en ;
+    IAO:0000115 "The total number of lines added across all files in this diff."@en ;
+    rdfs:comment "Total lines added in the diff"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:int .
+
+vcs:linesDeleted a owl:DatatypeProperty ;
+    rdfs:label "lines deleted"@en ;
+    IAO:0000115 "The total number of lines removed across all files in this diff."@en ;
+    rdfs:comment "Total lines deleted in the diff"@en ;
+    rdfs:domain vcs:Diff ;
+    rdfs:isDefinedBy vcs: ;
+    rdfs:range xsd:int .
 
 vcs:milestoneProgress a owl:DatatypeProperty ;
     rdfs:label "milestone progress"@en ;
@@ -856,7 +912,7 @@ vcs: a owl:Ontology ;
     dcterms:title "Version Control System Ontology" ;
     rdfs:comment "Ontology for representing source code repositories, commits, branches, tags, and version control metadata"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-25"^^xsd:date ;
+    dcterms:modified "2026-05-11"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/vcs/0.7.0> ;
 

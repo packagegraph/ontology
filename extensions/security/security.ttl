@@ -8,6 +8,7 @@
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 sec:accessComplexity a owl:DatatypeProperty ;
@@ -164,6 +165,14 @@ sec:environmentalScore a owl:DatatypeProperty ;
     rdfs:domain sec:CVSSScore ;
     rdfs:isDefinedBy sec: ;
     rdfs:range xsd:decimal .
+
+sec:eventCommit a owl:ObjectProperty ;
+    rdfs:label "event commit"@en ;
+    IAO:0000115 "Associates a GIT-range event with the actual VCS commit entity, enabling traversal from a vulnerability fix event to the commit that fixed it. Only populated when the range type is GIT and a commit hash is available."@en ;
+    rdfs:comment "Links a GIT-range event to the VCS commit it references"@en ;
+    rdfs:domain sec:RangeEvent ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range vcs:Commit .
 
 sec:eventType a owl:ObjectProperty ;
     rdfs:label "event type"@en ;
@@ -451,7 +460,7 @@ sec: a owl:Ontology ;
     rdfs:comment "Ontology for representing security vulnerabilities, advisories, and their relationships to software packages"@en ;
     rdfs:seeAlso <http://spdx.org/rdf/terms> ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-05-11"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/security/0.7.0> ;
 

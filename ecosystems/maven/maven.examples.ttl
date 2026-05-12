@@ -1,0 +1,138 @@
+@prefix ex:    <https://purl.org/packagegraph/ontology/examples#> .
+@prefix maven: <https://purl.org/packagegraph/ontology/maven#> .
+@prefix pkg:   <https://purl.org/packagegraph/ontology/core#> .
+@prefix sec:   <https://purl.org/packagegraph/ontology/security#> .
+@prefix vcs:   <https://purl.org/packagegraph/ontology/vcs#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+# ============================================================
+# Maven Artifact Examples (Spring Framework test corpus)
+# ============================================================
+
+# PackageIdentity (version-agnostic)
+ex:spring-beans-identity a pkg:PackageIdentity ;
+  pkg:identityName "org.springframework:spring-beans" ;
+  pkg:purl "pkg:maven/org.springframework/spring-beans"^^xsd:anyURI ;
+  pkg:upstreamRepository ex:spring-framework-repo .
+
+# Versioned artifact
+ex:spring-beans-5.3.18 a pkg:Package, pkg:BinaryPackage, maven:MavenArtifact ;
+  pkg:packageName "org.springframework:spring-beans" ;
+  pkg:isVersionOf ex:spring-beans-identity ;
+  pkg:hasVersion ex:spring-beans-version-5.3.18 ;
+  maven:groupId "org.springframework" ;
+  maven:artifactId "spring-beans" ;
+  maven:packaging "jar" ;
+  vcs:packagedFromTag ex:spring-framework-tag-v5.3.18 .
+
+ex:spring-beans-version-5.3.18 a pkg:Version ;
+  pkg:versionString "5.3.18" .
+
+# ============================================================
+# Vulnerability Example (CVE-2022-22965 — Spring4Shell)
+# ============================================================
+
+ex:ghsa-36p3-wjmg-h94x a sec:Vulnerability ;
+  rdfs:label "CVE-2022-22965" ;
+  sec:cveId "CVE-2022-22965" ;
+  sec:osvId "GHSA-36p3-wjmg-h94x" ;
+  sec:severity "critical" ;
+  sec:summary "Spring Framework RCE via Data Binding on JDK 9+" ;
+  sec:hasAffectedRange ex:spring4shell-ecosystem-range ,
+                       ex:spring4shell-git-range ;
+  sec:hasCVSSScore ex:spring4shell-cvss .
+
+ex:spring4shell-cvss a sec:CVSSScore ;
+  sec:cvssVersion "3.1" ;
+  sec:baseScore "9.8"^^xsd:decimal .
+
+ex:spring4shell-ecosystem-range a sec:AffectedRange ;
+  sec:affectsEcosystem ex:maven-ecosystem ;
+  sec:affectsPackageName "org.springframework:spring-beans" ;
+  sec:rangeType sec:range-ecosystem ;
+  sec:hasRangeEvent ex:spring4shell-introduced ,
+                    ex:spring4shell-fixed .
+
+ex:spring4shell-introduced a sec:RangeEvent ;
+  sec:eventType sec:event-introduced ;
+  sec:eventVersion "5.3.0" .
+
+ex:spring4shell-fixed a sec:RangeEvent ;
+  sec:eventType sec:event-fixed ;
+  sec:eventVersion "5.3.18" .
+
+# Ecosystem entity
+ex:maven-ecosystem a pkg:Ecosystem ;
+  rdfs:label "Maven" .
+
+# ============================================================
+# VCS Repository + Diff Example (CQ-M4, CQ-M5)
+# ============================================================
+
+ex:spring-framework-repo a vcs:Repository ;
+  rdfs:label "spring-framework" ;
+  vcs:cloneUrl "https://github.com/spring-projects/spring-framework.git"^^xsd:anyURI ;
+  vcs:defaultBranch "main" .
+
+ex:spring-framework-tag-v5.3.18 a vcs:Tag, vcs:Release ;
+  vcs:tagName "v5.3.18" ;
+  vcs:pointsTo ex:spring-framework-commit-abc123 ;
+  vcs:previousRelease ex:spring-framework-tag-v5.3.17 ;
+  vcs:correspondingPackageVersion ex:spring-beans-version-5.3.18 ;
+  vcs:hasDiff ex:spring-framework-diff-v5.3.17-v5.3.18 .
+
+ex:spring-framework-tag-v5.3.17 a vcs:Tag, vcs:Release ;
+  vcs:tagName "v5.3.17" ;
+  vcs:pointsTo ex:spring-framework-commit-def456 .
+
+ex:spring-framework-commit-abc123 a vcs:Commit ;
+  vcs:commitHash "abc123def456789" ;
+  vcs:commitTimestamp "2022-03-31T12:00:00Z"^^xsd:dateTime .
+
+ex:spring-framework-commit-def456 a vcs:Commit ;
+  vcs:commitHash "def456abc789012" ;
+  vcs:commitTimestamp "2022-03-15T12:00:00Z"^^xsd:dateTime .
+
+ex:spring-framework-diff-v5.3.17-v5.3.18 a vcs:Diff ;
+  vcs:diffFrom ex:spring-framework-commit-def456 ;
+  vcs:diffTo ex:spring-framework-commit-abc123 ;
+  vcs:diffUrl "https://github.com/spring-projects/spring-framework/compare/v5.3.17...v5.3.18"^^xsd:anyURI ;
+  vcs:linesAdded "342"^^xsd:int ;
+  vcs:linesDeleted "89"^^xsd:int ;
+  vcs:filesChanged "27"^^xsd:int .
+
+# ============================================================
+# GIT-Range Fix Commit Example (CQ-M3 commit-level)
+# ============================================================
+
+ex:spring4shell-git-range a sec:AffectedRange ;
+  sec:affectsEcosystem ex:maven-ecosystem ;
+  sec:affectsPackageName "org.springframework:spring-beans" ;
+  sec:rangeType sec:range-git ;
+  sec:hasRangeEvent ex:spring4shell-git-introduced ,
+                    ex:spring4shell-git-fixed .
+
+ex:spring4shell-git-introduced a sec:RangeEvent ;
+  sec:eventType sec:event-introduced ;
+  sec:eventVersion "0000000000000000000000000000000000000000" .
+
+ex:spring4shell-git-fixed a sec:RangeEvent ;
+  sec:eventType sec:event-fixed ;
+  sec:eventVersion "abc123def456789" ;
+  sec:eventCommit ex:spring-framework-commit-abc123 .
+
+# ============================================================
+# Cross-Coordinate Equivalence Example (javax→Jakarta)
+# ============================================================
+
+ex:javax-servlet-api-identity a pkg:PackageIdentity ;
+  pkg:identityName "javax.servlet:javax.servlet-api" ;
+  pkg:purl "pkg:maven/javax.servlet/javax.servlet-api"^^xsd:anyURI ;
+  pkg:upstreamEquivalent ex:jakarta-servlet-api-identity .
+
+ex:jakarta-servlet-api-identity a pkg:PackageIdentity ;
+  pkg:identityName "jakarta.servlet:jakarta.servlet-api" ;
+  pkg:purl "pkg:maven/jakarta.servlet/jakarta.servlet-api"^^xsd:anyURI .

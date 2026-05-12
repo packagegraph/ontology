@@ -28,6 +28,32 @@ vcs:CommitShape a sh:NodeShape ;
             sh:path vcs:authoredBy ] ;
     sh:targetClass vcs:Commit .
 
+vcs:DiffShape a sh:NodeShape ;
+    sh:property [ sh:class vcs:Commit ;
+            sh:maxCount 1 ;
+            sh:message "A diff must have exactly one source commit (diffFrom)."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:diffFrom ],
+        [ sh:class vcs:Commit ;
+            sh:maxCount 1 ;
+            sh:message "A diff must have exactly one target commit (diffTo)."@en ;
+            sh:minCount 1 ;
+            sh:path vcs:diffTo ],
+        [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A diff should have a URL to the forge compare view."@en ;
+            sh:path vcs:diffUrl ],
+        [ sh:datatype xsd:int ;
+            sh:maxCount 1 ;
+            sh:path vcs:linesAdded ],
+        [ sh:datatype xsd:int ;
+            sh:maxCount 1 ;
+            sh:path vcs:linesDeleted ],
+        [ sh:datatype xsd:int ;
+            sh:maxCount 1 ;
+            sh:path vcs:filesChanged ] ;
+    sh:targetClass vcs:Diff .
+
 vcs:IssueShape a sh:NodeShape ;
     sh:property [ sh:message "An issue must have at least one label."@en ;
             sh:minCount 1 ;

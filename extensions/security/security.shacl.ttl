@@ -4,6 +4,7 @@
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 sec:AffectedRangeShape a sh:NodeShape ;
@@ -72,7 +73,11 @@ sec:RangeEventShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:message "A range event must have exactly one version string or commit hash."@en ;
             sh:minCount 1 ;
-            sh:path sec:eventVersion ] ;
+            sh:path sec:eventVersion ],
+        [ sh:class vcs:Commit ;
+            sh:maxCount 1 ;
+            sh:message "A range event can optionally link to a VCS commit (for GIT range types)."@en ;
+            sh:path sec:eventCommit ] ;
     sh:targetClass sec:RangeEvent .
 
 sec:SecurityAdvisoryShape a sh:NodeShape ;

@@ -1884,6 +1884,188 @@ WHERE {
 
 ---
 
+## Domain: Maven Ecosystem (MVN)
+
+### CQ-MVN-01: CVEs for a Maven Artifact
+
+**Question:** Given the Maven artifact `org.springframework:spring-beans`, what CVEs affect it?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?cveId ?osvId ?severity
+WHERE {
+  ?vuln sec:hasAffectedRange ?range .
+  ?range sec:affectsPackageName "org.springframework:spring-beans" ;
+         sec:affectsEcosystem/rdfs:label "Maven" .
+  ?vuln sec:cveId ?cveId .
+  OPTIONAL { ?vuln sec:osvId ?osvId }
+  OPTIONAL { ?vuln sec:hasCVSSScore/sec:baseScore ?severity }
+}
+ORDER BY DESC(?severity)
+```
+
+**Expected Columns:** cveId (string), osvId (string or UNDEF), severity (decimal or UNDEF)
+
+**Exercises:** sec:hasAffectedRange, sec:affectsPackageName, sec:affectsEcosystem, Maven ecosystem entity
+
+**Test corpus:** `spring-cves.json` — expected: CVE-2022-22965 for spring-beans, CVE-2024-53677 for struts2-core. Negative: spring-aop returns zero results.
+
+**Status:** PASS (after Phase 1 + P2)
+
+---
+
+### CQ-MVN-02: Vulnerable Versions for a CVE
+
+**Question:** Given `org.springframework:spring-beans`, what versions are vulnerable to CVE-2022-22965?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?introducedVersion ?fixedVersion
+WHERE {
+  ?vuln sec:cveId "CVE-2022-22965" ;
+        sec:hasAffectedRange ?range .
+  ?range sec:affectsPackageName "org.springframework:spring-beans" ;
+         sec:affectsEcosystem/rdfs:label "Maven" ;
+         sec:rangeType ?rangeTypeUri ;
+         sec:hasRangeEvent ?event .
+  FILTER(?rangeTypeUri IN (sec:range-ecosystem, sec:range-semver))
+  OPTIONAL {
+    ?event sec:eventType sec:event-introduced ;
+           sec:eventVersion ?introducedVersion .
+  }
+  OPTIONAL {
+    ?event sec:eventType sec:event-fixed ;
+           sec:eventVersion ?fixedVersion .
+  }
+}
+```
+
+**Expected Columns:** introducedVersion (string or UNDEF), fixedVersion (string or UNDEF)
+
+**Exercises:** sec:AffectedRange, sec:RangeEvent, sec:eventType, sec:eventVersion, sec:rangeType
+
+**Note:** Filters to ECOSYSTEM and SEMVER range types only — GIT ranges contain commit hashes, not version strings. Determining whether a specific version X.Y.Z falls within an affected range requires version comparison logic outside SPARQL. The query returns range boundaries; the consumer interprets them.
+
+**Status:** PASS (after Phase 1 + P2)
+
+---
+
+### CQ-MVN-03: Fix Commit for a CVE
+
+**Question:** Given CVE-2022-22965 and `org.springframework:spring-beans`, what commit (or version) fixes it?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?fixedVersion ?commitHash ?commitUrl
+WHERE {
+  ?vuln sec:cveId "CVE-2022-22965" ;
+        sec:hasAffectedRange ?range .
+  ?range sec:affectsPackageName "org.springframework:spring-beans" ;
+         sec:affectsEcosystem/rdfs:label "Maven" ;
+         sec:hasRangeEvent ?event .
+  ?event sec:eventType sec:event-fixed .
+
+  OPTIONAL { ?event sec:eventVersion ?fixedVersion }
+  OPTIONAL {
+    ?event sec:eventCommit ?commit .
+    ?commit vcs:commitHash ?commitHash .
+    OPTIONAL {
+      ?commit ^vcs:hasCommit ?repo .
+      ?repo vcs:cloneUrl ?commitUrl .
+    }
+  }
+}
+```
+
+**Expected Columns:** fixedVersion (string or UNDEF), commitHash (string or UNDEF), commitUrl (anyURI or UNDEF)
+
+**Exercises:** sec:eventCommit (new), sec:eventType, vcs:Commit, vcs:commitHash
+
+**Status:** PASS (version-level after P2; commit-level after P4)
+
+---
+
+### CQ-MVN-04: Source Location for an Artifact Version
+
+**Question:** Given `org.springframework:spring-core` version 6.2.0, where is the source?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
+PREFIX maven: <https://purl.org/packagegraph/ontology/maven#>
+
+SELECT ?cloneUrl ?tag
+WHERE {
+  ?artifact maven:groupId "org.springframework" ;
+            maven:artifactId "spring-core" ;
+            pkg:hasVersion/pkg:versionString "6.2.0" ;
+            pkg:isVersionOf ?identity .
+
+  OPTIONAL { ?identity pkg:upstreamRepository ?repo .
+             ?repo vcs:cloneUrl ?cloneUrl }
+  OPTIONAL { ?artifact vcs:packagedFromTag/vcs:tagName ?tag }
+}
+```
+
+**Expected Columns:** cloneUrl (anyURI or UNDEF), tag (string or UNDEF)
+
+**Exercises:** pkg:upstreamRepository, vcs:packagedFromTag, vcs:cloneUrl, POM `<scm>` extraction
+
+**Status:** PASS (after Phase 1 + P3)
+
+---
+
+### CQ-MVN-05: Source Diff to Previous Version
+
+**Question:** For `org.springframework:spring-core`, what is the source diff between consecutive versions?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX vcs: <https://purl.org/packagegraph/ontology/vcs#>
+PREFIX maven: <https://purl.org/packagegraph/ontology/maven#>
+
+SELECT ?currentVersion ?previousVersion ?diffUrl
+       ?linesAdded ?linesDeleted ?filesChanged
+WHERE {
+  ?artifact maven:groupId "org.springframework" ;
+            maven:artifactId "spring-core" ;
+            pkg:hasVersion/pkg:versionString ?currentVersion ;
+            pkg:isVersionOf ?identity .
+  ?identity pkg:upstreamRepository ?repo .
+
+  ?release vcs:correspondingPackageVersion/pkg:versionString ?currentVersion ;
+           vcs:hasDiff ?diff ;
+           vcs:previousRelease ?prevRelease .
+  ?prevRelease vcs:correspondingPackageVersion/pkg:versionString ?previousVersion .
+
+  ?diff vcs:diffUrl ?diffUrl .
+  OPTIONAL { ?diff vcs:linesAdded ?linesAdded }
+  OPTIONAL { ?diff vcs:linesDeleted ?linesDeleted }
+  OPTIONAL { ?diff vcs:filesChanged ?filesChanged }
+}
+```
+
+**Expected Columns:** currentVersion (string), previousVersion (string), diffUrl (anyURI), linesAdded (int or UNDEF), linesDeleted (int or UNDEF), filesChanged (int or UNDEF)
+
+**Exercises:** vcs:Diff (new properties), vcs:hasDiff (new), vcs:Release, vcs:previousRelease, vcs:correspondingPackageVersion
+
+**Status:** PASS (after Phase 1 + P5)
+
+---
+
 ## Summary Statistics
 
 | Domain | CQ Count | PASS | ADVISORY-SIDE | BLOCKED |
@@ -1898,7 +2080,8 @@ WHERE {
 | Repository / VCS (VCS) | 2 | 2 | 0 | 0 |
 | Package Set (SET) | 1 | 1 | 0 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 |
-| **TOTAL** | **48** | **43** | **4** | **1** |
+| Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 |
+| **TOTAL** | **53** | **48** | **4** | **1** |
 
 **Note:** PASS, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
 
@@ -1948,12 +2131,13 @@ The following CQs can be validated against local example files without Fuseki:
 - **CQ-PM-05** — packages by maintainer (uses Person/Maintainer examples)
 - **CQ-SEC-07** — patch provenance chain (uses security examples)
 - **CQ-DEP-03** — version constraints (uses dependency examples)
+- **CQ-MVN-01..03** — Maven CVEs, vulnerable versions, fix commits (uses maven examples — spring-beans 5.3.18)
 
 ---
 
 ## CQ Coverage Map
 
-### Classes Exercised (28 of 36 core classes)
+### Classes Exercised (29 of 36 core classes)
 
 - Package ✓
 - BinaryPackage ✓
@@ -1981,6 +2165,7 @@ The following CQs can be validated against local example files without Fuseki:
 - AffectedRange (Security) ✓
 - RangeEvent (Security) ✓
 - CVSSScore (Security) ✓
+- Diff (VCS) ✓
 - Repository (VCS) ✓
 - Commit (VCS) ✓
 
@@ -1988,9 +2173,9 @@ The following CQs can be validated against local example files without Fuseki:
 
 **Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, hasUpstreamProject, sourceCodeRepository, derivedFromCommit
 
-**Security:** cveId, osvId, hasAffectedRange, affectsEcosystem, affectsPackageName, rangeType, hasRangeEvent, eventType, eventVersion, hasCVSSScore, cvssVersion, baseScore, affectsPackage, patchAddresses, patchProducedVersion, patchedFrom, addressesVulnerability, hasCWE
+**Security:** cveId, osvId, hasAffectedRange, affectsEcosystem, affectsPackageName, rangeType, hasRangeEvent, eventType, eventVersion, eventCommit, hasCVSSScore, cvssVersion, baseScore, affectsPackage, patchAddresses, patchProducedVersion, patchedFrom, addressesVulnerability, hasCWE
 
-**VCS:** commitHash, onBranch, branchName
+**VCS:** commitHash, onBranch, branchName, cloneUrl, packagedFromTag, tagName, correspondingPackageVersion, previousRelease, hasDiff, diffFrom, diffTo, diffUrl, linesAdded, linesDeleted, filesChanged
 
 **Metrics:** primaryLanguage
 

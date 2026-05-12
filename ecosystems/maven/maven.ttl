@@ -131,6 +131,12 @@ maven:MavenRepository a owl:Class ;
     rdfs:isDefinedBy maven: ;
     rdfs:subClassOf pkg:Repository .
 
+maven:MavenEcosystem a owl:NamedIndividual,
+        pkg:Ecosystem ;
+    rdfs:label "Maven"@en ;
+    IAO:0000115 "The Maven Central / JVM package ecosystem, covering Java, Kotlin, Scala, Groovy, and other JVM language artifacts distributed through Maven repositories."@en ;
+    rdfs:isDefinedBy maven: .
+
 maven: a owl:Ontology ;
     rdfs:isDefinedBy maven: ;
     rdfs:label "Maven Package Ontology"@en ;
@@ -139,15 +145,15 @@ maven: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Maven artifacts and the Java/JVM ecosystem"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-05-11"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/maven/0.7.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/maven/0.8.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/0.8.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/0.9.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/maven/shapes> ;
 
-    owl:versionInfo "0.8.0" .
+    owl:versionInfo "0.9.0" .
 
 maven:MavenArtifact a owl:Class ;
     rdfs:label "Maven Artifact"@en ;
