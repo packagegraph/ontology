@@ -198,16 +198,19 @@ def generate_html():
     <h2>Citation</h2>
     <p>If you use PackageGraph in academic work, please cite:</p>
     <blockquote style="background: #f8f9fa; padding: 1rem; border-left: 4px solid #2c3e50; margin: 1rem 0; font-size: 0.95rem;">
-      Brian 'redbeard' Harrington. <em>PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.</em> Version {version}, 2026. Available at: <a href="https://purl.org/packagegraph/ontology/core">https://purl.org/packagegraph/ontology/core</a>
+      PackageGraph Project. <em>PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.</em> Version 0.6.0, 2026. Available at: <a href="https://purl.org/packagegraph/ontology/core">https://purl.org/packagegraph/ontology/core</a>
     </blockquote>
     <details style="margin-top: 1rem;">
       <summary style="cursor: pointer; font-weight: 500; color: #2980b9;">BibTeX</summary>
-      <pre style="background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; margin-top: 0.5rem;">@misc{redbeard2026packagegraph,
-  author       = {{Brian `redbeard' Harrington}},
-  title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis},
+      <pre style="background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; margin-top: 0.5rem;">@misc{packagegraph2026,
+  title        = {{PackageGraph}: An {OWL} 2 Ontology for Cross-Distribution
+                  Software Package Analysis},
+  author       = {{PackageGraph Project}},
   year         = {2026},
-  version      = {{version}},
-  organization = {PackageGraph Project},
+  howpublished = {\\url{https://purl.org/packagegraph/ontology/core}},
+  note         = {Version {version}. 35 modules, 70+ classes, 29 ecosystem
+                  extensions. OWL 2 DL, OntoClean compliant, SHACL validated.
+                  Licensed under CC0 1.0 Universal.},
   url          = {https://purl.org/packagegraph/ontology/core}
 }</pre>
     </details>

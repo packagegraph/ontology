@@ -393,17 +393,20 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.10.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> PackageGraph Project. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.10.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 
 ```bibtex
-@misc{redbeard2026packagegraph,
-  author       = {{Brian `redbeard' Harrington}},
-  title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis},
+@misc{packagegraph2026,
+  title        = {{PackageGraph}: An {OWL} 2 Ontology for Cross-Distribution
+                  Software Package Analysis},
+  author       = {Harrington, Brian ``redbeard''},
   year         = {2026},
-  version      = {0.10.0},
-  organization = {PackageGraph Project},
+  howpublished = {\url{https://purl.org/packagegraph/ontology/core}},
+  note         = {OWL 2 DL, OntoClean compliant, SHACL validated.
+                  Licensed under CC0 1.0 Universal.
+                  ORCID: 0009-0000-4478-8141},
   url          = {https://purl.org/packagegraph/ontology/core}
 }
 ```
