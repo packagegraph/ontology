@@ -149,11 +149,14 @@ generate-docs: setup-tools
 			base=$$(basename "$$f" .ttl); \
 			echo "  Generating docs for $$base..."; \
 			mkdir -p "$(ONTOLOGY_DOCS_DIR)/$$base"; \
-			timeout 120 java -Xmx2g -jar $(WIDOCO_JAR) \
+			timeout 120 java -Xmx2g \
+				-Dsun.net.client.defaultConnectTimeout=10000 \
+				-Dsun.net.client.defaultReadTimeout=10000 \
+				-jar $(WIDOCO_JAR) \
 				-ontFile "$$f" \
 				-outFolder "$(ONTOLOGY_DOCS_DIR)/$$base" \
 				-webVowl -rewriteAll -getOntologyMetadata \
-				2>/dev/null \
+				-includeImportedOntologies 2>/dev/null \
 			|| echo "    ⚠ $$base: Widoco generation failed (non-fatal)"; \
 		done; \
 	fi
