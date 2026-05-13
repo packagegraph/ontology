@@ -82,14 +82,25 @@ def has_widoco_docs(module_name):
 def has_downloads(module_name):
     return (DOWNLOADS_DIR / f"{module_name}.ttl").exists()
 
+def get_ontology_version():
+    """Read owl:versionInfo from core.ttl."""
+    core_path = Path("core/core.ttl")
+    if not core_path.exists():
+        return "0.10.0"
+    for line in core_path.read_text().splitlines():
+        if "owl:versionInfo" in line:
+            return line.split('"')[1]
+    return "0.10.0"
+
 def generate_html():
+    version = get_ontology_version()
     html = []
     html.append("""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PackageGraph Ontology v0.6.0</title>
+  <title>PackageGraph Ontology {version}</title>
   <style>
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -129,16 +140,16 @@ def generate_html():
   <p class="subtitle">A rigorous OWL 2 ontology for cross-distribution package analysis and software supply chain research.</p>
 
   <div class="badges">
-    <span class="badge-version">v0.6.0</span>
+    <span class="badge-version">{version}</span>
     <span class="badge-owl">OWL 2 DL</span>
-    <span class="badge-shacl">29 SHACL Shapes</span>
+    <span class="badge-shacl">119 SHACL Shapes</span>
     <span class="badge-license">CC0 1.0</span>
   </div>
 
   <div class="nav">
     <a href="https://github.com/packagegraph/ontology">GitHub</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/CHANGELOG.md">Changelog</a>
-    <a href="https://github.com/packagegraph/ontology/blob/main/docs/competency-questions.md">33 Competency Questions</a>
+    <a href="https://github.com/packagegraph/ontology/blob/main/docs/competency-questions.md">53 Competency Questions</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/docs/design-decisions.md">Design Decisions</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/docs/reports/2026-04-20-evaluation-comparison.md">vs SPDX/CycloneDX/OSV</a>
   </div>
@@ -197,7 +208,7 @@ def generate_html():
   author       = {{PackageGraph Project}},
   year         = {2026},
   howpublished = {\\url{https://purl.org/packagegraph/ontology/core}},
-  note         = {Version 0.6.0. 34 modules, 253 classes, 29 ecosystem
+  note         = {Version {version}. 35 modules, 70+ classes, 29 ecosystem
                   extensions. OWL 2 DL, OntoClean compliant, SHACL validated.
                   Licensed under CC0 1.0 Universal.},
   url          = {https://purl.org/packagegraph/ontology/core}
@@ -207,13 +218,13 @@ def generate_html():
   </div>
 
   <footer>
-    <p>PackageGraph Ontology v0.6.0 &mdash; <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a></p>
-    <p>34 modules | 253 classes | 29 ecosystems | 5 extensions | OWL 2 DL decidable | OntoClean compliant</p>
+    <p>PackageGraph Ontology {version} &mdash; <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal</a></p>
+    <p>35 modules | 70+ classes | 29 ecosystems | 5 extensions | OWL 2 DL decidable | OntoClean compliant</p>
   </footer>
 </body>
 </html>""")
 
-    return "\n".join(html)
+    return "\n".join(html).replace("{version}", version)
 
 
 if __name__ == "__main__":
