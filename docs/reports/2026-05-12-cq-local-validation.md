@@ -23,14 +23,14 @@ CQs validated are those listed in the "Validation Against Examples" section of `
 | CQ-PM-03 | Virtual package providers | 2 | PASS |
 | CQ-PM-05 | Packages by maintainer | 5 | PASS |
 | CQ-SEC-07 | Patch provenance chain | 1 | PASS |
-| CQ-DEP-03 | Version constraints | 0 | NO DATA |
+| CQ-DEP-03 | Version constraints | 1 | PASS |
 | CQ-MVN-01 | Maven CVEs (spring-beans) | 2 | PASS |
 | CQ-MVN-05 | Source diff | 1 | PASS |
 | Cross-ecosystem type check | Distinct ecosystem types | 20 | PASS |
 
 ### CQ-DEP-03 Note
 
-Version constraint examples use the `hasDependency → hasVersionConstraint → VersionConstraint` reification pattern. The core examples include dependencies with `dependencyTarget` but the constraint reification (`versionConstraintOperator`, `versionConstraintValue`) is not exercised in any example file. This is a known gap in the example data — the SHACL shapes for `VersionConstraint` exist and are correct, but no example demonstrates the pattern.
+VersionConstraint example added to `core/core.examples.ttl` (wget → libc6 >= 2.17) after the initial validation run. CQ-DEP-03 now returns 1 row.
 
 ## Cross-Ecosystem Type Coverage
 
@@ -48,6 +48,5 @@ The existing `platform/etl/scripts/cq-validate.py` harness runs all 53 CQs again
 
 ## Recommendations
 
-1. **Add VersionConstraint example** to `core/core.examples.ttl` to cover CQ-DEP-03
-2. **Run `cq-validate.py`** against production when cluster is accessible to update the 48 non-Maven CQ statuses
-3. **Add the 5 Maven CQs** to the validation harness (currently only validates CQs frozen at commit `7db2f99`)
+1. **Run `cq-validate.py`** against production when cluster is accessible to update the non-Maven CQ statuses
+2. **Add the 5 Maven CQs** to the validation harness (currently only validates CQs frozen at commit `7db2f99`)

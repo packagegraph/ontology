@@ -1,0 +1,65 @@
+[
+  {
+    "component": "org.springframework:spring-core",
+    "cve_id": "CVE-2025-41249",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2025-41249"
+  },
+  {
+    "component": "org.springframework:spring-beans",
+    "cve_id": "CVE-2022-22965",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-22965"
+  },
+  {
+    "component": "org.springframework:spring-context",
+    "cve_id": "CVE-2022-22968",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-22968"
+  },
+  {
+    "component": "org.springframework:spring-aop",
+    "cve_id": null,
+    "cve_url": null,
+    "note": "No advisories found for this component in the GitHub Advisory Database"
+  },
+  {
+    "component": "org.springframework:spring-webmvc",
+    "cve_id": "CVE-2022-22965",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-22965"
+  },
+  {
+    "component": "org.springframework:spring-web",
+    "cve_id": "CVE-2016-1000027",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000027"
+  },
+  {
+    "component": "org.springframework:spring-jdbc",
+    "cve_id": null,
+    "cve_url": null,
+    "note": "No advisories found for this component in the GitHub Advisory Database"
+  },
+  {
+    "component": "org.springframework:spring-tx",
+    "cve_id": null,
+    "cve_url": null,
+    "note": "No advisories found for this component in the GitHub Advisory Database"
+  },
+  {
+    "component": "org.apache.struts:struts2-core",
+    "cve_id": "CVE-2024-53677",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2024-53677"
+  },
+  {
+    "component": "org.springframework.security:spring-security-core",
+    "cve_id": "CVE-2022-31692",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-31692"
+  },
+  {
+    "component": "org.springframework.security:spring-security-web",
+    "cve_id": "CVE-2022-22978",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2022-22978"
+  },
+  {
+    "component": "org.springframework.security:spring-security-config",
+    "cve_id": "CVE-2023-34034",
+    "cve_url": "https://nvd.nist.gov/vuln/detail/CVE-2023-34034"
+  }
+]

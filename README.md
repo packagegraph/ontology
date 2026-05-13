@@ -1,8 +1,8 @@
 # PackageGraph Ontology
 
-**Version:** 0.6.0
+**Version:** 0.10.0
 **License:** CC0 1.0 Universal
-**Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 30/30 Modules SHACL Valid
+**Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 35/35 Modules SHACL Valid | ✅ OWL 2 RL Reasoning Verified
 
 A rigorous OWL 2 ontology for cross-distribution package analysis and software supply chain research.
 
@@ -51,21 +51,18 @@ uv pip install rdflib pyshacl
 
 ---
 
-## What's New in v0.6.0
+## What's New in v0.10.0
 
-**Academic readiness release** — journal-level semantic rigor across all modules:
+**Maven security & VCS integration, academic hardening:**
 
-- ✅ **Competency questions** formalized as SPARQL across multiple domains → [docs/competency-questions.md](docs/competency-questions.md)
-- ✅ **OSV-aligned vulnerability model** (AffectedRange, RangeEvent, CVSSScore) → aligned with OSV schema 1.6
-- ✅ **Properties-as-taxonomy** for dependencyType (OWL 2 punning) → harmonizes dual-model (reified + shortcut)
-- ✅ **OntoClean compliance** (rigid/anti-rigid distinction, Person/Maintainer role model)
-- ✅ **OWL 2 DL decidability** (SROIQ violations eliminated, property chain axioms)
-- ✅ **Upper ontology alignment** (PROV-O, FOAF, SPDX, DOAP) → lightweight vocabulary integration
-- ✅ **SHACL shapes** with full core coverage → structural integrity validation
-- ✅ **@en language tags** on schema definitions → internationalization support
-- ✅ **rdfs:isDefinedBy** on all entities → Linked Data dereferenceability
-- ✅ **Design decisions documented** → [docs/design-decisions.md](docs/design-decisions.md)
-- ✅ **Evaluation comparison** → [vs SPDX/CycloneDX/OSV](docs/reports/2026-04-20-evaluation-comparison.md)
+- ✅ **5 Maven CQs** — CVEs, vulnerable versions, fix commits, source location, source diffs → [live-validated against Fuseki](docs/reports/2026-05-12-maven-cq-validation.md)
+- ✅ **`vcs:Diff` properties** — diffFrom/To, diffUrl, linesAdded/Deleted, filesChanged for release-to-release analysis
+- ✅ **`sec:eventCommit`** — links GIT-range vulnerability fix events to VCS commits
+- ✅ **Cross-coordinate equivalence** — `pkg:upstreamEquivalent` for javax→Jakarta, coordinate renames
+- ✅ **28/28 ecosystem example files** — every module now has validated example data
+- ✅ **OWL 2 RL reasoning tests** — `propertyChainAxiom` on `directlyDependsOn` verified sound
+- ✅ **53 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
+- ✅ **BFO/DOLCE positioning clarified** — evaluated but not aligned; rationale documented in DD-UO-1
 
 See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
@@ -327,7 +324,7 @@ Run the full validation suite:
 
 ```bash
 make lint          # Parse all .ttl files → All 77 files valid
-make validate-all  # SHACL validation → 30/30 modules SHACL OK
+make validate-all  # SHACL validation → 35/35 modules SHACL OK
 ```
 
 Per-module validation:
@@ -396,7 +393,7 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> PackageGraph Project. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.6.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> PackageGraph Project. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.10.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 

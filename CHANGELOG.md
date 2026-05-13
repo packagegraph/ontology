@@ -5,6 +5,45 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-05-12
+
+Maven security & VCS integration, academic hardening, and full ecosystem example coverage.
+
+### Added
+- **`vcs:Diff` properties** — 7 new properties on the previously empty `Diff` class: `diffFrom`, `diffTo` (→ Commit), `diffUrl` (→ anyURI), `linesAdded`, `linesDeleted`, `filesChanged` (→ xsd:int). Enables source-diff-between-versions queries.
+- **`vcs:hasDiff`** (ObjectProperty, domain: Release, range: Diff) — links a release to the diff from its previous release
+- **`vcs:DiffShape`** SHACL shape — requires `diffFrom` and `diffTo` (exactly one Commit each)
+- **`sec:eventCommit`** (ObjectProperty, domain: RangeEvent, range: vcs:Commit) — links GIT-range vulnerability fix events to VCS commit entities. Optional — only populated when `rangeType` is GIT.
+- **`maven:MavenEcosystem`** (NamedIndividual, pkg:Ecosystem) — Maven Central ecosystem entity for `sec:affectsEcosystem` targeting
+- **Maven example data** (`ecosystems/maven/maven.examples.ttl`) — Spring4Shell (CVE-2022-22965) test corpus exercising all 5 Maven CQs: vulnerability lookup, version ranges, fix commits, source location, source diffs. Cross-coordinate equivalence (javax→Jakarta) also demonstrated.
+- **Maven equivalence seed** (`ecosystems/maven/maven-equivalences.ttl`) — 17 `pkg:upstreamEquivalent` pairs: 15 javax→Jakarta EE 9+ API migrations, 2 high-profile coordinate renames (mysql-connector, commons-io). Loaded as named graph `<graph/maven/equivalences>`.
+- **5 Maven competency questions** (CQ-MVN-01 through CQ-MVN-05) — CVEs for artifact, vulnerable versions, fix commit, source location, source diff. All formalized as SPARQL with expected result schemas. CQ total: 53 (was 48).
+- **20 new ecosystem example files** — all 28 ecosystem modules now have `.examples.ttl` files. Generated from ontology class/property definitions with correct superclass typing (`BinaryPackage` vs `SourcePackage`). All pass `scripts/validate_module.py` SHACL validation.
+- **OWL 2 RL reasoning test** (`scripts/test-owl2-reasoning.py`) — validates `owl:propertyChainAxiom` on `directlyDependsOn` (hasDependency → dependencyTarget chain), disjointness axioms, and basic OWL RL expansion consistency. 1,666 triples inferred from core ontology.
+- **DD-UO-1** design decision — documents upper ontology non-alignment rationale (BFO/DOLCE evaluated but not adopted)
+- **VersionConstraint example** in `core/core.examples.ttl` — `wget → libc6 >= 2.17` exercises the `hasDependency → hasVersionConstraint → VersionConstraint` reification pattern (CQ-DEP-03)
+- **Graph model requirement** documented in `competency-questions.md` — all CQs assume `tdb2:unionDefaultGraph true`; named graphs are for lifecycle management, not query scoping
+
+### Changed
+- **`sec:RangeEventShape`** — updated to allow optional `sec:eventCommit` (vcs:Commit)
+- **`dcterms:references`** to BFO/DOLCE — replaced with `rdfs:comment` attribution. The `dcterms:references` assertion implied formal alignment that doesn't exist. Upper ontology positioning rationale moved to dedicated comment and DD-UO-1.
+- **CQ-MVN-02 SPARQL** — filters to ECOSYSTEM/SEMVER range types only (GIT ranges contain commit hashes, not version strings)
+- **CQ summary statistics** — 53 CQs total, 48 PASS, 4 ADVISORY-SIDE, 1 BLOCKED
+- **CQ Coverage Map** — 29 classes exercised (added Diff), 70+ properties exercised (added eventCommit, diffFrom/To/Url, linesAdded/Deleted, filesChanged, hasDiff, correspondingPackageVersion, previousRelease, packagedFromTag, cloneUrl)
+
+### Fixed
+- **BFO/DOLCE overclaim** — `dcterms:references` to `bfo.owl` and `DOLCEbasic` removed. These implied formal alignment that was explicitly rejected in the design. Replaced with `rdfs:comment` explaining the evaluation.
+- **Maven example SHACL** — `rdfs:label` added to Vulnerability example (required by VulnerabilityShape); diff stats use `xsd:int` typed literals (bare integers default to `xsd:integer`, SHACL expects `xsd:int`)
+- **Maven example GIT range** — linked to vulnerability via `sec:hasAffectedRange` (was orphaned)
+
+### Validation
+- **Maven CQs Fuseki-validated** — 5 Maven CQs (CQ-MVN-01..05) executed against local Fuseki with real OSV data from the live pipeline (12 Spring/Struts components, 23K security triples, 1.2K diff triples). Report: `docs/reports/2026-05-12-maven-cq-validation.md`
+- **All 53 CQs structurally valid** — all SPARQL queries executed against local Fuseki without errors. 12 returned data (example data + Maven pipeline output); remainder returned NO DATA (require production cluster's 37.5M triples). Report: `docs/reports/2026-05-12-cq-local-validation.md`
+- **OWL 2 RL reasoning** — `propertyChainAxiom` on `directlyDependsOn` verified sound (1,666 inferred triples)
+- **SHACL** — all 33 example files conform to their module shapes
+
+---
+
 ## [0.9.0] - 2026-04-27
 
 OpenWrt class hierarchy correction and SLSA/core domain widenings — reclassifies source-defined packages, introduces binary IPK and APK classes for the opkg-to-apk transition, and removes domain constraints that blocked legitimate property usage.
@@ -302,6 +341,7 @@ Academic readiness release — comprehensive semantic audit and remediation acro
 - VCS and SLSA extension modules
 - SHACL validation shapes and example instances
 
+[0.10.0]: https://github.com/packagegraph/ontology/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/packagegraph/ontology/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/packagegraph/ontology/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/packagegraph/ontology/compare/v0.6.0...v0.7.0
