@@ -159,6 +159,10 @@ generate-docs: setup-tools
 				-includeImportedOntologies 2>/dev/null \
 			|| echo "    ⚠ $$base: Widoco generation failed (non-fatal)"; \
 		done; \
+		echo "  Sanitizing WebVOWL links (visualdataweb.org is compromised)..."; \
+		find $(ONTOLOGY_DOCS_DIR) -name '*.html' -exec \
+			sed -i'' -e 's|http://vowl.visualdataweb.org/webvowl.html#releases|https://github.com/VisualDataWeb/WebVOWL|g' \
+			          -e 's|http://vowl.visualdataweb.org[^"]*|https://github.com/VisualDataWeb/WebVOWL|g' {} +; \
 	fi
 
 create-index:
