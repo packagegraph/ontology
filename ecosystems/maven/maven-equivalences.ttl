@@ -1,6 +1,8 @@
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 # ============================================================
 # Maven Cross-Coordinate Equivalences
@@ -17,6 +19,11 @@
 #
 # Load into Fuseki as: <https://packagegraph.github.io/graph/maven/equivalences>
 # ============================================================
+
+<https://purl.org/packagegraph/ontology/maven/equivalences> a owl:Ontology ;
+    rdfs:label "PackageGraph Maven Equivalence Seed"@en ;
+    dcterms:description "A curated seed dataset of high-confidence upstream-equivalent Maven coordinates, including Jakarta EE namespace migrations and selected artifact renames." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> .
 
 # --- javax → Jakarta EE 9+ API migrations ---
 # Jakarta EE 9 moved all javax.* APIs to jakarta.* namespace.

@@ -3,6 +3,7 @@ name = "ontology"
 version = "0.1.0"
 description = "Ontology for representing software packages and repositories across different package management systems"
 readme = "README.md"
+license = "CC0-1.0"
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.2.1",

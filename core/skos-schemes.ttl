@@ -1,9 +1,15 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+pkg:skos-schemes a owl:Ontology ;
+    rdfs:label "PackageGraph SKOS Concept Schemes"@en ;
+    dcterms:description "Shared SKOS concept schemes for dependency types, severity levels, advisory categories, checksum algorithms, and related controlled vocabularies used across PackageGraph modules." ;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> .
 
 pkg:algo-md5 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;
@@ -264,4 +270,3 @@ pkg:DependencyTypeScheme a skos:ConceptScheme ;
     dcterms:description "Classification of dependency relationships between packages" ;
     skos:hasTopConcept pkg:dep-strong,
         pkg:dep-weak .
-
