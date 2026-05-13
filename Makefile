@@ -153,7 +153,7 @@ generate-docs: setup-tools
 				-ontFile "$$f" \
 				-outFolder "$(ONTOLOGY_DOCS_DIR)/$$base" \
 				-webVowl -rewriteAll -getOntologyMetadata \
-				-includeImportedOntologies 2>/dev/null \
+				2>/dev/null \
 			|| echo "    ⚠ $$base: Widoco generation failed (non-fatal)"; \
 		done; \
 	fi
