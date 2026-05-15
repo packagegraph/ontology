@@ -862,6 +862,30 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:isDefinedBy : ;
     rdfs:range :Architecture .
 
+:targetOperatingSystem a owl:DatatypeProperty ;
+    rdfs:label "target operating system"@en ;
+    IAO:0000115 "The operating system for which this binary package variant was built or selected (e.g., linux, darwin, win32). Complements targetArchitecture for platform-specific binary artifact selection — inspired by Hermeto's OS-level variant filtering for pip wheels and bundler gems."@en ;
+    rdfs:comment "The OS this binary variant targets (e.g., linux, darwin, win32)"@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:targetABI a owl:DatatypeProperty ;
+    rdfs:label "target ABI tag"@en ;
+    IAO:0000115 "The ABI compatibility tag for a binary package variant, such as a Python wheel ABI tag (cp312, abi3) or Ruby platform string. Used in language ecosystems where multiple binary variants exist for the same architecture and OS."@en ;
+    rdfs:comment "The ABI compatibility tag (e.g., cp312 for CPython 3.12, abi3 for stable ABI)"@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:targetPlatformTag a owl:DatatypeProperty ;
+    rdfs:label "target platform tag"@en ;
+    IAO:0000115 "The composite platform tag identifying the full build target of a binary artifact — e.g., a Python wheel platform tag like 'manylinux_2_17_x86_64' or a Ruby gem platform like 'x86_64-linux'. Captures the full specificity beyond what architecture + OS + ABI individually express."@en ;
+    rdfs:comment "The full platform tag for this binary artifact (e.g., manylinux_2_17_x86_64)"@en ;
+    rdfs:domain :BinaryPackage ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
 :upstreamEcosystem a owl:ObjectProperty ;
     rdfs:label "upstream ecosystem"@en ;
     IAO:0000115 "Links a package to the upstream software ecosystem it originates from, enabling ecosystem-level cross-referencing and analysis. The Ecosystem entity allows traversal to all packages from that ecosystem rather than matching string literals."@en ;

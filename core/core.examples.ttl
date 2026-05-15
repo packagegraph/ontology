@@ -500,3 +500,34 @@ ex:fedora-43-snapshot a pkg:DataSnapshot ;
 # }
 # Note: Replace the literal date with the actual cutoff. Fuseki does not
 # support dateTime-duration arithmetic (NOW() - duration) in FILTER.
+
+
+# ============================================================
+# Artifact Variant Selection (Task — Hermeto-derived)
+# ============================================================
+# Recording which platform-specific binary variant was resolved
+# ============================================================
+
+ex:cryptography-wheel a pkg:BinaryPackage ;
+    pkg:packageName "cryptography" ;
+    pkg:hasVersion ex:cryptography-version ;
+    pkg:targetArchitecture ex:arch-x86-64 ;
+    pkg:targetOperatingSystem "linux" ;
+    pkg:targetABI "cp312" ;
+    pkg:targetPlatformTag "manylinux_2_28_x86_64" ;
+    rdfs:label "cryptography 42.0.5 (cp312-manylinux_2_28_x86_64)" .
+
+ex:cryptography-version a pkg:Version ;
+    pkg:versionString "42.0.5" ;
+    rdfs:label "cryptography 42.0.5" .
+
+ex:arch-x86-64 a pkg:Architecture ;
+    pkg:architectureName "x86_64" ;
+    rdfs:label "x86_64" .
+
+# Query: "Which packages have Python 3.12-specific binary wheels?"
+# SELECT ?pkg ?platform WHERE {
+#   ?pkg a pkg:BinaryPackage ;
+#        pkg:targetABI "cp312" ;
+#        pkg:targetPlatformTag ?platform .
+# }

@@ -30,6 +30,21 @@ pkg:BinaryPackageShape a sh:NodeShape ;
             sh:severity sh:Warning ] ;
     sh:targetClass pkg:BinaryPackage .
 
+pkg:BinaryPackageVariantShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary package can have at most one target OS."@en ;
+            sh:path pkg:targetOperatingSystem ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary package can have at most one target ABI tag."@en ;
+            sh:path pkg:targetABI ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A binary package can have at most one platform tag."@en ;
+            sh:path pkg:targetPlatformTag ] ;
+    sh:targetClass pkg:BinaryPackage .
+
 pkg:BuildActivityShape a sh:NodeShape ;
     sh:property [ sh:class prov:Agent ;
             sh:message "A build activity's performer must be a prov:Agent."@en ;
