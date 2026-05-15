@@ -1,4 +1,5 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dq: <https://purl.org/packagegraph/ontology/dq#> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -362,3 +363,55 @@ pkg:LinkTypeScheme a skos:ConceptScheme ;
         pkg:link-build-log,
         pkg:link-recipe,
         pkg:link-registry .
+
+dq:cat-dead-homepage a skos:Concept ;
+    skos:definition "The package's homepage URL returns a permanent error (4xx/5xx) or is unreachable." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "dead-homepage" .
+
+dq:cat-dead-download a skos:Concept ;
+    skos:definition "The package's download URL is unreachable or returns an error." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "dead-download" .
+
+dq:cat-dead-repo a skos:Concept ;
+    skos:definition "The upstream source code repository is unreachable, archived, or deleted." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "dead-repo" .
+
+dq:cat-missing-cpe a skos:Concept ;
+    skos:definition "The package has no CPE identifier, preventing CVE correlation." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "missing-cpe" .
+
+dq:cat-missing-license a skos:Concept ;
+    skos:definition "The package has no license metadata." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "missing-license" .
+
+dq:cat-malformed-email a skos:Concept ;
+    skos:definition "A maintainer or contributor email address does not conform to RFC 5322." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "malformed-email" .
+
+dq:cat-missing-checksum a skos:Concept ;
+    skos:definition "The package artifact has no checksum in its lockfile or metadata — a supply chain risk signal." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "missing-checksum" .
+
+dq:cat-missing-upstream a skos:Concept ;
+    skos:definition "The package has no upstream project or repository link, preventing cross-distribution analysis." ;
+    skos:inScheme dq:IssueCategoryScheme ;
+    skos:prefLabel "missing-upstream" .
+
+dq:IssueCategoryScheme a skos:ConceptScheme ;
+    rdfs:label "Data Quality Issue Categories"@en ;
+    dcterms:description "Structured taxonomy of well-known data quality problems in package metadata — derived from Repology's problem detection and Hermeto's missing-hash tracking" ;
+    skos:hasTopConcept dq:cat-dead-homepage,
+        dq:cat-dead-download,
+        dq:cat-dead-repo,
+        dq:cat-missing-cpe,
+        dq:cat-missing-license,
+        dq:cat-malformed-email,
+        dq:cat-missing-checksum,
+        dq:cat-missing-upstream .

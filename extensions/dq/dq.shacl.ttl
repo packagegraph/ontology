@@ -1,11 +1,17 @@
 @prefix dq: <https://purl.org/packagegraph/ontology/dq#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 dq:DataQualityIssueShape a sh:NodeShape ;
     sh:property [ sh:message "A data quality issue must have at least one label."@en ;
             sh:minCount 1 ;
-            sh:path rdfs:label ] ;
+            sh:path rdfs:label ],
+        [ sh:class skos:Concept ;
+            sh:maxCount 1 ;
+            sh:message "A data quality issue can have at most one structured category (must be a skos:Concept)."@en ;
+            sh:path dq:issueCategory ;
+            sh:severity sh:Info ] ;
     sh:targetClass dq:DataQualityIssue .
 

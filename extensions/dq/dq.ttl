@@ -4,6 +4,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 dq:detectedAt a owl:DatatypeProperty ;
@@ -58,6 +59,18 @@ dq:issueType a owl:DatatypeProperty,
     rdfs:domain dq:DataQualityIssue ;
     rdfs:isDefinedBy dq: ;
     rdfs:range xsd:string .
+
+dq:issueCategory a owl:ObjectProperty ;
+    rdfs:label "issue category"@en ;
+    IAO:0000115 """A machine-readable SKOS concept classifying the data quality issue.
+        Uses concepts from dq:IssueCategoryScheme (dead-homepage, missing-cpe,
+        missing-checksum, etc.). Provides a controlled vocabulary complement to
+        the freeform dq:issueType string — use issueCategory for standard
+        categories, issueType for ad-hoc or collector-specific types."""@en ;
+    rdfs:comment "Structured category of the data quality issue (SKOS concept)"@en ;
+    rdfs:domain dq:DataQualityIssue ;
+    rdfs:isDefinedBy dq: ;
+    rdfs:range skos:Concept .
 
 dq:rawValue a owl:DatatypeProperty,
         owl:FunctionalProperty ;
