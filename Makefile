@@ -11,10 +11,13 @@ EXT_DIRS = $(wildcard extensions/*)
 ECO_DIRS = $(wildcard ecosystems/*)
 ALL_MODULE_DIRS = $(CORE_DIR) $(EXT_DIRS) $(ECO_DIRS)
 
-# Find all ontology .ttl files (not .shacl.ttl or .examples.ttl)
-ONTOLOGY_FILES = $(foreach d,$(ALL_MODULE_DIRS),$(wildcard $(d)/$(notdir $(d)).ttl))
-SHACL_FILES = $(foreach d,$(ALL_MODULE_DIRS),$(wildcard $(d)/$(notdir $(d)).shacl.ttl))
-EXAMPLE_FILES = $(foreach d,$(ALL_MODULE_DIRS),$(wildcard $(d)/$(notdir $(d)).examples.ttl))
+# File discovery uses find to catch all .ttl files, not just <dir>/<dir>.ttl.
+# This ensures auxiliary files (skos-schemes.ttl, maven-equivalences.ttl,
+# alignments.ttl) are linted, serialized, and published alongside modules.
+TRACKED_DIRS = $(ALL_MODULE_DIRS) references
+ONTOLOGY_FILES = $(shell find $(TRACKED_DIRS) -name '*.ttl' ! -name '*.shacl.ttl' ! -name '*.examples.ttl' 2>/dev/null | sort)
+SHACL_FILES = $(shell find $(TRACKED_DIRS) -name '*.shacl.ttl' 2>/dev/null | sort)
+EXAMPLE_FILES = $(shell find $(TRACKED_DIRS) -name '*.examples.ttl' 2>/dev/null | sort)
 ALL_TTL_FILES = $(ONTOLOGY_FILES) $(SHACL_FILES) $(EXAMPLE_FILES)
 
 # Extract module names for per-module targets
@@ -70,7 +73,7 @@ check-version:
 	@EXPECTED=$$(grep -m1 'owl:versionInfo' core/core.ttl | sed 's/.*"\(.*\)".*/\1/'); \
 	echo "Expected version: $$EXPECTED"; \
 	FAIL=0; \
-	for f in $(ONTOLOGY_FILES) references/alignments.ttl; do \
+	for f in $(ONTOLOGY_FILES); do \
 		VER=$$(grep 'owl:versionInfo' "$$f" 2>/dev/null | sed 's/.*"\(.*\)".*/\1/'); \
 		VIRI=$$(grep 'owl:versionIRI' "$$f" 2>/dev/null | grep -o '/[0-9][^>]*' | sed 's|^/||'); \
 		if [ -z "$$VER" ]; then \
