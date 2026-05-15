@@ -93,6 +93,20 @@ pkg:DataSnapshotShape a sh:NodeShape ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:DataSnapshot .
 
+pkg:PackageIdentitySourceShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A package identity can have at most one canonical source URL."@en ;
+            sh:path pkg:canonicalSourceUrl ] ;
+    sh:targetClass pkg:PackageIdentity .
+
+pkg:DataSnapshotFetchShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A data snapshot can have at most one fetched-from URL."@en ;
+            sh:path pkg:fetchedFromUrl ] ;
+    sh:targetClass pkg:DataSnapshot .
+
 pkg:DependencyConsistencyShape a sh:NodeShape ;
     sh:property [ sh:message "Package has directlyDependsOn but no corresponding hasDependency reification."@en ;
             sh:minCount 1 ;

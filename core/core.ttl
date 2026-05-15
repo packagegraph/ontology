@@ -707,6 +707,14 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:anyURI .
 
+:canonicalSourceUrl a owl:DatatypeProperty ;
+    rdfs:label "canonical source URL"@en ;
+    IAO:0000115 "The canonical URL of the package in its upstream registry or distribution repository. This is the authoritative, stable location — the registry-of-record URL. Distinct from downloadURL on Package (which is version-specific) and from fetchedFromUrl on DataSnapshot (which records the actual fetch location during a specific collection run)."@en ;
+    rdfs:comment "The canonical registry URL for the package identity (upstream source of record)"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
 :recommends a owl:ObjectProperty ;
     rdfs:label "recommends"@en ;
     IAO:0000115 "A weak dependency relationship suggesting that installing the target package enhances functionality but is not required. Used in Debian Recommends and RPM Recommends tags. If package A recommends package B, A works without B but gains features when B is present."@en ;
@@ -803,6 +811,14 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:domain :DataSnapshot ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:string .
+
+:fetchedFromUrl a owl:DatatypeProperty ;
+    rdfs:label "fetched from URL"@en ;
+    IAO:0000115 "The actual URL from which repository metadata was downloaded during this collection snapshot. May differ from the canonical source when a mirror, proxy, or CDN was used. Observation-scoped — different collection runs may fetch from different mirrors. Inspired by Hermeto's proxy URL provenance tracking."@en ;
+    rdfs:comment "The actual URL from which metadata was fetched during this snapshot (may be a mirror or proxy)"@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
 
 :snapshotTimestamp a owl:DatatypeProperty ;
     rdfs:label "snapshot timestamp"@en ;

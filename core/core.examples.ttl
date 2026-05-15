@@ -439,3 +439,34 @@ ex:openssl-link-changelog a pkg:PackageLink ;
 #   ?link dq:hasQualityIssue ?issue .
 #   ?issue dq:issueType "dead-homepage" .
 # }
+
+
+# ============================================================
+# Fetch Provenance & Canonical Source URLs (Task — Hermeto-derived)
+# ============================================================
+# canonicalSourceUrl on PackageIdentity (stable, version-independent)
+# fetchedFromUrl on DataSnapshot (observation-scoped, per collection run)
+# ============================================================
+
+# Stable registry-of-record URL on the package identity
+ex:requests-pypi-identity a pkg:PackageIdentity ;
+    pkg:identityName "requests" ;
+    pkg:purl "pkg:pypi/requests@2.31.0"^^xsd:anyURI ;
+    pkg:canonicalSourceUrl "https://pypi.org/simple/requests/"^^xsd:anyURI ;
+    rdfs:label "requests (PyPI identity)" .
+
+# Collection snapshot recording where data was actually fetched
+ex:pypi-snapshot-2026-05 a pkg:DataSnapshot ;
+    rdfs:label "PyPI snapshot 2026-05-14" ;
+    pkg:snapshotTimestamp "2026-05-14T08:00:00Z"^^xsd:dateTime ;
+    pkg:snapshotSource "pg-collect pypi" ;
+    pkg:fetchedFromUrl "https://pypi-mirror.internal.example.com/simple/"^^xsd:anyURI ;
+    pkg:isCurrent true .
+
+# Query: "Which snapshots fetched from a non-canonical mirror?"
+# SELECT ?snapshot ?fetchUrl ?source WHERE {
+#   ?snapshot a pkg:DataSnapshot ;
+#             pkg:fetchedFromUrl ?fetchUrl ;
+#             pkg:snapshotSource ?source .
+#   FILTER(CONTAINS(STR(?fetchUrl), "mirror"))
+# }
