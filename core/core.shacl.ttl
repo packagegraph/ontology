@@ -344,6 +344,29 @@ pkg:RepositoryShape a sh:NodeShape ;
             sh:path rdfs:label ] ;
     sh:targetClass pkg:Repository .
 
+pkg:RepositoryLifecycleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:date ;
+            sh:maxCount 1 ;
+            sh:message "A repository can have at most one first-seen date."@en ;
+            sh:path pkg:repositoryFirstSeen ],
+        [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:message "A repository can have at most one last-fetched timestamp."@en ;
+            sh:path pkg:repositoryLastFetched ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "active" "stale" "legacy" "new" ) ;
+            sh:maxCount 1 ;
+            sh:message "Repository status must be one of: active, stale, legacy, new."@en ;
+            sh:path pkg:repositoryStatus ] ;
+    sh:targetClass pkg:Repository .
+
+pkg:DataSnapshotMetricsShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:long ;
+            sh:maxCount 1 ;
+            sh:message "A data snapshot can have at most one triple count."@en ;
+            sh:path pkg:snapshotTripleCount ] ;
+    sh:targetClass pkg:DataSnapshot .
+
 pkg:SourcePackageShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;

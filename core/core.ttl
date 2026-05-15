@@ -1355,6 +1355,38 @@ xsd:date a rdfs:Datatype .
     rdfs:subClassOf owl:Thing,
         prov:Entity .
 
+:repositoryFirstSeen a owl:DatatypeProperty ;
+    rdfs:label "repository first seen"@en ;
+    IAO:0000115 "The date when this repository was first collected by the PackageGraph pipeline."@en ;
+    rdfs:comment "When the repository was first discovered and collected"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:date .
+
+:repositoryLastFetched a owl:DatatypeProperty ;
+    rdfs:label "repository last fetched"@en ;
+    IAO:0000115 "The date of the most recent successful metadata fetch from this repository."@en ;
+    rdfs:comment "When the repository metadata was last successfully fetched"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:dateTime .
+
+:repositoryStatus a owl:DatatypeProperty ;
+    rdfs:label "repository status"@en ;
+    IAO:0000115 "The operational status of the repository in the PackageGraph pipeline: 'active' (regularly collected), 'stale' (last fetch older than expected update period), 'legacy' (no longer updated upstream), 'new' (recently added, not yet fully indexed)."@en ;
+    rdfs:comment "Operational status: active, stale, legacy, new"@en ;
+    rdfs:domain :Repository ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:snapshotTripleCount a owl:DatatypeProperty ;
+    rdfs:label "snapshot triple count"@en ;
+    IAO:0000115 "The number of triples in the named graph at snapshot time. Enables monitoring for unexpected data volume changes."@en ;
+    rdfs:comment "Number of triples in this snapshot's named graph"@en ;
+    rdfs:domain :DataSnapshot ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:long .
+
 :dependsOn a owl:ObjectProperty ;
     rdfs:label "depends on"@en ;
     IAO:0000115 "A relationship indicating that one package requires another package to be present and functional in order to operate correctly."@en ;

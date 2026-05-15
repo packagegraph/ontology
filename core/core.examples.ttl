@@ -470,3 +470,33 @@ ex:pypi-snapshot-2026-05 a pkg:DataSnapshot ;
 #             pkg:snapshotSource ?source .
 #   FILTER(CONTAINS(STR(?fetchUrl), "mirror"))
 # }
+
+
+# ============================================================
+# Repository Operational Lifecycle (Task — Repology-derived)
+# ============================================================
+# Tracking repository freshness and operational state
+# ============================================================
+
+ex:fedora-43-repo a pkg:Repository ;
+    rdfs:label "Fedora 43 Everything x86_64" ;
+    pkg:repositoryFirstSeen "2025-04-15"^^xsd:date ;
+    pkg:repositoryLastFetched "2026-05-14T06:00:00Z"^^xsd:dateTime ;
+    pkg:repositoryStatus "active" .
+
+ex:fedora-43-snapshot a pkg:DataSnapshot ;
+    rdfs:label "Fedora 43 snapshot 2026-05-14" ;
+    pkg:snapshotTimestamp "2026-05-14T06:15:00Z"^^xsd:dateTime ;
+    pkg:snapshotSource "pg-collect rpm" ;
+    pkg:snapshotGraph "https://packagegraph.github.io/graph/fedora/43"^^xsd:anyURI ;
+    pkg:isCurrent true ;
+    pkg:snapshotTripleCount 4500000 .
+
+# Query: "Which repositories haven't been fetched in over 30 days?"
+# SELECT ?repo ?lastFetch WHERE {
+#   ?repo a pkg:Repository ;
+#         pkg:repositoryLastFetched ?lastFetch .
+#   FILTER(?lastFetch < "2026-04-14T00:00:00Z"^^xsd:dateTime)
+# }
+# Note: Replace the literal date with the actual cutoff. Fuseki does not
+# support dateTime-duration arithmetic (NOW() - duration) in FILTER.
