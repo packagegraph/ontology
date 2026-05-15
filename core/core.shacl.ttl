@@ -383,6 +383,19 @@ pkg:VirtualPackageShape a sh:NodeShape ;
             sh:path pkg:capabilityName ] ;
     sh:targetClass pkg:VirtualPackage .
 
+pkg:PackageLinkShape a sh:NodeShape ;
+    sh:property [ sh:class skos:Concept ;
+            sh:maxCount 1 ;
+            sh:message "A package link must have exactly one link type."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:linkType ],
+        [ sh:datatype xsd:anyURI ;
+            sh:maxCount 1 ;
+            sh:message "A package link must have exactly one URL."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:linkUrl ] ;
+    sh:targetClass pkg:PackageLink .
+
 sec:CPEShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;

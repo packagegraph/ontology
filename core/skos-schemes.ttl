@@ -310,3 +310,55 @@ pkg:FreshnessStatusScheme a skos:ConceptScheme ;
         pkg:fresh-devel,
         pkg:fresh-rolling,
         pkg:fresh-unique .
+
+pkg:link-homepage a skos:Concept ;
+    skos:definition "The upstream project's primary website or landing page." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "homepage" .
+
+pkg:link-download a skos:Concept ;
+    skos:definition "Direct download URL for the package archive or binary." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "download" .
+
+pkg:link-issues a skos:Concept ;
+    skos:definition "Bug tracker or issue tracker URL." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "issues" .
+
+pkg:link-changelog a skos:Concept ;
+    skos:definition "Changelog or release notes URL." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "changelog" .
+
+pkg:link-documentation a skos:Concept ;
+    skos:definition "Documentation or API reference URL." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "documentation" .
+
+pkg:link-build-log a skos:Concept ;
+    skos:definition "Build log or CI pipeline URL for a specific package build." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "build-log" .
+
+pkg:link-recipe a skos:Concept ;
+    skos:definition "Package recipe or build specification (spec file, PKGBUILD, Debian rules)." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "recipe" .
+
+pkg:link-registry a skos:Concept ;
+    skos:definition "Package registry page (PyPI, npm, crates.io, etc.)." ;
+    skos:inScheme pkg:LinkTypeScheme ;
+    skos:prefLabel "registry" .
+
+pkg:LinkTypeScheme a skos:ConceptScheme ;
+    rdfs:label "Package Link Types"@en ;
+    dcterms:description "Classification of URLs associated with packages — derived from Repology's 28+ link type taxonomy, reduced to broadly applicable categories" ;
+    skos:hasTopConcept pkg:link-homepage,
+        pkg:link-download,
+        pkg:link-issues,
+        pkg:link-changelog,
+        pkg:link-documentation,
+        pkg:link-build-log,
+        pkg:link-recipe,
+        pkg:link-registry .

@@ -397,3 +397,45 @@ ex:glibc-identity pkg:freshnessStatus pkg:fresh-outdated .
 #   ?pkg pkg:isVersionOf ?id ;
 #        pkg:partOfRelease <.../debian/trixie> .
 # }
+
+
+# ============================================================
+# Typed Package Links (Task — Repology-derived)
+# ============================================================
+# Demonstrating structured link tracking on different entity types
+# ============================================================
+
+# Version-independent links attach to PackageIdentity (shared across versions)
+ex:openssl-link-homepage a pkg:PackageLink ;
+    pkg:linkType pkg:link-homepage ;
+    pkg:linkUrl "https://www.openssl.org/"^^xsd:anyURI .
+
+ex:openssl-link-issues a pkg:PackageLink ;
+    pkg:linkType pkg:link-issues ;
+    pkg:linkUrl "https://github.com/openssl/openssl/issues"^^xsd:anyURI .
+
+ex:openssl-identity pkg:hasLink ex:openssl-link-homepage,
+    ex:openssl-link-issues .
+
+# Version-specific links attach to Package (per-version artifact)
+ex:openssl-link-download a pkg:PackageLink ;
+    pkg:linkType pkg:link-download ;
+    pkg:linkUrl "https://deb.debian.org/debian/pool/main/o/openssl/openssl_3.0.2-1_amd64.deb"^^xsd:anyURI .
+
+ex:openssl-deb pkg:hasLink ex:openssl-link-download .
+
+# UpstreamProject can also have links
+ex:openssl-link-changelog a pkg:PackageLink ;
+    pkg:linkType pkg:link-changelog ;
+    pkg:linkUrl "https://www.openssl.org/news/changelog.html"^^xsd:anyURI .
+
+# Query: "Find all package identities whose homepage is dead"
+# SELECT ?id ?name ?url WHERE {
+#   ?id a pkg:PackageIdentity ;
+#       pkg:identityName ?name ;
+#       pkg:hasLink ?link .
+#   ?link pkg:linkType pkg:link-homepage ;
+#         pkg:linkUrl ?url .
+#   ?link dq:hasQualityIssue ?issue .
+#   ?issue dq:issueType "dead-homepage" .
+# }

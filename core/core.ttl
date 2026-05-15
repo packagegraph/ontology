@@ -1369,6 +1369,37 @@ xsd:date a rdfs:Datatype .
     rdfs:isDefinedBy : ;
     rdfs:subClassOf owl:Thing .
 
+:PackageLink a owl:Class ;
+    rdfs:label "Package Link"@en ;
+    IAO:0000115 "A typed URL associated with a package, classifying the relationship between the package and the linked resource. Enables structured tracking of homepage, download, issue tracker, build log, and other URLs — inspired by Repology's 28-type link taxonomy."@en ;
+    rdfs:comment "A typed URL associated with a package (homepage, download, issue tracker, etc.)"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:hasLink a owl:ObjectProperty ;
+    rdfs:label "has link"@en ;
+    IAO:0000115 "Associates any resource (Package, PackageIdentity, or UpstreamProject) with a typed URL link. No rdfs:domain declared — version-independent links (homepage, issues, documentation) attach to PackageIdentity or UpstreamProject; version-specific links (download, build-log) attach to Package."@en ;
+    rdfs:comment "Links any resource to a typed URL — attachment level depends on link type"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageLink .
+
+:linkType a owl:ObjectProperty ;
+    rdfs:label "link type"@en ;
+    IAO:0000115 "Classifies the kind of URL this link represents, using concepts from the LinkTypeScheme (homepage, download, issues, changelog, etc.)."@en ;
+    rdfs:comment "The type of link (homepage, download, issues, etc.)"@en ;
+    rdfs:domain :PackageLink ;
+    rdfs:isDefinedBy : ;
+    rdfs:range skos:Concept .
+
+:linkUrl a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "link URL"@en ;
+    IAO:0000115 "The actual URL that this package link points to."@en ;
+    rdfs:comment "The URL of the link"@en ;
+    rdfs:domain :PackageLink ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:anyURI .
+
 :Package a owl:Class ;
     rdfs:label "Package"@en ;
     IAO:0000115 "A discrete unit of software represented in package repository metadata, typically containing executable code, configuration files, documentation, and metadata. Most packages can be installed, updated, or removed by a package management system, though some entries (such as phantom packages) exist only as metadata references."@en ;
