@@ -5,6 +5,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sec: <https://purl.org/packagegraph/ontology/security#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 pkg:ABIShape a sh:NodeShape ;
@@ -249,6 +250,14 @@ pkg:PackageIdentityShape a sh:NodeShape ;
         [ sh:message "A package identity must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ] ;
+    sh:targetClass pkg:PackageIdentity .
+
+pkg:FreshnessStatusShape a sh:NodeShape ;
+    sh:property [ sh:class skos:Concept ;
+            sh:maxCount 1 ;
+            sh:message "A package identity can have at most one freshness status."@en ;
+            sh:path pkg:freshnessStatus ;
+            sh:severity sh:Info ] ;
     sh:targetClass pkg:PackageIdentity .
 
 pkg:PackageManagerShape a sh:NodeShape ;

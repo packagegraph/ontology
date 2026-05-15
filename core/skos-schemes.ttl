@@ -270,3 +270,43 @@ pkg:DependencyTypeScheme a skos:ConceptScheme ;
     dcterms:description "Classification of dependency relationships between packages" ;
     skos:hasTopConcept pkg:dep-strong,
         pkg:dep-weak .
+
+pkg:fresh-newest a skos:Concept ;
+    skos:definition "The version in this repository is the newest known version across all tracked repositories." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "newest" .
+
+pkg:fresh-outdated a skos:Concept ;
+    skos:definition "A newer version exists in at least one other tracked repository." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "outdated" .
+
+pkg:fresh-legacy a skos:Concept ;
+    skos:definition "An older version maintained in parallel with a newer branch (e.g., Python 2 alongside Python 3)." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "legacy" .
+
+pkg:fresh-devel a skos:Concept ;
+    skos:definition "A pre-release or development version (alpha, beta, rc, git snapshot)." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "devel" .
+
+pkg:fresh-rolling a skos:Concept ;
+    skos:definition "Version from a rolling-release repository where traditional version comparison is not meaningful." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "rolling" .
+
+pkg:fresh-unique a skos:Concept ;
+    skos:definition "The package exists in only one repository family, so freshness comparison is not possible." ;
+    skos:inScheme pkg:FreshnessStatusScheme ;
+    skos:prefLabel "unique" .
+
+pkg:FreshnessStatusScheme a skos:ConceptScheme ;
+    rdfs:label "Version Freshness Status"@en ;
+    dcterms:description "Classification of package version currency relative to other repositories — derived from Repology's version classification system" ;
+    skos:hasTopConcept pkg:fresh-newest,
+        pkg:fresh-outdated,
+        pkg:fresh-legacy,
+        pkg:fresh-devel,
+        pkg:fresh-rolling,
+        pkg:fresh-unique .

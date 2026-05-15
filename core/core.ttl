@@ -7,6 +7,7 @@
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 IAO:0000115 a owl:AnnotationProperty ;
@@ -323,6 +324,14 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:anyURI .
+
+:freshnessStatus a owl:ObjectProperty ;
+    rdfs:label "freshness status"@en ;
+    IAO:0000115 "Classifies the currency of a package version relative to other tracked repositories. Values are SKOS concepts from the FreshnessStatusScheme (newest, outdated, legacy, devel, rolling, unique). Computed post-collection by comparing versions across distribution graphs — inspired by Repology's version classification system."@en ;
+    rdfs:comment "Whether this package identity's latest version is current, outdated, legacy, etc."@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range skos:Concept .
 
 :ecosystemPackage a owl:ObjectProperty ;
     rdfs:label "ecosystem package"@en ;

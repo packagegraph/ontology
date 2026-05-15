@@ -379,3 +379,21 @@ ex:openssl-identity a pkg:PackageIdentity ;
 # Link existing openssl-deb to its identity
 ex:openssl-deb pkg:isVersionOf ex:openssl-identity .
 ex:openssl-identity pkg:hasPackage ex:openssl-deb .
+
+
+# ============================================================
+# Version Freshness Classification (Task — Repology-derived)
+# ============================================================
+# Demonstrating freshness status on PackageIdentity
+# ============================================================
+
+ex:openssl-identity pkg:freshnessStatus pkg:fresh-newest .
+ex:glibc-identity pkg:freshnessStatus pkg:fresh-outdated .
+
+# Query: "Which packages in Debian are outdated?"
+# SELECT ?name WHERE {
+#   ?id pkg:freshnessStatus pkg:fresh-outdated ;
+#       pkg:identityName ?name .
+#   ?pkg pkg:isVersionOf ?id ;
+#        pkg:partOfRelease <.../debian/trixie> .
+# }
