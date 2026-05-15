@@ -448,12 +448,8 @@ ex:openssl-link-changelog a pkg:PackageLink ;
 # fetchedFromUrl on DataSnapshot (observation-scoped, per collection run)
 # ============================================================
 
-# Stable registry-of-record URL on the package identity
-ex:requests-pypi-identity a pkg:PackageIdentity ;
-    pkg:identityName "requests" ;
-    pkg:purl "pkg:pypi/requests@2.31.0"^^xsd:anyURI ;
-    pkg:canonicalSourceUrl "https://pypi.org/simple/requests/"^^xsd:anyURI ;
-    rdfs:label "requests (PyPI identity)" .
+# Add canonicalSourceUrl to the existing requests PyPI identity (defined above)
+ex:requests-pypi-identity pkg:canonicalSourceUrl "https://pypi.org/simple/requests/"^^xsd:anyURI .
 
 # Collection snapshot recording where data was actually fetched
 ex:pypi-snapshot-2026-05 a pkg:DataSnapshot ;
@@ -490,7 +486,7 @@ ex:fedora-43-snapshot a pkg:DataSnapshot ;
     pkg:snapshotSource "pg-collect rpm" ;
     pkg:snapshotGraph "https://packagegraph.github.io/graph/fedora/43"^^xsd:anyURI ;
     pkg:isCurrent true ;
-    pkg:snapshotTripleCount 4500000 .
+    pkg:snapshotTripleCount "4500000"^^xsd:long .
 
 # Query: "Which repositories haven't been fetched in over 30 days?"
 # SELECT ?repo ?lastFetch WHERE {
