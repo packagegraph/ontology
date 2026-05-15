@@ -8,9 +8,9 @@ dq:DataQualityIssueShape a sh:NodeShape ;
     sh:property [ sh:message "A data quality issue must have at least one label."@en ;
             sh:minCount 1 ;
             sh:path rdfs:label ],
-        [ sh:class skos:Concept ;
+        [ sh:in ( dq:cat-dead-homepage dq:cat-dead-download dq:cat-dead-repo dq:cat-missing-cpe dq:cat-missing-license dq:cat-malformed-email dq:cat-missing-checksum dq:cat-missing-upstream ) ;
             sh:maxCount 1 ;
-            sh:message "A data quality issue can have at most one structured category (must be a skos:Concept)."@en ;
+            sh:message "Issue category must be a concept from IssueCategoryScheme."@en ;
             sh:path dq:issueCategory ;
             sh:severity sh:Info ] ;
     sh:targetClass dq:DataQualityIssue .

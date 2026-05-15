@@ -282,9 +282,9 @@ pkg:PackageIdentityShape a sh:NodeShape ;
     sh:targetClass pkg:PackageIdentity .
 
 pkg:FreshnessStatusShape a sh:NodeShape ;
-    sh:property [ sh:class skos:Concept ;
+    sh:property [ sh:in ( pkg:fresh-newest pkg:fresh-outdated pkg:fresh-legacy pkg:fresh-devel pkg:fresh-rolling pkg:fresh-unique ) ;
             sh:maxCount 1 ;
-            sh:message "A package identity can have at most one freshness status."@en ;
+            sh:message "Freshness status must be a concept from FreshnessStatusScheme."@en ;
             sh:path pkg:freshnessStatus ;
             sh:severity sh:Info ] ;
     sh:targetClass pkg:PackageIdentity .
@@ -436,9 +436,9 @@ pkg:VirtualPackageShape a sh:NodeShape ;
     sh:targetClass pkg:VirtualPackage .
 
 pkg:PackageLinkShape a sh:NodeShape ;
-    sh:property [ sh:class skos:Concept ;
+    sh:property [ sh:in ( pkg:link-homepage pkg:link-download pkg:link-issues pkg:link-changelog pkg:link-documentation pkg:link-build-log pkg:link-recipe pkg:link-registry ) ;
             sh:maxCount 1 ;
-            sh:message "A package link must have exactly one link type."@en ;
+            sh:message "Link type must be a concept from LinkTypeScheme."@en ;
             sh:minCount 1 ;
             sh:path pkg:linkType ],
         [ sh:datatype xsd:anyURI ;
