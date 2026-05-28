@@ -104,7 +104,7 @@ cpan: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing CPAN distributions and the Perl ecosystem"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/cpan/0.8.0> ;
 

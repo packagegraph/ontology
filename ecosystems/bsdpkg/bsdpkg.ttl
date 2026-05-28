@@ -522,7 +522,7 @@ bsdpkg: a owl:Ontology ;
     dcterms:title "BSD Package Ontology" ;
     rdfs:comment "Ontology for representing BSD ports system packages (FreeBSD, OpenBSD, NetBSD)"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/bsdpkg/0.8.0> ;
 

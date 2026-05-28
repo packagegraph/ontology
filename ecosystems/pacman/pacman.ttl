@@ -508,7 +508,7 @@ pacman: a owl:Ontology ;
     rdfs:comment "Ontology for representing Arch Linux packages, PKGBUILD files, and Pacman repositories"@en ;
     owl:imports pkg:,
         vcs: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/pacman/0.8.0> ;
 

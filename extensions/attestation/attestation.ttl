@@ -19,7 +19,7 @@ att: a owl:Ontology ;
     dcterms:creator <https://packagegraph.github.io/> ;
     dcterms:description "Models cryptographic signing infrastructure: digital signatures, certificates, transparency logs, OIDC identity binding, and verification metadata for software supply chain attestation." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    dcterms:modified "2026-04-25"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
     dcterms:title "Attestation and Signing Infrastructure Ontology" ;
     rdfs:comment "Ontology for representing cryptographic signing methods, certificates, transparency logs, and identity binding across GPG, SSH, X.509, Sigstore, and OpenPubkey"@en ;
     owl:imports pkg: ;

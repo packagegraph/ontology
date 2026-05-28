@@ -53,7 +53,7 @@ rh: a owl:Ontology ;
     rdfs:comment "Vendor-specific extension ontology for Red Hat products, providing RHEL and RHIVOS package set definitions and Application Compatibility Guide lifecycle classifications"@en ;
     owl:imports pkg:,
         rpm: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/redhat/0.8.0> ;
 

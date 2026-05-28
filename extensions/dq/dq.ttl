@@ -122,7 +122,7 @@ dq: a owl:Ontology ;
     dcterms:title "Data Quality Ontology" ;
     rdfs:comment "Ontology for recording and querying data quality issues in the PackageGraph knowledge graph"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/dq/0.8.0> ;
 

@@ -444,7 +444,7 @@ choco: a owl:Ontology ;
     dcterms:title "Chocolatey Package Ontology" ;
     rdfs:comment "Ontology for representing Chocolatey packages and repositories on Windows"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/chocolatey/0.8.0> ;
 

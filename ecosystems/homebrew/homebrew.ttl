@@ -579,7 +579,7 @@ brew: a owl:Ontology ;
     dcterms:title "Homebrew Package Ontology" ;
     rdfs:comment "Ontology for representing Homebrew packages, formulae, and taps on macOS and Linux"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-04-27"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/homebrew/0.8.0> ;
 
