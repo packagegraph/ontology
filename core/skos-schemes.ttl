@@ -366,6 +366,46 @@ pkg:LinkTypeScheme a skos:ConceptScheme ;
         pkg:link-recipe,
         pkg:link-registry .
 
+pkg:match-upstream-verified a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "upstream verified"@en ;
+    skos:definition "Identity confirmed via upstream project metadata (e.g., PyPI project URL matches RPM Source URL)."@en .
+
+pkg:match-repository-shared a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "repository shared"@en ;
+    skos:definition "Both packages link to the same upstream VCS repository."@en .
+
+pkg:match-name-heuristic a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "name heuristic"@en ;
+    skos:definition "Identity inferred from package name similarity after normalization (e.g., python3-requests ↔ requests)."@en .
+
+pkg:match-fork-detected a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "fork detected"@en ;
+    skos:definition "Repository fork relationship detected between upstream sources."@en .
+
+pkg:match-repackage-detected a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "repackage detected"@en ;
+    skos:definition "Package appears to be a repackaging of another package under a different name."@en .
+
+pkg:match-repology a skos:Concept ;
+    skos:inScheme pkg:MatchMethodScheme ;
+    skos:prefLabel "Repology equivalence"@en ;
+    skos:definition "Cross-distribution equivalence asserted by Repology project mapping."@en .
+
+pkg:MatchMethodScheme a skos:ConceptScheme ;
+    rdfs:label "Match Method Scheme"@en ;
+    dcterms:description "Methods used to establish cross-ecosystem package identity relationships — from verified upstream metadata to heuristic name matching" ;
+    skos:hasTopConcept pkg:match-upstream-verified,
+        pkg:match-repository-shared,
+        pkg:match-name-heuristic,
+        pkg:match-fork-detected,
+        pkg:match-repackage-detected,
+        pkg:match-repology .
+
 dq:cat-dead-homepage a skos:Concept ;
     skos:definition "The package's homepage URL returns a permanent error (4xx/5xx) or is unreachable." ;
     skos:inScheme dq:IssueCategoryScheme ;

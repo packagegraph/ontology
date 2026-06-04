@@ -456,3 +456,29 @@ sec:CPEShape a sh:NodeShape ;
             sh:pattern "^cpe:2\\.3:[aho]:[^:]+:[^:]+:[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*$" ] ;
     sh:targetClass pkg:PackageIdentity .
 
+pkg:PackageRelationshipShape a sh:NodeShape ;
+    sh:property [ sh:class pkg:PackageIdentity ;
+            sh:maxCount 1 ;
+            sh:message "A package relationship must have exactly one target package identity."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:relationshipTarget ],
+        [ sh:class skos:Concept ;
+            sh:maxCount 1 ;
+            sh:message "A package relationship must have exactly one match method."@en ;
+            sh:minCount 1 ;
+            sh:path pkg:matchMethod ],
+        [ sh:datatype xsd:decimal ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1.0 ;
+            sh:message "Match confidence must be between 0.0 and 1.0."@en ;
+            sh:minInclusive 0.0 ;
+            sh:path pkg:matchConfidence ] ;
+    sh:sparql [ sh:message "A PackageRelationship must be linked from at least one PackageIdentity via hasPackageRelationship."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        FILTER NOT EXISTS { ?source pkg:hasPackageRelationship $this }
+                    }
+                """ ] ;
+    sh:targetClass pkg:PackageRelationship .
+

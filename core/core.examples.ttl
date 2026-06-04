@@ -527,3 +527,47 @@ ex:arch-x86-64 a pkg:Architecture ;
 #        pkg:targetABI "cp312" ;
 #        pkg:targetPlatformTag ?platform .
 # }
+
+
+# ============================================================
+# Package Relationship Confidence Examples
+# ============================================================
+
+# PackageIdentity stubs for relationship examples
+<https://packagegraph.github.io/d/pkgid/debian/trixie/amd64/python3-requests> a pkg:PackageIdentity ;
+    pkg:identityName "python3-requests" ;
+    pkg:purl "pkg:deb/debian/python3-requests@2.31.0-1"^^xsd:anyURI ;
+    rdfs:label "python3-requests (Debian trixie amd64)" .
+
+<https://packagegraph.github.io/d/pkgid/pypi/requests> a pkg:PackageIdentity ;
+    pkg:identityName "requests" ;
+    pkg:purl "pkg:pypi/requests@2.31.0"^^xsd:anyURI ;
+    rdfs:label "requests (PyPI)" .
+
+<https://packagegraph.github.io/d/pkgid/fedora/43/x86_64/python3-cryptography> a pkg:PackageIdentity ;
+    pkg:identityName "python3-cryptography" ;
+    pkg:purl "pkg:rpm/fedora/python3-cryptography@42.0.5-1.fc43"^^xsd:anyURI ;
+    rdfs:label "python3-cryptography (Fedora 43 x86_64)" .
+
+<https://packagegraph.github.io/d/pkgid/pypi/cryptography> a pkg:PackageIdentity ;
+    pkg:identityName "cryptography" ;
+    pkg:purl "pkg:pypi/cryptography@42.0.5"^^xsd:anyURI ;
+    rdfs:label "cryptography (PyPI)" .
+
+# Debian python3-requests ↔ PyPI requests (upstream verified, high confidence)
+<https://packagegraph.github.io/d/pkg-rel/debian-python3-requests-pypi-requests> a pkg:PackageRelationship ;
+    pkg:relationshipTarget <https://packagegraph.github.io/d/pkgid/pypi/requests> ;
+    pkg:matchMethod pkg:match-upstream-verified ;
+    pkg:matchConfidence "1.0"^^xsd:decimal .
+
+<https://packagegraph.github.io/d/pkgid/debian/trixie/amd64/python3-requests>
+    pkg:hasPackageRelationship <https://packagegraph.github.io/d/pkg-rel/debian-python3-requests-pypi-requests> .
+
+# Fedora python3-cryptography ↔ PyPI cryptography (heuristic name match, lower confidence)
+<https://packagegraph.github.io/d/pkg-rel/fedora-python3-cryptography-pypi-cryptography> a pkg:PackageRelationship ;
+    pkg:relationshipTarget <https://packagegraph.github.io/d/pkgid/pypi/cryptography> ;
+    pkg:matchMethod pkg:match-name-heuristic ;
+    pkg:matchConfidence "0.85"^^xsd:decimal .
+
+<https://packagegraph.github.io/d/pkgid/fedora/43/x86_64/python3-cryptography>
+    pkg:hasPackageRelationship <https://packagegraph.github.io/d/pkg-rel/fedora-python3-cryptography-pypi-cryptography> .
