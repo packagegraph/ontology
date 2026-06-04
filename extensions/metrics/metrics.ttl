@@ -235,6 +235,14 @@ met:totalLinesOfCode a owl:DatatypeProperty ;
     rdfs:isDefinedBy met: ;
     rdfs:range xsd:integer .
 
+met:reverseDependencyCount a owl:DatatypeProperty ;
+    rdfs:label "reverse dependency count"@en ;
+    IAO:0000115 "The number of distinct package identities that directly depend on this package identity within a given distribution graph. Materialized by the enrich-revdeps enricher from a SPARQL aggregate over pkg:directlyDependsOn edges. Higher counts indicate greater ecosystem criticality — a package with 5,000 reverse dependencies is a systemic risk if compromised."@en ;
+    rdfs:comment "Count of package identities that directly depend on this one"@en ;
+    rdfs:domain pkg:PackageIdentity ;
+    rdfs:isDefinedBy met: ;
+    rdfs:range xsd:integer .
+
 met:hasLanguageMetrics a owl:ObjectProperty ;
     rdfs:label "has language metrics"@en ;
     IAO:0000115 "Links summary code metrics to per-language breakdowns."@en ;

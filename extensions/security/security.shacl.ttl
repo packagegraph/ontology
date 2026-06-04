@@ -118,7 +118,12 @@ sec:VulnerabilityShape a sh:NodeShape ;
             sh:path sec:hasAffectedRange ],
         [ sh:class sec:CVSSScore ;
             sh:message "A vulnerability can have zero or more CVSS scores (one per CVSS version)."@en ;
-            sh:path sec:hasCVSSScore ] ;
+            sh:path sec:hasCVSSScore ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "Blast radius must be a non-negative integer."@en ;
+            sh:minInclusive 0 ;
+            sh:path sec:blastRadius ] ;
     sh:targetClass sec:Vulnerability .
 
 sec:EPSSAssessmentShape a sh:NodeShape ;

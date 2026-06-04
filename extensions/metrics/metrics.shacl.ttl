@@ -1,4 +1,5 @@
 @prefix met: <https://purl.org/packagegraph/ontology/metrics#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -19,4 +20,12 @@ met:ProgrammingLanguageShape a sh:NodeShape ;
             sh:message "A programming language can have at most one memory safety indicator."@en ;
             sh:path met:isMemorySafe ] ;
     sh:targetClass met:ProgrammingLanguage .
+
+met:ReverseDependencyCountShape a sh:NodeShape ;
+    sh:targetSubjectsOf met:reverseDependencyCount ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:message "Reverse dependency count must be a non-negative integer."@en ;
+            sh:minInclusive 0 ;
+            sh:path met:reverseDependencyCount ] .
 

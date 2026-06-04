@@ -101,6 +101,14 @@ sec:affectsVersion a owl:ObjectProperty ;
     rdfs:range pkg:Version ;
     owl:inverseOf sec:vulnerableIn .
 
+sec:blastRadius a owl:DatatypeProperty ;
+    rdfs:label "blast radius"@en ;
+    IAO:0000115 "The number of distinct package identities that transitively depend on packages affected by this vulnerability. Quantifies the downstream impact scope — a vulnerability with blast radius 5,000 affects far more of the ecosystem than one with blast radius 10, regardless of CVSS score."@en ;
+    rdfs:comment "Count of package identities transitively exposed to this vulnerability"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:integer .
+
 sec:baseScore a owl:DatatypeProperty ;
     rdfs:label "base score"@en ;
     IAO:0000115 "The CVSS base score representing the intrinsic severity of the vulnerability, independent of temporal or environmental factors. Range: 0.0 (none) to 10.0 (critical)."@en ;

@@ -17,6 +17,7 @@ Each CQ has a **Status** field. The following terms distinguish ontology readine
 | Status | Meaning |
 |--------|---------|
 | **PASS** | Ontology vocabulary exists and the query is structurally correct. Does NOT guarantee results on live data — many PASS CQs were validated against example data, not production graphs. |
+| **ONTOLOGY-COMPLETE** | Ontology vocabulary is complete and an enricher exists in platform (pg-collect), but has not yet been run against production data. Remaining work is pipeline-operations, not ontology. |
 | **BLOCKED** | Either the ontology vocabulary is incomplete (missing property/class) or no producer emits the required data. The blocking reason is stated. |
 | **ADVISORY-SIDE SATISFIED** | Partial pipeline readiness — one side of a multi-source join has data, the other does not. |
 
@@ -2102,7 +2103,7 @@ ORDER BY DESC(?confidence)
 
 **Exercises:** PackageRelationship, hasPackageRelationship, relationshipTarget, matchMethod, matchConfidence, MatchMethodScheme
 
-**Status:** BLOCKED — requires cross-ecosystem enricher
+**Status:** ONTOLOGY-COMPLETE — Repology and forge enrichers emit `PackageRelationship` triples, awaiting first production run
 
 ---
 
@@ -2225,7 +2226,7 @@ ORDER BY DESC(?epssScore)
 
 **Exercises:** EPSSAssessment, hasEPSSAssessment, epssScore, epssAssessmentDate, temporal most-recent pattern
 
-**Status:** BLOCKED — requires EPSS enricher (platform team)
+**Status:** ONTOLOGY-COMPLETE — `enrich-epss` enricher exists in platform (pg-collect), awaiting first production run
 
 ---
 
@@ -2258,31 +2259,31 @@ ORDER BY DESC(?epssScore)
 
 **Exercises:** EPSSAssessment, CVSSScore, cross-metric disagreement analysis
 
-**Status:** BLOCKED — requires EPSS enricher
+**Status:** ONTOLOGY-COMPLETE — `enrich-epss` enricher exists in platform (pg-collect), awaiting first production run
 
 ---
 
 ## Summary Statistics
 
-| Domain | CQ Count | PASS | ADVISORY-SIDE | BLOCKED |
-|--------|----------|------|---------------|---------|
-| Package Management (PM) | 10 | 10 | 0 | 0 |
-| Licensing (LIC) | 3 | 3 | 0 | 0 |
-| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 |
-| Package Identity (PID) | 1 | 0 | 0 | 1 |
-| Software Classification (CLASS) | 2 | 0 | 0 | 2 |
-| Exploit Risk Assessment (ERA) | 2 | 0 | 0 | 2 |
-| Temporal Analysis (TEMP) | 3 | 2 | 1 | 0 |
-| Supply Chain Risk (SCR) | 9 | 5 | 3 | 1 |
-| Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 |
-| Provenance / Build (PROV) | 4 | 4 | 0 | 0 |
-| Repository / VCS (VCS) | 2 | 2 | 0 | 0 |
-| Package Set (SET) | 1 | 1 | 0 | 0 |
-| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 |
-| Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 |
-| **TOTAL** | **58** | **48** | **4** | **6** |
+| Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED |
+|--------|----------|------|-------------------|---------------|---------|
+| Package Management (PM) | 10 | 10 | 0 | 0 | 0 |
+| Licensing (LIC) | 3 | 3 | 0 | 0 | 0 |
+| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 | 0 |
+| Package Identity (PID) | 1 | 0 | 1 | 0 | 0 |
+| Software Classification (CLASS) | 2 | 0 | 0 | 0 | 2 |
+| Exploit Risk Assessment (ERA) | 2 | 0 | 2 | 0 | 0 |
+| Temporal Analysis (TEMP) | 3 | 2 | 0 | 1 | 0 |
+| Supply Chain Risk (SCR) | 9 | 5 | 0 | 3 | 1 |
+| Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 | 0 |
+| Provenance / Build (PROV) | 4 | 4 | 0 | 0 | 0 |
+| Repository / VCS (VCS) | 2 | 2 | 0 | 0 | 0 |
+| Package Set (SET) | 1 | 1 | 0 | 0 | 0 |
+| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 |
+| Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 | 0 |
+| **TOTAL** | **58** | **48** | **3** | **4** | **3** |
 
-**Note:** PASS, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
+**Note:** PASS, ONTOLOGY-COMPLETE, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ONTOLOGY-COMPLETE means the ontology and an enricher both exist but the enricher has not been run against production. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
 
 ---
 
@@ -2293,6 +2294,7 @@ CQ statuses use the following terms. Platform reports should use the same vocabu
 | Status | Meaning |
 |--------|---------|
 | **PASS** | The ontology vocabulary supports the query and data sources for all required properties are expected to be available or already populated. Does not guarantee end-to-end execution against production — use the validation harness for that. |
+| **ONTOLOGY-COMPLETE** | The ontology vocabulary is complete and an enricher exists in the platform repo (pg-collect) that emits the required triples, but the enricher has not yet been run against production data. Unblocking is a pipeline-operations task, not an ontology task. |
 | **ADVISORY-SIDE SATISFIED** | Two-sided CQ where advisory-side data is populated (e.g., `advisoryForPackage`, `advisoryDate`), but vulnerability-side prerequisites (`publishedDate`, `hasCVSSScore`, `hasAffectedRange`) are not yet available for the relevant ecosystem. |
 | **VULNERABILITY-SIDE SATISFIED** | Two-sided CQ where vulnerability-side data is populated, but advisory-side prerequisites are not yet available. |
 | **BLOCKED** | A required data source has no authoritative provider identified, or a required property is formally unsupported. |
