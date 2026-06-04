@@ -317,6 +317,38 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 
 ---
 
+### DD-REL: Reified Package Relationships with Epistemic Qualifiers
+
+**Decision:** Add `PackageRelationship` as a reified cross-ecosystem identity link with `matchMethod` and `matchConfidence`, complementing the existing `crossDistributionAlternative` and `upstreamEquivalent` shortcut properties.
+
+**Rationale:** The shortcut properties assert clean equivalence but provide no evidence for how the equivalence was established or how reliable it is. ecosyste.ms/advisories tracks `match_kind` (repo_fork, likely_fork, repackage, name_match) because identity matching across ecosystems is inherently uncertain. A `crossDistributionAlternative` link established by Repology project mapping (confidence ~0.95) is qualitatively different from one established by name heuristic (confidence ~0.6). The reification makes this distinction queryable without breaking existing shortcut-based queries.
+
+**Relationship to existing properties:** `crossDistributionAlternative` and `upstreamEquivalent` remain as unqualified convenience shortcuts. `PackageRelationship` provides the qualified version when evidence matters. The two models coexist — parallel to the `directlyDependsOn` / `hasDependency` dual pattern.
+
+**Source-side enforcement:** SHACL includes a SPARQL constraint requiring every `PackageRelationship` to be linked from at least one `PackageIdentity` via `hasPackageRelationship`, preventing orphaned relationship nodes.
+
+---
+
+### DD-TAX: Taxonomy as SKOS, Not OWL Classes
+
+**Decision:** Model the OSS Taxonomy as a SKOS concept scheme with `skos:Collection` per facet, not as OWL class hierarchies.
+
+**Rationale:** Taxonomy terms are classification labels, not ontological types. A package classified as `role:framework` does not become a member of a `Framework` class — it carries a tag. SKOS is the W3C standard for exactly this use case: controlled vocabularies, thesauri, and classification systems. Using SKOS keeps the taxonomy editable (add/remove terms without OWL reasoning impact), aligns with the CodeMeta community direction (ecosyste.ms is working with CodeMeta on structured taxonomy support), and allows multiple classifications per facet without multiple inheritance problems.
+
+**Alternative rejected:** OWL subclasses of `Package` (e.g., `FrameworkPackage`, `LibraryPackage`). This would force single-class assignment (or use multiple inheritance), create a combinatorial explosion of classes, and conflate classification with identity.
+
+---
+
+### DD-EPSS: EPSS as Reified Assessment
+
+**Decision:** Model EPSS as a reified `EPSSAssessment` class with timestamp, rather than flat properties on `Vulnerability`.
+
+**Rationale:** EPSS scores are temporal predictions that change daily as FIRST.org updates their model with new exploit activity data. A flat `epssScore` property would imply a static value. The reification pattern mirrors `CVSSScore` and allows storing historical EPSS assessments to track how exploit probability evolves over a vulnerability's lifetime. ecosyste.ms/advisories stores only the latest score; our model supports the full timeline.
+
+**Alternative rejected:** Flat properties (`sec:epssScore`, `sec:epssPercentile` directly on `Vulnerability`). Simpler but loses temporal dimension. If the pipeline only ever stores the latest score, the reification degrades gracefully to a single assessment per vulnerability.
+
+---
+
 ### DD-UO-1: Upper Ontology Non-Alignment
 
 **Decision:** PackageGraph does not align with BFO or DOLCE. It references them as evaluated alternatives, not as imports or formal alignments.

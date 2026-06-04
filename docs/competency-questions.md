@@ -2066,6 +2066,202 @@ WHERE {
 
 ---
 
+## Domain: Package Identity (PID)
+
+### CQ-PID-01: High-Confidence Cross-Ecosystem Matches
+
+**Question:** Which Fedora RPM packages have verified upstream equivalents in PyPI with confidence > 0.9?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?fedoraName ?pypiName ?confidence ?method
+WHERE {
+  ?fedoraId a pkg:PackageIdentity ;
+            pkg:identityName ?fedoraName ;
+            pkg:hasPackageRelationship ?rel .
+  ?rel pkg:relationshipTarget ?pypiId ;
+       pkg:matchMethod ?methodConcept ;
+       pkg:matchConfidence ?confidence .
+  ?methodConcept skos:prefLabel ?method .
+  ?pypiId pkg:identityName ?pypiName .
+
+  ?fedoraPkg pkg:isVersionOf ?fedoraId ;
+             pkg:partOfRelease/^pkg:hasRelease/rdfs:label "Fedora" .
+
+  FILTER(?confidence > "0.9"^^xsd:decimal)
+}
+ORDER BY DESC(?confidence)
+```
+
+**Expected Columns:** fedoraName (string), pypiName (string), confidence (decimal), method (string)
+
+**Exercises:** PackageRelationship, hasPackageRelationship, relationshipTarget, matchMethod, matchConfidence, MatchMethodScheme
+
+**Status:** BLOCKED — requires cross-ecosystem enricher
+
+---
+
+## Domain: Software Classification (CLASS)
+
+### CQ-CLASS-01: Web Frameworks with Unpatched CVEs
+
+**Question:** Which packages classified as web frameworks (role:framework + domain:web-development) have unpatched CVEs?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX tax: <https://purl.org/packagegraph/ontology/taxonomy#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?projectName ?cveId ?cvssScore
+WHERE {
+  ?upstream a pkg:UpstreamProject ;
+            pkg:projectName ?projectName ;
+            pkg:hasClassification tax:role-framework ;
+            pkg:hasClassification tax:domain-web-development .
+  ?identity pkg:hasUpstreamProject ?upstream .
+  ?vuln sec:affectsPackage ?identity ;
+        sec:cveId ?cveId .
+  OPTIONAL { ?vuln sec:hasCVSSScore/sec:baseScore ?cvssScore }
+  FILTER NOT EXISTS {
+    ?advisory sec:addressesVulnerability ?vuln .
+  }
+}
+ORDER BY DESC(?cvssScore)
+```
+
+**Expected Columns:** projectName (string), cveId (string), cvssScore (decimal or UNDEF)
+
+**Exercises:** hasClassification, UpstreamProject, taxonomy concepts, security cross-domain join
+
+**Status:** BLOCKED — requires taxonomy classification enricher
+
+---
+
+### CQ-CLASS-02: Taxonomy Facet Distribution
+
+**Question:** What is the distribution of taxonomy classifications across all classified upstream projects, grouped by facet?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX tax: <https://purl.org/packagegraph/ontology/taxonomy#>
+
+SELECT ?facetLabel ?termLabel (COUNT(DISTINCT ?subject) AS ?count)
+WHERE {
+  ?subject pkg:hasClassification ?term .
+  ?term skos:inScheme tax:TaxonomyScheme ;
+        skos:prefLabel ?termLabel .
+  ?facet skos:member ?term ;
+         skos:prefLabel ?facetLabel .
+}
+GROUP BY ?facetLabel ?termLabel
+ORDER BY ?facetLabel DESC(?count)
+```
+
+**Expected Columns:** facetLabel (string), termLabel (string), count (integer)
+
+**Exercises:** hasClassification, TaxonomyScheme, skos:Collection membership, faceted aggregation
+
+**Status:** BLOCKED — requires taxonomy classification enricher
+
+---
+
+## Domain: Exploit Risk Assessment (ERA)
+
+### CQ-ERA-01: EPSS-Ranked Unpatched Vulnerabilities
+
+**Question:** Which unpatched vulnerabilities affecting Fedora 43 have an EPSS probability > 0.5?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cveId ?packageName ?epssScore ?cvssScore
+WHERE {
+  ?vuln sec:cveId ?cveId ;
+        sec:affectsPackage ?identity ;
+        sec:hasEPSSAssessment ?epss ;
+        sec:hasCVSSScore ?cvss .
+  ?epss sec:epssScore ?epssScore ;
+        sec:epssAssessmentDate ?epssDate .
+  ?cvss sec:baseScore ?cvssScore .
+  ?identity pkg:identityName ?packageName .
+
+  ?package pkg:isVersionOf ?identity ;
+           pkg:partOfRelease ?release .
+  ?release ^pkg:hasRelease/rdfs:label "Fedora" ;
+           pkg:releaseVersion "43" .
+
+  FILTER(?epssScore > "0.5"^^xsd:decimal)
+
+  # Most recent EPSS assessment
+  FILTER NOT EXISTS {
+    ?vuln sec:hasEPSSAssessment ?newerEpss .
+    ?newerEpss sec:epssAssessmentDate ?newerDate .
+    FILTER(?newerDate > ?epssDate)
+  }
+
+  # Not patched
+  FILTER NOT EXISTS {
+    ?advisory sec:addressesVulnerability ?vuln ;
+              sec:advisoryForPackage ?package .
+  }
+}
+ORDER BY DESC(?epssScore)
+```
+
+**Expected Columns:** cveId (string), packageName (string), epssScore (decimal), cvssScore (decimal)
+
+**Exercises:** EPSSAssessment, hasEPSSAssessment, epssScore, epssAssessmentDate, temporal most-recent pattern
+
+**Status:** BLOCKED — requires EPSS enricher (platform team)
+
+---
+
+### CQ-ERA-02: EPSS vs CVSS Disagreement
+
+**Question:** Which vulnerabilities have high EPSS (> 0.7) but low CVSS (< 4.0), or vice versa?
+
+**SPARQL:**
+```sparql
+PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?cveId ?epssScore ?cvssScore
+WHERE {
+  ?vuln sec:cveId ?cveId ;
+        sec:hasEPSSAssessment ?epss ;
+        sec:hasCVSSScore ?cvss .
+  ?epss sec:epssScore ?epssScore .
+  ?cvss sec:cvssVersion "3.1" ;
+        sec:baseScore ?cvssScore .
+  FILTER(
+    (?epssScore > "0.7"^^xsd:decimal && ?cvssScore < "4.0"^^xsd:decimal) ||
+    (?epssScore < "0.1"^^xsd:decimal && ?cvssScore > "9.0"^^xsd:decimal)
+  )
+}
+ORDER BY DESC(?epssScore)
+```
+
+**Expected Columns:** cveId (string), epssScore (decimal), cvssScore (decimal)
+
+**Exercises:** EPSSAssessment, CVSSScore, cross-metric disagreement analysis
+
+**Status:** BLOCKED — requires EPSS enricher
+
+---
+
 ## Summary Statistics
 
 | Domain | CQ Count | PASS | ADVISORY-SIDE | BLOCKED |
@@ -2073,6 +2269,9 @@ WHERE {
 | Package Management (PM) | 10 | 10 | 0 | 0 |
 | Licensing (LIC) | 3 | 3 | 0 | 0 |
 | Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 |
+| Package Identity (PID) | 1 | 0 | 0 | 1 |
+| Software Classification (CLASS) | 2 | 0 | 0 | 2 |
+| Exploit Risk Assessment (ERA) | 2 | 0 | 0 | 2 |
 | Temporal Analysis (TEMP) | 3 | 2 | 1 | 0 |
 | Supply Chain Risk (SCR) | 9 | 5 | 3 | 1 |
 | Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 |
@@ -2081,7 +2280,7 @@ WHERE {
 | Package Set (SET) | 1 | 1 | 0 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 |
 | Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 |
-| **TOTAL** | **53** | **48** | **4** | **1** |
+| **TOTAL** | **58** | **48** | **4** | **6** |
 
 **Note:** PASS, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
 
