@@ -333,6 +333,13 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:isDefinedBy : ;
     rdfs:range skos:Concept .
 
+:hasClassification a owl:ObjectProperty ;
+    rdfs:label "has classification"@en ;
+    IAO:0000115 "Associates a package identity or upstream project with a classification term from a controlled taxonomy. The range is skos:Concept — terms are organized in faceted SKOS concept schemes (domain, role, function, audience, layer, technology). Multiple classifications per facet are expected."@en ;
+    rdfs:comment "Links a package identity or upstream project to a taxonomy classification term"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:range skos:Concept .
+
 :ecosystemPackage a owl:ObjectProperty ;
     rdfs:label "ecosystem package"@en ;
     IAO:0000115 "Links an upstream project to package identities in various ecosystems (PyPI, npm, Cargo, etc.). Enables queries like 'what packages from different ecosystems come from the same project'."@en ;
@@ -1472,6 +1479,45 @@ xsd:date a rdfs:Datatype .
     rdfs:isDefinedBy : ;
     rdfs:range xsd:anyURI .
 
+:PackageRelationship a owl:Class ;
+    rdfs:label "Package Relationship"@en ;
+    IAO:0000115 "A reified relationship between two package identities that captures the method and confidence of the identity match. Enables epistemic qualification of cross-ecosystem equivalence assertions — distinguishing verified upstream linkage from heuristic name matching."@en ;
+    rdfs:comment "A qualified cross-ecosystem package identity relationship"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf owl:Thing .
+
+:hasPackageRelationship a owl:ObjectProperty ;
+    rdfs:label "has package relationship"@en ;
+    IAO:0000115 "Associates a package identity with a reified cross-ecosystem relationship that includes match method and confidence."@en ;
+    rdfs:comment "Links a package identity to a qualified relationship with another package"@en ;
+    rdfs:domain :PackageIdentity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageRelationship .
+
+:relationshipTarget a owl:ObjectProperty ;
+    rdfs:label "relationship target"@en ;
+    IAO:0000115 "The target package identity of a cross-ecosystem relationship."@en ;
+    rdfs:comment "The other package identity in the relationship"@en ;
+    rdfs:domain :PackageRelationship ;
+    rdfs:isDefinedBy : ;
+    rdfs:range :PackageIdentity .
+
+:matchMethod a owl:ObjectProperty ;
+    rdfs:label "match method"@en ;
+    IAO:0000115 "The method used to establish the cross-ecosystem identity relationship, as a SKOS concept from the MatchMethodScheme. Values include: upstream-verified (confirmed via upstream project metadata), repository-shared (same upstream VCS repository), name-heuristic (name similarity matching), fork-detected (repository fork relationship), repackage-detected (repackaged under different name)."@en ;
+    rdfs:comment "How the cross-ecosystem match was established"@en ;
+    rdfs:domain :PackageRelationship ;
+    rdfs:isDefinedBy : ;
+    rdfs:range skos:Concept .
+
+:matchConfidence a owl:DatatypeProperty ;
+    rdfs:label "match confidence"@en ;
+    IAO:0000115 "A confidence score (0.0 to 1.0) indicating the reliability of the cross-ecosystem identity match. 1.0 indicates verified equivalence; lower values indicate heuristic or probabilistic matches."@en ;
+    rdfs:comment "Confidence score for the identity match (0.0-1.0)"@en ;
+    rdfs:domain :PackageRelationship ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:decimal .
+
 :Package a owl:Class ;
     rdfs:label "Package"@en ;
     IAO:0000115 "A discrete unit of software represented in package repository metadata, typically containing executable code, configuration files, documentation, and metadata. Most packages can be installed, updated, or removed by a package management system, though some entries (such as phantom packages) exist only as metadata references."@en ;
@@ -1518,7 +1564,7 @@ xsd:date a rdfs:Datatype .
     owl:members ( :Person :Package :Distribution :Repository ) .
 
 [] a owl:AllDisjointClasses ;
-    owl:members ( :Dependency :Package :Version ) .
+    owl:members ( :Dependency :Package :PackageRelationship :Version ) .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :Package :Distribution :Repository :License :Architecture :Capability ) .

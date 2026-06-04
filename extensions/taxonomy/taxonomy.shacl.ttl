@@ -1,0 +1,19 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix tax: <https://purl.org/packagegraph/ontology/taxonomy#> .
+
+<https://purl.org/packagegraph/ontology/taxonomy/shapes>
+    a owl:Ontology ;
+    rdfs:label "Taxonomy SHACL Shapes"@en .
+
+tax:ClassificationShape a sh:NodeShape ;
+    sh:targetSubjectsOf pkg:hasClassification ;
+    sh:property [
+        sh:path pkg:hasClassification ;
+        sh:class skos:Concept ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Classification targets must be SKOS Concepts identified by IRI."@en ;
+    ] .

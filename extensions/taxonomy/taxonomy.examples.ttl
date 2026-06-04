@@ -1,0 +1,28 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix tax: <https://purl.org/packagegraph/ontology/taxonomy#> .
+
+# OpenSSL classified by taxonomy
+<https://packagegraph.github.io/d/upstream/openssl>
+    pkg:hasClassification tax:domain-security ,
+                          tax:function-encryption ,
+                          tax:role-library ,
+                          tax:layer-infrastructure ,
+                          tax:audience-developer .
+
+# Django classified by taxonomy
+<https://packagegraph.github.io/d/upstream/django>
+    pkg:hasClassification tax:domain-web-development ,
+                          tax:role-framework ,
+                          tax:function-api-development ,
+                          tax:function-authentication ,
+                          tax:layer-backend ,
+                          tax:audience-developer ,
+                          tax:audience-enterprise .
+
+# systemd classified by taxonomy
+<https://packagegraph.github.io/d/upstream/systemd>
+    pkg:hasClassification tax:domain-operating-systems ,
+                          tax:role-service ,
+                          tax:function-process-management ,
+                          tax:layer-infrastructure ,
+                          tax:audience-system-administrator .
