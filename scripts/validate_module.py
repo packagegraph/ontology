@@ -14,6 +14,7 @@ NS_TO_PATH = {
     "https://purl.org/packagegraph/ontology/slsa#": "extensions/slsa/slsa.ttl",
     "https://purl.org/packagegraph/ontology/dq#": "extensions/dq/dq.ttl",
     "https://purl.org/packagegraph/ontology/attestation#": "extensions/attestation/attestation.ttl",
+    "https://purl.org/packagegraph/ontology/taxonomy#": "extensions/taxonomy/taxonomy.ttl",
     "https://purl.org/packagegraph/ontology/rpm#": "ecosystems/rpm/rpm.ttl",
 }
 

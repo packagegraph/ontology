@@ -124,14 +124,15 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 | **snap** | `snap#` | Ubuntu Snap apps — confinement, interfaces, tracks |
 | **chocolatey** | `choco#` | Windows packages — NuGet format, PowerShell scripts, shims |
 
-### Extensions (5 modules)
+### Extensions (6 modules)
 
 | Module | Namespace | Description |
 |--------|-----------|-------------|
-| **security** | `sec#` | CVE vulnerabilities, OSV ranges, CVSS scores, security advisories, patch provenance |
+| **security** | `sec#` | CVE vulnerabilities, OSV ranges, CVSS/EPSS scores, security advisories, patch provenance |
 | **vcs** | `vcs#` | Git repositories, commits, branches, tags, pull requests, contributor activity |
 | **slsa** | `slsa#` | Build provenance attestations, SLSA levels, builder identity |
 | **metrics** | `met#` | Code analysis — lines of code, cyclomatic complexity, language breakdowns |
+| **taxonomy** | `tax#` | OSS software taxonomy — 6-facet SKOS classification (domain, role, function, audience, layer, technology) |
 | **dq** | `dq#` | Data quality issues and metadata validation |
 
 ---
@@ -191,11 +192,12 @@ ontology/
 │   ├── maven/maven.ttl             # Java/JVM
 │   └── ... (22 more)
 │
-├── extensions/                     # 5 extension modules
-│   ├── security/security.ttl       # Vulnerabilities, CVEs, advisories
+├── extensions/                     # 6 extension modules
+│   ├── security/security.ttl       # Vulnerabilities, CVEs, EPSS, advisories
 │   ├── vcs/vcs.ttl                 # Git, commits, repositories
 │   ├── slsa/slsa.ttl               # Build provenance
 │   ├── metrics/metrics.ttl         # Code analysis metrics
+│   ├── taxonomy/taxonomy.ttl       # OSS software taxonomy (SKOS)
 │   └── dq/dq.ttl                   # Data quality
 │
 ├── references/

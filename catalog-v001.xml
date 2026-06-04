@@ -9,6 +9,7 @@
     <uri name="https://purl.org/packagegraph/ontology/metrics#" uri="extensions/metrics/metrics.ttl"/>
     <uri name="https://purl.org/packagegraph/ontology/slsa#" uri="extensions/slsa/slsa.ttl"/>
     <uri name="https://purl.org/packagegraph/ontology/dq#" uri="extensions/dq/dq.ttl"/>
+    <uri name="https://purl.org/packagegraph/ontology/taxonomy#" uri="extensions/taxonomy/taxonomy.ttl"/>
 
     <!-- Ecosystems: System-level -->
     <uri name="https://purl.org/packagegraph/ontology/rpm#" uri="ecosystems/rpm/rpm.ttl"/>
