@@ -121,3 +121,24 @@ sec:VulnerabilityShape a sh:NodeShape ;
             sh:path sec:hasCVSSScore ] ;
     sh:targetClass sec:Vulnerability .
 
+sec:EPSSAssessmentShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:decimal ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1.0 ;
+            sh:message "An EPSS assessment must have exactly one score between 0.0 and 1.0."@en ;
+            sh:minCount 1 ;
+            sh:minInclusive 0.0 ;
+            sh:path sec:epssScore ],
+        [ sh:datatype xsd:decimal ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1.0 ;
+            sh:message "An EPSS percentile must be between 0.0 and 1.0."@en ;
+            sh:minInclusive 0.0 ;
+            sh:path sec:epssPercentile ],
+        [ sh:datatype xsd:date ;
+            sh:maxCount 1 ;
+            sh:message "An EPSS assessment must have exactly one assessment date."@en ;
+            sh:minCount 1 ;
+            sh:path sec:epssAssessmentDate ] ;
+    sh:targetClass sec:EPSSAssessment .
+

@@ -427,6 +427,47 @@ sec:CVSSScore a owl:Class ;
     rdfs:isDefinedBy sec: ;
     rdfs:subClassOf owl:Thing .
 
+sec:EPSSAssessment a owl:Class ;
+    rdfs:label "EPSS Assessment"@en ;
+    IAO:0000115 "A point-in-time Exploit Prediction Scoring System assessment. EPSS scores change daily as exploit activity data is updated — reification with a timestamp captures when the prediction was made. Published by FIRST.org."@en ;
+    rdfs:comment "A timestamped EPSS exploit probability assessment"@en ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:seeAlso <https://www.first.org/epss/> ;
+    rdfs:subClassOf owl:Thing .
+
+sec:hasEPSSAssessment a owl:ObjectProperty ;
+    rdfs:label "has EPSS assessment"@en ;
+    IAO:0000115 "Associates a vulnerability with a point-in-time EPSS exploit prediction assessment. Multiple assessments may exist per vulnerability as EPSS scores are updated daily."@en ;
+    rdfs:comment "Links a vulnerability to a timestamped EPSS assessment"@en ;
+    rdfs:domain sec:Vulnerability ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range sec:EPSSAssessment .
+
+sec:epssScore a owl:DatatypeProperty ;
+    rdfs:label "EPSS score"@en ;
+    IAO:0000115 "The probability (0.0 to 1.0) that the vulnerability will be exploited in the wild within 30 days, as predicted by the FIRST.org EPSS model."@en ;
+    rdfs:comment "Exploit probability (0.0-1.0) within 30 days"@en ;
+    rdfs:domain sec:EPSSAssessment ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:decimal .
+
+sec:epssPercentile a owl:DatatypeProperty ;
+    rdfs:label "EPSS percentile"@en ;
+    IAO:0000115 "The percentile rank of this vulnerability's EPSS score relative to all scored vulnerabilities (0.0 to 1.0). A percentile of 0.95 means the vulnerability scores higher than 95% of all vulnerabilities."@en ;
+    rdfs:comment "Percentile rank among all scored vulnerabilities (0.0-1.0)"@en ;
+    rdfs:domain sec:EPSSAssessment ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:decimal .
+
+sec:epssAssessmentDate a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "EPSS assessment date"@en ;
+    IAO:0000115 "The date when this EPSS score was computed. EPSS is updated daily — different assessment dates may yield different scores for the same CVE."@en ;
+    rdfs:comment "Date the EPSS score was computed"@en ;
+    rdfs:domain sec:EPSSAssessment ;
+    rdfs:isDefinedBy sec: ;
+    rdfs:range xsd:date .
+
 sec:SecurityAdvisory a owl:Class ;
     rdfs:label "Security Advisory"@en ;
     IAO:0000115 "A vendor-issued security advisory (such as RHSA, DSA, or GLSA) that documents and addresses one or more known vulnerabilities, providing guidance and fixes for affected packages."@en ;
@@ -471,5 +512,5 @@ sec: a owl:Ontology ;
     owl:versionInfo "0.10.0" .
 
 [] a owl:AllDisjointClasses ;
-    owl:members ( pkg:Package sec:Vulnerability sec:SecurityAdvisory sec:AffectedRange sec:RangeEvent sec:CVSSScore sec:CVE sec:PatchActivity ) .
+    owl:members ( pkg:Package sec:Vulnerability sec:SecurityAdvisory sec:AffectedRange sec:RangeEvent sec:CVSSScore sec:EPSSAssessment sec:CVE sec:PatchActivity ) .
 

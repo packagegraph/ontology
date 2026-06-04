@@ -161,3 +161,19 @@ ex:cve-2024-1234-cvss-v31 a sec:CVSSScore ;
 
 # Update existing CVE to use reified CVSS
 ex:cve-2024-1234 sec:hasCVSSScore ex:cve-2024-1234-cvss-v2 , ex:cve-2024-1234-cvss-v31 .
+
+
+# ============================================================
+# EPSS Exploit Prediction Scoring Examples
+# ============================================================
+
+<https://packagegraph.github.io/d/vuln/CVE-2024-6119> a sec:Vulnerability ;
+    rdfs:label "CVE-2024-6119" ;
+    sec:cveId "CVE-2024-6119" ;
+    sec:summary "Possible denial of service in X.509 name checks in OpenSSL" ;
+    sec:hasEPSSAssessment <https://packagegraph.github.io/d/epss/CVE-2024-6119/2026-06-04> .
+
+<https://packagegraph.github.io/d/epss/CVE-2024-6119/2026-06-04> a sec:EPSSAssessment ;
+    sec:epssScore "0.00532"^^xsd:decimal ;
+    sec:epssPercentile "0.72100"^^xsd:decimal ;
+    sec:epssAssessmentDate "2026-06-04"^^xsd:date .
