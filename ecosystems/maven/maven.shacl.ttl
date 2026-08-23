@@ -15,3 +15,16 @@ maven:MavenArtifactShape a sh:NodeShape ;
             sh:path maven:artifactId ] ;
     sh:targetClass maven:MavenArtifact .
 
+maven:DependencyExclusionShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A dependency exclusion must have exactly one excluded groupId."@en ;
+            sh:minCount 1 ;
+            sh:path maven:excludedGroupId ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:message "A dependency exclusion must have exactly one excluded artifactId."@en ;
+            sh:minCount 1 ;
+            sh:path maven:excludedArtifactId ] ;
+    sh:targetClass maven:DependencyExclusion .
+

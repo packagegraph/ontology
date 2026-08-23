@@ -291,10 +291,10 @@ opkg: a owl:Ontology ;
     owl:imports pkg: ;
     dcterms:modified "2026-04-27"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/opkg/0.10.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/opkg/0.11.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/opkg/0.11.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/opkg/0.12.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/opkg/shapes> ;
 
-    owl:versionInfo "0.11.0" .
+    owl:versionInfo "0.12.0" .

@@ -136,3 +136,49 @@ ex:javax-servlet-api-identity a pkg:PackageIdentity ;
 ex:jakarta-servlet-api-identity a pkg:PackageIdentity ;
   pkg:identityName "jakarta.servlet:jakarta.servlet-api" ;
   pkg:purl "pkg:maven/jakarta.servlet/jakarta.servlet-api"^^xsd:anyURI .
+
+# ============================================================
+# Dependency Exclusion Example (CQ-MVN-06)
+# ============================================================
+# An application artifact depends on spring-beans but excludes
+# commons-logging from being inherited transitively. Exclusions
+# are typically declared by consuming projects, not by Spring itself.
+
+ex:myapp a pkg:Package, maven:MavenArtifact ;
+  pkg:packageName "com.example:myapp" ;
+  maven:groupId "com.example" ;
+  maven:artifactId "myapp" ;
+  pkg:hasVersion ex:myapp-version ;
+  rdfs:label "myapp (example application)" .
+
+ex:myapp-version a pkg:Version ;
+  pkg:versionString "1.0.0" .
+
+ex:myapp-spring-beans-dep a pkg:Dependency ;
+  pkg:dependencyTarget ex:spring-beans-identity ;
+  pkg:dependencyType pkg:dependsOn ;
+  maven:hasExclusion ex:excl-commons-logging ;
+  rdfs:label "myapp requires spring-beans (excluding commons-logging)" .
+
+ex:excl-commons-logging a maven:DependencyExclusion ;
+  maven:excludedGroupId "commons-logging" ;
+  maven:excludedArtifactId "commons-logging" .
+
+# Wildcard exclusion: myapp depends on guava but excludes all of
+# com.google.code.findbugs (checker-qual, jsr305, etc.)
+ex:guava-identity a pkg:PackageIdentity ;
+  pkg:identityName "com.google.guava:guava" ;
+  pkg:purl "pkg:maven/com.google.guava/guava"^^xsd:anyURI .
+
+ex:myapp-guava-dep a pkg:Dependency ;
+  pkg:dependencyTarget ex:guava-identity ;
+  pkg:dependencyType pkg:dependsOn ;
+  maven:hasExclusion ex:excl-findbugs-wildcard ;
+  rdfs:label "myapp requires guava (excluding all findbugs artifacts)" .
+
+ex:excl-findbugs-wildcard a maven:DependencyExclusion ;
+  maven:excludedGroupId "com.google.code.findbugs" ;
+  maven:excludedArtifactId "*" .
+
+ex:myapp pkg:hasDependency ex:myapp-spring-beans-dep ,
+                           ex:myapp-guava-dep .

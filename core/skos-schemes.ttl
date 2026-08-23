@@ -11,8 +11,8 @@ pkg:skos-schemes a owl:Ontology ;
     rdfs:label "PackageGraph SKOS Concept Schemes"@en ;
     dcterms:description "Shared SKOS concept schemes for dependency types, severity levels, advisory categories, checksum algorithms, and related controlled vocabularies used across PackageGraph modules." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/skos-schemes/0.11.0> ;
-    owl:versionInfo "0.11.0" .
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/skos-schemes/0.12.0> ;
+    owl:versionInfo "0.12.0" .
 
 pkg:algo-md5 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;

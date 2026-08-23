@@ -5,6 +5,22 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-08-22
+
+Maven dependency exclusion vocabulary.
+
+### Added
+- **`maven:DependencyExclusion`** (Class) — represents a Maven POM `<exclusion>` element attached to a specific dependency declaration, not globally to the declaring artifact.
+- **`maven:hasExclusion`** (ObjectProperty, domain: `pkg:Dependency`, range: `maven:DependencyExclusion`) — links a reified dependency to its exclusions.
+- **`maven:excludedGroupId`** / **`maven:excludedArtifactId`** (DatatypeProperty) — the Maven coordinates of the excluded transitive dependency. Wildcard `*` values are representable.
+- **`maven:DependencyExclusionShape`** (SHACL) — validates exactly one `excludedGroupId` and one `excludedArtifactId` per exclusion.
+- **Exclusion example** in `maven.examples.ttl` — `spring-beans → spring-core` with `commons-logging` excluded.
+- **CQ-MVN-06** — "Which transitive dependencies does an artifact exclude, and through which direct dependency?"
+- **CQ-MVN-07** — "Which artifacts exclude a specific coordinate?" (reverse lookup by excluded groupId:artifactId)
+- **CQ-MVN-08** — "Which dependencies use wildcard exclusions?" (exercises `*` representability) (CQ total: 68)
+
+Resolves: #1. Related: `packagegraph/platform#3`.
+
 ## [0.11.0] - 2026-08-22
 
 Corrective semantic revision: dependency properties now target `PackageEntity` instead of `Package`, stopping incorrect type inference on identity targets.
