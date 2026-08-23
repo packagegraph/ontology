@@ -1,6 +1,6 @@
 # PackageGraph Ontology
 
-**Version:** 0.10.0
+**Version:** 0.11.0
 **License:** CC0 1.0 Universal
 **Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 35/35 Modules SHACL Valid | ✅ OWL 2 RL Reasoning Verified
 
@@ -51,7 +51,19 @@ uv pip install rdflib pyshacl
 
 ---
 
-## What's New in v0.10.0
+## What's New in v0.11.0
+
+**Corrective semantic revision: dependency target model**
+
+- ✅ **`pkg:PackageEntity`** — common superclass of `Package` and `PackageIdentity` for dependency targeting
+- ✅ **12 property range/domain updates** — dependency properties accept both concrete packages and version-independent identities
+- ✅ **Identity-target example** — `wget → libssl3` exercises `PackageIdentity` as dependency target
+- ✅ **8 OWL 2 RL reasoning tests** — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
+- ✅ **DD-PE-1** — design decision documenting rationale, alternatives, and migration
+
+See [CHANGELOG.md](CHANGELOG.md) for full details and migration guidance.
+
+## What Was New in v0.10.0
 
 **Maven security & VCS integration, academic hardening:**
 
@@ -395,7 +407,7 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.10.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.11.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 
@@ -405,7 +417,7 @@ If you use PackageGraph in academic work, please cite:
   title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution
                   Software Package Analysis},
   year         = {2026},
-  version      = {0.10.0},
+  version      = {0.11.0},
   organization = {PackageGraph Project},
   url          = {https://purl.org/packagegraph/ontology/core}
 }

@@ -165,7 +165,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Indicates a build-time dependency that is required to build the source package but not needed at runtime."@en ;
     rdfs:domain :SourcePackage ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :builtFromSource a owl:AsymmetricProperty,
@@ -193,7 +193,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Indicates a test-time dependency for running the package's test suite"@en ;
     rdfs:domain :SourcePackage ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :checksumAlgorithm a owl:DatatypeProperty,
@@ -299,11 +299,11 @@ dcterms:title a owl:AnnotationProperty ;
 
 :directlyDependsOn a owl:ObjectProperty ;
     rdfs:label "directly depends on"@en ;
-    IAO:0000115 "A direct dependency relationship between packages, providing an efficient query path that bypasses the detailed dependency metadata structure. This property is a materialized convenience shortcut semantically grounded by the property chain axiom: if X hasDependency D and D dependencyTarget Y, then X directlyDependsOn Y. For version constraint details, traverse the Dependency reification."@en ;
+    IAO:0000115 "A direct dependency relationship between a package and a package entity, providing an efficient query path that bypasses the detailed dependency metadata structure. This property is a materialized convenience shortcut semantically grounded by the property chain axiom: if X hasDependency D and D dependencyTarget Y, then X directlyDependsOn Y. The target may be a concrete Package or a version-independent PackageIdentity. For version constraint details, traverse the Dependency reification."@en ;
     rdfs:comment "Materialized convenience shortcut of the hasDependency → dependencyTarget chain. For version constraint details, traverse the Dependency reification. NOTE: owl:propertyChainAxiom requires OWL 2 reasoning to materialize — Fuseki without OWL reasoning will not auto-derive this property from hasDependency chains."@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn ;
     owl:inverseOf :isDirectDependencyOf ;
     owl:propertyChainAxiom ( :hasDependency :dependencyTarget ) .
@@ -362,7 +362,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Indicates that this package enhances another package's functionality"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :epoch a owl:DatatypeProperty ;
@@ -679,7 +679,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Indicates a pre-installation dependency (stronger than regular depends)"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :projectRepository a owl:ObjectProperty ;
@@ -728,7 +728,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Suggests installing another package for enhanced functionality"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :release a owl:DatatypeProperty ;
@@ -841,7 +841,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Suggests another package that may be useful in some scenarios"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :supplements a owl:ObjectProperty ;
@@ -850,7 +850,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:comment "Indicates that this package supplements another package"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
 :supportedArchitecture a owl:ObjectProperty ;
@@ -1020,11 +1020,11 @@ xsd:duration a rdfs:Datatype .
 
 :dependencyTarget a owl:ObjectProperty ;
     rdfs:label "dependency target"@en ;
-    IAO:0000115 "Identifies the specific package that satisfies a dependency, linking the reified Dependency to its target Package."@en ;
-    rdfs:comment "The package that a dependency relationship targets"@en ;
+    IAO:0000115 "Identifies the package or package identity that satisfies a dependency, linking the reified Dependency to its target PackageEntity."@en ;
+    rdfs:comment "The package or package identity that a dependency relationship targets"@en ;
     rdfs:domain :Dependency ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package .
+    rdfs:range :PackageEntity .
 
 :hasContributor a owl:ObjectProperty ;
     rdfs:label "has contributor"@en ;
@@ -1069,9 +1069,9 @@ xsd:duration a rdfs:Datatype .
 
 :isDirectDependencyOf a owl:ObjectProperty ;
     rdfs:label "is direct dependency of"@en ;
-    IAO:0000115 "The inverse relationship of directlyDependsOn, indicating that this package is a direct dependency of another package. Critical for blast radius analysis - enables efficient queries for 'what directly depends on this package'."@en ;
-    rdfs:comment "Indicates that this package is a direct dependency of another package"@en ;
-    rdfs:domain :Package ;
+    IAO:0000115 "The inverse relationship of directlyDependsOn, indicating that this package or package identity is a direct dependency of another package. Critical for blast radius analysis - enables efficient queries for 'what directly depends on this package'."@en ;
+    rdfs:comment "Indicates that this package or package identity is a direct dependency of another package"@en ;
+    rdfs:domain :PackageEntity ;
     rdfs:isDefinedBy : ;
     rdfs:range :Package ;
     rdfs:subPropertyOf :isDependencyOf .
@@ -1234,9 +1234,9 @@ xsd:duration a rdfs:Datatype .
 
 :isDependencyOf a owl:ObjectProperty ;
     rdfs:label "is dependency of"@en ;
-    IAO:0000115 "The inverse relationship of dependsOn, indicating that this package is required by another package."@en ;
-    rdfs:comment "Indicates that this package is a dependency of another package"@en ;
-    rdfs:domain :Package ;
+    IAO:0000115 "The inverse relationship of dependsOn, indicating that this package or package identity is required by another package."@en ;
+    rdfs:comment "Indicates that this package or package identity is a dependency of another package"@en ;
+    rdfs:domain :PackageEntity ;
     rdfs:isDefinedBy : ;
     rdfs:range :Package .
 
@@ -1420,11 +1420,11 @@ xsd:date a rdfs:Datatype .
 
 :dependsOn a owl:ObjectProperty ;
     rdfs:label "depends on"@en ;
-    IAO:0000115 "A relationship indicating that one package requires another package to be present and functional in order to operate correctly."@en ;
-    rdfs:comment "Indicates that a package requires another package to function"@en ;
+    IAO:0000115 "A relationship indicating that one package requires another package or package identity to be present and functional in order to operate correctly."@en ;
+    rdfs:comment "Indicates that a package requires another package or package identity to function"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
-    rdfs:range :Package ;
+    rdfs:range :PackageEntity ;
     owl:inverseOf :isDependencyOf .
 
 :Distribution a owl:Class ;
@@ -1446,7 +1446,7 @@ xsd:date a rdfs:Datatype .
     IAO:0000115 "A stable, version-independent identifier for a package name within a specific distribution, release, and architecture. BinaryPackage instances link to their identity via isVersionOf. Dependencies point to the identity, enabling direct name-based joins without URI parsing."@en ;
     rdfs:comment "The version-agnostic identity of a package within a distribution and architecture. Dependency targets point to this instead of versioned instances."@en ;
     rdfs:isDefinedBy : ;
-    rdfs:subClassOf owl:Thing .
+    rdfs:subClassOf :PackageEntity .
 
 :PackageLink a owl:Class ;
     rdfs:label "Package Link"@en ;
@@ -1518,6 +1518,13 @@ xsd:date a rdfs:Datatype .
     rdfs:isDefinedBy : ;
     rdfs:range xsd:decimal .
 
+:PackageEntity a owl:Class ;
+    rdfs:label "Package Entity"@en ;
+    IAO:0000115 "The common superclass of Package and PackageIdentity, representing any resource that can participate in a dependency relationship as a target. Introduced to allow dependency properties to accept both version-specific packages and version-independent identities without collapsing their types under RDFS/OWL reasoning."@en ;
+    rdfs:comment "Common superclass of Package and PackageIdentity for dependency targeting"@en ;
+    rdfs:isDefinedBy : ;
+    rdfs:subClassOf prov:Entity .
+
 :Package a owl:Class ;
     rdfs:label "Package"@en ;
     IAO:0000115 "A discrete unit of software represented in package repository metadata, typically containing executable code, configuration files, documentation, and metadata. Most packages can be installed, updated, or removed by a package management system, though some entries (such as phantom packages) exist only as metadata references."@en ;
@@ -1526,8 +1533,7 @@ xsd:date a rdfs:Datatype .
     rdfs:subClassOf [ a owl:Restriction ;
             owl:cardinality "1"^^xsd:nonNegativeInteger ;
             owl:onProperty :packageName ],
-        owl:Thing,
-        prov:Entity .
+        :PackageEntity .
 
 : a owl:Ontology ;
     rdfs:label "Package Management Core Ontology"@en ;
@@ -1547,15 +1553,15 @@ xsd:date a rdfs:Datatype .
         prov:,
         foaf: ;
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
-    dcterms:modified "2026-05-12"^^xsd:date ;
+    dcterms:modified "2026-08-22"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.9.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.10.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.10.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.11.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/core/shapes> ;
 
-    owl:versionInfo "0.10.0" .
+    owl:versionInfo "0.11.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :BinaryPackage :SourcePackage ) .

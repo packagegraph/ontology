@@ -234,8 +234,30 @@ ex:wget-deb pkg:hasDependency ex:wget-glibc-dep ;
 # The inverse:
 ex:glibc-deb pkg:isDirectDependencyOf ex:wget-deb .
 
+# Identity-target dependency: wget depends on the libssl3 PackageIdentity
+# This exercises the PackageEntity range — the dependency target is a
+# version-independent identity rather than a concrete package.
+ex:libssl3-identity a pkg:PackageIdentity ;
+  pkg:identityName "libssl3" ;
+  pkg:purl "pkg:deb/debian/libssl3@3.0.0"^^xsd:anyURI ;
+  rdfs:label "libssl3 Package Identity" .
+
+ex:wget-libssl3-dep a pkg:Dependency ;
+  pkg:dependencyTarget ex:libssl3-identity ;
+  pkg:dependencyType pkg:dependsOn ;
+  pkg:hasVersionConstraint ex:wget-libssl3-constraint ;
+  rdfs:label "wget requires libssl3" .
+
+ex:wget-libssl3-constraint a pkg:VersionConstraint ;
+  pkg:versionConstraintOperator ">=" ;
+  pkg:versionConstraintValue "3.0.0" .
+
+ex:wget-deb pkg:hasDependency ex:wget-libssl3-dep ;
+            pkg:directlyDependsOn ex:libssl3-identity .
+
+ex:libssl3-identity pkg:isDirectDependencyOf ex:wget-deb .
+
 # 3. hasPackage (inverse of isVersionOf)
-# Assuming there's a PackageIdentity for glibc
 ex:glibc-identity a pkg:PackageIdentity ;
   pkg:purl "pkg:deb/debian/libc6@2.38-1"^^xsd:anyURI ;
   pkg:identityName "libc6" ;

@@ -349,6 +349,28 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 
 ---
 
+### DD-PE-1: PackageEntity as Dependency Target Superclass
+
+**Decision:** Introduce `pkg:PackageEntity` as the common superclass of `pkg:Package` and `pkg:PackageIdentity`. Generic dependency properties (`dependsOn`, `directlyDependsOn`, `dependencyTarget`) target `PackageEntity`; their sources remain concrete `Package` instances. Inverse properties (`isDependencyOf`, `isDirectDependencyOf`) widen their domain to `PackageEntity`.
+
+**Problem:** Platform collectors emit dependency targets as `PackageIdentity` resources (version-independent coordinates), but the dependency properties declared `rdfs:range pkg:Package`. Under RDFS/OWL reasoning, any `PackageIdentity` used as a dependency target was incorrectly inferred as `pkg:Package`, collapsing the intended distinction between identities and concrete releases.
+
+**Why a named superclass, not an OWL union?** An anonymous union of `Package` and `PackageIdentity` expresses the allowed set in OWL but is less useful to RDFS-only consumers and more cumbersome in SHACL and SPARQL. A named superclass gives callers a stable query and validation target.
+
+**Why not PackageIdentity-only targets?** Existing core examples and ecosystem properties (Maven, Nix, Conda) intentionally target concrete package subclasses. Making every dependency target exclusively a `PackageIdentity` would invalidate those models.
+
+**prov:Entity promotion:** `PackageEntity rdfs:subClassOf prov:Entity` means `PackageIdentity` becomes a `prov:Entity` by transitivity. This is intentional — PROV-O defines Entity broadly enough to include conceptual things with fixed aspects. Queries targeting `prov:Entity` must be audited.
+
+**Disjointness deferred:** `Package` and `PackageIdentity` are not declared `owl:disjointWith` in this change. Existing reasoned data may contain identity resources with stale `rdf:type pkg:Package` from the old ranges. The first release stops the invalid inference; explicit disjointness can be considered after production data audit.
+
+**Core subproperties:** All seven generic `dependsOn` subproperties (`buildDependsOn`, `checkRequires`, `enhances`, `preDepends`, `recommends`, `suggests`, `supplements`) also widen their ranges to `PackageEntity`. The platform already emits `buildDependsOn` to identity targets; leaving a narrower `Package` range would reintroduce the inference collapse.
+
+**Ecosystem subproperties:** Ecosystem-specific dependency subproperties (e.g., `nix:nixBuildInput` with range `nix:Derivation`) retain their narrower ranges. RDFS range is conjunctive — a target is inferred as both the ecosystem type and `PackageEntity`. These narrower ranges are intentional when the ecosystem always targets concrete packages.
+
+**Version:** Released as ontology v0.11.0 (corrective semantic revision, not conservative extension).
+
+---
+
 ### DD-UO-1: Upper Ontology Non-Alignment
 
 **Decision:** PackageGraph does not align with BFO or DOLCE. It references them as evaluated alternatives, not as imports or formal alignments.
