@@ -130,9 +130,9 @@ pkg:DependencyConsistencyShape a sh:NodeShape ;
     sh:targetSubjectsOf pkg:directlyDependsOn .
 
 pkg:DependencyShape a sh:NodeShape ;
-    sh:property [ sh:class pkg:Package ;
+    sh:property [ sh:class pkg:PackageEntity ;
             sh:maxCount 1 ;
-            sh:message "A dependency must have exactly one target package."@en ;
+            sh:message "A dependency must have exactly one target package entity."@en ;
             sh:minCount 1 ;
             sh:path pkg:dependencyTarget ],
         [ sh:in ( pkg:dependsOn pkg:buildDependsOn pkg:recommends pkg:suggests pkg:enhances pkg:supplements pkg:checkRequires pkg:preDepends pkg:conflicts ) ;

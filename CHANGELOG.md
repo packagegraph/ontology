@@ -5,6 +5,34 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-08-22
+
+Corrective semantic revision: dependency properties now target `PackageEntity` instead of `Package`, stopping incorrect type inference on identity targets.
+
+Discovered during platform collector testing by @luhenry (Ludovic Henry) and filed as ontology issue #2 by @brianredbeard.
+
+### Added
+- **`pkg:PackageEntity`** (Class, subClassOf `prov:Entity`) — common superclass of `Package` and `PackageIdentity`. Dependency properties target this class so that both version-specific packages and version-independent identities are valid targets without collapsing types under RDFS/OWL reasoning.
+- **Identity-target dependency example** in `core/core.examples.ttl` — `wget → libssl3` exercises a dependency whose target is a `PackageIdentity` with a `VersionConstraint`, complementing the existing concrete-target `wget → glibc` example.
+- **8 OWL 2 RL reasoning tests** — property chain for identity and concrete targets, negative assertion (identity not inferred as `Package`), both inverse pairs for identity and concrete targets, `prov:Entity` inference through `PackageEntity`, core subproperty identity-target acceptance.
+- **DD-PE-1** design decision — documents `PackageEntity` rationale, alternatives rejected, inference behavior, and migration handling.
+
+### Changed
+- **`pkg:dependsOn`** range — `pkg:Package` → `pkg:PackageEntity`
+- **`pkg:directlyDependsOn`** range — `pkg:Package` → `pkg:PackageEntity`
+- **`pkg:dependencyTarget`** range — `pkg:Package` → `pkg:PackageEntity`
+- **`pkg:isDependencyOf`** domain — `pkg:Package` → `pkg:PackageEntity`
+- **`pkg:isDirectDependencyOf`** domain — `pkg:Package` → `pkg:PackageEntity`
+- **7 core dependency subproperty ranges** (`buildDependsOn`, `checkRequires`, `enhances`, `preDepends`, `recommends`, `suggests`, `supplements`) — `pkg:Package` → `pkg:PackageEntity`
+- **`pkg:Package`** superclass — removed redundant direct `owl:Thing` and `prov:Entity`; now `rdfs:subClassOf pkg:PackageEntity` (reaches both through `PackageEntity`)
+- **`pkg:PackageIdentity`** superclass — `owl:Thing` → `pkg:PackageEntity` (intentionally promotes to `prov:Entity`)
+- **`pkg:DependencyShape`** — `sh:class` on `dependencyTarget` changed from `pkg:Package` to `pkg:PackageEntity`; diagnostic message updated
+
+### Migration
+- **Entailment change:** Prior ranges/domains on dependency properties incorrectly inferred `rdf:type pkg:Package` on `PackageIdentity` targets. This inference is removed. Previously materialized stale type triples must be cleared or graphs reloaded.
+- **Query impact:** SPARQL queries filtering dependency targets by `rdf:type pkg:Package` must be reviewed — use `pkg:PackageEntity` to match both target types. Queries matching `prov:Entity` will now also match `PackageIdentity` instances.
+- **No triple rewriting:** Existing asserted dependency triples remain valid. Property IRIs are unchanged.
+
 ## [0.10.0] - 2026-05-12
 
 Maven security & VCS integration, academic hardening, and full ecosystem example coverage.
