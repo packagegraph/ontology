@@ -15,8 +15,8 @@ tax: a owl:Ontology ;
     dcterms:source <https://github.com/ecosyste-ms/oss-taxonomy> ;
     dcterms:title "OSS Software Taxonomy"@en ;
     owl:imports pkg: ;
-    owl:versionIRI <https://purl.org/packagegraph/ontology/taxonomy/0.11.0> ;
-    owl:versionInfo "0.11.0" .
+    owl:versionIRI <https://purl.org/packagegraph/ontology/taxonomy/0.12.0> ;
+    owl:versionInfo "0.12.0" .
 
 tax:TaxonomyScheme a skos:ConceptScheme ;
     rdfs:label "OSS Taxonomy"@en ;

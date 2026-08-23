@@ -2067,6 +2067,100 @@ WHERE {
 
 ---
 
+### CQ-MVN-06: Dependency Exclusions for an Artifact
+
+**Question:** Which transitive dependencies does a given artifact exclude, and through which direct dependency?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX maven: <https://purl.org/packagegraph/ontology/maven#>
+
+SELECT ?artifactGroup ?artifactName ?depTarget ?excludedGroup ?excludedArtifact
+WHERE {
+  ?artifact maven:groupId ?artifactGroup ;
+            maven:artifactId ?artifactName ;
+            pkg:hasDependency ?dep .
+  ?dep pkg:dependencyTarget ?target ;
+       maven:hasExclusion ?excl .
+  ?target pkg:identityName ?depTarget .
+  ?excl maven:excludedGroupId ?excludedGroup ;
+        maven:excludedArtifactId ?excludedArtifact .
+}
+```
+
+**Expected Columns:** artifactGroup (string), artifactName (string), depTarget (string), excludedGroup (string), excludedArtifact (string)
+
+**Exercises:** maven:hasExclusion, maven:DependencyExclusion, maven:excludedGroupId, maven:excludedArtifactId, dependency-scoped exclusions
+
+**Test corpus:** `maven.examples.ttl` — expected: `com.example:myapp` excludes `commons-logging:commons-logging` through its `spring-beans` dependency.
+
+**Status:** NEW
+
+---
+
+### CQ-MVN-07: Artifacts Excluding a Specific Coordinate
+
+**Question:** Which artifacts exclude `commons-logging:commons-logging` from any of their dependencies?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX maven: <https://purl.org/packagegraph/ontology/maven#>
+
+SELECT ?artifactGroup ?artifactName ?depTarget
+WHERE {
+  ?artifact maven:groupId ?artifactGroup ;
+            maven:artifactId ?artifactName ;
+            pkg:hasDependency ?dep .
+  ?dep pkg:dependencyTarget/pkg:identityName ?depTarget ;
+       maven:hasExclusion ?excl .
+  ?excl maven:excludedGroupId "commons-logging" ;
+        maven:excludedArtifactId "commons-logging" .
+}
+```
+
+**Expected Columns:** artifactGroup (string), artifactName (string), depTarget (string)
+
+**Exercises:** maven:hasExclusion reverse lookup by excluded coordinate
+
+**Test corpus:** `maven.examples.ttl` — expected: `com.example:myapp` via its `spring-beans` dependency.
+
+**Status:** NEW
+
+---
+
+### CQ-MVN-08: Wildcard Exclusions
+
+**Question:** Which dependencies use wildcard exclusions (artifactId `*`)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX maven: <https://purl.org/packagegraph/ontology/maven#>
+
+SELECT ?artifactGroup ?artifactName ?depTarget ?excludedGroup
+WHERE {
+  ?artifact maven:groupId ?artifactGroup ;
+            maven:artifactId ?artifactName ;
+            pkg:hasDependency ?dep .
+  ?dep pkg:dependencyTarget/pkg:identityName ?depTarget ;
+       maven:hasExclusion ?excl .
+  ?excl maven:excludedGroupId ?excludedGroup ;
+        maven:excludedArtifactId "*" .
+}
+```
+
+**Expected Columns:** artifactGroup (string), artifactName (string), depTarget (string), excludedGroup (string)
+
+**Exercises:** maven:DependencyExclusion wildcard representability
+
+**Test corpus:** `maven.examples.ttl` — expected: `com.example:myapp` excludes all `com.google.code.findbugs` artifacts via its `guava` dependency.
+
+**Status:** NEW
+
+---
+
 ## Domain: Package Identity (PID)
 
 ### CQ-PID-01: High-Confidence Cross-Ecosystem Matches

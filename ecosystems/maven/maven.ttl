@@ -124,6 +124,33 @@ maven:testDependency a owl:ObjectProperty ;
     rdfs:range maven:MavenArtifact ;
     rdfs:subPropertyOf pkg:buildDependsOn .
 
+maven:DependencyExclusion a owl:Class ;
+    rdfs:label "Dependency Exclusion"@en ;
+    IAO:0000115 "A Maven dependency exclusion that prevents a transitive dependency from being inherited through a specific direct dependency declaration. Exclusions are scoped to the dependency they are attached to, not to the declaring artifact globally. Both groupId and artifactId support wildcard values ('*')."@en ;
+    rdfs:comment "A Maven POM exclusion attached to a specific dependency declaration"@en ;
+    rdfs:isDefinedBy maven: .
+
+maven:hasExclusion a owl:ObjectProperty ;
+    rdfs:label "has exclusion"@en ;
+    IAO:0000115 "Links a reified dependency declaration to an exclusion that prevents a transitive dependency from being inherited through this dependency path."@en ;
+    rdfs:domain pkg:Dependency ;
+    rdfs:isDefinedBy maven: ;
+    rdfs:range maven:DependencyExclusion .
+
+maven:excludedGroupId a owl:DatatypeProperty ;
+    rdfs:label "excluded group ID"@en ;
+    IAO:0000115 "The Maven groupId of the excluded transitive dependency. A value of '*' excludes all groups."@en ;
+    rdfs:domain maven:DependencyExclusion ;
+    rdfs:isDefinedBy maven: ;
+    rdfs:range xsd:string .
+
+maven:excludedArtifactId a owl:DatatypeProperty ;
+    rdfs:label "excluded artifact ID"@en ;
+    IAO:0000115 "The Maven artifactId of the excluded transitive dependency. A value of '*' excludes all artifacts within the group."@en ;
+    rdfs:domain maven:DependencyExclusion ;
+    rdfs:isDefinedBy maven: ;
+    rdfs:range xsd:string .
+
 maven:MavenRepository a owl:Class ;
     rdfs:label "Maven Repository"@en ;
     IAO:0000115 "A repository serving Maven artifacts, such as Maven Central, JCenter, or a private Nexus/Artifactory instance."@en ;
@@ -145,15 +172,15 @@ maven: a owl:Ontology ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
     rdfs:comment "Ontology for representing Maven artifacts and the Java/JVM ecosystem"@en ;
     owl:imports pkg: ;
-    dcterms:modified "2026-05-11"^^xsd:date ;
+    dcterms:modified "2026-08-22"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/maven/0.10.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/maven/0.11.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/0.11.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/0.12.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/maven/shapes> ;
 
-    owl:versionInfo "0.11.0" .
+    owl:versionInfo "0.12.0" .
 
 maven:MavenArtifact a owl:Class ;
     rdfs:label "Maven Artifact"@en ;
