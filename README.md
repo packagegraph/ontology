@@ -1,8 +1,9 @@
 # PackageGraph Ontology
 
-**Version:** 0.11.0
-**License:** CC0 1.0 Universal
-**Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 35/35 Modules SHACL Valid | ✅ OWL 2 RL Reasoning Verified
+[![Version](https://img.shields.io/github/v/release/packagegraph/ontology?label=version)](https://github.com/packagegraph/ontology/releases/latest)
+[![License: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-blue)](https://creativecommons.org/publicdomain/zero/1.0/)
+
+**Status:** ✅ OWL 2 DL | ✅ OntoClean Compliant | ✅ 36/36 Modules SHACL Valid | ✅ OWL 2 RL Reasoning Verified
 
 A rigorous OWL 2 ontology for cross-distribution package analysis and software supply chain research.
 
@@ -51,19 +52,25 @@ uv pip install rdflib pyshacl
 
 ---
 
-## What's New in v0.11.0
+## What's New in v0.12.0
 
-**Corrective semantic revision: dependency target model**
+**Maven dependency exclusion vocabulary**
 
-- ✅ **`pkg:PackageEntity`** — common superclass of `Package` and `PackageIdentity` for dependency targeting
-- ✅ **12 property range/domain updates** — dependency properties accept both concrete packages and version-independent identities
-- ✅ **Identity-target example** — `wget → libssl3` exercises `PackageIdentity` as dependency target
-- ✅ **8 OWL 2 RL reasoning tests** — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
-- ✅ **DD-PE-1** — design decision documenting rationale, alternatives, and migration
+- ✅ **`maven:DependencyExclusion`** — represents Maven POM `<exclusion>` elements on specific dependency declarations
+- ✅ **`maven:hasExclusion`**, **`excludedGroupId`**, **`excludedArtifactId`** — structured exclusion properties with wildcard (`*`) support
+- ✅ **3 new CQs** (CQ-MVN-06/07/08) — forward lookup, reverse lookup, and wildcard exclusion queries (total: 68)
 
-See [CHANGELOG.md](CHANGELOG.md) for full details and migration guidance.
+See [CHANGELOG.md](CHANGELOG.md) for full details.
 
-## What Was New in v0.10.0
+## Previous Releases
+
+### v0.11.0 — PackageEntity dependency target model
+
+- `pkg:PackageEntity` — common superclass of `Package` and `PackageIdentity` for dependency targeting
+- 12 property range/domain updates — dependency properties accept both concrete packages and version-independent identities
+- 8 OWL 2 RL reasoning tests — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
+
+### v0.10.0
 
 **Maven security & VCS integration, academic hardening:**
 
@@ -407,7 +414,7 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.11.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.12.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 
@@ -417,7 +424,7 @@ If you use PackageGraph in academic work, please cite:
   title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution
                   Software Package Analysis},
   year         = {2026},
-  version      = {0.11.0},
+  version      = {0.12.0},
   organization = {PackageGraph Project},
   url          = {https://purl.org/packagegraph/ontology/core}
 }
