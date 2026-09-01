@@ -288,11 +288,11 @@ bitbake: a owl:Ontology ;
     owl:imports pkg: ;
     dcterms:modified "2026-04-27"^^xsd:date ;
 
-    owl:priorVersion <https://purl.org/packagegraph/ontology/bitbake/0.11.0> ;
+    owl:priorVersion <https://purl.org/packagegraph/ontology/bitbake/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/bitbake/0.12.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/bitbake/0.13.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/bitbake/shapes> ;
 
-    owl:versionInfo "0.12.0" .
+    owl:versionInfo "0.13.0" .
 

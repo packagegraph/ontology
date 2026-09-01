@@ -593,3 +593,22 @@ ex:arch-x86-64 a pkg:Architecture ;
 
 <https://packagegraph.github.io/d/pkgid/fedora/43/x86_64/python3-cryptography>
     pkg:hasPackageRelationship <https://packagegraph.github.io/d/pkg-rel/fedora-python3-cryptography-pypi-cryptography> .
+
+# AlmaLinux 9 openssl current build is an exact rebuild of the RHEL 9 build.
+<https://packagegraph.github.io/d/src/almalinux/9/openssl/3.5.5-6.el9_8> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/src/almalinux/9/openssl/3.5.5-6.el9_8#v> ;
+    pkg:rebuildTrackingStatus pkg:track-exact ;
+    pkg:rebuildOf <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> ;
+    rdfs:label "openssl (AlmaLinux 9 source package)" .
+
+<https://packagegraph.github.io/d/src/almalinux/9/openssl/3.5.5-6.el9_8#v> a pkg:Version ;
+    pkg:versionString "3.5.5-6.el9_8" .
+
+<https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8#v> ;
+    rdfs:label "openssl (RHEL 9 source package)" .
+
+<https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8#v> a pkg:Version ;
+    pkg:versionString "3.5.5-6.el9_8" .

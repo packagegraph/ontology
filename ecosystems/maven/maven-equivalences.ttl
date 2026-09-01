@@ -24,8 +24,8 @@
     rdfs:label "PackageGraph Maven Equivalence Seed"@en ;
     dcterms:description "A curated seed dataset of high-confidence upstream-equivalent Maven coordinates, including Jakarta EE namespace migrations and selected artifact renames." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/equivalences/0.12.0> ;
-    owl:versionInfo "0.12.0" .
+    owl:versionIRI <https://purl.org/packagegraph/ontology/maven/equivalences/0.13.0> ;
+    owl:versionInfo "0.13.0" .
 
 # --- javax → Jakarta EE 9+ API migrations ---
 # Jakarta EE 9 moved all javax.* APIs to jakarta.* namespace.

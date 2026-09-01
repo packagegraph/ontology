@@ -5,6 +5,13 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.13.0
+
+### Added
+- `core:rebuildOf`, `core:comparedAgainst`, `core:rebuildTrackingStatus`
+- `pkg:RebuildTrackingScheme` SKOS scheme (exact, vendor-patched,
+  modular-equivalent, ahead, behind, equivalent-version, exclusive)
+
 ## [0.12.0] - 2026-08-22
 
 Maven dependency exclusion vocabulary.

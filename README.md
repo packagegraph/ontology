@@ -52,13 +52,13 @@ uv pip install rdflib pyshacl
 
 ---
 
-## What's New in v0.12.0
+## What's New in v0.13.0
 
-**Maven dependency exclusion vocabulary**
+**RHEL rebuild tracking vocabulary**
 
-- ✅ **`maven:DependencyExclusion`** — represents Maven POM `<exclusion>` elements on specific dependency declarations
-- ✅ **`maven:hasExclusion`**, **`excludedGroupId`**, **`excludedArtifactId`** — structured exclusion properties with wildcard (`*`) support
-- ✅ **3 new CQs** (CQ-MVN-06/07/08) — forward lookup, reverse lookup, and wildcard exclusion queries (total: 68)
+- ✅ **`core:rebuildOf`** — links a downstream rebuild source package to the upstream source package it reproduces (prov lineage)
+- ✅ **`core:comparedAgainst`** — records the upstream baseline used for an ahead/behind/equivalent-version classification (not a lineage claim)
+- ✅ **`core:rebuildTrackingStatus`** + **`pkg:RebuildTrackingScheme`** — SKOS classification of rebuild fidelity (exact, vendor-patched, modular-equivalent, ahead, behind, equivalent-version, exclusive)
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -414,7 +414,7 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.12.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.13.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 
@@ -424,7 +424,7 @@ If you use PackageGraph in academic work, please cite:
   title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution
                   Software Package Analysis},
   year         = {2026},
-  version      = {0.12.0},
+  version      = {0.13.0},
   organization = {PackageGraph Project},
   url          = {https://purl.org/packagegraph/ontology/core}
 }

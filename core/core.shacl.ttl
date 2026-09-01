@@ -289,6 +289,15 @@ pkg:FreshnessStatusShape a sh:NodeShape ;
             sh:severity sh:Info ] ;
     sh:targetClass pkg:PackageIdentity .
 
+pkg:RebuildTrackingStatusShape a sh:NodeShape ;
+    sh:property [ sh:in ( pkg:track-exact pkg:track-vendor-patched pkg:track-modular-equivalent pkg:track-ahead pkg:track-behind pkg:track-equivalent-version pkg:track-exclusive ) ;
+            sh:class skos:Concept ;
+            sh:maxCount 1 ;
+            sh:message "rebuildTrackingStatus must be a concept from RebuildTrackingScheme."@en ;
+            sh:path pkg:rebuildTrackingStatus ;
+            sh:severity sh:Info ] ;
+    sh:targetSubjectsOf pkg:rebuildTrackingStatus .
+
 pkg:PackageManagerShape a sh:NodeShape ;
     sh:property [ sh:message "A package manager must have at least one label."@en ;
             sh:minCount 1 ;
