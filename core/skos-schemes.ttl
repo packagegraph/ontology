@@ -457,3 +457,49 @@ dq:IssueCategoryScheme a skos:ConceptScheme ;
         dq:cat-malformed-email,
         dq:cat-missing-checksum,
         dq:cat-missing-upstream .
+
+pkg:track-exact a skos:Concept ;
+    skos:definition "The rebuild's current build NVR is byte-identical to an upstream build." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "exact" .
+
+pkg:track-vendor-patched a skos:Concept ;
+    skos:definition "The rebuild's NVR equals an upstream build's NVR after stripping an anchored vendor suffix (e.g. .rocky.N, .alma.N) — a provable rebuild of that SRPM with a vendor tag." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "vendor-patched" .
+
+pkg:track-modular-equivalent a skos:Concept ;
+    skos:definition "Modular package whose base NVR (before the .module marker) matches upstream; only the module build-context differs (.module+el9 vs .module_el9 and regenerated build-ids)." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "modular-equivalent" .
+
+pkg:track-ahead a skos:Concept ;
+    skos:definition "No NVR match; the rebuild's current build has a higher RPM EVR than the upstream newest build (rebuild leads the collected snapshot)." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "ahead" .
+
+pkg:track-behind a skos:Concept ;
+    skos:definition "No NVR match; the rebuild's current build has a lower RPM EVR than the upstream newest build (rebuild lags upstream — investigate)." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "behind" .
+
+pkg:track-equivalent-version a skos:Concept ;
+    skos:definition "No NVR match under normalization, but rpmvercmp reports the rebuild's EVR equal to an upstream build's EVR (e.g. from ignored separators or leading zeros). Recorded as a comparison, not a lineage claim." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "equivalent-version" .
+
+pkg:track-exclusive a skos:Concept ;
+    skos:definition "The source-package name is absent from upstream (branding or distribution-specific extras)." ;
+    skos:inScheme pkg:RebuildTrackingScheme ;
+    skos:prefLabel "exclusive" .
+
+pkg:RebuildTrackingScheme a skos:ConceptScheme ;
+    rdfs:label "RHEL Rebuild Tracking Status"@en ;
+    dcterms:description "Classification of how faithfully a downstream rebuild source package tracks its upstream (RHEL) build." ;
+    skos:hasTopConcept pkg:track-exact,
+        pkg:track-vendor-patched,
+        pkg:track-modular-equivalent,
+        pkg:track-ahead,
+        pkg:track-behind,
+        pkg:track-equivalent-version,
+        pkg:track-exclusive .

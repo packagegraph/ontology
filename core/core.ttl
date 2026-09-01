@@ -279,6 +279,31 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:range <https://purl.org/packagegraph/ontology/vcs#Commit> ;
     rdfs:subPropertyOf prov:wasDerivedFrom .
 
+:rebuildOf a owl:ObjectProperty ;
+    rdfs:label "rebuild of"@en ;
+    IAO:0000115 "Links a source package in a downstream rebuild distribution to the specific upstream source package it reproduces (e.g. an AlmaLinux SRPM to the RHEL SRPM it was rebuilt from). Directional build-lineage; asserted only when the downstream NVR matches an upstream build exactly or after documented normalization."@en ;
+    rdfs:comment "This source package is a rebuild of a specific upstream source package"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:range :SourcePackage ;
+    rdfs:subPropertyOf prov:wasDerivedFrom ;
+    rdfs:isDefinedBy : .
+
+:comparedAgainst a owl:ObjectProperty ;
+    rdfs:label "compared against"@en ;
+    IAO:0000115 "Records the upstream source package used as the comparison baseline when classifying a rebuild build whose NVR does NOT match any upstream build under normalization (ahead / behind / equivalent-version). This is a comparison reference, NOT a provenance/lineage claim."@en ;
+    rdfs:comment "Upstream baseline used for an ahead/behind/equivalent-version classification; not a lineage claim"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:range :SourcePackage ;
+    rdfs:isDefinedBy : .
+
+:rebuildTrackingStatus a owl:ObjectProperty ;
+    rdfs:label "rebuild tracking status"@en ;
+    IAO:0000115 "Classifies how faithfully a rebuild source package's current build tracks its upstream (RHEL). Values are SKOS concepts from the RebuildTrackingScheme. Computed post-collection by comparing source NVRs across distribution graphs with epoch-aware RPM version comparison and documented normalization."@en ;
+    rdfs:comment "How faithfully this rebuild source package's current build tracks upstream"@en ;
+    rdfs:domain :SourcePackage ;
+    rdfs:range skos:Concept ;
+    rdfs:isDefinedBy : .
+
 :description a owl:DatatypeProperty ;
     rdfs:label "description"@en ;
     IAO:0000115 "A textual explanation of the package's purpose, functionality, and features, intended to help users understand what the package provides."@en ;
