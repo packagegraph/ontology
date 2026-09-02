@@ -504,7 +504,40 @@ pkg:RebuildAssessmentShape a sh:NodeShape ;
             sh:message "rebuildFidelity must be a concept from RebuildFidelityScheme."@en ] ;
     sh:property [ sh:path pkg:rebuildDrift ; sh:maxCount 1 ;
             sh:in ( pkg:drift-even pkg:drift-ahead pkg:drift-behind pkg:drift-version-equivalent ) ;
-            sh:message "rebuildDrift must be a concept from RebuildDriftScheme."@en ] .
+            sh:message "rebuildDrift must be a concept from RebuildDriftScheme."@en ] ;
+    sh:sparql [ sh:message "A RebuildAssessment must reference exactly one assessedAgainstSnapshot."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        FILTER NOT EXISTS { $this pkg:assessedAgainstSnapshot ?snap }
+                    }
+                """ ] ;
+    sh:sparql [ sh:message "rebuildFidelity must be a concept from RebuildFidelityScheme."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildFidelity ?f1 .
+                        $this pkg:rebuildFidelity ?f2 .
+                        FILTER ( ?f1 != ?f2 )
+                    }
+                """ ] ;
+    sh:sparql [ sh:message "assessmentConfidence must be between 0.0 and 1.0."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:assessmentConfidence ?c .
+                        FILTER ( ?c < 0.0 || ?c > 1.0 )
+                    }
+                """ ] ;
+    sh:sparql [ sh:message "A RebuildAssessment must have exactly one lineageConfirmed boolean."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:lineageConfirmed ?x .
+                        $this pkg:lineageConfirmed ?y .
+                        FILTER ( ?x != ?y )
+                    }
+                """ ] .
 
 pkg:RebuildAssessmentResultsShape a sh:NodeShape ;
     sh:targetClass pkg:RebuildAssessment ;
