@@ -61,6 +61,7 @@ uv pip install rdflib pyshacl
 - ✅ **Evidence-gated lineage** — `rebuildOf` property asymmetric and irreflexive, guarded by `lineageConfirmed` / `lineageEvidence` / `ambiguousCandidate` provenance properties
 - ✅ **SHACL guards** — `RebuildAssessmentShape` + SPARQL constraints for coupling, ambiguity, self-baseline, promotion, and lineage integrity
 - ✅ **Provenance properties** — `assessedAt`, `assessmentMethod`, `assessmentConfidence`, `assessedAgainstSnapshot` enable reproducible assessments
+- ✅ **9 new competency questions (CQ-RB-01..09)** — rebuild tracking queries; 67 total, all structurally valid
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -72,7 +73,15 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - 12 property range/domain updates — dependency properties accept both concrete packages and version-independent identities
 - 8 OWL 2 RL reasoning tests — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
 
-### v0.10.0
+### v0.12.0 — Maven dependency exclusions
+
+**Maven ecosystem dependency exclusion vocabulary:**
+
+- ✅ **`maven:DependencyExclusion`** — reified exclusion model on dependencies
+- ✅ **Exclusion predicates** — `hasExclusion`, `excludedGroupId`, `excludedArtifactId` with wildcard support
+- ✅ **3 Maven CQs (MVN-06..08)** — exclusion queries, reverse lookup, wildcard matching
+
+### v0.11.0
 
 **Maven security & VCS integration, academic hardening:**
 
@@ -82,8 +91,10 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - ✅ **Cross-coordinate equivalence** — `pkg:upstreamEquivalent` for javax→Jakarta, coordinate renames
 - ✅ **28/28 ecosystem example files** — every module now has validated example data
 - ✅ **OWL 2 RL reasoning tests** — `propertyChainAxiom` on `directlyDependsOn` verified sound
-- ✅ **67 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
+- ✅ **53 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
 - ✅ **BFO/DOLCE positioning clarified** — evaluated but not aligned; rationale documented in DD-UO-1
+
+### v0.10.0
 
 See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 

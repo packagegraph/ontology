@@ -40,7 +40,9 @@ def run():
         components = {str(c) for _, _, c in report_g.triples((None, SH.sourceConstraintComponent, None))}
         want_msg = exp["resultMessage"]
         want_component_local = exp["sourceConstraintComponent"]
-        # Extract local name (part after #) from components
+        # Extract local name (part after #) from components.
+        # Note: resultMessage and sourceConstraintComponent are matched as independent sets over the report,
+        # which is safe because every constraint's sh:message string is distinct.
         component_local_names = {c.split("#")[-1] for c in components}
         if want_msg not in messages:
             print(f"  ✗ {fname}: expected message not in report: {want_msg!r}")
