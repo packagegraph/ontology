@@ -54,7 +54,7 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all validate-integration
+validate: validate-all validate-integration validate-negative
 validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
@@ -64,6 +64,12 @@ validate-all:
 validate-integration:
 	@echo "Cross-module integration validation..."
 	@$(PYTHON) scripts/validate_integration.py
+
+# Negative SHACL fixtures validation
+.PHONY: validate-negative
+validate-negative:
+	@echo "Negative SHACL fixtures (must fail)..."
+	@$(PYTHON) scripts/validate_negative.py
 
 # ─── Version Consistency ─────────────────────────────────────────────────────
 
