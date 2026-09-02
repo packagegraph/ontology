@@ -54,11 +54,13 @@ uv pip install rdflib pyshacl
 
 ## What's New in v0.13.0
 
-**RHEL rebuild tracking vocabulary**
+**Reified rebuild-tracking vocabulary (presence / fidelity / drift)**
 
-- ✅ **`core:rebuildOf`** — links a downstream rebuild source package to the upstream source package it reproduces (prov lineage)
-- ✅ **`core:comparedAgainst`** — records the upstream baseline used for an ahead/behind/equivalent-version classification (not a lineage claim)
-- ✅ **`core:rebuildTrackingStatus`** + **`pkg:RebuildTrackingScheme`** — SKOS classification of rebuild fidelity (exact, vendor-patched, modular-equivalent, ahead, behind, equivalent-version, exclusive)
+- ✅ **`pkg:RebuildAssessment`** — reified class for structured rebuild assessments
+- ✅ **Two-/three-axis model** — `rebuildFidelity` (exact, vendor-patched, modular-equivalent, unknown) and `rebuildDrift` (even, ahead, behind, version-equivalent) axes for fine-grained rebuild characterization
+- ✅ **Evidence-gated lineage** — `rebuildOf` property asymmetric and irreflexive, guarded by `lineageConfirmed` / `lineageEvidence` / `ambiguousCandidate` provenance properties
+- ✅ **SHACL guards** — `RebuildAssessmentShape` + SPARQL constraints for coupling, ambiguity, self-baseline, promotion, and lineage integrity
+- ✅ **Provenance properties** — `assessedAt`, `assessmentMethod`, `assessmentConfidence`, `assessedAgainstSnapshot` enable reproducible assessments
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -80,7 +82,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - ✅ **Cross-coordinate equivalence** — `pkg:upstreamEquivalent` for javax→Jakarta, coordinate renames
 - ✅ **28/28 ecosystem example files** — every module now has validated example data
 - ✅ **OWL 2 RL reasoning tests** — `propertyChainAxiom` on `directlyDependsOn` verified sound
-- ✅ **53 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
+- ✅ **67 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
 - ✅ **BFO/DOLCE positioning clarified** — evaluated but not aligned; rationale documented in DD-UO-1
 
 See [CHANGELOG.md](CHANGELOG.md) for full release notes.

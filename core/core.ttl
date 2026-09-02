@@ -1681,7 +1681,7 @@ xsd:date a rdfs:Datatype .
         prov:,
         foaf: ;
     foaf:homepage <https://packagegraph.github.io/ontology/> ;
-    dcterms:modified "2026-08-22"^^xsd:date ;
+    dcterms:modified "2026-09-02"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.12.0> ;
 
