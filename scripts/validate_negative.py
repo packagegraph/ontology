@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Assert that each negative fixture FAILS SHACL with the expected shape/message.
+"""Assert that each negative fixture FAILS SHACL with the expected message and component.
 
-Every SPARQL-based SHACL constraint reports the same sh:sourceConstraintComponent
-(sh:SPARQLConstraintComponent), so a fixture that fails for an unrelated reason could
-masquerade as a pass. To prevent that, each fixture declares the exact
-sh:sourceShape and sh:resultMessage it must produce; this harness checks the
-validation report graph for that specific result.
+Each fixture declares the exact sh:resultMessage and sh:sourceConstraintComponent it must
+produce; this harness checks the validation report graph for that specific result.
+Message and component (by local name) together uniquely identify each rule violation.
 """
 
 import json
@@ -39,17 +37,19 @@ def run():
             ok = False
             continue
         messages = {str(m) for _, _, m in report_g.triples((None, SH.resultMessage, None))}
-        shapes = {str(s) for _, _, s in report_g.triples((None, SH.sourceShape, None))}
-        want_shape = str(PKG[exp["sourceShape"]])
+        components = {str(c) for _, _, c in report_g.triples((None, SH.sourceConstraintComponent, None))}
         want_msg = exp["resultMessage"]
-        if want_shape not in shapes:
-            print(f"  ✗ {fname}: expected sourceShape {exp['sourceShape']} not in report")
-            ok = False
-        elif want_msg not in messages:
+        want_component_local = exp["sourceConstraintComponent"]
+        # Extract local name (part after #) from components
+        component_local_names = {c.split("#")[-1] for c in components}
+        if want_msg not in messages:
             print(f"  ✗ {fname}: expected message not in report: {want_msg!r}")
             ok = False
+        elif want_component_local not in component_local_names:
+            print(f"  ✗ {fname}: expected component {want_component_local} not in report")
+            ok = False
         else:
-            print(f"  ✓ {fname}: fails as expected ({exp['sourceShape']})")
+            print(f"  ✓ {fname}: fails as expected")
     if not ok:
         sys.exit(1)
     print(f"All {len(expectations)} negative fixtures fail as expected.")

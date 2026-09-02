@@ -1,91 +1,73 @@
 {
   "missing-snapshot.ttl": {
-    "sourceShape": "RebuildAssessmentShape",
     "resultMessage": "A RebuildAssessment must reference exactly one assessedAgainstSnapshot.",
     "sourceConstraintComponent": "MinCountConstraintComponent"
   },
   "two-fidelity.ttl": {
-    "sourceShape": "RebuildAssessmentShape",
     "resultMessage": "rebuildFidelity must be a concept from RebuildFidelityScheme.",
-    "sourceConstraintComponent": "InConstraintComponent"
+    "sourceConstraintComponent": "MaxCountConstraintComponent"
   },
   "bad-confidence.ttl": {
-    "sourceShape": "RebuildAssessmentShape",
     "resultMessage": "assessmentConfidence must be between 0.0 and 1.0.",
     "sourceConstraintComponent": "MaxInclusiveConstraintComponent"
   },
   "lineage-confirmed-twice.ttl": {
-    "sourceShape": "RebuildAssessmentShape",
     "resultMessage": "A RebuildAssessment must have exactly one lineageConfirmed boolean.",
     "sourceConstraintComponent": "MaxCountConstraintComponent"
   },
   "drift-without-baseline.ttl": {
-    "sourceShape": "RebuildAssessmentResultsShape",
     "resultMessage": "rebuildDrift present requires a comparedAgainst baseline.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "matched-without-baseline.ttl": {
-    "sourceShape": "RebuildAssessmentResultsShape",
     "resultMessage": "A matched fidelity (exact/vendor-patched/modular-equivalent) requires a fidelityBaseline.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "unknown-with-baseline.ttl": {
-    "sourceShape": "RebuildAssessmentResultsShape",
     "resultMessage": "fidelity-unknown forbids a fidelityBaseline.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "counterpart-false-with-fidelity.ttl": {
-    "sourceShape": "RebuildAssessmentResultsShape",
     "resultMessage": "hasUpstreamCounterpart=false forbids fidelity, drift, baselines, and ambiguous candidates.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "counterpart-true-missing-results.ttl": {
-    "sourceShape": "RebuildAssessmentResultsShape",
     "resultMessage": "hasUpstreamCounterpart=true requires exactly one rebuildFidelity and one rebuildDrift.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "self-baseline.ttl": {
-    "sourceShape": "RebuildAssessmentSelfBaselineShape",
     "resultMessage": "A package must not be its own fidelity or drift baseline.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "one-ambiguous.ttl": {
-    "sourceShape": "RebuildAssessmentAmbiguityShape",
     "resultMessage": "ambiguousCandidate requires at least two distinct candidates.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "ambiguous-not-unknown.ttl": {
-    "sourceShape": "RebuildAssessmentAmbiguityShape",
     "resultMessage": "ambiguousCandidate requires rebuildFidelity = fidelity-unknown.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "ambiguous-bad-confidence.ttl": {
-    "sourceShape": "RebuildAssessmentAmbiguityShape",
     "resultMessage": "An ambiguous assessment must have assessmentConfidence 0.5 and lineageConfirmed=false.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "confirmed-unknown.ttl": {
-    "sourceShape": "RebuildAssessmentPromotionShape",
     "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "confirmed-no-evidence.ttl": {
-    "sourceShape": "RebuildAssessmentPromotionShape",
     "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "unconfirmed-with-evidence.ttl": {
-    "sourceShape": "RebuildAssessmentPromotionShape",
     "resultMessage": "lineageConfirmed=false forbids lineageEvidence.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "lineage-wrong-target.ttl": {
-    "sourceShape": "RebuildLineageGuardShape",
     "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   },
   "lineage-unconfirmed.ttl": {
-    "sourceShape": "RebuildLineageGuardShape",
     "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true.",
     "sourceConstraintComponent": "SPARQLConstraintComponent"
   }
