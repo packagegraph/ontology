@@ -23,10 +23,10 @@ ALL_TTL_FILES = $(ONTOLOGY_FILES) $(SHACL_FILES) $(EXAMPLE_FILES)
 # Extract module names for per-module targets
 MODULES = $(foreach d,$(ALL_MODULE_DIRS),$(notdir $(d)))
 
-.PHONY: all lint validate validate-all help
+.PHONY: all lint validate validate-all reason help
 
 # Default
-all: lint validate
+all: lint validate reason
 
 # ─── Linting ──────────────────────────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all validate-integration
+validate: validate-all validate-integration validate-negative
 validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
@@ -64,6 +64,19 @@ validate-all:
 validate-integration:
 	@echo "Cross-module integration validation..."
 	@$(PYTHON) scripts/validate_integration.py
+
+# Negative SHACL fixtures validation
+.PHONY: validate-negative
+validate-negative:
+	@echo "Negative SHACL fixtures (must fail)..."
+	@$(PYTHON) scripts/validate_negative.py
+
+# ─── OWL 2 RL Reasoning ───────────────────────────────────────────────────────
+
+.PHONY: reason
+reason:
+	@echo "OWL 2 RL reasoning tests..."
+	@$(PYTHON) scripts/test-owl2-reasoning.py
 
 # ─── Version Consistency ─────────────────────────────────────────────────────
 
@@ -172,7 +185,7 @@ create-index:
 	@echo "Creating index page..."
 	@$(PYTHON) scripts/generate_index.py $(DOCS_DIR) $(ONTOLOGY_DOCS_DIR) $(DOWNLOADS_DIR)
 
-deploy: lint validate setup-tools
+deploy: lint validate reason setup-tools
 	@echo "Building deployment..."
 	@mkdir -p $(DOWNLOADS_DIR) $(REPORTS_DIR) $(ONTOLOGY_DOCS_DIR)
 	@echo "Generating serializations..."
@@ -218,10 +231,12 @@ help:
 	@echo "PackageGraph Ontology"
 	@echo "═══════════════════════════════════════════════════════"
 	@echo ""
-	@echo "  make                 Lint + validate all modules"
+	@echo "  make                 Lint + validate + reasoning gate"
 	@echo "  make lint            Parse-check all .ttl files"
 	@echo "  make validate-all    SHACL-validate every module"
 	@echo "  make validate-NAME   SHACL-validate one module"
+	@echo "  make validate-negative  Assert negative fixtures FAIL"
+	@echo "  make reason          OWL 2 RL reasoning tests"
 	@echo "                       (e.g., make validate-rpm)"
 	@echo "  make check-version   Verify owl:versionInfo/IRI consistency"
 	@echo "  make stats           Triple counts per module"

@@ -8,6 +8,7 @@ Tests:
   - Inverse property pairs for both identity and concrete targets
   - prov:Entity inference through PackageEntity
   - Core dependency subproperty identity-target acceptance
+  - rebuildOf => prov:wasDerivedFrom, and rebuild assessment inverse/domain/range
 
 Requires: rdflib, owlrl (uv pip install owlrl)
 """
@@ -18,8 +19,10 @@ from rdflib.term import URIRef
 try:
     import owlrl
 except ImportError:
-    print("SKIP: owlrl not installed (uv pip install owlrl)")
-    sys.exit(0)
+    # A gate that silently skips is not a gate. owlrl is a declared project
+    # dependency, so its absence is a broken environment, not a reason to pass.
+    print("FAIL: owlrl not installed (uv pip install owlrl) -- reasoning gate cannot run")
+    sys.exit(1)
 
 PKG = Namespace("https://purl.org/packagegraph/ontology/core#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
@@ -226,6 +229,86 @@ def test_disjoint_classes():
         print(f"PASS: disjointness raised exception: {e}")
 
 
+def test_rebuild_of_subproperty_of_prov():
+    """rebuildOf is a prov:wasDerivedFrom subproperty: committed lineage enters the PROV chain."""
+    g = _load_and_reason()
+
+    g.add((EX.downstream, RDF.type, PKG.SourcePackage))
+    g.add((EX.downstream, PKG.packageName, Literal("openssl")))
+    g.add((EX.upstream, RDF.type, PKG.SourcePackage))
+    g.add((EX.upstream, PKG.packageName, Literal("openssl")))
+    g.add((EX.downstream, PKG.rebuildOf, EX.upstream))
+
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+    derived = (EX.downstream, PROV.wasDerivedFrom, EX.upstream) in g
+    is_entity = (EX.downstream, RDF.type, PROV.Entity) in g
+    assert derived, "FAIL: rebuildOf did not infer prov:wasDerivedFrom"
+    assert is_entity, "FAIL: rebuilt SourcePackage not inferred as prov:Entity"
+    print("PASS: rebuildOf => prov:wasDerivedFrom (committed lineage in PROV chain)")
+
+
+def test_rebuild_assessment_inverse_pair():
+    """hasRebuildAssessment owl:inverseOf assessmentOf infers both directions under OWL RL."""
+    g = _load_and_reason()
+
+    g.add((EX.asmt, RDF.type, PKG.RebuildAssessment))
+    g.add((EX.srcpkg, RDF.type, PKG.SourcePackage))
+    g.add((EX.srcpkg, PKG.packageName, Literal("nodejs")))
+    # Assert ONLY the canonical direction.
+    g.add((EX.asmt, PKG.assessmentOf, EX.srcpkg))
+
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+    inverse_inferred = (EX.srcpkg, PKG.hasRebuildAssessment, EX.asmt) in g
+    assert inverse_inferred, "FAIL: hasRebuildAssessment not inferred from assessmentOf"
+    print("PASS: assessmentOf <=> hasRebuildAssessment inverse pair inferred (OWL RL only)")
+
+
+def test_assessment_domain_range_inference():
+    """Assessment properties carry their domain/range types under reasoning."""
+    g = _load_and_reason()
+
+    g.add((EX.a2, PKG.rebuildFidelity, PKG["fidelity-exact"]))
+    g.add((EX.a2, PKG.fidelityBaseline, EX.up2))
+    g.add((EX.a2, PKG.assessedAgainstSnapshot, EX.snap2))
+
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+    assert (EX.a2, RDF.type, PKG.RebuildAssessment) in g, \
+        "FAIL: rebuildFidelity domain did not type subject as RebuildAssessment"
+    assert (EX.up2, RDF.type, PKG.SourcePackage) in g, \
+        "FAIL: fidelityBaseline range did not type object as SourcePackage"
+    assert (EX.snap2, RDF.type, PKG.DataSnapshot) in g, \
+        "FAIL: assessedAgainstSnapshot range did not type object as DataSnapshot"
+    print("PASS: assessment property domains/ranges inferred (RebuildAssessment, SourcePackage, DataSnapshot)")
+
+
+def test_rebuild_of_asymmetric_irreflexive_axioms():
+    """rebuildOf is declared Asymmetric and Irreflexive (structural check).
+
+    OWL 2 RL cannot report these violations as inconsistency, so we assert the axioms
+    are present rather than claiming a reasoner enforces them. SHACL carries the
+    operative guard (a package may not be its own baseline).
+    """
+    g = Graph()
+    g.parse("core/core.ttl", format="turtle")
+
+    OWL = Namespace("http://www.w3.org/2002/07/owl#")
+    is_asym = (PKG.rebuildOf, RDF.type, OWL.AsymmetricProperty) in g
+    is_irref = (PKG.rebuildOf, RDF.type, OWL.IrreflexiveProperty) in g
+    sub_prov = (PKG.rebuildOf, RDFS.subPropertyOf, PROV.wasDerivedFrom) in g
+    assert is_asym, "FAIL: rebuildOf missing owl:AsymmetricProperty"
+    assert is_irref, "FAIL: rebuildOf missing owl:IrreflexiveProperty"
+    assert sub_prov, "FAIL: rebuildOf missing rdfs:subPropertyOf prov:wasDerivedFrom"
+
+    # comparedAgainst / fidelityBaseline must NOT be lineage claims.
+    for p in (PKG.comparedAgainst, PKG.fidelityBaseline, PKG.ambiguousCandidate):
+        assert (p, RDFS.subPropertyOf, PROV.wasDerivedFrom) not in g, \
+            f"FAIL: {p} must not be a prov:wasDerivedFrom subproperty (comparison, not lineage)"
+    print("PASS: rebuildOf axioms present; comparison properties are not prov lineage")
+
+
 if __name__ == "__main__":
     print("=== OWL 2 RL Reasoning Tests ===\n")
     test_ontology_consistency()
@@ -237,4 +320,8 @@ if __name__ == "__main__":
     test_prov_entity_inference()
     test_core_subproperty_identity_target()
     test_disjoint_classes()
+    test_rebuild_of_subproperty_of_prov()
+    test_rebuild_assessment_inverse_pair()
+    test_assessment_domain_range_inference()
+    test_rebuild_of_asymmetric_irreflexive_axioms()
     print("\n=== All reasoning tests complete ===")
