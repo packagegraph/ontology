@@ -482,3 +482,176 @@ pkg:PackageRelationshipShape a sh:NodeShape ;
                 """ ] ;
     sh:targetClass pkg:PackageRelationship .
 
+pkg:RebuildAssessmentShape a sh:NodeShape ;
+    sh:targetClass pkg:RebuildAssessment ;
+    sh:property [ sh:path pkg:assessmentOf ; sh:class pkg:SourcePackage ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must have exactly one assessmentOf SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:assessedAt ; sh:datatype xsd:dateTime ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must have exactly one assessedAt dateTime."@en ] ;
+    sh:property [ sh:path pkg:assessmentMethod ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must have exactly one assessmentMethod."@en ] ;
+    sh:property [ sh:path pkg:assessedAgainstSnapshot ; sh:class pkg:DataSnapshot ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must reference exactly one assessedAgainstSnapshot."@en ] ;
+    sh:property [ sh:path pkg:hasUpstreamCounterpart ; sh:datatype xsd:boolean ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must have exactly one hasUpstreamCounterpart boolean."@en ] ;
+    sh:property [ sh:path pkg:lineageConfirmed ; sh:datatype xsd:boolean ; sh:minCount 1 ; sh:maxCount 1 ;
+            sh:message "A RebuildAssessment must have exactly one lineageConfirmed boolean."@en ] ;
+    sh:property [ sh:path pkg:assessmentConfidence ; sh:datatype xsd:decimal ; sh:maxCount 1 ;
+            sh:minInclusive 0.0 ; sh:maxInclusive 1.0 ;
+            sh:message "assessmentConfidence must be between 0.0 and 1.0."@en ] ;
+    sh:property [ sh:path pkg:rebuildFidelity ; sh:maxCount 1 ;
+            sh:in ( pkg:fidelity-exact pkg:fidelity-vendor-patched pkg:fidelity-modular-equivalent pkg:fidelity-unknown ) ;
+            sh:message "rebuildFidelity must be a concept from RebuildFidelityScheme."@en ] ;
+    sh:property [ sh:path pkg:rebuildDrift ; sh:maxCount 1 ;
+            sh:in ( pkg:drift-even pkg:drift-ahead pkg:drift-behind pkg:drift-version-equivalent ) ;
+            sh:message "rebuildDrift must be a concept from RebuildDriftScheme."@en ] ;
+    sh:property [ sh:path pkg:fidelityBaseline ; sh:class pkg:SourcePackage ; sh:maxCount 1 ;
+            sh:message "An assessment must have at most one fidelityBaseline SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:comparedAgainst ; sh:class pkg:SourcePackage ; sh:maxCount 1 ;
+            sh:message "An assessment must have at most one comparedAgainst SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:ambiguousCandidate ; sh:class pkg:SourcePackage ;
+            sh:message "Each ambiguousCandidate must be a SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:lineageEvidence ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minLength 1 ;
+            sh:message "lineageEvidence must be a single non-empty string."@en ] .
+
+pkg:RebuildAssessmentResultsShape a sh:NodeShape ;
+    sh:targetClass pkg:RebuildAssessment ;
+    sh:sparql [ sh:message "hasUpstreamCounterpart=false forbids fidelity, drift, baselines, and ambiguous candidates."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:hasUpstreamCounterpart false .
+                        { $this pkg:rebuildFidelity ?x } UNION { $this pkg:rebuildDrift ?x }
+                        UNION { $this pkg:fidelityBaseline ?x } UNION { $this pkg:comparedAgainst ?x }
+                        UNION { $this pkg:ambiguousCandidate ?x }
+                    }
+                """ ] ,
+        [ sh:message "hasUpstreamCounterpart=true requires exactly one rebuildFidelity and one rebuildDrift."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:hasUpstreamCounterpart true .
+                        FILTER ( NOT EXISTS { $this pkg:rebuildFidelity ?f } || NOT EXISTS { $this pkg:rebuildDrift ?d } )
+                    }
+                """ ] ,
+        [ sh:message "rebuildDrift present requires a comparedAgainst baseline."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildDrift ?d .
+                        FILTER NOT EXISTS { $this pkg:comparedAgainst ?c }
+                    }
+                """ ] ,
+        [ sh:message "A matched fidelity (exact/vendor-patched/modular-equivalent) requires a fidelityBaseline."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildFidelity ?f .
+                        FILTER ( ?f IN ( pkg:fidelity-exact, pkg:fidelity-vendor-patched, pkg:fidelity-modular-equivalent ) )
+                        FILTER NOT EXISTS { $this pkg:fidelityBaseline ?b }
+                    }
+                """ ] ,
+        [ sh:message "fidelity-unknown forbids a fidelityBaseline."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildFidelity pkg:fidelity-unknown ; pkg:fidelityBaseline ?b .
+                    }
+                """ ] .
+
+pkg:RebuildAssessmentSelfBaselineShape a sh:NodeShape ;
+    sh:targetClass pkg:RebuildAssessment ;
+    sh:sparql [ sh:message "A package must not be its own fidelity or drift baseline."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:assessmentOf ?p .
+                        { $this pkg:fidelityBaseline ?p } UNION { $this pkg:comparedAgainst ?p }
+                    }
+                """ ] .
+
+pkg:RebuildAssessmentAmbiguityShape a sh:NodeShape ;
+    sh:targetClass pkg:RebuildAssessment ;
+    sh:sparql [ sh:message "ambiguousCandidate requires rebuildFidelity = fidelity-unknown."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:ambiguousCandidate ?c .
+                        FILTER NOT EXISTS { $this pkg:rebuildFidelity pkg:fidelity-unknown }
+                    }
+                """ ] ,
+        [ sh:message "ambiguousCandidate requires at least two distinct candidates."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:ambiguousCandidate ?c .
+                        FILTER NOT EXISTS { $this pkg:ambiguousCandidate ?c2 . FILTER ( ?c2 != ?c ) }
+                    }
+                """ ] ,
+        [ sh:message "An ambiguous assessment must have assessmentConfidence 0.5 and lineageConfirmed=false."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:ambiguousCandidate ?c .
+                        FILTER ( NOT EXISTS { $this pkg:assessmentConfidence ?v . FILTER ( ?v = 0.5 ) }
+                                 || EXISTS { $this pkg:lineageConfirmed true } )
+                    }
+                """ ] .
+
+pkg:RebuildAssessmentPromotionShape a sh:NodeShape ;
+    sh:targetClass pkg:RebuildAssessment ;
+    sh:sparql [ sh:message "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:lineageConfirmed true .
+                        FILTER ( NOT EXISTS { $this pkg:fidelityBaseline ?b }
+                                 || NOT EXISTS { $this pkg:lineageEvidence ?e . FILTER ( STRLEN( STR(?e) ) > 0 ) }
+                                 || NOT EXISTS { $this pkg:rebuildFidelity ?f .
+                                        FILTER ( ?f IN ( pkg:fidelity-exact, pkg:fidelity-vendor-patched, pkg:fidelity-modular-equivalent ) ) } )
+                    }
+                """ ] ,
+        [ sh:message "lineageConfirmed=false forbids lineageEvidence."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:lineageConfirmed false ; pkg:lineageEvidence ?e .
+                    }
+                """ ] .
+
+pkg:RebuildLineageGuardShape a sh:NodeShape ;
+    sh:targetSubjectsOf pkg:rebuildOf ;
+    sh:sparql [ sh:message "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildOf ?target .
+                        FILTER NOT EXISTS {
+                            ?a pkg:assessmentOf $this ;
+                               pkg:fidelityBaseline ?target ;
+                               pkg:lineageConfirmed true .
+                        }
+                    }
+                """ ] .
+
+pkg:RebuildOfForkContradictionShape a sh:NodeShape ;
+    sh:targetSubjectsOf pkg:rebuildOf ;
+    sh:severity sh:Warning ;
+    sh:sparql [ sh:message "This pair carries both a committed rebuildOf lineage claim and a PackageRelationship classifying it as a fork or repackage -- a rebuild and a fork are different relationships; see DD-RB."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildOf ?target .
+                        $this pkg:isVersionOf ?thisIdentity .
+                        ?target pkg:isVersionOf ?targetIdentity .
+                        {
+                            ?thisIdentity pkg:hasPackageRelationship ?rel .
+                            ?rel pkg:relationshipTarget ?targetIdentity ; pkg:matchMethod ?method .
+                        } UNION {
+                            ?targetIdentity pkg:hasPackageRelationship ?rel .
+                            ?rel pkg:relationshipTarget ?thisIdentity ; pkg:matchMethod ?method .
+                        }
+                        FILTER ( ?method IN ( pkg:match-fork-detected, pkg:match-repackage-detected ) )
+                    }
+                """ ] .
+

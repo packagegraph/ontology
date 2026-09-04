@@ -5,6 +5,48 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-09-02
+
+Reified rebuild-tracking vocabulary (presence / fidelity / drift) for downstream
+package rebuilds. Ecosystem-neutral (the RPM-based RHEL/AlmaLinux/Rocky case is the
+flagship example and the one with a worked reference algorithm; the model applies to
+any rebuild-from-upstream relationship, e.g. Debian derivatives, JVM vendor
+distributions, or Kubernetes distributions such as k3s) and explicit about how a
+rebuild differs from a fork (see DD-RB).
+
+### Added
+- `pkg:RebuildAssessment` reified class + `hasRebuildAssessment` / `assessmentOf`.
+- Axes: `rebuildFidelity` (`RebuildFidelityScheme`: exact, vendor-patched,
+  modular-equivalent, unknown) and `rebuildDrift` (`RebuildDriftScheme`: even, ahead,
+  behind, version-equivalent).
+- Baselines `fidelityBaseline`, `comparedAgainst`; presence `hasUpstreamCounterpart`.
+- Provenance `assessedAt`, `assessmentMethod`, `assessmentConfidence`,
+  `assessedAgainstSnapshot`; evidence-gated lineage `rebuildOf`
+  (asymmetric + irreflexive), `lineageConfirmed`, `lineageEvidence`;
+  `ambiguousCandidate`.
+- `pkg:RebuildAssessmentShape` + SPARQL guards (coupling, ambiguity, self-baseline,
+  promotion, lineage) and a negative-fixture harness (`make validate-negative`, 31
+  fixtures).
+- `pkg:RebuildOfForkContradictionShape` (`sh:Warning`) flagging a package pair
+  double-classified as both a rebuild and a fork/repackage, plus an advisory-fixture
+  harness (`make validate-advisory`) for testing non-blocking severities. `make
+  validate` and `make deploy` now propagate `allow_infos`/`allow_warnings` so
+  `sh:Info`/`sh:Warning` results are genuinely advisory rather than blocking
+  conformance.
+- Cross-ecosystem examples proving the vocabulary is not RPM-specific: OpenJDK
+  vendor rebuilds (Temurin, Corretto, Zulu, Microsoft Build of OpenJDK), a
+  Debian→Ubuntu rebuild (`debian-norm/v1` method), an Electron ABI rebuild of a
+  native npm module (non-RPM `modular-equivalent`), an Anaconda-vs-PyPI drift
+  case, and a Kubernetes→k3s vendor-patched rebuild.
+- 10 competency questions (CQ-RB-01..10) and DD-RB, including a "Rebuild vs. Fork"
+  section on why package-name identity is not the test and why the unit of
+  comparison must be the specific component, never the enclosing product
+  (OpenShift vs. its vendored Kubernetes source tree).
+
+### Changed
+- Replaced the flat `rebuildTrackingStatus` / `RebuildTrackingScheme` (never released)
+  with the reified model above.
+
 ## [0.12.0] - 2026-08-22
 
 Maven dependency exclusion vocabulary.

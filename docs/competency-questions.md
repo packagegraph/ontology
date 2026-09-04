@@ -2357,25 +2357,446 @@ ORDER BY DESC(?epssScore)
 
 ---
 
+## Domain: Rebuild Tracking (RB)
+
+### CQ-RB-01: Drift-Behind Packages in AlmaLinux and Rocky
+
+**Question:** Which AlmaLinux and Rocky source packages are `drift-behind` their RHEL upstream, as of the latest assessment?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?pkg ?distro ?pkgName ?fidelity ?baseline ?newest
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildDrift pkg:drift-behind ;
+     pkg:comparedAgainst ?newest .
+  ?pkg pkg:packageName ?pkgName .
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+
+  # Get fidelity for context
+  OPTIONAL { ?a pkg:rebuildFidelity ?fidelity }
+  OPTIONAL { ?a pkg:fidelityBaseline ?baseline }
+}
+ORDER BY ?distro ?pkgName
+```
+
+**Expected Columns:** pkg (URI), distro (string), pkgName (string), fidelity (URI), baseline (URI), newest (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildDrift, comparedAgainst, temporal most-recent pattern
+
+**Status:** PASS
+
+---
+
+### CQ-RB-02: Fidelity Provenance with Assessment Metadata
+
+**Question:** For a given rebuild package's latest assessment, what is the `fidelityBaseline`, `rebuildFidelity`, `assessmentMethod`, and `assessmentConfidence`?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkg ?pkgName ?fidelity ?baseline ?baselineName ?method ?confidence
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity ?fidelity ;
+     pkg:fidelityBaseline ?baseline ;
+     pkg:assessmentMethod ?method ;
+     pkg:assessmentConfidence ?confidence .
+  ?pkg pkg:packageName ?pkgName .
+  ?baseline pkg:packageName ?baselineName .
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+}
+ORDER BY ?pkgName
+```
+
+**Expected Columns:** pkg (URI), pkgName (string), fidelity (URI), baseline (URI), baselineName (string), method (string), confidence (decimal)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, fidelityBaseline, assessmentMethod, assessmentConfidence
+
+**Status:** PASS
+
+---
+
+### CQ-RB-03: Vendor-Patched Yet Drift-Behind (Killer Query)
+
+**Question:** Which packages are `vendor-patched` **yet** `drift-behind` — locally patched but lagging upstream security updates — in Alma vs Rocky?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+SELECT ?pkg ?distro ?baseline ?newest ?snapshot WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity pkg:fidelity-vendor-patched ;
+     pkg:rebuildDrift pkg:drift-behind ;
+     pkg:fidelityBaseline ?baseline ;
+     pkg:comparedAgainst ?newest ;
+     pkg:assessedAgainstSnapshot ?snapshot .
+  ?pkg pkg:packageName ?name .
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
+
+  # Latest assessment per package: a drift verdict is snapshot-relative, so the
+  # snapshot it was computed against is returned alongside it.
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+}
+```
+
+**Expected Columns:** pkg (URI), distro (string), baseline (URI), newest (URI), snapshot (URI — the dataset the drift verdict is relative to)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, fidelityBaseline, comparedAgainst, assessedAgainstSnapshot, compound axis query
+
+**Status:** PASS
+
+---
+
+### CQ-RB-04: Committed Lineage vs. Unpromoted Candidate
+
+**Question:** Which packages carry committed `rebuildOf` lineage (`lineageConfirmed = true`) versus only an unpromoted candidate `fidelityBaseline`?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkg ?pkgName ?lineageStatus ?baseline ?committed
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity ?fidelity ;
+     pkg:fidelityBaseline ?baseline ;
+     pkg:lineageConfirmed ?lineageStatus .
+
+  ?pkg pkg:packageName ?pkgName .
+
+  # The committed prov shortcut, if it was promoted. A candidate baseline
+  # alone does NOT imply the rebuildOf triple exists — only an
+  # evidence-confirmed promotion materialises it.
+  OPTIONAL { ?pkg pkg:rebuildOf ?committed . FILTER( ?committed = ?baseline ) }
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+}
+ORDER BY ?pkgName ?lineageStatus
+```
+
+**Expected Columns:** pkg (URI), pkgName (string), lineageStatus (boolean), baseline (URI), committed (URI or unbound — bound only when the committed `rebuildOf` triple exists)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, fidelityBaseline, lineageConfirmed, rebuildOf, promotion pattern
+
+**Status:** PASS
+
+---
+
+### CQ-RB-05: Exclusive Packages Absent from Upstream
+
+**Question:** Which source packages are **exclusive** (`hasUpstreamCounterpart = false`) to AlmaLinux or to Rocky — absent from RHEL?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkg ?distro ?pkgName
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:hasUpstreamCounterpart false ;
+     pkg:assessedAgainstSnapshot ?snapshot .
+  ?pkg pkg:packageName ?pkgName .
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+}
+ORDER BY ?distro ?pkgName
+```
+
+**Expected Columns:** pkg (URI), distro (string), pkgName (string)
+
+**Exercises:** RebuildAssessment, assessmentOf, hasUpstreamCounterpart, assessedAgainstSnapshot, presence axis
+
+**Status:** PASS
+
+---
+
+### CQ-RB-06: Ambiguous Upstream Matches
+
+**Question:** Which packages have an **ambiguous** upstream match (`ambiguousCandidate`), and what are the tied builds?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkg ?pkgName ?candidate ?candidateName
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity pkg:fidelity-unknown ;
+     pkg:ambiguousCandidate ?candidate .
+  ?pkg pkg:packageName ?pkgName .
+  ?candidate pkg:packageName ?candidateName .
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+}
+ORDER BY ?pkgName ?candidateName
+```
+
+**Expected Columns:** pkg (URI), pkgName (string), candidate (URI), candidateName (string)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, ambiguousCandidate, ambiguity representation
+
+**Status:** PASS
+
+---
+
+### CQ-RB-07: Cross-Distro Three-Way Comparison
+
+**Question:** For a package present in all three distributions (Alma, Rocky, RHEL), compare their fidelity + drift against the same RHEL upstream build side by side.
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkgName ?almaFidelity ?almaBaseline ?almaDrift ?rockyFidelity ?rockyBaseline ?rockyDrift ?rhelUpstream
+WHERE {
+  # Alma assessment
+  ?aAlma pkg:assessmentOf ?pkgAlma ;
+         pkg:rebuildFidelity ?almaFidelity ;
+         pkg:fidelityBaseline ?almaBaseline ;
+         pkg:rebuildDrift ?almaDrift ;
+         pkg:comparedAgainst ?rhelUpstream .
+  ?pkgAlma pkg:packageName ?pkgName .
+
+  # Rocky assessment against same upstream
+  ?aRocky pkg:assessmentOf ?pkgRocky ;
+          pkg:rebuildFidelity ?rockyFidelity ;
+          pkg:fidelityBaseline ?rockyBaseline ;
+          pkg:rebuildDrift ?rockyDrift ;
+          pkg:comparedAgainst ?rhelUpstream .
+  ?pkgRocky pkg:packageName ?pkgName .
+
+  # Verify both distributions
+  FILTER( REGEX( STR(?pkgAlma), "/almalinux/" ) && REGEX( STR(?pkgRocky), "/rocky/" ) )
+
+  # Filter to latest per distribution per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkgAlma ;
+        pkg:assessedAt ?date2 .
+    ?aAlma pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+  FILTER NOT EXISTS {
+    ?a3 pkg:assessmentOf ?pkgRocky ;
+        pkg:assessedAt ?date3 .
+    ?aRocky pkg:assessedAt ?date4 .
+    FILTER(?date3 > ?date4)
+  }
+}
+ORDER BY ?pkgName
+```
+
+**Expected Columns:** pkgName (string), almaFidelity (URI), almaBaseline (URI), almaDrift (URI), rockyFidelity (URI), rockyBaseline (URI), rockyDrift (URI), rhelUpstream (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, fidelityBaseline, comparedAgainst, cross-distro join
+
+**Status:** PASS
+
+---
+
+### CQ-RB-08: Drift-Ahead Packages
+
+**Question:** Which packages are `drift-ahead` of RHEL (a rebuild leads the upstream snapshot)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkg ?distro ?pkgName ?fidelity ?newest
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildDrift pkg:drift-ahead ;
+     pkg:comparedAgainst ?newest .
+  ?pkg pkg:packageName ?pkgName .
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
+
+  # Filter to latest assessment per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+
+  # Get fidelity for context
+  OPTIONAL { ?a pkg:rebuildFidelity ?fidelity }
+}
+ORDER BY ?distro ?pkgName
+```
+
+**Expected Columns:** pkg (URI), distro (string), pkgName (string), fidelity (URI), newest (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildDrift, comparedAgainst, edge-case drift
+
+**Status:** PASS
+
+---
+
+### CQ-RB-09: Alma vs. Rocky Divergence on Same RHEL Package
+
+**Question:** Where do Alma and Rocky **disagree** on tracking the same RHEL package (different fidelity or drift in their latest assessments)?
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?pkgName ?almaFidelity ?rockyFidelity ?almaDrift ?rockyDrift
+WHERE {
+  # Alma assessment
+  ?aAlma pkg:assessmentOf ?pkgAlma ;
+         pkg:rebuildFidelity ?almaFidelity ;
+         pkg:rebuildDrift ?almaDrift ;
+         pkg:comparedAgainst ?baseline .
+  ?pkgAlma pkg:packageName ?pkgName .
+
+  # Rocky assessment against same baseline
+  ?aRocky pkg:assessmentOf ?pkgRocky ;
+          pkg:rebuildFidelity ?rockyFidelity ;
+          pkg:rebuildDrift ?rockyDrift ;
+          pkg:comparedAgainst ?baseline .
+  ?pkgRocky pkg:packageName ?pkgName .
+
+  # Verify both distributions
+  FILTER( REGEX( STR(?pkgAlma), "/almalinux/" ) && REGEX( STR(?pkgRocky), "/rocky/" ) )
+
+  # They must disagree on at least one axis
+  FILTER( ?almaFidelity != ?rockyFidelity || ?almaDrift != ?rockyDrift )
+
+  # Filter to latest per distribution per package
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkgAlma ;
+        pkg:assessedAt ?date2 .
+    ?aAlma pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
+  FILTER NOT EXISTS {
+    ?a3 pkg:assessmentOf ?pkgRocky ;
+        pkg:assessedAt ?date3 .
+    ?aRocky pkg:assessedAt ?date4 .
+    FILTER(?date3 > ?date4)
+  }
+}
+ORDER BY ?pkgName
+```
+
+**Expected Columns:** pkgName (string), almaFidelity (URI), rockyFidelity (URI), almaDrift (URI), rockyDrift (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, comparedAgainst, cross-distro divergence, FILTER inequality
+
+**Status:** PASS
+
+---
+
+### CQ-RB-10: Cross-Ecosystem Vendor Comparison (N-Way, Non-RPM)
+
+**Question:** For a project rebuilt by multiple vendors under different downstream product names (e.g. OpenJDK, rebuilt as Eclipse Temurin, Amazon Corretto, Azul Zulu, and Microsoft Build of OpenJDK), compare fidelity and drift across all vendors against the same upstream project. Demonstrates the vocabulary is not RPM-specific and that package-name identity is not the rebuild/fork test (see DD-RB) -- these vendors publish under entirely different names while all rebuilding the same upstream source.
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?vendor ?vendorProduct ?fidelity ?drift
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity ?fidelity ;
+     pkg:rebuildDrift ?drift ;
+     pkg:comparedAgainst ?upstream ;
+     pkg:assessedAt ?assessedAt .
+  ?pkg pkg:packageName ?vendorProduct .
+  ?upstream pkg:packageName "openjdk" .
+
+  # Vendor segment of the source-package IRI -- the downstream product name
+  # (?vendorProduct) is deliberately NOT required to match the upstream's
+  # packageName ("openjdk"), since a genuine rebuild is commonly published
+  # under a different product name.
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?vendor )
+
+  # Latest assessment per vendor package.
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ; pkg:assessedAt ?date2 .
+    FILTER(?date2 > ?assessedAt)
+  }
+}
+ORDER BY ?vendor
+```
+
+**Expected Columns:** vendor (string), vendorProduct (string), fidelity (URI), drift (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, comparedAgainst, cross-ecosystem N-way join, package-name-independent rebuild identification
+
+**Status:** PASS
+
+---
+
 ## Summary Statistics
 
-| Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED |
-|--------|----------|------|-------------------|---------------|---------|
-| Package Management (PM) | 10 | 10 | 0 | 0 | 0 |
-| Licensing (LIC) | 3 | 3 | 0 | 0 | 0 |
-| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 | 0 |
-| Package Identity (PID) | 1 | 0 | 1 | 0 | 0 |
-| Software Classification (CLASS) | 2 | 0 | 0 | 0 | 2 |
-| Exploit Risk Assessment (ERA) | 2 | 0 | 2 | 0 | 0 |
-| Temporal Analysis (TEMP) | 3 | 2 | 0 | 1 | 0 |
-| Supply Chain Risk (SCR) | 9 | 5 | 0 | 3 | 1 |
-| Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 | 0 |
-| Provenance / Build (PROV) | 4 | 4 | 0 | 0 | 0 |
-| Repository / VCS (VCS) | 2 | 2 | 0 | 0 | 0 |
-| Package Set (SET) | 1 | 1 | 0 | 0 | 0 |
-| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 |
-| Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 | 0 |
-| **TOTAL** | **58** | **48** | **3** | **4** | **3** |
+| Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED | OTHER |
+|--------|----------|------|-------------------|---------------|---------|-------|
+| Package Management (PM) | 11 | 11 | 0 | 0 | 0 | 0 |
+| Dependency Analysis (DEP) | 5 | 5 | 0 | 0 | 0 | 0 |
+| Licensing (LIC) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 | 0 | 0 |
+| Package Identity (PID) | 1 | 0 | 1 | 0 | 0 | 0 |
+| Software Classification (CLASS) | 2 | 0 | 0 | 0 | 2 | 0 |
+| Exploit Risk Assessment (ERA) | 2 | 0 | 2 | 0 | 0 | 0 |
+| Temporal Analysis (TEMP) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Supply Chain Risk (SCR) | 10 | 5 | 0 | 3 | 2 | 0 |
+| Cross-Distribution Analysis (XD) | 5 | 4 | 0 | 0 | 1 | 0 |
+| Provenance / Build (PROV) | 4 | 3 | 0 | 0 | 0 | 1 |
+| Repository / VCS (VCS) | 2 | 1 | 0 | 0 | 1 | 0 |
+| Package Set (SET) | 1 | 1 | 0 | 0 | 0 | 0 |
+| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Maven Ecosystem (MVN) | 8 | 5 | 0 | 0 | 0 | 3 |
+| Rebuild Tracking (RB) | 10 | 10 | 0 | 0 | 0 | 0 |
+| **TOTAL** | **78** | **62** | **3** | **3** | **6** | **4** |
+
+**Count basis:** 77 `### CQ-*` entries, each with its own SPARQL block (PM includes the
+`CQ-PM-03b` UNION variant alongside `CQ-PM-03`). Counts are derived mechanically from the
+`**Status:**` line of each entry. OTHER covers 3 MVN entries marked NEW and 1 PROV entry
+marked PARTIAL.
 
 **Note:** PASS, ONTOLOGY-COMPLETE, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ONTOLOGY-COMPLETE means the ontology and an enricher both exist but the enricher has not been run against production. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
 
@@ -2429,12 +2850,22 @@ The following CQs can be validated against local example files without Fuseki:
 - **CQ-SEC-07** — patch provenance chain (uses security examples)
 - **CQ-DEP-03** — version constraints (uses dependency examples)
 - **CQ-MVN-01..03** — Maven CVEs, vulnerable versions, fix commits (uses maven examples — spring-beans 5.3.18)
+- **CQ-RB-01** — drift-behind packages (uses rebuild tracking examples)
+- **CQ-RB-02** — fidelity provenance (uses rebuild tracking examples)
+- **CQ-RB-03** — vendor-patched and drift-behind (uses rebuild tracking examples)
+- **CQ-RB-04** — committed lineage vs. unpromoted candidate (uses rebuild tracking examples)
+- **CQ-RB-05** — exclusive packages (uses rebuild tracking examples)
+- **CQ-RB-06** — ambiguous upstream matches (uses rebuild tracking examples)
+- **CQ-RB-07** — cross-distro three-way comparison (uses rebuild tracking examples)
+- **CQ-RB-08** — drift-ahead packages (uses rebuild tracking examples)
+- **CQ-RB-09** — Alma vs. Rocky divergence (uses rebuild tracking examples)
+- **CQ-RB-10** — cross-ecosystem N-way vendor comparison (uses rebuild tracking examples)
 
 ---
 
 ## CQ Coverage Map
 
-### Classes Exercised (29 of 36 core classes)
+### Classes Exercised (30 of 36 core classes)
 
 - Package ✓
 - BinaryPackage ✓
@@ -2455,6 +2886,7 @@ The following CQs can be validated against local example files without Fuseki:
 - BuildActivity ✓
 - InstalledFile ✓
 - PackageSet ✓
+- RebuildAssessment ✓
 - Vulnerability (Security) ✓
 - CVE (Security) ✓
 - SecurityAdvisory (Security) ✓
@@ -2466,9 +2898,11 @@ The following CQs can be validated against local example files without Fuseki:
 - Repository (VCS) ✓
 - Commit (VCS) ✓
 
-### Properties Exercised (55+ properties)
+### Properties Exercised (70+ properties)
 
 **Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, hasUpstreamProject, sourceCodeRepository, derivedFromCommit
+
+**Rebuild Tracking:** assessmentOf, hasRebuildAssessment, rebuildFidelity, fidelityBaseline, rebuildDrift, comparedAgainst, hasUpstreamCounterpart, ambiguousCandidate, assessmentMethod, assessmentConfidence, assessedAt, assessedAgainstSnapshot, lineageConfirmed, lineageEvidence, rebuildOf
 
 **Security:** cveId, osvId, hasAffectedRange, affectsEcosystem, affectsPackageName, rangeType, hasRangeEvent, eventType, eventVersion, eventCommit, hasCVSSScore, cvssVersion, baseScore, affectsPackage, patchAddresses, patchProducedVersion, patchedFrom, addressesVulnerability, hasCWE
 

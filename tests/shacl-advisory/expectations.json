@@ -1,0 +1,8 @@
+{
+  "rebuild-of-fork-contradiction.ttl": {
+    "focusNode": "_advMariaDb",
+    "sourceShape": "RebuildOfForkContradictionShape",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "This pair carries both a committed rebuildOf lineage claim and a PackageRelationship classifying it as a fork or repackage -- a rebuild and a fork are different relationships; see DD-RB."
+  }
+}

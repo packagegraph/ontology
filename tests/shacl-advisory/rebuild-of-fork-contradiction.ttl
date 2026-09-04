@@ -1,0 +1,48 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# MariaDB is a well-known, independently-developed fork of MySQL, not a rebuild.
+# This fixture deliberately mis-models it as a rebuildOf lineage claim to prove the
+# advisory contradiction guard fires when a PackageRelationship elsewhere already
+# classifies the same pair as a fork. The graph otherwise conforms cleanly -- this
+# fixture demonstrates a Warning, not a Violation.
+pkg:_advMysqlIdentity a pkg:PackageIdentity ;
+    pkg:purl "pkg:generic/mysql-server@8.0.35"^^xsd:anyURI ;
+    pkg:identityName "mysql-server" ;
+    rdfs:label "mysql-server" .
+pkg:_advMysql a pkg:SourcePackage ;
+    pkg:packageName "mysql-server" ;
+    pkg:isVersionOf pkg:_advMysqlIdentity ;
+    pkg:hasVersion pkg:_advMysqlVersion .
+pkg:_advMysqlVersion a pkg:Version ;
+    pkg:versionString "8.0.35" .
+
+pkg:_advMariaDbIdentity a pkg:PackageIdentity ;
+    pkg:purl "pkg:generic/mariadb-server@11.4.2"^^xsd:anyURI ;
+    pkg:identityName "mariadb-server" ;
+    rdfs:label "mariadb-server" ;
+    pkg:hasPackageRelationship [ a pkg:PackageRelationship ;
+        pkg:relationshipTarget pkg:_advMysqlIdentity ;
+        pkg:matchMethod pkg:match-fork-detected ] .
+pkg:_advMariaDb a pkg:SourcePackage ;
+    pkg:packageName "mariadb-server" ;
+    pkg:isVersionOf pkg:_advMariaDbIdentity ;
+    pkg:hasVersion pkg:_advMariaDbVersion ;
+    pkg:rebuildOf pkg:_advMysql .
+pkg:_advMariaDbVersion a pkg:Version ;
+    pkg:versionString "11.4.2" .
+
+pkg:_advSnap a pkg:DataSnapshot ; rdfs:label "adv snap" .
+pkg:_advAssessment a pkg:RebuildAssessment ;
+    pkg:assessmentOf pkg:_advMariaDb ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-exact ;
+    pkg:fidelityBaseline pkg:_advMysql ;
+    pkg:rebuildDrift pkg:drift-even ;
+    pkg:comparedAgainst pkg:_advMysql ;
+    pkg:assessedAt "2026-08-31T00:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "adv-test/v1" ;
+    pkg:assessedAgainstSnapshot pkg:_advSnap ;
+    pkg:lineageConfirmed true ;
+    pkg:lineageEvidence "illustrative-only" .
