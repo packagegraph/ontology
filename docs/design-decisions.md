@@ -363,11 +363,11 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 | What upstream build was this rebuilt from, how faithfully? | `pkg:rebuildFidelity` | `pkg:fidelityBaseline` | Four tiers: exact EVR match, vendor-patched suffix strip, modular-equivalent, unknown |
 | How does it sit vs upstream's current newest? | `pkg:rebuildDrift` | `pkg:comparedAgainst` | Four outcomes: even, ahead, behind, version-equivalent |
 
-Separating fidelity from drift enables the highest-value supply-chain signal: vendor-patched **and** behind — locally modified but lagging upstream security updates — expressible as `rebuildFidelity = vendor-patched` (baseline: the SRPM rebuilt) and `rebuildDrift = behind` (baseline: RHEL's newest). These reference *different* upstream builds, both recorded on the assessment.
+Separating fidelity from drift enables the highest-value supply-chain signal: vendor-patched **and** behind — locally modified but lagging upstream security updates — expressible as `rebuildFidelity = vendor-patched` (baseline: the specific upstream build rebuilt) and `rebuildDrift = behind` (baseline: upstream's newest, e.g. the SRPM rebuilt vs. RHEL's newest). These reference *different* upstream builds, both recorded on the assessment. The class and property model (`RebuildAssessment`, the three axes, evidence-gated `rebuildOf`) is ecosystem-neutral; RPM/RHEL is the motivating and most fully worked example, not a scope boundary — see the method-id discussion below.
 
 **The versioned executable algorithm `rebuild-norm/v1`:**
 
-Normalized candidate matching is deterministic and versioned. The method id `"rebuild-norm/v1"` pins the ruleset:
+Normalized candidate matching is deterministic and versioned. `pkg:assessmentMethod` is a free-form versioned identifier precisely so each ecosystem can define its own ruleset — `rebuild-norm/v1` below is the RPM-family instantiation (RHEL/AlmaLinux/Rocky), not the only one a conformant assessment may cite. A Debian-derivative rebuild would define its own id (e.g. `debian-norm/v1`) over `dpkg --compare-versions`; a language-ecosystem fork (Maven, npm, Cargo) would define one over semantic versioning. The method id pins the ruleset:
 
 - **Candidate scope:** upstream builds with same source `packageName` within the release (and, for modular packages, same `module:stream`) recorded in `assessedAgainstSnapshot`.
 - **Version comparison:** epoch-aware `rpmvercmp` over full EVR. Missing epoch treated as `0` (RPM semantics).

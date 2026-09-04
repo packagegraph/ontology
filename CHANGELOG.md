@@ -8,7 +8,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.13.0] - 2026-09-02
 
 Reified rebuild-tracking vocabulary (presence / fidelity / drift) for downstream
-RHEL rebuilds.
+package rebuilds. Ecosystem-neutral (the RPM-based RHEL/AlmaLinux/Rocky case is the
+flagship example and the one with a worked reference algorithm; the model applies to
+any rebuild-from-upstream relationship, e.g. Debian derivatives or language-ecosystem
+forks).
 
 ### Added
 - `pkg:RebuildAssessment` reified class + `hasRebuildAssessment` / `assessmentOf`.

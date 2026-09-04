@@ -281,7 +281,7 @@ dcterms:title a owl:AnnotationProperty ;
 
 :rebuildOf a owl:ObjectProperty, owl:IrreflexiveProperty, owl:AsymmetricProperty ;
     rdfs:label "rebuild of"@en ;
-    IAO:0000115 "Committed build-lineage: links a source package in a downstream rebuild distribution to the specific upstream source package it was rebuilt from. Asserted ONLY when a RebuildAssessment has promoted a candidate baseline to committed lineage (lineageConfirmed = true) on the strength of independent provenance evidence — never inferred from NVR/EVR normalization alone."@en ;
+    IAO:0000115 "Committed build-lineage: links a source package produced by a downstream rebuild to the specific upstream source package it was rebuilt from. Asserted ONLY when a RebuildAssessment has promoted a candidate baseline to committed lineage (lineageConfirmed = true) on the strength of independent provenance evidence — never inferred from version-string normalization alone (e.g. RPM NVR/EVR matching, dpkg version comparison, or semantic-version equality)."@en ;
     rdfs:comment "This source package is a rebuild of a specific upstream source package (evidence-confirmed lineage)"@en ;
     rdfs:domain :SourcePackage ;
     rdfs:range :SourcePackage ;
@@ -1529,7 +1529,7 @@ xsd:date a rdfs:Datatype .
 
 :rebuildDrift a owl:ObjectProperty ;
     rdfs:label "rebuild drift"@en ;
-    IAO:0000115 "Where the assessed build sits relative to upstream's newest build (the comparedAgainst baseline), as a SKOS concept from RebuildDriftScheme. Epoch-aware rpmvercmp against the assessment snapshot."@en ;
+    IAO:0000115 "Where the assessed build sits relative to upstream's newest build (the comparedAgainst baseline), as a SKOS concept from RebuildDriftScheme. Computed by the ecosystem-appropriate ordered version comparison (e.g. RPM's epoch-aware rpmvercmp, dpkg version comparison, or semantic versioning) against the assessment snapshot."@en ;
     rdfs:comment "Drift classification for this assessment"@en ;
     rdfs:domain :RebuildAssessment ;
     rdfs:range skos:Concept ;
