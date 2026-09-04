@@ -1,74 +1,112 @@
 {
-  "missing-snapshot.ttl": {
-    "resultMessage": "A RebuildAssessment must reference exactly one assessedAgainstSnapshot.",
-    "sourceConstraintComponent": "MinCountConstraintComponent"
+  "ambiguous-bad-confidence.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "An ambiguous assessment must have assessmentConfidence 0.5 and lineageConfirmed=false."
   },
-  "two-fidelity.ttl": {
-    "resultMessage": "rebuildFidelity must be a concept from RebuildFidelityScheme.",
-    "sourceConstraintComponent": "MaxCountConstraintComponent"
-  },
-  "bad-confidence.ttl": {
-    "resultMessage": "assessmentConfidence must be between 0.0 and 1.0.",
-    "sourceConstraintComponent": "MaxInclusiveConstraintComponent"
-  },
-  "lineage-confirmed-twice.ttl": {
-    "resultMessage": "A RebuildAssessment must have exactly one lineageConfirmed boolean.",
-    "sourceConstraintComponent": "MaxCountConstraintComponent"
-  },
-  "drift-without-baseline.ttl": {
-    "resultMessage": "rebuildDrift present requires a comparedAgainst baseline.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "matched-without-baseline.ttl": {
-    "resultMessage": "A matched fidelity (exact/vendor-patched/modular-equivalent) requires a fidelityBaseline.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "unknown-with-baseline.ttl": {
-    "resultMessage": "fidelity-unknown forbids a fidelityBaseline.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "counterpart-false-with-fidelity.ttl": {
-    "resultMessage": "hasUpstreamCounterpart=false forbids fidelity, drift, baselines, and ambiguous candidates.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "counterpart-true-missing-results.ttl": {
-    "resultMessage": "hasUpstreamCounterpart=true requires exactly one rebuildFidelity and one rebuildDrift.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "self-baseline.ttl": {
-    "resultMessage": "A package must not be its own fidelity or drift baseline.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "one-ambiguous.ttl": {
-    "resultMessage": "ambiguousCandidate requires at least two distinct candidates.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+  "ambiguous-candidate-not-source.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "ClassConstraintComponent",
+    "resultMessage": "Each ambiguousCandidate must be a SourcePackage."
   },
   "ambiguous-not-unknown.ttl": {
-    "resultMessage": "ambiguousCandidate requires rebuildFidelity = fidelity-unknown.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "ambiguousCandidate requires rebuildFidelity = fidelity-unknown."
   },
-  "ambiguous-bad-confidence.ttl": {
-    "resultMessage": "An ambiguous assessment must have assessmentConfidence 0.5 and lineageConfirmed=false.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
-  },
-  "confirmed-unknown.ttl": {
-    "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+  "bad-confidence.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MaxInclusiveConstraintComponent",
+    "resultMessage": "assessmentConfidence must be between 0.0 and 1.0."
   },
   "confirmed-no-evidence.ttl": {
-    "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence."
   },
-  "unconfirmed-with-evidence.ttl": {
-    "resultMessage": "lineageConfirmed=false forbids lineageEvidence.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+  "confirmed-unknown.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "lineageConfirmed=true requires a matched fidelity, a fidelityBaseline, and non-empty lineageEvidence."
   },
-  "lineage-wrong-target.ttl": {
-    "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+  "counterpart-false-with-fidelity.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "hasUpstreamCounterpart=false forbids fidelity, drift, baselines, and ambiguous candidates."
+  },
+  "counterpart-true-missing-results.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "hasUpstreamCounterpart=true requires exactly one rebuildFidelity and one rebuildDrift."
+  },
+  "drift-without-baseline.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "rebuildDrift present requires a comparedAgainst baseline."
+  },
+  "evidence-not-string.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "DatatypeConstraintComponent",
+    "resultMessage": "lineageEvidence must be a single non-empty string."
+  },
+  "lineage-confirmed-twice.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MaxCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one lineageConfirmed boolean."
   },
   "lineage-unconfirmed.ttl": {
-    "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true.",
-    "sourceConstraintComponent": "SPARQLConstraintComponent"
+    "focusNode": "_negSrc",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true."
+  },
+  "lineage-wrong-target.ttl": {
+    "focusNode": "_negSrc",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "rebuildOf requires an assessment of the same package with the same fidelityBaseline and lineageConfirmed=true."
+  },
+  "matched-without-baseline.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "A matched fidelity (exact/vendor-patched/modular-equivalent) requires a fidelityBaseline."
+  },
+  "missing-snapshot.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must reference exactly one assessedAgainstSnapshot."
+  },
+  "one-ambiguous.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "ambiguousCandidate requires at least two distinct candidates."
+  },
+  "self-baseline.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "A package must not be its own fidelity or drift baseline."
+  },
+  "two-compared-against.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MaxCountConstraintComponent",
+    "resultMessage": "An assessment must have at most one comparedAgainst SourcePackage."
+  },
+  "two-fidelity-baselines.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MaxCountConstraintComponent",
+    "resultMessage": "An assessment must have at most one fidelityBaseline SourcePackage."
+  },
+  "two-fidelity.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "MaxCountConstraintComponent",
+    "resultMessage": "rebuildFidelity must be a concept from RebuildFidelityScheme."
+  },
+  "unconfirmed-with-evidence.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "lineageConfirmed=false forbids lineageEvidence."
+  },
+  "unknown-with-baseline.ttl": {
+    "focusNode": "_neg",
+    "sourceConstraintComponent": "SPARQLConstraintComponent",
+    "resultMessage": "fidelity-unknown forbids a fidelityBaseline."
   }
 }

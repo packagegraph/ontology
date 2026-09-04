@@ -281,6 +281,13 @@ noted.
   `fidelityBaseline`.
 - `rebuildFidelity = fidelity-unknown` ⇒ **no** `fidelityBaseline`.
 
+**Node-kind limitation (documented, not silently assumed):** validation runs pyshacl with
+`inference="rdfs"`, so an object property's `rdfs:range` retypes any IRI object before shapes
+are checked. `sh:class` on `fidelityBaseline` / `comparedAgainst` / `ambiguousCandidate`
+therefore catches *literals* supplied where a SourcePackage is required, but cannot catch an
+IRI that was declared as some other class. The cardinality constraints (`sh:maxCount 1`) and
+the `lineageEvidence` `sh:datatype` check are fully enforceable and carry the real weight.
+
 **Self-baseline guard (SPARQL, fixes finding #4):** `assessmentOf` must not equal
 `fidelityBaseline` or `comparedAgainst` (a package is not its own baseline).
 
@@ -377,9 +384,12 @@ New `## Domain: Rebuild Tracking (RB)` in `docs/competency-questions.md`, each
 formalized as SPARQL with an expected-result schema in the house style. The suite
 deliberately spans **RHEL (upstream) vs AlmaLinux vs Rocky**, exercises every new
 axis, and includes both **positive** (matches found) and **negative** (absence /
-lag / ambiguity) searches. Every query keys on the *latest* assessment per package
-(`ORDER BY DESC(?assessedAt)` / `MAX`), joins via the canonical `assessmentOf`
-direction, and filters `assessedAgainstSnapshot` for reproducibility.
+lag / ambiguity) searches. Every query keys on the *latest* assessment per package (via a
+`FILTER NOT EXISTS { ... ?date2 > ?date1 }` recency pattern) and joins via the canonical
+`assessmentOf` direction. Queries whose verdict is snapshot-relative (drift) additionally
+**return** `assessedAgainstSnapshot`, so the dataset the verdict is relative to travels with
+the answer; they do not constrain it to a fixed snapshot, which would hard-code a
+collection run into the specification.
 
 | CQ | Question | Axis / kind |
 |----|----------|-------------|

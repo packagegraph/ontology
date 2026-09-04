@@ -2375,7 +2375,7 @@ WHERE {
      pkg:comparedAgainst ?newest .
   ?pkg pkg:packageName ?pkgName .
   BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
-  
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2383,7 +2383,7 @@ WHERE {
     ?a pkg:assessedAt ?date1 .
     FILTER(?date2 > ?date1)
   }
-  
+
   # Get fidelity for context
   OPTIONAL { ?a pkg:rebuildFidelity ?fidelity }
   OPTIONAL { ?a pkg:fidelityBaseline ?baseline }
@@ -2416,7 +2416,7 @@ WHERE {
      pkg:assessmentConfidence ?confidence .
   ?pkg pkg:packageName ?pkgName .
   ?baseline pkg:packageName ?baselineName .
-  
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2443,20 +2443,30 @@ ORDER BY ?pkgName
 **SPARQL:**
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
-SELECT ?pkg ?distro ?baseline ?newest WHERE {
+SELECT ?pkg ?distro ?baseline ?newest ?snapshot WHERE {
   ?a pkg:assessmentOf ?pkg ;
      pkg:rebuildFidelity pkg:fidelity-vendor-patched ;
      pkg:rebuildDrift pkg:drift-behind ;
      pkg:fidelityBaseline ?baseline ;
-     pkg:comparedAgainst ?newest .
+     pkg:comparedAgainst ?newest ;
+     pkg:assessedAgainstSnapshot ?snapshot .
   ?pkg pkg:packageName ?name .
   BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
+
+  # Latest assessment per package: a drift verdict is snapshot-relative, so the
+  # snapshot it was computed against is returned alongside it.
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ;
+        pkg:assessedAt ?date2 .
+    ?a pkg:assessedAt ?date1 .
+    FILTER(?date2 > ?date1)
+  }
 }
 ```
 
-**Expected Columns:** pkg (URI), distro (string), baseline (URI), newest (URI)
+**Expected Columns:** pkg (URI), distro (string), baseline (URI), newest (URI), snapshot (URI — the dataset the drift verdict is relative to)
 
-**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, fidelityBaseline, comparedAgainst, compound axis query
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, fidelityBaseline, comparedAgainst, assessedAgainstSnapshot, compound axis query
 
 **Status:** PASS
 
@@ -2470,16 +2480,20 @@ SELECT ?pkg ?distro ?baseline ?newest WHERE {
 ```sparql
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 
-SELECT ?pkg ?pkgName ?lineageStatus ?baseline
+SELECT ?pkg ?pkgName ?lineageStatus ?baseline ?committed
 WHERE {
   ?a pkg:assessmentOf ?pkg ;
-     pkg:rebuildFidelity ?fidelity .
-  
+     pkg:rebuildFidelity ?fidelity ;
+     pkg:fidelityBaseline ?baseline ;
+     pkg:lineageConfirmed ?lineageStatus .
+
   ?pkg pkg:packageName ?pkgName .
-  
-  ?a pkg:fidelityBaseline ?baseline .
-  ?a pkg:lineageConfirmed ?lineageStatus .
-  
+
+  # The committed prov shortcut, if it was promoted. A candidate baseline
+  # alone does NOT imply the rebuildOf triple exists — only an
+  # evidence-confirmed promotion materialises it.
+  OPTIONAL { ?pkg pkg:rebuildOf ?committed . FILTER( ?committed = ?baseline ) }
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2491,9 +2505,9 @@ WHERE {
 ORDER BY ?pkgName ?lineageStatus
 ```
 
-**Expected Columns:** pkg (URI), pkgName (string), lineageStatus (boolean), baseline (URI)
+**Expected Columns:** pkg (URI), pkgName (string), lineageStatus (boolean), baseline (URI), committed (URI or unbound — bound only when the committed `rebuildOf` triple exists)
 
-**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, fidelityBaseline, lineageConfirmed, promotion pattern
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, fidelityBaseline, lineageConfirmed, rebuildOf, promotion pattern
 
 **Status:** PASS
 
@@ -2514,7 +2528,7 @@ WHERE {
      pkg:assessedAgainstSnapshot ?snapshot .
   ?pkg pkg:packageName ?pkgName .
   BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
-  
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2549,7 +2563,7 @@ WHERE {
      pkg:ambiguousCandidate ?candidate .
   ?pkg pkg:packageName ?pkgName .
   ?candidate pkg:packageName ?candidateName .
-  
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2586,7 +2600,7 @@ WHERE {
          pkg:rebuildDrift ?almaDrift ;
          pkg:comparedAgainst ?rhelUpstream .
   ?pkgAlma pkg:packageName ?pkgName .
-  
+
   # Rocky assessment against same upstream
   ?aRocky pkg:assessmentOf ?pkgRocky ;
           pkg:rebuildFidelity ?rockyFidelity ;
@@ -2594,10 +2608,10 @@ WHERE {
           pkg:rebuildDrift ?rockyDrift ;
           pkg:comparedAgainst ?rhelUpstream .
   ?pkgRocky pkg:packageName ?pkgName .
-  
+
   # Verify both distributions
   FILTER( REGEX( STR(?pkgAlma), "/almalinux/" ) && REGEX( STR(?pkgRocky), "/rocky/" ) )
-  
+
   # Filter to latest per distribution per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkgAlma ;
@@ -2638,7 +2652,7 @@ WHERE {
      pkg:comparedAgainst ?newest .
   ?pkg pkg:packageName ?pkgName .
   BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?distro )
-  
+
   # Filter to latest assessment per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkg ;
@@ -2646,7 +2660,7 @@ WHERE {
     ?a pkg:assessedAt ?date1 .
     FILTER(?date2 > ?date1)
   }
-  
+
   # Get fidelity for context
   OPTIONAL { ?a pkg:rebuildFidelity ?fidelity }
 }
@@ -2677,20 +2691,20 @@ WHERE {
          pkg:rebuildDrift ?almaDrift ;
          pkg:comparedAgainst ?baseline .
   ?pkgAlma pkg:packageName ?pkgName .
-  
+
   # Rocky assessment against same baseline
   ?aRocky pkg:assessmentOf ?pkgRocky ;
           pkg:rebuildFidelity ?rockyFidelity ;
           pkg:rebuildDrift ?rockyDrift ;
           pkg:comparedAgainst ?baseline .
   ?pkgRocky pkg:packageName ?pkgName .
-  
+
   # Verify both distributions
   FILTER( REGEX( STR(?pkgAlma), "/almalinux/" ) && REGEX( STR(?pkgRocky), "/rocky/" ) )
-  
+
   # They must disagree on at least one axis
   FILTER( ?almaFidelity != ?rockyFidelity || ?almaDrift != ?rockyDrift )
-  
+
   # Filter to latest per distribution per package
   FILTER NOT EXISTS {
     ?a2 pkg:assessmentOf ?pkgAlma ;
@@ -2718,24 +2732,30 @@ ORDER BY ?pkgName
 
 ## Summary Statistics
 
-| Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED |
-|--------|----------|------|-------------------|---------------|---------|
-| Package Management (PM) | 10 | 10 | 0 | 0 | 0 |
-| Licensing (LIC) | 3 | 3 | 0 | 0 | 0 |
-| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 | 0 |
-| Package Identity (PID) | 1 | 0 | 1 | 0 | 0 |
-| Software Classification (CLASS) | 2 | 0 | 0 | 0 | 2 |
-| Exploit Risk Assessment (ERA) | 2 | 0 | 2 | 0 | 0 |
-| Temporal Analysis (TEMP) | 3 | 2 | 0 | 1 | 0 |
-| Supply Chain Risk (SCR) | 9 | 5 | 0 | 3 | 1 |
-| Cross-Distribution Analysis (XD) | 5 | 5 | 0 | 0 | 0 |
-| Provenance / Build (PROV) | 4 | 4 | 0 | 0 | 0 |
-| Repository / VCS (VCS) | 2 | 2 | 0 | 0 | 0 |
-| Package Set (SET) | 1 | 1 | 0 | 0 | 0 |
-| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 |
-| Maven Ecosystem (MVN) | 5 | 5 | 0 | 0 | 0 |
-| Rebuild Tracking (RB) | 9 | 9 | 0 | 0 | 0 |
-| **TOTAL** | **67** | **57** | **3** | **4** | **3** |
+| Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED | OTHER |
+|--------|----------|------|-------------------|---------------|---------|-------|
+| Package Management (PM) | 11 | 11 | 0 | 0 | 0 | 0 |
+| Dependency Analysis (DEP) | 5 | 5 | 0 | 0 | 0 | 0 |
+| Licensing (LIC) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Security / Vulnerability (SEC) | 8 | 8 | 0 | 0 | 0 | 0 |
+| Package Identity (PID) | 1 | 0 | 1 | 0 | 0 | 0 |
+| Software Classification (CLASS) | 2 | 0 | 0 | 0 | 2 | 0 |
+| Exploit Risk Assessment (ERA) | 2 | 0 | 2 | 0 | 0 | 0 |
+| Temporal Analysis (TEMP) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Supply Chain Risk (SCR) | 10 | 5 | 0 | 3 | 2 | 0 |
+| Cross-Distribution Analysis (XD) | 5 | 4 | 0 | 0 | 1 | 0 |
+| Provenance / Build (PROV) | 4 | 3 | 0 | 0 | 0 | 1 |
+| Repository / VCS (VCS) | 2 | 1 | 0 | 0 | 1 | 0 |
+| Package Set (SET) | 1 | 1 | 0 | 0 | 0 | 0 |
+| Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 | 0 |
+| Maven Ecosystem (MVN) | 8 | 5 | 0 | 0 | 0 | 3 |
+| Rebuild Tracking (RB) | 9 | 9 | 0 | 0 | 0 | 0 |
+| **TOTAL** | **77** | **61** | **3** | **3** | **6** | **4** |
+
+**Count basis:** 77 `### CQ-*` entries, each with its own SPARQL block (PM includes the
+`CQ-PM-03b` UNION variant alongside `CQ-PM-03`). Counts are derived mechanically from the
+`**Status:**` line of each entry. OTHER covers 3 MVN entries marked NEW and 1 PROV entry
+marked PARTIAL.
 
 **Note:** PASS, ONTOLOGY-COMPLETE, ADVISORY-SIDE SATISFIED, and BLOCKED are mutually exclusive statuses. PASS means vocabulary supports the query and data sources are expected to be available. ONTOLOGY-COMPLETE means the ontology and an enricher both exist but the enricher has not been run against production. ADVISORY-SIDE SATISFIED means the advisory half of a two-sided join is populated but the vulnerability side is not. BLOCKED means a required data source is formally unsupported. See Status Vocabulary below.
 

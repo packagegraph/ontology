@@ -1,0 +1,23 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# A literal where a SourcePackage is required. NOTE: a wrong-*typed IRI* cannot be
+# caught here, because pyshacl runs with inference="rdfs" and the rdfs:range of
+# ambiguousCandidate retypes any IRI object as a SourcePackage. A literal object is
+# still detected, so that is what this fixture pins.
+pkg:_negSrc a pkg:SourcePackage ; pkg:packageName "x" .
+pkg:_negUp1 a pkg:SourcePackage ; pkg:packageName "x" .
+pkg:_negSnap a pkg:DataSnapshot ; rdfs:label "snap" .
+pkg:_neg a pkg:RebuildAssessment ;
+    pkg:assessmentOf pkg:_negSrc ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-unknown ;
+    pkg:rebuildDrift pkg:drift-behind ;
+    pkg:comparedAgainst pkg:_negUp1 ;
+    pkg:ambiguousCandidate pkg:_negUp1 , "not-a-source-package" ;
+    pkg:assessedAt "2026-08-31T00:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.5"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot pkg:_negSnap ;
+    pkg:lineageConfirmed false .

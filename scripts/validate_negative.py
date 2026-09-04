@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Assert that each negative fixture FAILS SHACL with the expected message and component.
+"""Assert that each negative fixture FAILS SHACL with the expected validation result.
 
-Each fixture declares the exact sh:resultMessage and sh:sourceConstraintComponent it must
-produce; this harness checks the validation report graph for that specific result.
-Message and component (by local name) together uniquely identify each rule violation.
+Each fixture declares the exact focus node, sh:sourceConstraintComponent and
+sh:resultMessage it must produce. This harness requires all of those to occur on a
+SINGLE sh:ValidationResult node -- not merely somewhere in the report. Matching them
+as independent sets would let a fixture pass when the expected message and component
+come from two unrelated violations, which is precisely the failure mode a negative
+test is supposed to exclude.
+
+`--emit-focus` re-derives the focus node of the matching result for each fixture and
+prints it as JSON, for regenerating expectations after a fixture is edited.
 """
 
 import json
@@ -20,10 +26,28 @@ CORE_SHACL = Path("core/core.shacl.ttl")
 PKG = Namespace("https://purl.org/packagegraph/ontology/core#")
 
 
-def run():
+def local(term):
+    """Local name of an IRI (after '#' or the last '/')."""
+    s = str(term)
+    return s.split("#")[-1] if "#" in s else s.rsplit("/", 1)[-1]
+
+
+def results(report_g):
+    """Yield (focus, component_local, message, source_shape) per validation result."""
+    for r in report_g.subjects(SH.resultMessage, None):
+        focus = next(report_g.objects(r, SH.focusNode), None)
+        comp = next(report_g.objects(r, SH.sourceConstraintComponent), None)
+        shape = next(report_g.objects(r, SH.sourceShape), None)
+        for msg in report_g.objects(r, SH.resultMessage):
+            yield focus, (local(comp) if comp else None), str(msg), shape
+
+
+def run(emit_focus=False):
     expectations = json.loads((FIX_DIR / "expectations.json").read_text())
-    shacl_g = Graph(); shacl_g.parse(str(CORE_SHACL), format="turtle")
+    shacl_g = Graph()
+    shacl_g.parse(str(CORE_SHACL), format="turtle")
     ok = True
+    derived = {}
     for fname, exp in sorted(expectations.items()):
         data_g = Graph()
         data_g.parse(str(CORE), format="turtle")
@@ -36,26 +60,41 @@ def run():
             print(f"  ✗ {fname}: expected violation but graph CONFORMS")
             ok = False
             continue
-        messages = {str(m) for _, _, m in report_g.triples((None, SH.resultMessage, None))}
-        components = {str(c) for _, _, c in report_g.triples((None, SH.sourceConstraintComponent, None))}
+
         want_msg = exp["resultMessage"]
-        want_component_local = exp["sourceConstraintComponent"]
-        # Extract local name (part after #) from components.
-        # Note: resultMessage and sourceConstraintComponent are matched as independent sets over the report,
-        # which is safe because every constraint's sh:message string is distinct.
-        component_local_names = {c.split("#")[-1] for c in components}
-        if want_msg not in messages:
-            print(f"  ✗ {fname}: expected message not in report: {want_msg!r}")
-            ok = False
-        elif want_component_local not in component_local_names:
-            print(f"  ✗ {fname}: expected component {want_component_local} not in report")
-            ok = False
+        want_comp = exp["sourceConstraintComponent"]
+        want_focus = exp.get("focusNode")
+
+        # Require ONE result carrying every expected field.
+        matches = [
+            (f, c, m) for (f, c, m, _s) in results(report_g)
+            if m == want_msg and c == want_comp
+            and (want_focus is None or local(f) == want_focus)
+        ]
+        if emit_focus:
+            allm = [(f, c, m) for (f, c, m, _s) in results(report_g)
+                    if m == want_msg and c == want_comp]
+            derived[fname] = local(allm[0][0]) if allm else None
+            continue
+
+        if matches:
+            print(f"  ✓ {fname}: fails as expected "
+                  f"({want_comp} on {local(matches[0][0])})")
         else:
-            print(f"  ✓ {fname}: fails as expected")
+            ok = False
+            got = sorted({(local(f), c, m[:60]) for (f, c, m, _s) in results(report_g)})
+            print(f"  ✗ {fname}: no single result with "
+                  f"focus={want_focus} component={want_comp} message={want_msg!r}")
+            for g_ in got:
+                print(f"      report has: focus={g_[0]} component={g_[1]} msg={g_[2]!r}...")
+
+    if emit_focus:
+        print(json.dumps(derived, indent=2))
+        return
     if not ok:
         sys.exit(1)
     print(f"All {len(expectations)} negative fixtures fail as expected.")
 
 
 if __name__ == "__main__":
-    run()
+    run(emit_focus="--emit-focus" in sys.argv)

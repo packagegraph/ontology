@@ -396,6 +396,15 @@ The assessment points to its package via `pkg:assessmentOf` (asserted, canonical
 
 **Freshness distinction:**
 
+**Validation limits under RDFS inference.** The project validates with pyshacl
+`inference="rdfs"`, which materialises each property's `rdfs:range`. A `sh:class` check on
+`fidelityBaseline`, `comparedAgainst`, or `ambiguousCandidate` consequently cannot reject an
+IRI that was typed as another class — range inference retypes it first — though it still
+rejects literals. Cardinality (`sh:maxCount 1` on both baselines) and the `lineageEvidence`
+`sh:datatype`/`sh:minLength` checks are fully enforceable and are what the negative fixtures
+pin. This is recorded so future readers do not mistake the `sh:class` clauses for stronger
+guarantees than they provide.
+
 `rebuildDrift` (pairwise comparison: rebuild vs a specific upstream build) is distinct from `FreshnessStatusScheme` (cross-repo currency: how old is the rebuild vs the upstream ecosystem's latest). Drift answers "is this rebuild stale relative to RHEL's latest?"; freshness answers "how old is RHEL itself compared to Fedora/upstream community?" They are different baselines (specific upstream vs ecosystem benchmark) and are not redundant.
 
 ---

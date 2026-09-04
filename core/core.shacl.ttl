@@ -504,7 +504,15 @@ pkg:RebuildAssessmentShape a sh:NodeShape ;
             sh:message "rebuildFidelity must be a concept from RebuildFidelityScheme."@en ] ;
     sh:property [ sh:path pkg:rebuildDrift ; sh:maxCount 1 ;
             sh:in ( pkg:drift-even pkg:drift-ahead pkg:drift-behind pkg:drift-version-equivalent ) ;
-            sh:message "rebuildDrift must be a concept from RebuildDriftScheme."@en ] .
+            sh:message "rebuildDrift must be a concept from RebuildDriftScheme."@en ] ;
+    sh:property [ sh:path pkg:fidelityBaseline ; sh:class pkg:SourcePackage ; sh:maxCount 1 ;
+            sh:message "An assessment must have at most one fidelityBaseline SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:comparedAgainst ; sh:class pkg:SourcePackage ; sh:maxCount 1 ;
+            sh:message "An assessment must have at most one comparedAgainst SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:ambiguousCandidate ; sh:class pkg:SourcePackage ;
+            sh:message "Each ambiguousCandidate must be a SourcePackage."@en ] ;
+    sh:property [ sh:path pkg:lineageEvidence ; sh:datatype xsd:string ; sh:maxCount 1 ; sh:minLength 1 ;
+            sh:message "lineageEvidence must be a single non-empty string."@en ] .
 
 pkg:RebuildAssessmentResultsShape a sh:NodeShape ;
     sh:targetClass pkg:RebuildAssessment ;
