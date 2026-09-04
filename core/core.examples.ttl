@@ -593,3 +593,221 @@ ex:arch-x86-64 a pkg:Architecture ;
 
 <https://packagegraph.github.io/d/pkgid/fedora/43/x86_64/python3-cryptography>
     pkg:hasPackageRelationship <https://packagegraph.github.io/d/pkg-rel/fedora-python3-cryptography-pypi-cryptography> .
+
+# --- Rebuild tracking: shared upstream (RHEL) builds + snapshot ---
+<https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> a pkg:DataSnapshot ;
+    rdfs:label "RHEL 9 snapshot 2026-08-30"@en ;
+    pkg:snapshotTimestamp "2026-08-30T00:00:00Z"^^xsd:dateTime ;
+    pkg:snapshotSource "pg-collect rhel-9" .
+
+<https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/openssl/3.5.5-6.el9_8> ;
+    rdfs:label "openssl (RHEL 9 source, build -6)" .
+<https://packagegraph.github.io/d/ver/rhel/9/openssl/3.5.5-6.el9_8> a pkg:Version ;
+    pkg:versionString "3.5.5-6.el9_8" .
+
+<https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-7.el9_8> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/openssl/3.5.5-7.el9_8> ;
+    rdfs:label "openssl (RHEL 9 source, build -7, newest)" .
+<https://packagegraph.github.io/d/ver/rhel/9/openssl/3.5.5-7.el9_8> a pkg:Version ;
+    pkg:versionString "3.5.5-7.el9_8" .
+
+# FLAGSHIP: AlmaLinux openssl is vendor-patched vs the -6 SRPM it rebuilt,
+# yet behind RHEL's newer -7 build (patched but lagging a security update).
+<https://packagegraph.github.io/d/src/almalinux/9/openssl/3.5.5-6.el9_8.alma.1> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/almalinux/9/openssl/3.5.5-6.el9_8.alma.1> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/almalinux/9/openssl/2026-08-31> ;
+    rdfs:label "openssl (AlmaLinux 9 source)" .
+<https://packagegraph.github.io/d/ver/almalinux/9/openssl/3.5.5-6.el9_8.alma.1> a pkg:Version ;
+    pkg:versionString "3.5.5-6.el9_8.alma.1" .
+<https://packagegraph.github.io/d/rba/almalinux/9/openssl/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/almalinux/9/openssl/3.5.5-6.el9_8.alma.1> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-vendor-patched ;
+    pkg:fidelityBaseline <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> ;
+    pkg:rebuildDrift pkg:drift-behind ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-7.el9_8> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.95"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# CROSS-DISTRO: Rocky openssl is an exact rebuild of the same -6 RHEL build,
+# and even with newest at the time of its snapshot; lineage confirmed by digest.
+<https://packagegraph.github.io/d/src/rocky/9/openssl/3.5.5-6.el9_8> a pkg:SourcePackage ;
+    pkg:packageName "openssl" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rocky/9/openssl/3.5.5-6.el9_8> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/rocky/9/openssl/2026-08-31> ;
+    pkg:rebuildOf <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> ;
+    rdfs:label "openssl (Rocky 9 source)" .
+<https://packagegraph.github.io/d/ver/rocky/9/openssl/3.5.5-6.el9_8> a pkg:Version ;
+    pkg:versionString "3.5.5-6.el9_8" .
+<https://packagegraph.github.io/d/rba/rocky/9/openssl/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/rocky/9/openssl/3.5.5-6.el9_8> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-exact ;
+    pkg:fidelityBaseline <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-6.el9_8> ;
+    pkg:rebuildDrift pkg:drift-behind ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/9/openssl/3.5.5-7.el9_8> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "1.0"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed true ;
+    pkg:lineageEvidence "srpm-sha256-match" .
+
+# EXCLUSIVE: distro-only branding package, absent upstream.
+<https://packagegraph.github.io/d/src/almalinux/9/almalinux-release/9.4-1.el9> a pkg:SourcePackage ;
+    pkg:packageName "almalinux-release" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/almalinux/9/almalinux-release/9.4-1.el9> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/almalinux/9/almalinux-release/2026-08-31> ;
+    rdfs:label "almalinux-release (AlmaLinux 9 source)" .
+<https://packagegraph.github.io/d/ver/almalinux/9/almalinux-release/9.4-1.el9> a pkg:Version ;
+    pkg:versionString "9.4-1.el9" .
+<https://packagegraph.github.io/d/rba/almalinux/9/almalinux-release/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/almalinux/9/almalinux-release/9.4-1.el9> ;
+    pkg:hasUpstreamCounterpart false ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# EXCLUSIVE: Rocky-only branding package, absent upstream.
+<https://packagegraph.github.io/d/src/rocky/9/rocky-release/9.4-2.el9> a pkg:SourcePackage ;
+    pkg:packageName "rocky-release" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rocky/9/rocky-release/9.4-2.el9> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/rocky/9/rocky-release/2026-08-31> ;
+    rdfs:label "rocky-release (Rocky 9 source)" .
+<https://packagegraph.github.io/d/ver/rocky/9/rocky-release/9.4-2.el9> a pkg:Version ;
+    pkg:versionString "9.4-2.el9" .
+<https://packagegraph.github.io/d/rba/rocky/9/rocky-release/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/rocky/9/rocky-release/9.4-2.el9> ;
+    pkg:hasUpstreamCounterpart false ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# AMBIGUOUS: two upstream builds tied under normalization.
+<https://packagegraph.github.io/d/src/rhel/9/examplelib/1.0-1.el9> a pkg:SourcePackage ;
+    pkg:packageName "examplelib" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/examplelib/1.0-1.el9> ;
+    rdfs:label "examplelib (RHEL 9, build A)" .
+<https://packagegraph.github.io/d/ver/rhel/9/examplelib/1.0-1.el9> a pkg:Version ;
+    pkg:versionString "1.0-1.el9" .
+<https://packagegraph.github.io/d/src/rhel/9/examplelib/1.0-1.0.el9> a pkg:SourcePackage ;
+    pkg:packageName "examplelib" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/examplelib/1.0-1.0.el9> ;
+    rdfs:label "examplelib (RHEL 9, build B)" .
+<https://packagegraph.github.io/d/ver/rhel/9/examplelib/1.0-1.0.el9> a pkg:Version ;
+    pkg:versionString "1.0-1.0.el9" .
+<https://packagegraph.github.io/d/src/almalinux/9/examplelib/1.0-1.el9.alma.1> a pkg:SourcePackage ;
+    pkg:packageName "examplelib" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/almalinux/9/examplelib/1.0-1.el9.alma.1> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/almalinux/9/examplelib/2026-08-31> ;
+    rdfs:label "examplelib (AlmaLinux 9 source)" .
+<https://packagegraph.github.io/d/ver/almalinux/9/examplelib/1.0-1.el9.alma.1> a pkg:Version ;
+    pkg:versionString "1.0-1.el9.alma.1" .
+<https://packagegraph.github.io/d/rba/almalinux/9/examplelib/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/almalinux/9/examplelib/1.0-1.el9.alma.1> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-unknown ;
+    pkg:rebuildDrift pkg:drift-behind ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/9/examplelib/1.0-1.0.el9> ;
+    pkg:ambiguousCandidate <https://packagegraph.github.io/d/src/rhel/9/examplelib/1.0-1.el9> ,
+        <https://packagegraph.github.io/d/src/rhel/9/examplelib/1.0-1.0.el9> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.5"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# --- Rebuild tracking: remaining fidelity/drift coverage ---
+
+# MODULAR-EQUIVALENT + DRIFT-EVEN: a modular build whose base EVR matches upstream
+# within the same module stream; only the module build-context differs.
+<https://packagegraph.github.io/d/src/rhel/8/nodejs/16.20.2-1.module+el8.8.0+20000+abcdef01> a pkg:SourcePackage ;
+    pkg:packageName "nodejs" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/8/nodejs/16.20.2-1.module+el8.8.0+20000+abcdef01> ;
+    rdfs:label "nodejs (RHEL 8 modular source)" .
+<https://packagegraph.github.io/d/ver/rhel/8/nodejs/16.20.2-1.module+el8.8.0+20000+abcdef01> a pkg:Version ;
+    pkg:versionString "16.20.2-1.module+el8.8.0+20000+abcdef01" .
+
+<https://packagegraph.github.io/d/src/almalinux/8/nodejs/16.20.2-1.module_el8.8.0+3000+12345678> a pkg:SourcePackage ;
+    pkg:packageName "nodejs" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/almalinux/8/nodejs/16.20.2-1.module_el8.8.0+3000+12345678> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/almalinux/8/nodejs/2026-08-31> ;
+    rdfs:label "nodejs (AlmaLinux 8 modular source)" .
+<https://packagegraph.github.io/d/ver/almalinux/8/nodejs/16.20.2-1.module_el8.8.0+3000+12345678> a pkg:Version ;
+    pkg:versionString "16.20.2-1.module_el8.8.0+3000+12345678" .
+<https://packagegraph.github.io/d/rba/almalinux/8/nodejs/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/almalinux/8/nodejs/16.20.2-1.module_el8.8.0+3000+12345678> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-modular-equivalent ;
+    pkg:fidelityBaseline <https://packagegraph.github.io/d/src/rhel/8/nodejs/16.20.2-1.module+el8.8.0+20000+abcdef01> ;
+    pkg:rebuildDrift pkg:drift-even ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/8/nodejs/16.20.2-1.module+el8.8.0+20000+abcdef01> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.9"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# DRIFT-AHEAD: the rebuild leads the upstream newest build in the collected snapshot.
+<https://packagegraph.github.io/d/src/rhel/9/zlib/1.2.11-40.el9> a pkg:SourcePackage ;
+    pkg:packageName "zlib" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/zlib/1.2.11-40.el9> ;
+    rdfs:label "zlib (RHEL 9 source, newest in snapshot)" .
+<https://packagegraph.github.io/d/ver/rhel/9/zlib/1.2.11-40.el9> a pkg:Version ;
+    pkg:versionString "1.2.11-40.el9" .
+
+<https://packagegraph.github.io/d/src/rocky/9/zlib/1.2.11-41.el9> a pkg:SourcePackage ;
+    pkg:packageName "zlib" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rocky/9/zlib/1.2.11-41.el9> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/rocky/9/zlib/2026-08-31> ;
+    rdfs:label "zlib (Rocky 9 source, ahead of snapshot)" .
+<https://packagegraph.github.io/d/ver/rocky/9/zlib/1.2.11-41.el9> a pkg:Version ;
+    pkg:versionString "1.2.11-41.el9" .
+<https://packagegraph.github.io/d/rba/rocky/9/zlib/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/rocky/9/zlib/1.2.11-41.el9> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-unknown ;
+    pkg:rebuildDrift pkg:drift-ahead ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/9/zlib/1.2.11-40.el9> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.8"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .
+
+# DRIFT-VERSION-EQUIVALENT: canonical EVR strings differ but rpmvercmp reports
+# equality (here an explicit zero epoch versus an absent one).
+<https://packagegraph.github.io/d/src/rhel/9/libfoo/1.5-2.el9> a pkg:SourcePackage ;
+    pkg:packageName "libfoo" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/rhel/9/libfoo/1.5-2.el9> ;
+    rdfs:label "libfoo (RHEL 9 source)" .
+<https://packagegraph.github.io/d/ver/rhel/9/libfoo/1.5-2.el9> a pkg:Version ;
+    pkg:versionString "1.5-2.el9" .
+
+<https://packagegraph.github.io/d/src/almalinux/9/libfoo/0:1.5-2.el9> a pkg:SourcePackage ;
+    pkg:packageName "libfoo" ;
+    pkg:hasVersion <https://packagegraph.github.io/d/ver/almalinux/9/libfoo/0:1.5-2.el9> ;
+    pkg:hasRebuildAssessment <https://packagegraph.github.io/d/rba/almalinux/9/libfoo/2026-08-31> ;
+    rdfs:label "libfoo (AlmaLinux 9 source, explicit zero epoch)" .
+<https://packagegraph.github.io/d/ver/almalinux/9/libfoo/0:1.5-2.el9> a pkg:Version ;
+    pkg:versionString "0:1.5-2.el9" .
+<https://packagegraph.github.io/d/rba/almalinux/9/libfoo/2026-08-31> a pkg:RebuildAssessment ;
+    pkg:assessmentOf <https://packagegraph.github.io/d/src/almalinux/9/libfoo/0:1.5-2.el9> ;
+    pkg:hasUpstreamCounterpart true ;
+    pkg:rebuildFidelity pkg:fidelity-unknown ;
+    pkg:rebuildDrift pkg:drift-version-equivalent ;
+    pkg:comparedAgainst <https://packagegraph.github.io/d/src/rhel/9/libfoo/1.5-2.el9> ;
+    pkg:assessedAt "2026-08-31T12:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessmentConfidence "0.7"^^xsd:decimal ;
+    pkg:assessedAgainstSnapshot <https://packagegraph.github.io/d/snap/rhel/9/2026-08-30> ;
+    pkg:lineageConfirmed false .

@@ -11,8 +11,8 @@ pkg:skos-schemes a owl:Ontology ;
     rdfs:label "PackageGraph SKOS Concept Schemes"@en ;
     dcterms:description "Shared SKOS concept schemes for dependency types, severity levels, advisory categories, checksum algorithms, and related controlled vocabularies used across PackageGraph modules." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/skos-schemes/0.12.0> ;
-    owl:versionInfo "0.12.0" .
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/skos-schemes/0.13.0> ;
+    owl:versionInfo "0.13.0" .
 
 pkg:algo-md5 a skos:Concept ;
     skos:inScheme pkg:ChecksumAlgorithmScheme ;
@@ -457,3 +457,59 @@ dq:IssueCategoryScheme a skos:ConceptScheme ;
         dq:cat-malformed-email,
         dq:cat-missing-checksum,
         dq:cat-missing-upstream .
+
+pkg:fidelity-exact a skos:Concept ;
+    skos:definition "Canonical EVR equality with the fidelity baseline build (the candidate set already fixes the package name; an absent epoch is treated as 0). NVR/EVR equality does not establish byte identity of artifacts." ;
+    skos:inScheme pkg:RebuildFidelityScheme ;
+    skos:prefLabel "exact" .
+
+pkg:fidelity-vendor-patched a skos:Concept ;
+    skos:definition "EVR equal to a baseline build after stripping an anchored vendor suffix enumerated by the assessment method ruleset (e.g. an AlmaLinux '.alma.N' tag). Strong evidence of rebuilding that source package with a vendor tag — not cryptographic proof." ;
+    skos:inScheme pkg:RebuildFidelityScheme ;
+    skos:prefLabel "vendor-patched" .
+
+pkg:fidelity-modular-equivalent a skos:Concept ;
+    skos:definition "Modular package whose base EVR (before the module build-context marker) matches the baseline within the same module stream; only the module build-context differs. Applies to distributions using RPM modularity (a RHEL-8-era AppStream construct)." ;
+    skos:inScheme pkg:RebuildFidelityScheme ;
+    skos:prefLabel "modular-equivalent" .
+
+pkg:fidelity-unknown a skos:Concept ;
+    skos:definition "An upstream counterpart exists but no baseline matched under normalization (including ambiguous multi-match cases); fidelity cannot be established. No fidelity baseline is recorded." ;
+    skos:inScheme pkg:RebuildFidelityScheme ;
+    skos:prefLabel "unknown" .
+
+pkg:RebuildFidelityScheme a skos:ConceptScheme ;
+    rdfs:label "Rebuild Fidelity"@en ;
+    dcterms:description "How faithfully a downstream rebuild source package reproduces the specific upstream build it derives from (the fidelity baseline). Distinct from RebuildDriftScheme, which compares against upstream's current newest build." ;
+    skos:hasTopConcept pkg:fidelity-exact,
+        pkg:fidelity-vendor-patched,
+        pkg:fidelity-modular-equivalent,
+        pkg:fidelity-unknown .
+
+pkg:drift-even a skos:Concept ;
+    skos:definition "Canonical EVR strings are equal to the compared-against upstream newest build." ;
+    skos:inScheme pkg:RebuildDriftScheme ;
+    skos:prefLabel "even" .
+
+pkg:drift-ahead a skos:Concept ;
+    skos:definition "rpmvercmp ranks the rebuild's EVR higher than the upstream newest build (the rebuild leads the collected snapshot)." ;
+    skos:inScheme pkg:RebuildDriftScheme ;
+    skos:prefLabel "ahead" .
+
+pkg:drift-behind a skos:Concept ;
+    skos:definition "rpmvercmp ranks the rebuild's EVR lower than the upstream newest build (the rebuild lags upstream — investigate)." ;
+    skos:inScheme pkg:RebuildDriftScheme ;
+    skos:prefLabel "behind" .
+
+pkg:drift-version-equivalent a skos:Concept ;
+    skos:definition "Canonical EVR strings differ but rpmvercmp returns equality (e.g. ignored separators or leading zeros). Disjoint from 'even' by construction; a comparison result, not a lineage claim." ;
+    skos:inScheme pkg:RebuildDriftScheme ;
+    skos:prefLabel "version-equivalent" .
+
+pkg:RebuildDriftScheme a skos:ConceptScheme ;
+    rdfs:label "Rebuild Drift"@en ;
+    dcterms:description "Where a downstream rebuild source package's build sits relative to upstream's current newest build, by epoch-aware rpmvercmp. Snapshot-relative — always recorded with the compared-against build and the assessment snapshot. Distinct from FreshnessStatusScheme (cross-repository currency)." ;
+    skos:hasTopConcept pkg:drift-even,
+        pkg:drift-ahead,
+        pkg:drift-behind,
+        pkg:drift-version-equivalent .
