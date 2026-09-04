@@ -349,6 +349,66 @@ Transitive closure would incorrectly infer that Debian and Alpine packages are e
 
 ---
 
+### DD-RB: Reified Rebuild Assessment with Presence / Fidelity / Drift Axes
+
+**Decision:** Model rebuild tracking as a reified `RebuildAssessment` class with temporal scope, versioned method, and three independent axes (presence, fidelity, drift), each with its own baseline.
+
+**Why reified:** Rebuild determinations are computed results: uncertain heuristics (vendor-suffix stripping, version normalization), time-sensitive snapshot-relative comparisons, and multi-valued (a package can be both vendor-patched and behind upstream simultaneously). This mirrors the reification precedents `PackageRelationship` (DD-REL: epistemic qualifiers on cross-ecosystem matches) and `EPSSAssessment` (DD-EPSS: temporal predictions). A flat triple `rebuildTrackingStatus` on the package cannot express all three axes independently, cannot carry versioned methodology, and provides no evidence trail for promotion to committed `rebuildOf` lineage.
+
+**Three axes, cleanly separated:**
+
+| Question | Property | Baseline | Notes |
+|----------|----------|----------|-------|
+| Does an upstream counterpart exist? | `pkg:hasUpstreamCounterpart` (boolean) | assessed `DataSnapshot` | Absence means source name not found in upstream dataset (distro exclusives, e.g., `almalinux-release`) |
+| What upstream build was this rebuilt from, how faithfully? | `pkg:rebuildFidelity` | `pkg:fidelityBaseline` | Four tiers: exact EVR match, vendor-patched suffix strip, modular-equivalent, unknown |
+| How does it sit vs upstream's current newest? | `pkg:rebuildDrift` | `pkg:comparedAgainst` | Four outcomes: even, ahead, behind, version-equivalent |
+
+Separating fidelity from drift enables the highest-value supply-chain signal: vendor-patched **and** behind — locally modified but lagging upstream security updates — expressible as `rebuildFidelity = vendor-patched` (baseline: the SRPM rebuilt) and `rebuildDrift = behind` (baseline: RHEL's newest). These reference *different* upstream builds, both recorded on the assessment.
+
+**The versioned executable algorithm `rebuild-norm/v1`:**
+
+Normalized candidate matching is deterministic and versioned. The method id `"rebuild-norm/v1"` pins the ruleset:
+
+- **Candidate scope:** upstream builds with same source `packageName` within the release (and, for modular packages, same `module:stream`) recorded in `assessedAgainstSnapshot`.
+- **Version comparison:** epoch-aware `rpmvercmp` over full EVR. Missing epoch treated as `0` (RPM semantics).
+- **Exact match:** canonical EVR equality — string equality of `E:V-R` after epoch normalization.
+- **Vendor-suffix normalization:** strip anchored suffixes recognized by the method ruleset (e.g., AlmaLinux `\.alma\.\d+$`). Re-match → `fidelity-vendor-patched`.
+- **Modular normalization:** strip module build-context marker (`\.module[+_]el\d+.*$`), match base NVR within same stream → `fidelity-modular-equivalent`.
+- **Ambiguity handling:** if multiple upstream builds match at the chosen fidelity tier, record all via `pkg:ambiguousCandidate` (domain `RebuildAssessment`, range `SourcePackage`, `minCount 2`), set `rebuildFidelity = fidelity-unknown`, set `assessmentConfidence = 0.5` (deterministic, not vague), and set `lineageConfirmed = false` (never promote from ambiguous match). This explicit ambiguity representation (not merely low confidence) supports investigation and cross-distro comparison.
+
+**Candidate-vs-committed lineage split:**
+
+The algorithm produces a *candidate* baseline on the assessment (`fidelityBaseline` + versioned method + confidence). The committed `rebuildOf` triple is **not auto-created**. It is **promoted only** when an explicit evidence policy is satisfied — e.g., matching source-artifact digest, vendor-published build provenance, or operator confirmation — never from normalization alone. The assessment carries:
+- `pkg:lineageConfirmed` — `xsd:boolean`, exactly one value (boolean, not optional). Promotes *only* when independent evidence supports the baseline.
+- `pkg:lineageEvidence` — `xsd:string`, what evidence type (e.g., `"srpm-sha256-match"`, `"vendor-build-provenance"`, `"operator:jdoe"`). Required when `lineageConfirmed = true`; must be absent when `false` (prohibit misleading residual evidence).
+
+A normalized vendor/modular match — fidelity result alone — does **not** pass the lineage guard (SHACL SPARQL constraint: for every `rebuildOf` link, there must exist an assessment pointing to the same `fidelityBaseline` with `lineageConfirmed = true`).
+
+**Canonical link direction and RDFS validation:**
+
+The assessment points to its package via `pkg:assessmentOf` (asserted, canonical). **All SHACL, competency questions, and the lineage guard use the asserted direction `assessmentOf`.** The inverse `pkg:hasRebuildAssessment` remains optional (`owl:inverseOf`) for authoring convenience, but **nothing in validation depends on inverse inference** — the project validates with RDFS only, which does not materialize `owl:inverseOf`. This prevents silent validation failures when inverse rules are not applied.
+
+**Property characteristics:**
+
+`pkg:rebuildOf` is declared `owl:AsymmetricProperty` and `owl:IrreflexiveProperty`. Asymmetry forbids only mutual `rebuildOf` (A→B→A); chains A→B→C remain legal. Irreflexivity forbids self-derivation (A→A), preventing circular lineage. **Baselines are NOT declared irreflexive** — `fidelityBaseline` and `comparedAgainst` have disjoint node kinds (domain `RebuildAssessment`, range `SourcePackage`), so `owl:IrreflexiveProperty` would be vacuous. The real constraint — *assessed package ≠ baseline package* — is enforced in SHACL via comparison logic.
+
+**Wording discipline:** NVR equality does not establish byte identity. Vendor-suffix stripping and version normalization are strong evidence, not cryptographic proof. Reproducible builds *may* yield byte-identical artifacts, but NVR matching alone cannot verify that claim.
+
+**Freshness distinction:**
+
+**Validation limits under RDFS inference.** The project validates with pyshacl
+`inference="rdfs"`, which materialises each property's `rdfs:range`. A `sh:class` check on
+`fidelityBaseline`, `comparedAgainst`, or `ambiguousCandidate` consequently cannot reject an
+IRI that was typed as another class — range inference retypes it first — though it still
+rejects literals. Cardinality (`sh:maxCount 1` on both baselines) and the `lineageEvidence`
+`sh:datatype`/`sh:minLength` checks are fully enforceable and are what the negative fixtures
+pin. This is recorded so future readers do not mistake the `sh:class` clauses for stronger
+guarantees than they provide.
+
+`rebuildDrift` (pairwise comparison: rebuild vs a specific upstream build) is distinct from `FreshnessStatusScheme` (cross-repo currency: how old is the rebuild vs the upstream ecosystem's latest). Drift answers "is this rebuild stale relative to RHEL's latest?"; freshness answers "how old is RHEL itself compared to Fedora/upstream community?" They are different baselines (specific upstream vs ecosystem benchmark) and are not redundant.
+
+---
+
 ### DD-PE-1: PackageEntity as Dependency Target Superclass
 
 **Decision:** Introduce `pkg:PackageEntity` as the common superclass of `pkg:Package` and `pkg:PackageIdentity`. Generic dependency properties (`dependsOn`, `directlyDependsOn`, `dependencyTarget`) target `PackageEntity`; their sources remain concrete `Package` instances. Inverse properties (`isDependencyOf`, `isDirectDependencyOf`) widen their domain to `PackageEntity`.

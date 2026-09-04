@@ -5,6 +5,29 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-09-02
+
+Reified rebuild-tracking vocabulary (presence / fidelity / drift) for downstream
+RHEL rebuilds.
+
+### Added
+- `pkg:RebuildAssessment` reified class + `hasRebuildAssessment` / `assessmentOf`.
+- Axes: `rebuildFidelity` (`RebuildFidelityScheme`: exact, vendor-patched,
+  modular-equivalent, unknown) and `rebuildDrift` (`RebuildDriftScheme`: even, ahead,
+  behind, version-equivalent).
+- Baselines `fidelityBaseline`, `comparedAgainst`; presence `hasUpstreamCounterpart`.
+- Provenance `assessedAt`, `assessmentMethod`, `assessmentConfidence`,
+  `assessedAgainstSnapshot`; evidence-gated lineage `rebuildOf`
+  (asymmetric + irreflexive), `lineageConfirmed`, `lineageEvidence`;
+  `ambiguousCandidate`.
+- `pkg:RebuildAssessmentShape` + SPARQL guards (coupling, ambiguity, self-baseline,
+  promotion, lineage) and a negative-fixture harness (`make validate-negative`).
+- 9 competency questions (CQ-RB-01..09) and DD-RB.
+
+### Changed
+- Replaced the flat `rebuildTrackingStatus` / `RebuildTrackingScheme` (never released)
+  with the reified model above.
+
 ## [0.12.0] - 2026-08-22
 
 Maven dependency exclusion vocabulary.

@@ -52,13 +52,16 @@ uv pip install rdflib pyshacl
 
 ---
 
-## What's New in v0.12.0
+## What's New in v0.13.0
 
-**Maven dependency exclusion vocabulary**
+**Reified rebuild-tracking vocabulary (presence / fidelity / drift)**
 
-- ✅ **`maven:DependencyExclusion`** — represents Maven POM `<exclusion>` elements on specific dependency declarations
-- ✅ **`maven:hasExclusion`**, **`excludedGroupId`**, **`excludedArtifactId`** — structured exclusion properties with wildcard (`*`) support
-- ✅ **3 new CQs** (CQ-MVN-06/07/08) — forward lookup, reverse lookup, and wildcard exclusion queries (total: 68)
+- ✅ **`pkg:RebuildAssessment`** — reified class for structured rebuild assessments
+- ✅ **Two-/three-axis model** — `rebuildFidelity` (exact, vendor-patched, modular-equivalent, unknown) and `rebuildDrift` (even, ahead, behind, version-equivalent) axes for fine-grained rebuild characterization
+- ✅ **Evidence-gated lineage** — `rebuildOf` property asymmetric and irreflexive, guarded by `lineageConfirmed` / `lineageEvidence` / `ambiguousCandidate` provenance properties
+- ✅ **SHACL guards** — `RebuildAssessmentShape` + SPARQL constraints for coupling, ambiguity, self-baseline, promotion, and lineage integrity
+- ✅ **Provenance properties** — `assessedAt`, `assessmentMethod`, `assessmentConfidence`, `assessedAgainstSnapshot` enable reproducible assessments
+- ✅ **9 new competency questions (CQ-RB-01..09)** — rebuild tracking queries; 77 total, all structurally valid
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 
@@ -70,7 +73,15 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - 12 property range/domain updates — dependency properties accept both concrete packages and version-independent identities
 - 8 OWL 2 RL reasoning tests — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
 
-### v0.10.0
+### v0.12.0 — Maven dependency exclusions
+
+**Maven ecosystem dependency exclusion vocabulary:**
+
+- ✅ **`maven:DependencyExclusion`** — reified exclusion model on dependencies
+- ✅ **Exclusion predicates** — `hasExclusion`, `excludedGroupId`, `excludedArtifactId` with wildcard support
+- ✅ **3 Maven CQs (MVN-06..08)** — exclusion queries, reverse lookup, wildcard matching
+
+### v0.11.0
 
 **Maven security & VCS integration, academic hardening:**
 
@@ -82,6 +93,8 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - ✅ **OWL 2 RL reasoning tests** — `propertyChainAxiom` on `directlyDependsOn` verified sound
 - ✅ **53 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
 - ✅ **BFO/DOLCE positioning clarified** — evaluated but not aligned; rationale documented in DD-UO-1
+
+### v0.10.0
 
 See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
@@ -414,7 +427,7 @@ You can copy, modify, distribute and perform the work, even for commercial purpo
 
 If you use PackageGraph in academic work, please cite:
 
-> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.12.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
+> Brian 'redbeard' Harrington. *PackageGraph: An OWL 2 Ontology for Cross-Distribution Software Package Analysis.* Version 0.13.0, 2026. Available at: https://purl.org/packagegraph/ontology/core
 
 **BibTeX:**
 
@@ -424,7 +437,7 @@ If you use PackageGraph in academic work, please cite:
   title        = {PackageGraph: An OWL 2 Ontology for Cross-Distribution
                   Software Package Analysis},
   year         = {2026},
-  version      = {0.12.0},
+  version      = {0.13.0},
   organization = {PackageGraph Project},
   url          = {https://purl.org/packagegraph/ontology/core}
 }
