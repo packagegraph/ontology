@@ -68,7 +68,8 @@ def run_test(test):
 
         conforms, _, results_text = validate(
             data_g, shacl_graph=shacl_g, inference="rdfs",
-            serialize_report_graph=False
+            serialize_report_graph=False,
+            allow_infos=True, allow_warnings=True,
         )
 
         if conforms:

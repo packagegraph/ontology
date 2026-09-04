@@ -634,3 +634,24 @@ pkg:RebuildLineageGuardShape a sh:NodeShape ;
                     }
                 """ ] .
 
+pkg:RebuildOfForkContradictionShape a sh:NodeShape ;
+    sh:targetSubjectsOf pkg:rebuildOf ;
+    sh:severity sh:Warning ;
+    sh:sparql [ sh:message "This pair carries both a committed rebuildOf lineage claim and a PackageRelationship classifying it as a fork or repackage -- a rebuild and a fork are different relationships; see DD-RB."@en ;
+            sh:select """
+                    PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+                    SELECT $this WHERE {
+                        $this pkg:rebuildOf ?target .
+                        $this pkg:isVersionOf ?thisIdentity .
+                        ?target pkg:isVersionOf ?targetIdentity .
+                        {
+                            ?thisIdentity pkg:hasPackageRelationship ?rel .
+                            ?rel pkg:relationshipTarget ?targetIdentity ; pkg:matchMethod ?method .
+                        } UNION {
+                            ?targetIdentity pkg:hasPackageRelationship ?rel .
+                            ?rel pkg:relationshipTarget ?thisIdentity ; pkg:matchMethod ?method .
+                        }
+                        FILTER ( ?method IN ( pkg:match-fork-detected, pkg:match-repackage-detected ) )
+                    }
+                """ ] .
+

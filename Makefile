@@ -54,7 +54,7 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all validate-integration validate-negative
+validate: validate-all validate-integration validate-negative validate-advisory
 validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all
@@ -70,6 +70,11 @@ validate-integration:
 validate-negative:
 	@echo "Negative SHACL fixtures (must fail)..."
 	@$(PYTHON) scripts/validate_negative.py
+
+.PHONY: validate-advisory
+validate-advisory:
+	@echo "Advisory SHACL fixtures (must conform, with expected Warning/Info)..."
+	@$(PYTHON) scripts/validate_advisory.py
 
 # ─── OWL 2 RL Reasoning ───────────────────────────────────────────────────────
 

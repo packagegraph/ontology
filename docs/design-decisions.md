@@ -367,7 +367,7 @@ Separating fidelity from drift enables the highest-value supply-chain signal: ve
 
 **The versioned executable algorithm `rebuild-norm/v1`:**
 
-Normalized candidate matching is deterministic and versioned. `pkg:assessmentMethod` is a free-form versioned identifier precisely so each ecosystem can define its own ruleset — `rebuild-norm/v1` below is the RPM-family instantiation (RHEL/AlmaLinux/Rocky), not the only one a conformant assessment may cite. A Debian-derivative rebuild would define its own id (e.g. `debian-norm/v1`) over `dpkg --compare-versions`; a language-ecosystem fork (Maven, npm, Cargo) would define one over semantic versioning. The method id pins the ruleset:
+Normalized candidate matching is deterministic and versioned. `pkg:assessmentMethod` is a free-form versioned identifier precisely so each ecosystem can define its own ruleset — `rebuild-norm/v1` below is the RPM-family instantiation (RHEL/AlmaLinux/Rocky), not the only one a conformant assessment may cite. A Debian-derivative rebuild would define its own id (e.g. `debian-norm/v1`) over `dpkg --compare-versions`; a language-ecosystem rebuild (Maven, npm, Cargo) would define one over semantic versioning. The method id pins the ruleset:
 
 - **Candidate scope:** upstream builds with same source `packageName` within the release (and, for modular packages, same `module:stream`) recorded in `assessedAgainstSnapshot`.
 - **Version comparison:** epoch-aware `rpmvercmp` over full EVR. Missing epoch treated as `0` (RPM semantics).
@@ -406,6 +406,17 @@ pin. This is recorded so future readers do not mistake the `sh:class` clauses fo
 guarantees than they provide.
 
 `rebuildDrift` (pairwise comparison: rebuild vs a specific upstream build) is distinct from `FreshnessStatusScheme` (cross-repo currency: how old is the rebuild vs the upstream ecosystem's latest). Drift answers "is this rebuild stale relative to RHEL's latest?"; freshness answers "how old is RHEL itself compared to Fedora/upstream community?" They are different baselines (specific upstream vs ecosystem benchmark) and are not redundant.
+
+**Rebuild vs. Fork.**
+
+`RebuildAssessment` models an *ongoing* relationship: the downstream is expected to correspond to a specific current upstream release and to keep re-assessing as upstream ships new ones — that expectation is what makes `rebuildDrift` (ahead/behind/even) meaningful. A **fork** is the opposite: development has diverged into an independent trajectory, and there is no longer a "current upstream release" the downstream is expected to track. Asking whether MariaDB is "N versions behind" MySQL is not a well-formed question in the way asking it about AlmaLinux's openssl vs. RHEL's is — the two version schemes stopped corresponding to each other once the fork happened. The project already has vocabulary for the fork case: `PackageRelationship` with `matchMethod = pkg:match-fork-detected` (a diverged, independently-developed trajectory) or `pkg:match-repackage-detected` (republished under a new name, no assumption of continued correspondence).
+
+Two things this is deliberately **not** a test of:
+
+- **Not package-name identity.** A rebuild is commonly published under a different downstream name — Eclipse Temurin, Amazon Corretto, and Azul Zulu all rebuild the same upstream OpenJDK source under their own product names (`temurin-17-jdk`, `java-17-amazon-corretto`, `zulu17-jdk`), and none of that makes them forks. Conversely a repackage under an *unchanged* name is still not a rebuild if it stops tracking upstream's releases. Same-name is neither necessary nor sufficient.
+- **Not product-level version comparison.** The unit of comparison is always the specific `SourcePackage`, never the enclosing product or distribution. OpenShift's own release numbering (4.15, 4.16, …) is on a completely different axis from the Kubernetes version it bundles (1.28, 1.29, …) — no version comparison between "OpenShift 4.15" and "Kubernetes 1.28" is meaningful, so `RebuildAssessment` must never be asserted between them at that level. What *does* have a genuine rebuild relationship is the specific vendored Kubernetes source tree inside OpenShift's build against the exact upstream Kubernetes tag it was cut from and patched — the same `SourcePackage`-to-`SourcePackage` discipline this ontology already applies everywhere (cf. Kubernetes distributions like k3s/k0s, whose own release tags make this explicit: `v1.28.5+k3s1` is the anchored-vendor-suffix pattern applied to a Kubernetes rebuild, exactly like `.el9_8.alma.1`).
+
+The line itself is a curatorial judgment — like `crossDistributionAlternative`'s "correspondence, not equivalence" or `match-fork-detected` itself, no structural rule can determine from a single triple whether a project's development has diverged. What SHACL *can* catch is a **contradiction**: the same pair of packages should not simultaneously carry a committed `rebuildOf` lineage claim *and* be linked via `match-fork-detected`/`match-repackage-detected` — that would be classifying the same relationship both ways at once. `pkg:RebuildOfForkContradictionShape` (`sh:Warning` severity — advisory, not a hard violation, since the two links are populated by different curatorial processes and may legitimately not both be present) flags this when both are.
 
 ---
 

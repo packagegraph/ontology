@@ -384,12 +384,12 @@ pkg:match-name-heuristic a skos:Concept ;
 pkg:match-fork-detected a skos:Concept ;
     skos:inScheme pkg:MatchMethodScheme ;
     skos:prefLabel "fork detected"@en ;
-    skos:definition "Repository fork relationship detected between upstream sources."@en .
+    skos:definition "Repository fork relationship detected between upstream sources: development has diverged into an independent trajectory rather than continuing to track the original's ongoing release stream. Not for build-for-build rebuild tracking of a project still corresponding to its upstream releases -- see pkg:RebuildAssessment (rebuildFidelity / rebuildDrift) for that."@en .
 
 pkg:match-repackage-detected a skos:Concept ;
     skos:inScheme pkg:MatchMethodScheme ;
     skos:prefLabel "repackage detected"@en ;
-    skos:definition "Package appears to be a repackaging of another package under a different name."@en .
+    skos:definition "Package appears to be a repackaging of another package under a different name. Distinct from pkg:RebuildAssessment, which tracks a rebuild that keeps corresponding to a specific upstream project's ongoing releases -- a repackage under a new name is not assumed to keep tracking the original project's releases going forward."@en .
 
 pkg:match-repology a skos:Concept ;
     skos:inScheme pkg:MatchMethodScheme ;
