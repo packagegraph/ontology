@@ -31,7 +31,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install rdflib pyshacl
+          python -m pip install rdflib pyshacl owlrl
       - name: Verify version consistency
         run: make check-version
       - name: Run deployment using Makefile

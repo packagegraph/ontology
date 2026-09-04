@@ -19,8 +19,10 @@ from rdflib.term import URIRef
 try:
     import owlrl
 except ImportError:
-    print("SKIP: owlrl not installed (uv pip install owlrl)")
-    sys.exit(0)
+    # A gate that silently skips is not a gate. owlrl is a declared project
+    # dependency, so its absence is a broken environment, not a reason to pass.
+    print("FAIL: owlrl not installed (uv pip install owlrl) -- reasoning gate cannot run")
+    sys.exit(1)
 
 PKG = Namespace("https://purl.org/packagegraph/ontology/core#")
 PROV = Namespace("http://www.w3.org/ns/prov#")

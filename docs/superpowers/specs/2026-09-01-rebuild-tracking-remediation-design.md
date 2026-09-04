@@ -319,9 +319,13 @@ New `tests/shacl-negative/` + `scripts/validate_negative.py`, added as a
 depend on** (finding #9). Each fixture asserts the **expected focus node,
 `sh:sourceConstraintComponent`, and — because every SPARQL-based constraint reports
 the same `sh:SPARQLConstraintComponent` — the expected `sh:sourceShape` and
-`sh:resultMessage`**, not merely `conforms=False`, so no unrelated failure can make a
-fixture pass. (Each SPARQL constraint therefore carries a distinct, stable
-`sh:message`.) Fixtures include:
+`sh:resultMessage`**, all four required on the SAME `sh:ValidationResult` — not merely
+`conforms=False`, and not as independent sets over the report — so no unrelated failure
+can make a fixture pass. (Each SPARQL constraint therefore carries a distinct, stable
+`sh:message`.) Named shapes are pinned by local name; property shapes are blank nodes
+with no stable label, so they are pinned by their `sh:path` as `path:<localName>`
+(e.g. `path:fidelityBaseline`), which is what distinguishes one property constraint
+from another. Fixtures include:
 
 - `rebuildOf` to a target that no assessment's `fidelityBaseline` matches → lineage
   guard.
@@ -443,9 +447,12 @@ choice.
 
 ## 13. Verification (item 6)
 
-Rerun and confirm green: `make lint`, `make validate` (now depending on
-`validate-negative`), `make validate-integration`, `make check-version`,
-`scripts/test-owl2-reasoning.py`, plus structural validation of the new CQs.
+Rerun and confirm green: `make lint`, `make validate` (which depends on
+`validate-negative`), `make validate-integration`, `make check-version`, and
+`make reason`. The OWL 2 RL suite is a **gate**, not a manual step: `reason` is a
+prerequisite of both `make all` and `make deploy` (which CI runs), `owlrl` is a
+declared project dependency installed by the CI workflow, and a missing `owlrl` now
+fails the run instead of skipping it. Plus structural validation of the new CQs.
 
 ## 14. Out of scope (deferred, documented in DD-RB)
 
