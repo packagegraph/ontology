@@ -2812,7 +2812,12 @@ The following CQs can be validated against local example files without Fuseki:
 - **CQ-RB-01** — drift-behind packages (uses rebuild tracking examples)
 - **CQ-RB-02** — fidelity provenance (uses rebuild tracking examples)
 - **CQ-RB-03** — vendor-patched and drift-behind (uses rebuild tracking examples)
+- **CQ-RB-04** — committed lineage vs. unpromoted candidate (uses rebuild tracking examples)
 - **CQ-RB-05** — exclusive packages (uses rebuild tracking examples)
+- **CQ-RB-06** — ambiguous upstream matches (uses rebuild tracking examples)
+- **CQ-RB-07** — cross-distro three-way comparison (uses rebuild tracking examples)
+- **CQ-RB-08** — drift-ahead packages (uses rebuild tracking examples)
+- **CQ-RB-09** — Alma vs. Rocky divergence (uses rebuild tracking examples)
 
 ---
 

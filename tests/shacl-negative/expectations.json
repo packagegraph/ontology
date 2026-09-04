@@ -23,6 +23,12 @@
     "sourceConstraintComponent": "MaxInclusiveConstraintComponent",
     "resultMessage": "assessmentConfidence must be between 0.0 and 1.0."
   },
+  "confidence-too-low.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:assessmentConfidence",
+    "sourceConstraintComponent": "MinInclusiveConstraintComponent",
+    "resultMessage": "assessmentConfidence must be between 0.0 and 1.0."
+  },
   "confirmed-no-evidence.ttl": {
     "focusNode": "_neg",
     "sourceShape": "RebuildAssessmentPromotionShape",
@@ -47,6 +53,12 @@
     "sourceConstraintComponent": "SPARQLConstraintComponent",
     "resultMessage": "hasUpstreamCounterpart=true requires exactly one rebuildFidelity and one rebuildDrift."
   },
+  "drift-not-in-scheme.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:rebuildDrift",
+    "sourceConstraintComponent": "InConstraintComponent",
+    "resultMessage": "rebuildDrift must be a concept from RebuildDriftScheme."
+  },
   "drift-without-baseline.ttl": {
     "focusNode": "_neg",
     "sourceShape": "RebuildAssessmentResultsShape",
@@ -58,6 +70,12 @@
     "sourceShape": "path:lineageEvidence",
     "sourceConstraintComponent": "DatatypeConstraintComponent",
     "resultMessage": "lineageEvidence must be a single non-empty string."
+  },
+  "fidelity-not-in-scheme.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:rebuildFidelity",
+    "sourceConstraintComponent": "InConstraintComponent",
+    "resultMessage": "rebuildFidelity must be a concept from RebuildFidelityScheme."
   },
   "lineage-confirmed-twice.ttl": {
     "focusNode": "_neg",
@@ -83,11 +101,41 @@
     "sourceConstraintComponent": "SPARQLConstraintComponent",
     "resultMessage": "A matched fidelity (exact/vendor-patched/modular-equivalent) requires a fidelityBaseline."
   },
+  "missing-assessed-at.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:assessedAt",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one assessedAt dateTime."
+  },
+  "missing-assessment-method.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:assessmentMethod",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one assessmentMethod."
+  },
+  "missing-assessment-of.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:assessmentOf",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one assessmentOf SourcePackage."
+  },
+  "missing-lineage-confirmed.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:lineageConfirmed",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one lineageConfirmed boolean."
+  },
   "missing-snapshot.ttl": {
     "focusNode": "_neg",
     "sourceShape": "path:assessedAgainstSnapshot",
     "sourceConstraintComponent": "MinCountConstraintComponent",
     "resultMessage": "A RebuildAssessment must reference exactly one assessedAgainstSnapshot."
+  },
+  "missing-upstream-counterpart.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:hasUpstreamCounterpart",
+    "sourceConstraintComponent": "MinCountConstraintComponent",
+    "resultMessage": "A RebuildAssessment must have exactly one hasUpstreamCounterpart boolean."
   },
   "one-ambiguous.ttl": {
     "focusNode": "_neg",
@@ -106,6 +154,12 @@
     "sourceShape": "path:comparedAgainst",
     "sourceConstraintComponent": "MaxCountConstraintComponent",
     "resultMessage": "An assessment must have at most one comparedAgainst SourcePackage."
+  },
+  "two-drift.ttl": {
+    "focusNode": "_neg",
+    "sourceShape": "path:rebuildDrift",
+    "sourceConstraintComponent": "MaxCountConstraintComponent",
+    "resultMessage": "rebuildDrift must be a concept from RebuildDriftScheme."
   },
   "two-fidelity-baselines.ttl": {
     "focusNode": "_neg",

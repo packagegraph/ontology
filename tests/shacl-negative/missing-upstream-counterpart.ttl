@@ -1,0 +1,12 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+pkg:_negSrc a pkg:SourcePackage ; pkg:packageName "x" .
+pkg:_negSnap a pkg:DataSnapshot ; rdfs:label "snap" .
+pkg:_neg a pkg:RebuildAssessment ;
+    pkg:assessmentOf pkg:_negSrc ;
+    pkg:assessedAt "2026-08-31T00:00:00Z"^^xsd:dateTime ;
+    pkg:assessmentMethod "rebuild-norm/v1" ;
+    pkg:assessedAgainstSnapshot pkg:_negSnap ;
+    pkg:lineageConfirmed false .
