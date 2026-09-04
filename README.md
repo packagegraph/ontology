@@ -61,7 +61,7 @@ uv pip install rdflib pyshacl
 - ✅ **Evidence-gated lineage** — `rebuildOf` property asymmetric and irreflexive, guarded by `lineageConfirmed` / `lineageEvidence` / `ambiguousCandidate` provenance properties
 - ✅ **SHACL guards** — `RebuildAssessmentShape` + SPARQL constraints for coupling, ambiguity, self-baseline, promotion, and lineage integrity
 - ✅ **Provenance properties** — `assessedAt`, `assessmentMethod`, `assessmentConfidence`, `assessedAgainstSnapshot` enable reproducible assessments
-- ✅ **9 new competency questions (CQ-RB-01..09)** — rebuild tracking queries; 77 total, all structurally valid
+- ✅ **10 new competency questions (CQ-RB-01..10)** — rebuild tracking queries; 78 total, all structurally valid
 
 See [CHANGELOG.md](CHANGELOG.md) for full details.
 

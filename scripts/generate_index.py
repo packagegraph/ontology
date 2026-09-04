@@ -149,7 +149,7 @@ def generate_html():
   <div class="nav">
     <a href="https://github.com/packagegraph/ontology">GitHub</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/CHANGELOG.md">Changelog</a>
-    <a href="https://github.com/packagegraph/ontology/blob/main/docs/competency-questions.md">77 Competency Questions</a>
+    <a href="https://github.com/packagegraph/ontology/blob/main/docs/competency-questions.md">78 Competency Questions</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/docs/design-decisions.md">Design Decisions</a>
     <a href="https://github.com/packagegraph/ontology/blob/main/docs/reports/2026-04-20-evaluation-comparison.md">vs SPDX/CycloneDX/OSV</a>
   </div>

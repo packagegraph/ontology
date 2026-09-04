@@ -2730,6 +2730,47 @@ ORDER BY ?pkgName
 
 ---
 
+### CQ-RB-10: Cross-Ecosystem Vendor Comparison (N-Way, Non-RPM)
+
+**Question:** For a project rebuilt by multiple vendors under different downstream product names (e.g. OpenJDK, rebuilt as Eclipse Temurin, Amazon Corretto, Azul Zulu, and Microsoft Build of OpenJDK), compare fidelity and drift across all vendors against the same upstream project. Demonstrates the vocabulary is not RPM-specific and that package-name identity is not the rebuild/fork test (see DD-RB) -- these vendors publish under entirely different names while all rebuilding the same upstream source.
+
+**SPARQL:**
+```sparql
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+
+SELECT ?vendor ?vendorProduct ?fidelity ?drift
+WHERE {
+  ?a pkg:assessmentOf ?pkg ;
+     pkg:rebuildFidelity ?fidelity ;
+     pkg:rebuildDrift ?drift ;
+     pkg:comparedAgainst ?upstream ;
+     pkg:assessedAt ?assessedAt .
+  ?pkg pkg:packageName ?vendorProduct .
+  ?upstream pkg:packageName "openjdk" .
+
+  # Vendor segment of the source-package IRI -- the downstream product name
+  # (?vendorProduct) is deliberately NOT required to match the upstream's
+  # packageName ("openjdk"), since a genuine rebuild is commonly published
+  # under a different product name.
+  BIND( REPLACE( STR(?pkg), "^.*/d/src/([^/]+)/.*$", "$1" ) AS ?vendor )
+
+  # Latest assessment per vendor package.
+  FILTER NOT EXISTS {
+    ?a2 pkg:assessmentOf ?pkg ; pkg:assessedAt ?date2 .
+    FILTER(?date2 > ?assessedAt)
+  }
+}
+ORDER BY ?vendor
+```
+
+**Expected Columns:** vendor (string), vendorProduct (string), fidelity (URI), drift (URI)
+
+**Exercises:** RebuildAssessment, assessmentOf, rebuildFidelity, rebuildDrift, comparedAgainst, cross-ecosystem N-way join, package-name-independent rebuild identification
+
+**Status:** PASS
+
+---
+
 ## Summary Statistics
 
 | Domain | CQ Count | PASS | ONTOLOGY-COMPLETE | ADVISORY-SIDE | BLOCKED | OTHER |
@@ -2749,8 +2790,8 @@ ORDER BY ?pkgName
 | Package Set (SET) | 1 | 1 | 0 | 0 | 0 | 0 |
 | Ecosystem-Specific (ECO) | 3 | 3 | 0 | 0 | 0 | 0 |
 | Maven Ecosystem (MVN) | 8 | 5 | 0 | 0 | 0 | 3 |
-| Rebuild Tracking (RB) | 9 | 9 | 0 | 0 | 0 | 0 |
-| **TOTAL** | **77** | **61** | **3** | **3** | **6** | **4** |
+| Rebuild Tracking (RB) | 10 | 10 | 0 | 0 | 0 | 0 |
+| **TOTAL** | **78** | **62** | **3** | **3** | **6** | **4** |
 
 **Count basis:** 77 `### CQ-*` entries, each with its own SPARQL block (PM includes the
 `CQ-PM-03b` UNION variant alongside `CQ-PM-03`). Counts are derived mechanically from the
@@ -2818,6 +2859,7 @@ The following CQs can be validated against local example files without Fuseki:
 - **CQ-RB-07** — cross-distro three-way comparison (uses rebuild tracking examples)
 - **CQ-RB-08** — drift-ahead packages (uses rebuild tracking examples)
 - **CQ-RB-09** — Alma vs. Rocky divergence (uses rebuild tracking examples)
+- **CQ-RB-10** — cross-ecosystem N-way vendor comparison (uses rebuild tracking examples)
 
 ---
 
