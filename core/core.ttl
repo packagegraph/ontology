@@ -1553,7 +1553,7 @@ xsd:date a rdfs:Datatype .
 
 :assessedAgainstSnapshot a owl:ObjectProperty ;
     rdfs:label "assessed against snapshot"@en ;
-    IAO:0000115 "The upstream data snapshot from which candidates, presence, and the newest build were determined. Required on every assessment so results (including closed-world absence) are reproducible."@en ;
+    IAO:0000115 "The upstream data snapshot from which candidates, presence, and the newest build were determined. Required on every assessment so results (including closed-world absence) are reproducible. The referenced snapshot must identify an immutable collection run or content state -- pinned by snapshotTimestamp and snapshotSource, ideally with a content digest -- and not merely a mutable named-graph URI: re-collecting into an existing graph name would leave this reference resolving to contents the assessment was never computed against. Re-collection mints a new DataSnapshot rather than mutating one an assessment already cites."@en ;
     rdfs:comment "The upstream snapshot this assessment was computed against"@en ;
     rdfs:domain :RebuildAssessment ;
     rdfs:range :DataSnapshot ;
@@ -1585,7 +1585,7 @@ xsd:date a rdfs:Datatype .
 
 :assessmentConfidence a owl:DatatypeProperty ;
     rdfs:label "assessment confidence"@en ;
-    IAO:0000115 "A confidence score (0.0 to 1.0) for this assessment's classification. Ambiguous multi-match outcomes take the deterministic value fixed by the method (0.5 for rebuild-norm/v1)."@en ;
+    IAO:0000115 "A confidence score (0.0 to 1.0) for this assessment's classification. Numeric semantics are defined by the assessmentMethod, not by this ontology -- a method that describes itself as deterministic must pin one value per outcome it produces (e.g. rebuild-norm/v1 pins 1.0/0.9/0.85/0.7/0.5 for exact/vendor-patched/modular-equivalent/unknown/ambiguous; see design decisions)."@en ;
     rdfs:comment "Confidence score for this assessment (0.0-1.0)"@en ;
     rdfs:domain :RebuildAssessment ;
     rdfs:range xsd:decimal ;
