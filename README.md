@@ -67,12 +67,6 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 
 ## Previous Releases
 
-### v0.11.0 — PackageEntity dependency target model
-
-- `pkg:PackageEntity` — common superclass of `Package` and `PackageIdentity` for dependency targeting
-- 12 property range/domain updates — dependency properties accept both concrete packages and version-independent identities
-- 8 OWL 2 RL reasoning tests — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
-
 ### v0.12.0 — Maven dependency exclusions
 
 **Maven ecosystem dependency exclusion vocabulary:**
@@ -81,7 +75,13 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - ✅ **Exclusion predicates** — `hasExclusion`, `excludedGroupId`, `excludedArtifactId` with wildcard support
 - ✅ **3 Maven CQs (MVN-06..08)** — exclusion queries, reverse lookup, wildcard matching
 
-### v0.11.0
+### v0.11.0 — PackageEntity dependency target model
+
+- `pkg:PackageEntity` — common superclass of `Package` and `PackageIdentity` for dependency targeting
+- 12 property range/domain updates — dependency properties accept both concrete packages and version-independent identities
+- 8 OWL 2 RL reasoning tests — identity/concrete targets, inverse pairs, `prov:Entity` inference, negative assertions
+
+### v0.10.0 — Maven security & VCS integration
 
 **Maven security & VCS integration, academic hardening:**
 
@@ -94,9 +94,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - ✅ **53 competency questions** — all structurally valid against Fuseki → [docs/competency-questions.md](docs/competency-questions.md)
 - ✅ **BFO/DOLCE positioning clarified** — evaluated but not aligned; rationale documented in DD-UO-1
 
-### v0.10.0
-
-See [CHANGELOG.md](CHANGELOG.md) for full release notes.
+For v0.9.0 and earlier, see [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 ---
 
