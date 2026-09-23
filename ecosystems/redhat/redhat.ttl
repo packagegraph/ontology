@@ -57,9 +57,9 @@ rh: a owl:Ontology ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/redhat/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/redhat/0.13.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/redhat/0.14.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/redhat/shapes> ;
 
-    owl:versionInfo "0.13.0" .
+    owl:versionInfo "0.14.0" .
 

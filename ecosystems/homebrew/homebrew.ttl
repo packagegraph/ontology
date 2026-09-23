@@ -583,9 +583,9 @@ brew: a owl:Ontology ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/homebrew/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/homebrew/0.13.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/homebrew/0.14.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/homebrew/shapes> ;
 
-    owl:versionInfo "0.13.0" .
+    owl:versionInfo "0.14.0" .
 
