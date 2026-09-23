@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "verified_at": "2026-09-23T18:55:11.748712+00:00",
+  "migration_source_sha256": "8d2b977def206d0aacd2b5d24332d0daded4f7a7a8132cf6dd0cb6df989ad5c5",
+  "before_triples": 108,
+  "after_triples": 109,
+  "before_purls": 2,
+  "after_purls": 3,
+  "non_purl_triples_preserved": 106,
+  "snapshot_triples_preserved": 4,
+  "non_purl_added": 0,
+  "non_purl_removed": 0,
+  "input_unchanged": true,
+  "general_validation_errors": 0,
+  "rpm_profile_errors": [
+    {
+      "subject": "https://packagegraph.github.io/d/src/almalinux/10/acl/2.3.2-4.el10",
+      "message": "expected exactly one PURL"
+    },
+    {
+      "subject": "https://packagegraph.github.io/d/src/almalinux/10/acl/2.4.0-1.el10_2",
+      "message": "expected exactly one PURL"
+    }
+  ],
+  "cli_output_matches_api": true,
+  "purls_after": [
+    {
+      "subject": "https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl",
+      "purl": "pkg:rpm/almalinux/acl?arch=aarch64"
+    },
+    {
+      "subject": "https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl/2.3.2-4.el10.aarch64",
+      "purl": "pkg:rpm/almalinux/acl@2.3.2-4.el10?arch=aarch64"
+    },
+    {
+      "subject": "https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl/2.4.0-1.el10_2.aarch64",
+      "purl": "pkg:rpm/almalinux/acl@2.4.0-1.el10_2?arch=aarch64"
+    }
+  ],
+  "before.nt": {
+    "bytes": 22226,
+    "sha256": "6635711ebda9242a8c6d4695fa37473a215532d3b9ab4b8d1c86ee956bbef9d5"
+  },
+  "after.nt": {
+    "bytes": 22467,
+    "sha256": "a0797c0d3c8c57b409239be822ccdfe2a875ea798ad5219d5c305e8dfbec7a46"
+  }
+}

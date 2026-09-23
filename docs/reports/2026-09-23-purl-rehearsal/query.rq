@@ -1,0 +1,15 @@
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+SELECT DISTINCT ?s ?p ?o
+WHERE {
+  GRAPH <https://packagegraph.github.io/graph/almalinux/10> {
+    { VALUES ?s { <https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl> } ?s ?p ?o . }
+    UNION { ?s pkg:isVersionOf <https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl> ; ?p ?o . }
+    UNION {
+      ?package pkg:isVersionOf <https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl> ; pkg:hasVersion ?s .
+      ?s ?p ?o .
+    }
+    UNION { ?s a pkg:DataSnapshot ; ?p ?o . }
+  }
+}
+ORDER BY ?s ?p ?o
+LIMIT 10001

@@ -1,0 +1,20 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <https://example.org/purl/> .
+
+ex:identity a pkg:PackageIdentity ; pkg:identityName "acl" ; rdfs:label "acl" ;
+    pkg:purl "pkg:rpm/almalinux/acl?arch=aarch64"^^xsd:anyURI .
+ex:old a pkg:BinaryPackage, rpm:BinaryRPM ; pkg:packageName "acl" ;
+    pkg:isVersionOf ex:identity ; pkg:hasVersion ex:v1 ;
+    pkg:purl "pkg:rpm/almalinux/acl@2.3.2-4.el10?arch=aarch64"^^xsd:anyURI ;
+    prov:wasDerivedFrom ex:snapshot .
+ex:new a pkg:BinaryPackage, rpm:BinaryRPM ; pkg:packageName "acl" ;
+    pkg:isVersionOf ex:identity ; pkg:hasVersion ex:v2 ;
+    pkg:purl "pkg:rpm/almalinux/acl@2.4.0-1.el10_2?arch=aarch64"^^xsd:anyURI ;
+    prov:wasDerivedFrom ex:snapshot .
+ex:v1 a pkg:Version ; pkg:versionString "2.3.2-4.el10" .
+ex:v2 a pkg:Version ; pkg:versionString "2.4.0-1.el10_2" .
+ex:snapshot a prov:Entity ; rdfs:label "original collection snapshot" .

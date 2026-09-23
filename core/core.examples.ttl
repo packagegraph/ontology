@@ -239,7 +239,7 @@ ex:glibc-deb pkg:isDirectDependencyOf ex:wget-deb .
 # version-independent identity rather than a concrete package.
 ex:libssl3-identity a pkg:PackageIdentity ;
   pkg:identityName "libssl3" ;
-  pkg:purl "pkg:deb/debian/libssl3@3.0.0"^^xsd:anyURI ;
+  pkg:purl "pkg:deb/debian/libssl3"^^xsd:anyURI ;
   rdfs:label "libssl3 Package Identity" .
 
 ex:wget-libssl3-dep a pkg:Dependency ;
@@ -259,7 +259,7 @@ ex:libssl3-identity pkg:isDirectDependencyOf ex:wget-deb .
 
 # 3. hasPackage (inverse of isVersionOf)
 ex:glibc-identity a pkg:PackageIdentity ;
-  pkg:purl "pkg:deb/debian/libc6@2.38-1"^^xsd:anyURI ;
+  pkg:purl "pkg:deb/debian/libc6"^^xsd:anyURI ;
   pkg:identityName "libc6" ;
   rdfs:label "glibc Package Identity" .
 
@@ -360,7 +360,7 @@ ex:requests-github-repo a vcs:Repository ;
 ex:requests-pypi-identity a pkg:PackageIdentity ;
   pkg:upstreamRepository ex:requests-github-repo ;
   pkg:upstreamEquivalent ex:requests-debian-identity ;
-  pkg:purl "pkg:pypi/requests@2.28.2"^^xsd:anyURI ;
+  pkg:purl "pkg:pypi/requests"^^xsd:anyURI ;
   pkg:identityName "requests" ;
   rdfs:label "requests (PyPI)" ;
   rdfs:comment "PyPI package identity" .
@@ -370,7 +370,7 @@ ex:requests-debian-identity a pkg:PackageIdentity ;
   pkg:upstreamRepository ex:requests-github-repo ;
   pkg:upstreamPackageIdentity ex:requests-pypi-identity ;
   pkg:upstreamEquivalent ex:requests-pypi-identity ;
-  pkg:purl "pkg:deb/debian/python3-requests@2.28.2"^^xsd:anyURI ;
+  pkg:purl "pkg:deb/debian/python3-requests"^^xsd:anyURI ;
   pkg:identityName "python3-requests" ;
   sec:cpeId "cpe:2.3:a:python-requests:requests:2.28.2:*:*:*:*:*:*:*" ;
   rdfs:label "python3-requests (Debian)" ;
@@ -389,11 +389,12 @@ ex:requests-debian-identity a pkg:PackageIdentity ;
 # Demonstrating PURL and CPE identifiers
 # ============================================================
 
-# (PURLs and CPE moved to PackageIdentity definitions above)
+# Versionless PURLs identify identities; versioned PURLs belong to packages.
+# CPE assertions remain on the identity definitions above.
 
 # OpenSSL package identity with CPE
 ex:openssl-identity a pkg:PackageIdentity ;
-  pkg:purl "pkg:deb/debian/openssl@3.0.2"^^xsd:anyURI ;
+  pkg:purl "pkg:deb/debian/openssl"^^xsd:anyURI ;
   pkg:identityName "openssl" ;
   sec:cpeId "cpe:2.3:a:openssl:openssl:3.0.2:*:*:*:*:*:*:*" ;
   rdfs:label "OpenSSL package identity" .
@@ -558,22 +559,22 @@ ex:arch-x86-64 a pkg:Architecture ;
 # PackageIdentity stubs for relationship examples
 <https://packagegraph.github.io/d/pkgid/debian/trixie/amd64/python3-requests> a pkg:PackageIdentity ;
     pkg:identityName "python3-requests" ;
-    pkg:purl "pkg:deb/debian/python3-requests@2.31.0-1"^^xsd:anyURI ;
+    pkg:purl "pkg:deb/debian/python3-requests"^^xsd:anyURI ;
     rdfs:label "python3-requests (Debian trixie amd64)" .
 
 <https://packagegraph.github.io/d/pkgid/pypi/requests> a pkg:PackageIdentity ;
     pkg:identityName "requests" ;
-    pkg:purl "pkg:pypi/requests@2.31.0"^^xsd:anyURI ;
+    pkg:purl "pkg:pypi/requests"^^xsd:anyURI ;
     rdfs:label "requests (PyPI)" .
 
 <https://packagegraph.github.io/d/pkgid/fedora/43/x86_64/python3-cryptography> a pkg:PackageIdentity ;
     pkg:identityName "python3-cryptography" ;
-    pkg:purl "pkg:rpm/fedora/python3-cryptography@42.0.5-1.fc43"^^xsd:anyURI ;
+    pkg:purl "pkg:rpm/fedora/python3-cryptography"^^xsd:anyURI ;
     rdfs:label "python3-cryptography (Fedora 43 x86_64)" .
 
 <https://packagegraph.github.io/d/pkgid/pypi/cryptography> a pkg:PackageIdentity ;
     pkg:identityName "cryptography" ;
-    pkg:purl "pkg:pypi/cryptography@42.0.5"^^xsd:anyURI ;
+    pkg:purl "pkg:pypi/cryptography"^^xsd:anyURI ;
     rdfs:label "cryptography (PyPI)" .
 
 # Debian python3-requests ↔ PyPI requests (upstream verified, high confidence)

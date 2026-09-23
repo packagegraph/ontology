@@ -1,0 +1,23 @@
+{
+  "endpoint": "https://packagegraph.di.riseproject.dev/",
+  "graph": "https://packagegraph.github.io/graph/almalinux/10",
+  "identity": "https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl",
+  "selection_completed_at": "2026-09-23T18:50:21.665670+00:00",
+  "sample_started_at": "2026-09-23T18:51:00.815269+00:00",
+  "row_limit": 10001,
+  "sample_finished_at": "2026-09-23T18:51:01.933784+00:00",
+  "response_rows": 108,
+  "before_triples": 108,
+  "before_purls": 2,
+  "identity_count": 1,
+  "package_count": 2,
+  "snapshot_count": 1,
+  "snapshots": [
+    "https://packagegraph.github.io/d/snapshot/collector/almalinux-10/20260915T040421Z"
+  ],
+  "literal_normalization": false,
+  "before.nt": {
+    "bytes": 22226,
+    "sha256": "6635711ebda9242a8c6d4695fa37473a215532d3b9ab4b8d1c86ee956bbef9d5"
+  }
+}

@@ -1,0 +1,1 @@
+{"head":{"vars":["identity","purlCount"]},"results":{"bindings":[{"identity":{"type":"uri","value":"https://packagegraph.github.io/d/pkg/almalinux/10/aarch64/acl"},"purlCount":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}}]},"meta":{"query-time-ms":47,"result-size-total":1}}

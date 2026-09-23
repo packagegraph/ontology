@@ -1,0 +1,11 @@
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+SELECT ?identity (COUNT(DISTINCT ?purl) AS ?purlCount)
+WHERE {
+  GRAPH <https://packagegraph.github.io/graph/almalinux/10> {
+    ?identity a pkg:PackageIdentity ; pkg:purl ?purl .
+    FILTER(CONTAINS(STR(?purl), "@"))
+  }
+}
+GROUP BY ?identity
+HAVING (COUNT(DISTINCT ?purl) > 1)
+LIMIT 1
