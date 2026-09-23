@@ -50,6 +50,32 @@ pip install uv
 uv pip install rdflib pyshacl
 ```
 
+### Documentation builds and publication
+
+Pull requests run validation and build documentation with read-only repository
+permissions. In the completed Actions run, download the **github-pages** artifact
+from **Artifacts** and extract its archive to inspect the generated site. Artifacts
+are retained for seven days; they are not hosted PR previews.
+
+Only a successful build on `main` (a push or a manual workflow run selecting
+`main`) can publish to GitHub Pages. The separate deployment job uses the
+`github-pages` environment, which must remain restricted to the `main` branch.
+Its deployment URL appears in the Actions run after publication. PR builds and
+production deployments use separate concurrency groups.
+
+The workflow boundary has regression tests using GitHub's expression evaluator.
+They check event/ref/build-result eligibility, token permissions, the artifact
+dependency, concurrency isolation, and deployment URL wiring. To run locally
+with Node.js 22 and npm:
+
+```bash
+npm ci --prefix tests/workflows --ignore-scripts --no-audit --no-fund
+npm test --prefix tests/workflows
+```
+
+These tests evaluate workflow configuration; actual artifact publication and
+GitHub's environment UI still require a GitHub Actions run.
+
 ---
 
 ## What's New in v0.13.0
