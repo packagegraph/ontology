@@ -13,7 +13,7 @@ Tests:
 Requires: rdflib, owlrl (uv pip install owlrl)
 """
 import sys
-from rdflib import Graph, Namespace, RDF, RDFS, Literal
+from rdflib import Graph, Namespace, OWL, RDF, RDFS, Literal
 from rdflib.term import URIRef
 
 try:
@@ -309,6 +309,45 @@ def test_rebuild_of_asymmetric_irreflexive_axioms():
     print("PASS: rebuildOf axioms present; comparison properties are not prov lineage")
 
 
+def test_has_upstream_project_is_deprecated():
+    """hasUpstreamProject is derivable and must be marked deprecated."""
+    g = Graph()
+    g.parse("core/core.ttl", format="turtle")
+
+    assert (PKG.hasUpstreamProject, OWL.deprecated, Literal(True)) in g, (
+        "FAIL: hasUpstreamProject is not marked owl:deprecated"
+    )
+    print("PASS: hasUpstreamProject is deprecated")
+
+
+def test_project_repository_is_inverse_functional():
+    """One repository determines one UpstreamProject.
+
+    Retiring hasUpstreamProject is only sound if the repository join picks out
+    a single project. UpstreamProject hubs are keyed by canonical repository
+    URL, so projectRepository is inverse-functional by construction; stating it
+    makes the derivation well-defined instead of merely true-in-practice.
+    """
+    g = Graph()
+    g.parse("core/core.ttl", format="turtle")
+
+    assert (PKG.projectRepository, RDF.type, OWL.InverseFunctionalProperty) in g, (
+        "FAIL: projectRepository is not declared owl:InverseFunctionalProperty"
+    )
+
+    g.add((EX.hubA, RDF.type, PKG.UpstreamProject))
+    g.add((EX.hubB, RDF.type, PKG.UpstreamProject))
+    g.add((EX.hubA, PKG.projectRepository, EX.repo1))
+    g.add((EX.hubB, PKG.projectRepository, EX.repo1))
+
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+    assert (EX.hubA, OWL.sameAs, EX.hubB) in g, (
+        "FAIL: two hubs on one repository were not inferred identical"
+    )
+    print("PASS: projectRepository is inverse-functional (repo determines project)")
+
+
 if __name__ == "__main__":
     print("=== OWL 2 RL Reasoning Tests ===\n")
     test_ontology_consistency()
@@ -324,4 +363,6 @@ if __name__ == "__main__":
     test_rebuild_assessment_inverse_pair()
     test_assessment_domain_range_inference()
     test_rebuild_of_asymmetric_irreflexive_axioms()
+    test_has_upstream_project_is_deprecated()
+    test_project_repository_is_inverse_functional()
     print("\n=== All reasoning tests complete ===")

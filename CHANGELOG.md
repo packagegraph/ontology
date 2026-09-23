@@ -5,6 +5,36 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Deprecated
+- `pkg:hasUpstreamProject` is marked `owl:deprecated`. It was emitted by no
+  producer — zero triples in the published corpus on any subject type — and it
+  carries no information: an `UpstreamProject` is keyed by its canonical
+  repository URL, so the project is reached from any entity carrying
+  `pkg:upstreamRepository` by joining on the shared repository. Measured
+  2026-09-22, that join yields 232,981 pairs across 232,720 distinct
+  identities, against 25,605 hubs. The term is retained as resolvable; do not
+  emit it. Resolves #7.
+
+### Changed
+- `pkg:projectRepository` is now `owl:InverseFunctionalProperty`. Hubs are keyed
+  by canonical repository URL, so a repository determines at most one project —
+  verified in the corpus at 25,605 hubs over 25,605 distinct repository URLs
+  with no collisions. Stating the axiom is what makes reaching the project by
+  repository join well-defined rather than merely true in practice.
+- CQ-XD-04 ("Shared Upstream Projects") rewritten onto the repository join, and
+  through `isVersionOf` to a versioned package: `upstreamRepository` is asserted
+  on the version-independent identity, which carries no `partOfRelease`. Its
+  recorded status was `PASS`, which could not have been true against a predicate
+  with no instances. Grouping stays on `projectName` deliberately — see #8.
+- CQ-CLASS-01 ("Web Frameworks with Unpatched CVEs") retargeted at
+  `pkg:PackageIdentity`. Classifications are asserted on identities, not on
+  project hubs: zero `UpstreamProject` instances carry `tax:role-framework`,
+  against 1,799,183 identity-subject `hasClassification` triples. Status moves
+  from `BLOCKED` to `PASS (empty result)` — the pattern is satisfiable and the
+  unpatched filter legitimately matches nothing.
+
 ## [0.13.0] - 2026-09-02
 
 Reified rebuild-tracking vocabulary (presence / fidelity / drift) for downstream

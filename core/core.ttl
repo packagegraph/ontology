@@ -481,8 +481,9 @@ dcterms:title a owl:AnnotationProperty ;
 
 :hasUpstreamProject a owl:ObjectProperty ;
     rdfs:label "has upstream project"@en ;
-    IAO:0000115 "Associates a source package with the upstream open source project that it packages for distribution."@en ;
-    rdfs:comment "Links a source package to the upstream project it packages"@en ;
+    IAO:0000115 "Associates a source package with the upstream open source project that it packages for distribution. DEPRECATED: this relationship is fully derivable and is not asserted by any producer."@en ;
+    rdfs:comment "DEPRECATED - derive instead by joining on the shared repository URL: ?entity :upstreamRepository ?repo . ?project :projectRepository ?repo . An UpstreamProject is keyed by its canonical repository URL, so that join determines the project uniquely and this edge adds no information. Retained as a resolvable term; do not emit it."@en ;
+    owl:deprecated true ;
     rdfs:domain :SourcePackage ;
     rdfs:isDefinedBy : ;
     rdfs:range :UpstreamProject .
@@ -699,10 +700,11 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:range :PackageEntity ;
     rdfs:subPropertyOf :dependsOn .
 
-:projectRepository a owl:ObjectProperty ;
+:projectRepository a owl:ObjectProperty,
+        owl:InverseFunctionalProperty ;
     rdfs:label "project repository"@en ;
     IAO:0000115 "Links an upstream project to its primary source code repository. Makes UpstreamProject the central hub for cross-ecosystem identity - connect all ecosystem packages to the project, then to the shared repository."@en ;
-    rdfs:comment "Links an upstream project to its VCS repository"@en ;
+    rdfs:comment "Links an upstream project to its VCS repository. Inverse-functional: a repository determines at most one UpstreamProject, because hubs are keyed by canonical repository URL. This is what lets consumers reach the project from any entity carrying :upstreamRepository, without a direct edge."@en ;
     rdfs:domain :UpstreamProject ;
     rdfs:isDefinedBy : ;
     rdfs:range <https://purl.org/packagegraph/ontology/vcs#Repository> .
