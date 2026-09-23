@@ -81,6 +81,7 @@ validate-advisory:
 .PHONY: reason
 reason:
 	@echo "OWL 2 RL reasoning tests..."
+	@$(PYTHON) scripts/test_reasoning_support.py -v
 	@$(PYTHON) scripts/test-owl2-reasoning.py
 
 # ─── Version Consistency ─────────────────────────────────────────────────────

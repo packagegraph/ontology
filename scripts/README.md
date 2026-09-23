@@ -2,6 +2,14 @@
 
 ## Everyday Workflows
 
+### Reasoning gates
+
+`make reason` runs exact entailment checks and inspects owlrl's error-report
+triples. Positive fixtures reject every reported error; negative fixtures
+require their expected error. Missing reasoning dependencies and unexpected
+exceptions fail the command. This is fixture-based OWL-RL regression coverage,
+not certification of the complete import closure or of OWL 2 DL conformance.
+
 ### Validate modules
 
 ```bash

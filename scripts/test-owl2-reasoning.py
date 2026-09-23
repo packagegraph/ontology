@@ -9,12 +9,12 @@ Tests:
   - prov:Entity inference through PackageEntity
   - Core dependency subproperty identity-target acceptance
   - rebuildOf => prov:wasDerivedFrom, and rebuild assessment inverse/domain/range
+  - Reported OWL-RL errors fail positive fixtures; negative fixtures require errors
 
 Requires: rdflib, owlrl (uv pip install owlrl)
 """
 import sys
 from rdflib import Graph, Namespace, OWL, RDF, RDFS, Literal
-from rdflib.term import URIRef
 
 try:
     import owlrl
@@ -23,6 +23,8 @@ except ImportError:
     # dependency, so its absence is a broken environment, not a reason to pass.
     print("FAIL: owlrl not installed (uv pip install owlrl) -- reasoning gate cannot run")
     sys.exit(1)
+
+from reasoning_support import expand_checked, owlrl_errors
 
 PKG = Namespace("https://purl.org/packagegraph/ontology/core#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
@@ -33,7 +35,7 @@ def _load_and_reason() -> Graph:
     """Load core ontology and apply OWL 2 RL reasoning."""
     g = Graph()
     g.parse("core/core.ttl", format="turtle")
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
     return g
 
 
@@ -43,7 +45,7 @@ def test_ontology_consistency():
     g.parse("core/core.ttl", format="turtle")
 
     initial_count = len(g)
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
     final_count = len(g)
 
     inferred = final_count - initial_count
@@ -65,7 +67,7 @@ def test_property_chain_concrete_target():
 
     assert (EX.packageA, PKG.directlyDependsOn, EX.packageB) not in g
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.packageA, PKG.directlyDependsOn, EX.packageB) in g, (
         "FAIL: propertyChainAxiom did not infer directlyDependsOn for concrete target"
@@ -85,7 +87,7 @@ def test_property_chain_identity_target():
     g.add((EX.packageA, PKG.hasDependency, EX.dep1))
     g.add((EX.dep1, PKG.dependencyTarget, EX.identityB))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.packageA, PKG.directlyDependsOn, EX.identityB) in g, (
         "FAIL: propertyChainAxiom did not infer directlyDependsOn for identity target"
@@ -103,7 +105,7 @@ def test_identity_target_not_inferred_as_package():
     g.add((EX.identityB, RDF.type, PKG.PackageIdentity))
     g.add((EX.packageA, PKG.directlyDependsOn, EX.identityB))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.identityB, RDF.type, PKG.PackageEntity) in g, (
         "FAIL: identity target not inferred as PackageEntity"
@@ -126,18 +128,14 @@ def test_inverse_pairs_concrete():
     g.add((EX.packageA, PKG.dependsOn, EX.packageB))
     g.add((EX.packageA, PKG.directlyDependsOn, EX.packageB))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     dep_inv = (EX.packageB, PKG.isDependencyOf, EX.packageA) in g
     direct_inv = (EX.packageB, PKG.isDirectDependencyOf, EX.packageA) in g
 
-    if dep_inv and direct_inv:
-        print("PASS: both inverse pairs inferred (concrete target)")
-    elif dep_inv or direct_inv:
-        inferred = "isDependencyOf" if dep_inv else "isDirectDependencyOf"
-        print(f"PARTIAL: only {inferred} inferred (concrete target)")
-    else:
-        print("INFO: OWL RL did not infer inverse pairs (limitation of RL profile)")
+    assert dep_inv, "FAIL: isDependencyOf was not inferred"
+    assert direct_inv, "FAIL: isDirectDependencyOf was not inferred"
+    print("PASS: both inverse pairs inferred (concrete target)")
 
 
 def test_inverse_pairs_identity():
@@ -151,18 +149,14 @@ def test_inverse_pairs_identity():
     g.add((EX.packageA, PKG.dependsOn, EX.identityB))
     g.add((EX.packageA, PKG.directlyDependsOn, EX.identityB))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     dep_inv = (EX.identityB, PKG.isDependencyOf, EX.packageA) in g
     direct_inv = (EX.identityB, PKG.isDirectDependencyOf, EX.packageA) in g
 
-    if dep_inv and direct_inv:
-        print("PASS: both inverse pairs inferred (identity target)")
-    elif dep_inv or direct_inv:
-        inferred = "isDependencyOf" if dep_inv else "isDirectDependencyOf"
-        print(f"PARTIAL: only {inferred} inferred (identity target)")
-    else:
-        print("INFO: OWL RL did not infer inverse pairs for identity target (limitation of RL profile)")
+    assert dep_inv, "FAIL: isDependencyOf was not inferred"
+    assert direct_inv, "FAIL: isDirectDependencyOf was not inferred"
+    print("PASS: both inverse pairs inferred (identity target)")
 
 
 def test_prov_entity_inference():
@@ -173,7 +167,7 @@ def test_prov_entity_inference():
     g.add((EX.pkg, PKG.packageName, Literal("test")))
     g.add((EX.ident, RDF.type, PKG.PackageIdentity))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     pkg_is_entity = (EX.pkg, RDF.type, PROV.Entity) in g
     ident_is_entity = (EX.ident, RDF.type, PROV.Entity) in g
@@ -198,7 +192,7 @@ def test_core_subproperty_identity_target():
 
     g.add((EX.srcPkg, PKG.buildDependsOn, EX.identityB))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.identityB, RDF.type, PKG.PackageEntity) in g, (
         "FAIL: identity target of buildDependsOn not inferred as PackageEntity"
@@ -210,23 +204,31 @@ def test_core_subproperty_identity_target():
 
 
 def test_disjoint_classes():
-    """Verify disjointness axioms are consistent."""
-    g = Graph()
-    g.parse("core/core.ttl", format="turtle")
-
+    """A deliberately disjoint individual must produce the expected error."""
+    g = Graph().parse("core/core.ttl", format="turtle")
     g.add((EX.bad, RDF.type, PKG.Package))
-    g.add((EX.bad, PKG.packageName, Literal("bad")))
     g.add((EX.bad, RDF.type, PKG.Person))
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    messages = owlrl_errors(g)
+    assert messages, "FAIL: disjointness produced no error report"
+    assert any(
+        "Disjoint classes" in message
+        and str(PKG.Person) in message and str(PKG.Package) in message
+        for message in messages
+    ), messages
+    print("PASS: expected Person/Package disjointness error reported")
 
-    try:
-        owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
-        is_nothing = (EX.bad, RDF.type, URIRef("http://www.w3.org/2002/07/owl#Nothing")) in g
-        if is_nothing:
-            print("PASS: disjointness detected (individual typed as owl:Nothing)")
-        else:
-            print("INFO: OWL RL did not flag disjointness (limitation of RL profile)")
-    except Exception as e:
-        print(f"PASS: disjointness raised exception: {e}")
+
+def test_self_rebuild_reports_errors():
+    """Self-lineage must report both irreflexivity and asymmetry errors."""
+    g = Graph().parse("core/core.ttl", format="turtle")
+    g.add((EX.loop, PKG.rebuildOf, EX.loop))
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    messages = owlrl_errors(g)
+    assert any("irreflexive" in message.lower() for message in messages), messages
+    assert any("asymmetric" in message.lower() for message in messages), messages
+    assert all(str(PKG.rebuildOf) in message for message in messages), messages
+    print("PASS: expected self-rebuild irreflexivity/asymmetry errors reported")
 
 
 def test_rebuild_of_subproperty_of_prov():
@@ -239,7 +241,7 @@ def test_rebuild_of_subproperty_of_prov():
     g.add((EX.upstream, PKG.packageName, Literal("openssl")))
     g.add((EX.downstream, PKG.rebuildOf, EX.upstream))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     derived = (EX.downstream, PROV.wasDerivedFrom, EX.upstream) in g
     is_entity = (EX.downstream, RDF.type, PROV.Entity) in g
@@ -258,7 +260,7 @@ def test_rebuild_assessment_inverse_pair():
     # Assert ONLY the canonical direction.
     g.add((EX.asmt, PKG.assessmentOf, EX.srcpkg))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     inverse_inferred = (EX.srcpkg, PKG.hasRebuildAssessment, EX.asmt) in g
     assert inverse_inferred, "FAIL: hasRebuildAssessment not inferred from assessmentOf"
@@ -273,7 +275,7 @@ def test_assessment_domain_range_inference():
     g.add((EX.a2, PKG.fidelityBaseline, EX.up2))
     g.add((EX.a2, PKG.assessedAgainstSnapshot, EX.snap2))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.a2, RDF.type, PKG.RebuildAssessment) in g, \
         "FAIL: rebuildFidelity domain did not type subject as RebuildAssessment"
@@ -287,9 +289,9 @@ def test_assessment_domain_range_inference():
 def test_rebuild_of_asymmetric_irreflexive_axioms():
     """rebuildOf is declared Asymmetric and Irreflexive (structural check).
 
-    OWL 2 RL cannot report these violations as inconsistency, so we assert the axioms
-    are present rather than claiming a reasoner enforces them. SHACL carries the
-    operative guard (a package may not be its own baseline).
+    Operational negative tests separately inspect owlrl's error predicate.
+    These characteristics do not prevent cycles of length three or more.
+    SHACL also guards against a package being its own baseline.
     """
     g = Graph()
     g.parse("core/core.ttl", format="turtle")
@@ -325,7 +327,7 @@ def test_upstream_family_does_not_collapse_identity_into_package():
     g.add((EX.ecoPypi, RDF.type, PKG.Ecosystem))
     g.add((EX.identityA, PKG.upstreamEcosystem, EX.ecoPypi))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.identityA, RDF.type, PKG.PackageEntity) in g, (
         "FAIL: upstream* subject not inferred as PackageEntity"
@@ -383,7 +385,7 @@ def test_project_repository_is_inverse_functional():
     g.add((EX.hubA, PKG.projectRepository, EX.repo1))
     g.add((EX.hubB, PKG.projectRepository, EX.repo1))
 
-    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+    expand_checked(g)
 
     assert (EX.hubA, OWL.sameAs, EX.hubB) in g, (
         "FAIL: two hubs on one repository were not inferred identical"
@@ -402,6 +404,7 @@ if __name__ == "__main__":
     test_prov_entity_inference()
     test_core_subproperty_identity_target()
     test_disjoint_classes()
+    test_self_rebuild_reports_errors()
     test_rebuild_of_subproperty_of_prov()
     test_rebuild_assessment_inverse_pair()
     test_assessment_domain_range_inference()
