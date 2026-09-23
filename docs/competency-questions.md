@@ -1350,8 +1350,10 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?projectName (COUNT(DISTINCT ?distro) AS ?distroCount) (GROUP_CONCAT(DISTINCT ?distroName; separator=", ") AS ?distros)
 WHERE {
   ?upstream a pkg:UpstreamProject ;
-            pkg:projectName ?projectName .
-  ?package pkg:hasUpstreamProject ?upstream ;
+            pkg:projectName ?projectName ;
+            pkg:projectRepository ?repo .
+  ?identity pkg:upstreamRepository ?repo .
+  ?package pkg:isVersionOf ?identity ;
            pkg:partOfRelease/^pkg:hasRelease ?distro .
   ?distro rdfs:label ?distroName .
 }
@@ -1363,9 +1365,29 @@ LIMIT 50
 
 **Expected Columns:** projectName (string), distroCount (integer), distros (string)
 
-**Exercises:** UpstreamProject, hasUpstreamProject, cross-distribution aggregation
+**Exercises:** UpstreamProject, projectRepository, upstreamRepository, isVersionOf, cross-distribution aggregation
 
-**Status:** PASS
+**Notes:**
+
+- Reaches the project through the shared repository URL rather than a direct
+  edge. `pkg:hasUpstreamProject` is deprecated and emitted by no producer;
+  `projectRepository` is inverse-functional, so the repository determines the
+  project uniquely.
+- `upstreamRepository` is asserted on the version-independent
+  `pkg:PackageIdentity`, which carries no `partOfRelease` — release membership
+  is version-specific. Hence the hop through `isVersionOf` to a versioned
+  package.
+- Grouping is by `?projectName`, not by `?upstream`. Hubs are keyed by
+  canonical repository URL, so a project mirrored across forges
+  (`github.com/archlinux/arch-install-scripts` and
+  `gitlab.archlinux.org/archlinux/arch-install-scripts`) has two hub IRIs.
+  Grouping by IRI would split one project into two rows and under-count
+  `distroCount`, dropping genuine matches at the `HAVING` gate. Name grouping
+  re-joins them. Unifying mirrors properly is a separate modelling question.
+
+**Status:** PASS — verified 2026-09-22 against the production endpoint;
+top results reach 8 distributions (e.g. `dracut-ng/dracut-ng`,
+`google/brotli`, `cronie-crond/cronie`).
 
 ---
 
@@ -2214,13 +2236,11 @@ PREFIX sec: <https://purl.org/packagegraph/ontology/security#>
 PREFIX tax: <https://purl.org/packagegraph/ontology/taxonomy#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?projectName ?cveId ?cvssScore
+SELECT ?identityName ?cveId ?cvssScore
 WHERE {
-  ?upstream a pkg:UpstreamProject ;
-            pkg:projectName ?projectName ;
-            pkg:hasClassification tax:role-framework ;
-            pkg:hasClassification tax:domain-web-development .
-  ?identity pkg:hasUpstreamProject ?upstream .
+  ?identity pkg:hasClassification tax:role-framework ;
+            pkg:hasClassification tax:domain-web-development ;
+            pkg:identityName ?identityName .
   ?vuln sec:affectsPackage ?identity ;
         sec:cveId ?cveId .
   OPTIONAL { ?vuln sec:hasCVSSScore/sec:baseScore ?cvssScore }
@@ -2231,11 +2251,29 @@ WHERE {
 ORDER BY DESC(?cvssScore)
 ```
 
-**Expected Columns:** projectName (string), cveId (string), cvssScore (decimal or UNDEF)
+**Expected Columns:** identityName (string), cveId (string), cvssScore (decimal or UNDEF)
 
-**Exercises:** hasClassification, UpstreamProject, taxonomy concepts, security cross-domain join
+**Exercises:** hasClassification, taxonomy concepts, security cross-domain join
 
-**Status:** BLOCKED — requires taxonomy classification enricher
+**Notes:**
+
+- Classifications are asserted on `pkg:PackageIdentity`, not on
+  `pkg:UpstreamProject`. The earlier form targeted the hub and matched nothing:
+  measured 2026-09-22, zero `UpstreamProject` instances carry
+  `tax:role-framework`, against 1,799,183 `hasClassification` triples whose
+  subject is a `PackageIdentity`.
+- `sec:affectsPackage` already targets the identity, so no join through the
+  project hub is needed. The earlier form also depended on
+  `pkg:hasUpstreamProject`, which is deprecated and emitted by no producer.
+- To report the upstream project instead of the identity name, join through the
+  repository: `?identity pkg:upstreamRepository ?repo . ?upstream
+  pkg:projectRepository ?repo ; pkg:projectName ?projectName .`
+
+**Status:** PASS (empty result) — verified 2026-09-22. The pattern is
+satisfiable: 31 identities carry both `role-framework` and
+`domain-web-development`, and 5 of their CVEs resolve (all on `express`). All 5
+are addressed by an advisory, so the unpatched filter correctly yields zero
+rows. An empty result here means "no unpatched CVEs", not "query broken".
 
 ---
 
@@ -2900,7 +2938,7 @@ The following CQs can be validated against local example files without Fuseki:
 
 ### Properties Exercised (70+ properties)
 
-**Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, hasUpstreamProject, sourceCodeRepository, derivedFromCommit
+**Core:** packageName, identityName, hasVersion, versionString, partOfRelease, partOfDistribution, targetArchitecture, builtFromSource, provides, directlyDependsOn, hasDependency, dependencyTarget, dependencyType, hasVersionConstraint, versionConstraintOperator, versionConstraintValue, isVersionOf, maintainedBy, heldBy, contributesTo, hasLicense, installsFile, installedFilePath, memberOfPackageSet, projectRepository, upstreamRepository, sourceCodeRepository, derivedFromCommit
 
 **Rebuild Tracking:** assessmentOf, hasRebuildAssessment, rebuildFidelity, fidelityBaseline, rebuildDrift, comparedAgainst, hasUpstreamCounterpart, ambiguousCandidate, assessmentMethod, assessmentConfidence, assessedAt, assessedAgainstSnapshot, lineageConfirmed, lineageEvidence, rebuildOf
 
