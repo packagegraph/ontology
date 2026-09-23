@@ -5,6 +5,32 @@ All notable changes to the PackageGraph ontology are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `pkg:upstreamPackageVersion` is now declared. It was already emitted by the
+  collectors and present in published graphs (136,004 triples as of 2026-09-22)
+  with no domain, range, or definition, so SHACL could not validate it and
+  consumers could not discover it. Declared `rdfs:domain :Package` because it is
+  the one member of the `upstream*` family that is genuinely version-specific —
+  it derives from a versioned capability such as `crate(foo) = 1.2.3`.
+
+### Changed
+- `pkg:upstreamEcosystem` and `pkg:upstreamPackageName` widened from
+  `rdfs:domain :Package` to `rdfs:domain :PackageEntity`. Which ecosystem a
+  package comes from, and what it is called upstream, do not change between
+  builds, so collectors assert both on the version-independent
+  `pkg:PackageIdentity`. Under the previous domain that inferred every such
+  identity into `:Package`, collapsing the identity/version distinction
+  `:PackageEntity` exists to preserve.
+
+  Widening a domain removes entailments rather than adding them, so this is
+  monotonically safe for existing data: every triple legal before remains legal,
+  and nothing newly becomes invalid. The only inference lost is
+  `upstreamPackageName(x, _) ⊨ Package(x)`, which was the defect.
+
+  Resolves #9.
+
 ## [0.13.0] - 2026-09-02
 
 Reified rebuild-tracking vocabulary (presence / fidelity / drift) for downstream
