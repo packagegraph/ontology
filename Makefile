@@ -54,7 +54,12 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all validate-integration validate-negative validate-advisory
+validate: validate-all validate-integration validate-negative validate-advisory validate-purls
+
+.PHONY: validate-purls
+validate-purls:
+	@PYTHONPATH=tests $(PYTHON) -m unittest test_purl_contract test_purl_validation test_purl_migration test_purl_measurements -v
+	@$(PYTHON) -m packagegraph.purls $(EXAMPLE_FILES)
 validate-all:
 	@echo "Validating all modules..."
 	@$(PYTHON) scripts/validate_module.py --all

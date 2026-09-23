@@ -260,16 +260,27 @@ pkg:MetaPackageShape a sh:NodeShape ;
 pkg:PURLShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
             sh:maxCount 1 ;
-            sh:message "A PURL must follow the format pkg:type/namespace/name@version"@en ;
+            sh:message "A PURL must have a pkg:type/name structure. Full canonical syntax and ecosystem rules are checked by packagegraph.purls."@en ;
             sh:path pkg:purl ;
-            sh:pattern "^pkg:[a-z]+/.+@.+" ] ;
+            sh:pattern "^pkg:[a-z][a-z0-9.+-]*/[^?#]+([?][^#]+)?(#.+)?$" ] ;
+    sh:targetSubjectsOf pkg:purl .
+
+pkg:IdentityPURLShape a sh:NodeShape ;
+    sh:property [ sh:path pkg:purl ;
+            sh:not [ sh:pattern "^pkg:[^?#]*@" ] ;
+            sh:message "An identity PURL must be versionless (encode a scoped namespace's @ as %40)."@en ] ;
     sh:targetClass pkg:PackageIdentity .
+
+pkg:PackagePURLShape a sh:NodeShape ;
+    sh:property [ sh:path pkg:purl ;
+            sh:pattern "^pkg:[^?#]*@[^?#]+" ;
+            sh:message "A concrete package PURL must include its version."@en ] ;
+    sh:targetClass pkg:Package .
 
 pkg:PackageIdentityShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:anyURI ;
             sh:maxCount 1 ;
-            sh:message "A package identity must have exactly one PURL."@en ;
-            sh:minCount 1 ;
+            sh:message "A package identity may have at most one canonical versionless PURL; supported collection profiles require it."@en ;
             sh:path pkg:purl ],
         [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -654,4 +665,3 @@ pkg:RebuildOfForkContradictionShape a sh:NodeShape ;
                         FILTER ( ?method IN ( pkg:match-fork-detected, pkg:match-repackage-detected ) )
                     }
                 """ ] .
-

@@ -728,8 +728,8 @@ dcterms:title a owl:AnnotationProperty ;
 :purl a owl:DatatypeProperty ;
     rdfs:label "purl"@en ;
     IAO:0000115 "Package URL (PURL) - a standardized, universal identifier for software packages across ecosystems (e.g., pkg:npm/lodash@4.17.21, pkg:pypi/requests@2.28.0). Enables cross-tool interoperability and SBOM generation."@en ;
-    rdfs:comment "Package URL (PURL) - standardized package identifier"@en ;
-    rdfs:domain :PackageIdentity ;
+    rdfs:comment "Canonical Package URL: versionless on PackageIdentity, versioned on concrete Package instances. Completeness is required by supported collection profiles, not for incomplete or unmappable identities."@en ;
+    rdfs:domain :PackageEntity ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:anyURI .
 
@@ -1712,4 +1712,3 @@ xsd:date a rdfs:Datatype .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :Package :Distribution :Repository :License :Architecture :Capability ) .
-
