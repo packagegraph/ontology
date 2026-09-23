@@ -26,7 +26,7 @@ MODULES = $(foreach d,$(ALL_MODULE_DIRS),$(notdir $(d)))
 .PHONY: all lint validate validate-all reason help
 
 # Default
-all: lint validate reason
+all: lint validate reason test-cq
 
 # ─── Linting ──────────────────────────────────────────────────────────────────
 
@@ -84,6 +84,13 @@ reason:
 	@$(PYTHON) scripts/test_reasoning_support.py -v
 	@$(PYTHON) scripts/test-owl2-reasoning.py
 	@$(PYTHON) scripts/test_external_alignments.py -v
+
+# ─── Competency Query Regressions ────────────────────────────────────────────
+
+.PHONY: test-cq
+test-cq:
+	@echo "Documented competency query regression tests..."
+	@$(PYTHON) scripts/test_competency_questions.py -v
 
 # ─── Version Consistency ─────────────────────────────────────────────────────
 
@@ -192,7 +199,7 @@ create-index:
 	@echo "Creating index page..."
 	@$(PYTHON) scripts/generate_index.py $(DOCS_DIR) $(ONTOLOGY_DOCS_DIR) $(DOWNLOADS_DIR)
 
-deploy: lint validate reason setup-tools
+deploy: lint validate reason test-cq setup-tools
 	@echo "Building deployment..."
 	@mkdir -p $(DOWNLOADS_DIR) $(REPORTS_DIR) $(ONTOLOGY_DOCS_DIR)
 	@echo "Generating serializations..."
@@ -238,12 +245,13 @@ help:
 	@echo "PackageGraph Ontology"
 	@echo "═══════════════════════════════════════════════════════"
 	@echo ""
-	@echo "  make                 Lint + validate + reasoning gate"
+	@echo "  make                 Lint + validate + reasoning + CQ tests"
 	@echo "  make lint            Parse-check all .ttl files"
 	@echo "  make validate-all    SHACL-validate every module"
 	@echo "  make validate-NAME   SHACL-validate one module"
 	@echo "  make validate-negative  Assert negative fixtures FAIL"
 	@echo "  make reason          OWL 2 RL reasoning tests"
+	@echo "  make test-cq         Run documented competency query regressions"
 	@echo "                       (e.g., make validate-rpm)"
 	@echo "  make check-version   Verify owl:versionInfo/IRI consistency"
 	@echo "  make stats           Triple counts per module"

@@ -1347,7 +1347,7 @@ LIMIT 500
 PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?projectName (COUNT(DISTINCT ?distro) AS ?distroCount) (GROUP_CONCAT(DISTINCT ?distroName; separator=", ") AS ?distros)
+SELECT ?upstream ?projectName (COUNT(DISTINCT ?distro) AS ?distroCount) (GROUP_CONCAT(DISTINCT ?distroName; separator=", ") AS ?distros)
 WHERE {
   ?upstream a pkg:UpstreamProject ;
             pkg:projectName ?projectName ;
@@ -1357,13 +1357,13 @@ WHERE {
            pkg:partOfRelease/^pkg:hasRelease ?distro .
   ?distro rdfs:label ?distroName .
 }
-GROUP BY ?projectName
+GROUP BY ?upstream ?projectName
 HAVING (COUNT(DISTINCT ?distro) >= 3)
 ORDER BY DESC(?distroCount)
 LIMIT 50
 ```
 
-**Expected Columns:** projectName (string), distroCount (integer), distros (string)
+**Expected Columns:** upstream (URI), projectName (string), distroCount (integer), distros (string)
 
 **Exercises:** UpstreamProject, projectRepository, upstreamRepository, isVersionOf, cross-distribution aggregation
 
@@ -1377,17 +1377,13 @@ LIMIT 50
   `pkg:PackageIdentity`, which carries no `partOfRelease` — release membership
   is version-specific. Hence the hop through `isVersionOf` to a versioned
   package.
-- Grouping is by `?projectName`, not by `?upstream`. Hubs are keyed by
-  canonical repository URL, so a project mirrored across forges
-  (`github.com/archlinux/arch-install-scripts` and
-  `gitlab.archlinux.org/archlinux/arch-install-scripts`) has two hub IRIs.
-  Grouping by IRI would split one project into two rows and under-count
-  `distroCount`, dropping genuine matches at the `HAVING` gate. Name grouping
-  re-joins them. Unifying mirrors properly is a separate modelling question.
+- Grouping includes `?upstream`, so unrelated projects with the same display
+  name remain separate. Unifying mirrors requires an explicit identity model;
+  a shared name alone does not establish that they are the same project.
 
-**Status:** PASS — verified 2026-09-22 against the production endpoint;
-top results reach 8 distributions (e.g. `dracut-ng/dracut-ng`,
-`google/brotli`, `cronie-crond/cronie`).
+**Status:** PASS — project-IRI grouping validated against the regression
+fixture in `tests/competency-questions/cq-xd-04.ttl` via `make test-cq`.
+The revised query has not yet been reverified against the production endpoint.
 
 ---
 
