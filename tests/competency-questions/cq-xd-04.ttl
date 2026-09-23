@@ -1,0 +1,44 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <https://example.org/cq-xd-04/> .
+
+ex:fedora a pkg:Distribution ; rdfs:label "Fedora" ;
+    pkg:hasRelease ex:fedora42, ex:fedora43 .
+ex:debian a pkg:Distribution ; rdfs:label "Debian" ;
+    pkg:hasRelease ex:trixie .
+ex:arch a pkg:Distribution ; rdfs:label "Arch Linux" ;
+    pkg:hasRelease ex:rolling .
+
+# Same display name, distinct repositories and projects. Together they cover
+# three distributions, but neither project qualifies on its own.
+ex:githubWidget a pkg:UpstreamProject ; pkg:projectName "acme/widget" ;
+    pkg:projectRepository <https://github.com/acme/widget> .
+ex:gitlabWidget a pkg:UpstreamProject ; pkg:projectName "acme/widget" ;
+    pkg:projectRepository <https://gitlab.com/acme/widget> .
+ex:fedoraWidget pkg:upstreamRepository <https://github.com/acme/widget> .
+ex:debianWidget pkg:upstreamRepository <https://github.com/acme/widget> .
+ex:archWidget pkg:upstreamRepository <https://gitlab.com/acme/widget> .
+ex:fedoraWidget1 pkg:isVersionOf ex:fedoraWidget ; pkg:partOfRelease ex:fedora43 .
+ex:debianWidget1 pkg:isVersionOf ex:debianWidget ; pkg:partOfRelease ex:trixie .
+ex:archWidget1 pkg:isVersionOf ex:archWidget ; pkg:partOfRelease ex:rolling .
+
+# One real project spans three distributions. Extra versions and releases in
+# Fedora must not inflate its distribution count beyond three.
+ex:sharedProject a pkg:UpstreamProject ; pkg:projectName "acme/shared" ;
+    pkg:projectRepository <https://github.com/acme/shared> .
+ex:fedoraShared pkg:upstreamRepository <https://github.com/acme/shared> .
+ex:debianShared pkg:upstreamRepository <https://github.com/acme/shared> .
+ex:archShared pkg:upstreamRepository <https://github.com/acme/shared> .
+ex:fedoraShared1 pkg:isVersionOf ex:fedoraShared ; pkg:partOfRelease ex:fedora42 .
+ex:fedoraShared2 pkg:isVersionOf ex:fedoraShared ; pkg:partOfRelease ex:fedora43 .
+ex:fedoraShared3 pkg:isVersionOf ex:fedoraShared ; pkg:partOfRelease ex:fedora43 .
+ex:debianShared1 pkg:isVersionOf ex:debianShared ; pkg:partOfRelease ex:trixie .
+ex:archShared1 pkg:isVersionOf ex:archShared ; pkg:partOfRelease ex:rolling .
+
+# Three versions in a single distribution must not pass the HAVING threshold.
+ex:singleProject a pkg:UpstreamProject ; pkg:projectName "acme/single" ;
+    pkg:projectRepository <https://github.com/acme/single> .
+ex:fedoraSingle pkg:upstreamRepository <https://github.com/acme/single> .
+ex:fedoraSingle1 pkg:isVersionOf ex:fedoraSingle ; pkg:partOfRelease ex:fedora42 .
+ex:fedoraSingle2 pkg:isVersionOf ex:fedoraSingle ; pkg:partOfRelease ex:fedora43 .
+ex:fedoraSingle3 pkg:isVersionOf ex:fedoraSingle ; pkg:partOfRelease ex:fedora43 .
