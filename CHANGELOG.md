@@ -7,17 +7,29 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Deprecated
-- `pkg:hasUpstreamProject` is marked `owl:deprecated`. It was emitted by no
-  producer — zero triples in the published corpus on any subject type — and it
-  carries no information: an `UpstreamProject` is keyed by its canonical
-  repository URL, so the project is reached from any entity carrying
-  `pkg:upstreamRepository` by joining on the shared repository. Measured
-  2026-09-22, that join yields 232,981 pairs across 232,720 distinct
-  identities, against 25,605 hubs. The term is retained as resolvable; do not
-  emit it. Resolves #7.
+### Added
+- `pkg:upstreamPackageVersion` is now declared. It was already emitted by the
+  collectors and present in published graphs (136,004 triples as of 2026-09-22)
+  with no domain, range, or definition, so SHACL could not validate it and
+  consumers could not discover it. Declared `rdfs:domain :Package` because it is
+  the one member of the `upstream*` family that is genuinely version-specific —
+  it derives from a versioned capability such as `crate(foo) = 1.2.3`.
 
 ### Changed
+- `pkg:upstreamEcosystem` and `pkg:upstreamPackageName` widened from
+  `rdfs:domain :Package` to `rdfs:domain :PackageEntity`. Which ecosystem a
+  package comes from, and what it is called upstream, do not change between
+  builds, so collectors assert both on the version-independent
+  `pkg:PackageIdentity`. Under the previous domain that inferred every such
+  identity into `:Package`, collapsing the identity/version distinction
+  `:PackageEntity` exists to preserve.
+
+  Widening a domain removes entailments rather than adding them, so this is
+  monotonically safe for existing data: every triple legal before remains legal,
+  and nothing newly becomes invalid. The only inference lost is
+  `upstreamPackageName(x, _) ⊨ Package(x)`, which was the defect.
+
+  Resolves #9.
 - `pkg:projectRepository` is now `owl:InverseFunctionalProperty`. Hubs are keyed
   by canonical repository URL, so a repository determines at most one project —
   verified in the corpus at 25,605 hubs over 25,605 distinct repository URLs
@@ -34,6 +46,16 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   against 1,799,183 identity-subject `hasClassification` triples. Status moves
   from `BLOCKED` to `PASS (empty result)` — the pattern is satisfiable and the
   unpatched filter legitimately matches nothing.
+
+### Deprecated
+- `pkg:hasUpstreamProject` is marked `owl:deprecated`. It was emitted by no
+  producer — zero triples in the published corpus on any subject type — and it
+  carries no information: an `UpstreamProject` is keyed by its canonical
+  repository URL, so the project is reached from any entity carrying
+  `pkg:upstreamRepository` by joining on the shared repository. Measured
+  2026-09-22, that join yields 232,981 pairs across 232,720 distinct
+  identities, against 25,605 hubs. The term is retained as resolvable; do not
+  emit it. Resolves #7.
 
 ## [0.13.0] - 2026-09-02
 

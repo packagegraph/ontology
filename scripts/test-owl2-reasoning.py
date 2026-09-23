@@ -309,6 +309,49 @@ def test_rebuild_of_asymmetric_irreflexive_axioms():
     print("PASS: rebuildOf axioms present; comparison properties are not prov lineage")
 
 
+def test_upstream_family_does_not_collapse_identity_into_package():
+    """upstream* attributes on a PackageIdentity must not infer Package.
+
+    upstreamEcosystem and upstreamPackageName describe facts that do not change
+    between builds, so collectors assert them on the version-independent
+    identity. Their domain must therefore admit PackageIdentity without
+    collapsing the identity/version distinction.
+    """
+    g = Graph()
+    g.parse("core/core.ttl", format="turtle")
+
+    g.add((EX.identityA, RDF.type, PKG.PackageIdentity))
+    g.add((EX.identityA, PKG.upstreamPackageName, Literal("requests")))
+    g.add((EX.ecoPypi, RDF.type, PKG.Ecosystem))
+    g.add((EX.identityA, PKG.upstreamEcosystem, EX.ecoPypi))
+
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(g)
+
+    assert (EX.identityA, RDF.type, PKG.PackageEntity) in g, (
+        "FAIL: upstream* subject not inferred as PackageEntity"
+    )
+    assert (EX.identityA, RDF.type, PKG.Package) not in g, (
+        "FAIL: upstream* domain collapsed PackageIdentity into Package"
+    )
+    print("PASS: upstream* accepts identity without Package collapse")
+
+
+def test_upstream_package_version_is_declared():
+    """upstreamPackageVersion is emitted in production and must be declared."""
+    g = Graph()
+    g.parse("core/core.ttl", format="turtle")
+
+    domains = list(g.objects(PKG.upstreamPackageVersion, RDFS.domain))
+    ranges = list(g.objects(PKG.upstreamPackageVersion, RDFS.range))
+
+    assert domains, "FAIL: upstreamPackageVersion has no rdfs:domain declaration"
+    assert ranges, "FAIL: upstreamPackageVersion has no rdfs:range declaration"
+    assert PKG.Package in domains, (
+        f"FAIL: upstreamPackageVersion domain should be :Package, got {domains}"
+    )
+    print("PASS: upstreamPackageVersion is declared (domain Package)")
+
+
 def test_has_upstream_project_is_deprecated():
     """hasUpstreamProject is derivable and must be marked deprecated."""
     g = Graph()
@@ -363,6 +406,8 @@ if __name__ == "__main__":
     test_rebuild_assessment_inverse_pair()
     test_assessment_domain_range_inference()
     test_rebuild_of_asymmetric_irreflexive_axioms()
+    test_upstream_family_does_not_collapse_identity_into_package()
+    test_upstream_package_version_is_declared()
     test_has_upstream_project_is_deprecated()
     test_project_repository_is_inverse_functional()
     print("\n=== All reasoning tests complete ===")

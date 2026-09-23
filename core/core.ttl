@@ -916,7 +916,7 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:label "upstream ecosystem"@en ;
     IAO:0000115 "Links a package to the upstream software ecosystem it originates from, enabling ecosystem-level cross-referencing and analysis. The Ecosystem entity allows traversal to all packages from that ecosystem rather than matching string literals."@en ;
     rdfs:comment "The upstream package ecosystem entity (cargo, pypi, npm, gomod, etc.)"@en ;
-    rdfs:domain :Package ;
+    rdfs:domain :PackageEntity ;
     rdfs:isDefinedBy : ;
     rdfs:range :Ecosystem .
 
@@ -941,6 +941,14 @@ dcterms:title a owl:AnnotationProperty ;
     rdfs:label "upstream package name"@en ;
     IAO:0000115 "The canonical name of the upstream software in its native package ecosystem, extracted from RPM provides entries like crate(foo) or python3dist(bar). Enables cross-ecosystem identity linking. Retained for backward compatibility - prefer upstreamPackageIdentity for new data."@en ;
     rdfs:comment "The name of the package in its upstream ecosystem (e.g., crate name, PyPI name)"@en ;
+    rdfs:domain :PackageEntity ;
+    rdfs:isDefinedBy : ;
+    rdfs:range xsd:string .
+
+:upstreamPackageVersion a owl:DatatypeProperty ;
+    rdfs:label "upstream package version"@en ;
+    IAO:0000115 "The version of the upstream software in its native package ecosystem, as declared by a versioned ecosystem capability such as crate(foo) = 1.2.3. Version-specific, and therefore asserted on the versioned Package rather than on its version-independent identity."@en ;
+    rdfs:comment "The version of the package in its upstream ecosystem, from a versioned capability"@en ;
     rdfs:domain :Package ;
     rdfs:isDefinedBy : ;
     rdfs:range xsd:string .
