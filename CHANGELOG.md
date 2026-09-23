@@ -7,6 +7,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-09-22
+
 ### Added
 - `pkg:upstreamPackageVersion` is now declared. It was already emitted by the
   collectors and present in published graphs (136,004 triples as of 2026-09-22)

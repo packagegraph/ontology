@@ -183,9 +183,9 @@ portage: a owl:Ontology ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/portage/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/portage/0.13.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/portage/0.14.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/portage/shapes> ;
 
-    owl:versionInfo "0.13.0" .
+    owl:versionInfo "0.14.0" .
 
