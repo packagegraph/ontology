@@ -6,19 +6,27 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     concurrency:
-      group: pages
-      cancel-in-progress: false
+      group: ${{ github.workflow }}-build-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Setup Node for workflow regression tests
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Test Pages deployment boundary
+        run: |
+          npm ci --prefix tests/workflows --ignore-scripts --no-audit --no-fund
+          npm test --prefix tests/workflows
       - name: Setup Java for Widoco
         uses: actions/setup-java@v5
         with:
@@ -34,16 +42,33 @@ jobs:
           python -m pip install rdflib pyshacl owlrl
       - name: Verify version consistency
         run: make check-version
-      - name: Run deployment using Makefile
+      # make deploy builds the local site; only the deploy job publishes it.
+      - name: Validate ontology and build documentation
         run: make deploy
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v4
-        with:
-          enablement: true
-      - name: Upload artifact
+      - name: Upload documentation artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
+          retention-days: 7
+  deploy:
+    needs: build
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
