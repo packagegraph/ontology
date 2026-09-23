@@ -10,6 +10,15 @@ require their expected error. Missing reasoning dependencies and unexpected
 exceptions fail the command. This is fixture-based OWL-RL regression coverage,
 not certification of the complete import closure or of OWL 2 DL conformance.
 
+The error predicate is `http://www.daml.org/2002/03/agents/agent-ont#error`.
+Zero `owl:Nothing` instances or the absence of a Python exception does not
+establish consistency: owlrl reports disjoint-class contradictions through
+these diagnostic triples.
+
+The core/security/alignment bundle also checks directional external mappings.
+See [DD-AL-1](../docs/design-decisions.md#dd-al-1-directional-external-property-mappings)
+for the rationale and migration requirements for previously inferred triples.
+
 ### Validate modules
 
 ```bash

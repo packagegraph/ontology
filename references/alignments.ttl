@@ -20,9 +20,9 @@
     rdfs:comment "Formal alignment declarations between PackageGraph ontology and external standards (PROV-O, SPDX, Schema.org)" ;
     dcterms:created "2026-04-18"^^xsd:date ;
     dcterms:creator <https://packagegraph.github.io/> ;
-    dcterms:description "Maps PackageGraph classes and properties to their equivalents in PROV-O, SPDX 3.0, and Schema.org, enabling federated querying and SBOM generation." ;
+    dcterms:description "Directional mappings from PackageGraph to PROV-O and Schema.org, with legacy SPDX RDF-term mappings. This module does not assert complete SPDX 3 conformance." ;
     dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    dcterms:modified "2026-04-21"^^xsd:date ;
+    dcterms:modified "2026-09-23"^^xsd:date ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/alignments/0.12.0> ;
 
@@ -33,12 +33,12 @@
 # =============================================================================
 # PROV-O Alignment
 # =============================================================================
-# PackageGraph build/provenance properties map directly to PROV-O.
-# These alignments enable any PROV-O consumer to interpret PackageGraph
-# provenance chains without PackageGraph-specific tooling.
+# PackageGraph predicates specialize the external relations. The reverse
+# inference is not justified: arbitrary derivation is not compilation, and
+# arbitrary activity association is not PackageGraph packaging participation.
 
-pkg:builtFromSource owl:equivalentProperty prov:wasDerivedFrom .
-pkg:performedBy owl:equivalentProperty prov:wasAssociatedWith .
+pkg:builtFromSource rdfs:subPropertyOf prov:wasDerivedFrom .
+pkg:performedBy rdfs:subPropertyOf prov:wasAssociatedWith .
 pkg:BuildActivity rdfs:subClassOf prov:Activity .
 pkg:DataSnapshot rdfs:subClassOf prov:Entity .
 pkg:PackagingActivity rdfs:subClassOf prov:Activity .
@@ -60,15 +60,17 @@ pkg:downloadURL owl:equivalentProperty spdx:downloadLocation .
 # Schema.org Alignment
 # =============================================================================
 # Enables search engine discovery and knowledge graph integration.
+# Export local metadata without importing arbitrary external subjects into
+# PackageGraph's narrower domains or functional-property restrictions.
 
-pkg:description owl:equivalentProperty schema:description .
-pkg:homepage owl:equivalentProperty schema:url .
+pkg:description rdfs:subPropertyOf schema:description .
+pkg:homepage rdfs:subPropertyOf schema:url .
 pkg:Person rdfs:subClassOf schema:Person .
 pkg:Package rdfs:seeAlso schema:SoftwareApplication .
 # Not subClassOf because Package includes source packages, meta packages, and
 # phantom packages that are not applications in Schema.org terms.
-pkg:packageName owl:equivalentProperty schema:name .
-pkg:versionString owl:equivalentProperty schema:version .
+pkg:packageName rdfs:subPropertyOf schema:name .
+pkg:versionString rdfs:subPropertyOf schema:version .
 
 # =============================================================================
 # VCS ↔ PROV-O (reinforcing declarations already in vcs.ttl)

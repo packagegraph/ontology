@@ -475,3 +475,28 @@ The line itself is a curatorial judgment — like `crossDistributionAlternative`
 - `doap:Project` superclass for upstream projects
 
 **Historical note:** Early versions (pre-v0.6.0) included `dcterms:references` to BFO and DOLCE OWL files, which was misinterpreted by reviewers as claiming formal alignment. Changed to `rdfs:comment` attribution in v0.9.0.
+
+### DD-AL-1: Directional external property mappings
+
+PackageGraph's build/provenance and descriptive predicates specialize the
+mapped PROV-O and Schema.org predicates; they are not interchangeable with
+all external uses. The mappings therefore use `rdfs:subPropertyOf`. This keeps
+local-to-external entailments while preventing external names, descriptions,
+URLs, version metadata, derivations and activity associations from acquiring
+unjustified PackageGraph domains or functional restrictions.
+
+The regression bundle loads core, security and the alignment file locally.
+Positive entailments and forbidden local typing are checked on fresh graphs.
+This does not certify a complete remote import closure, the remaining legacy
+SPDX mappings, or full OWL 2 DL conformance.
+
+The unchanged SPDX equivalences are not certified safe. For example, an
+SPDX file's `spdx:checksum` can still entail `pkg:hasChecksum` and consequently
+`rdf:type pkg:Package`. Those mappings need separate corrective analysis and
+fixtures; this change does not close the entire unsafe-alignment class of bugs.
+
+Removing equivalences does not retract previously materialized triples.
+Operators must rebuild derived projections from preserved asserted data,
+tracking inferred versus independently asserted claims. Do not blindly delete
+all existing PackageGraph types from externally sourced resources. This
+change performs no production migration and makes no new identity claims.

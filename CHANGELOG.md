@@ -7,6 +7,16 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- PROV-O and Schema.org mappings now use one-way subproperties for package
+  derivation, packaging-agent association and descriptive metadata. Generic
+  external assertions no longer entail the corresponding narrow PackageGraph
+  predicates through these mappings. Previously materialized consequences
+  require regeneration from preserved assertions.
+- Reasoning gates inspect OWL-RL error triples, require expected errors in
+  negative fixtures, and check core/security/alignment composition.
+
 ## [0.14.0] - 2026-09-22
 
 ### Added

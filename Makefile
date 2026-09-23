@@ -83,6 +83,7 @@ reason:
 	@echo "OWL 2 RL reasoning tests..."
 	@$(PYTHON) scripts/test_reasoning_support.py -v
 	@$(PYTHON) scripts/test-owl2-reasoning.py
+	@$(PYTHON) scripts/test_external_alignments.py -v
 
 # ─── Version Consistency ─────────────────────────────────────────────────────
 
