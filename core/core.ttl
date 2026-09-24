@@ -1695,11 +1695,11 @@ xsd:date a rdfs:Datatype .
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/core/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.14.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/core/0.15.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/core/shapes> ;
 
-    owl:versionInfo "0.14.0" .
+    owl:versionInfo "0.15.0" .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( :BinaryPackage :SourcePackage ) .

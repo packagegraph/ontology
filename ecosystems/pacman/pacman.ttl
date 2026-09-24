@@ -512,9 +512,9 @@ pacman: a owl:Ontology ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/pacman/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/pacman/0.14.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/pacman/0.15.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/pacman/shapes> ;
 
-    owl:versionInfo "0.14.0" .
+    owl:versionInfo "0.15.0" .
 
