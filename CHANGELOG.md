@@ -7,6 +7,37 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-09-24
+
+### Changed
+
+- `pkg:purl` widens from `rdfs:domain :PackageIdentity` to `:PackageEntity`,
+  and its canonical form now depends on the subject: **versionless on
+  `PackageIdentity`, versioned on concrete `Package` instances**. The previous
+  model demanded a single versioned PURL on a version-independent node, which
+  no package with more than one version could satisfy. Resolves #10.
+- `pkg:PURLShape` now targets `sh:targetSubjectsOf pkg:purl` and checks
+  structure only; its pattern no longer requires `@version`. Two new shapes
+  carry the subject-specific rules: `pkg:IdentityPURLShape` (must be
+  versionless) and `pkg:PackagePURLShape` (must carry a version). Full
+  canonical syntax and ecosystem rules move to `packagegraph.purls`.
+- `pkg:PackageIdentityShape` no longer requires `sh:minCount 1` on
+  `pkg:purl`. An identity that is incomplete or has no mappable PURL is no
+  longer a violation; completeness is a collection-profile requirement rather
+  than an ontology-level one.
+- CQ-XD-04 groups by project IRI rather than `projectName`. A shared name
+  alone does not establish that two hubs are the same project, so mirrors
+  across forges now remain separate rows. Unifying them requires an explicit
+  identity model, tracked separately.
+
+### Added
+
+- Competency-question regression testing (`make test-cq`) with a fixture for
+  CQ-XD-04, so a CQ can no longer record a status that its query does not
+  actually produce.
+- PURL contract, validation, migration and measurement test suites, plus
+  producer-facing documentation at `docs/producer-shapes/purl.md`.
+
 ### Fixed
 
 - PROV-O and Schema.org mappings now use one-way subproperties for package

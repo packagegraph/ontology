@@ -96,9 +96,9 @@ hackage: a owl:Ontology ;
 
     owl:priorVersion <https://purl.org/packagegraph/ontology/hackage/0.12.0> ;
 
-    owl:versionIRI <https://purl.org/packagegraph/ontology/hackage/0.14.0> ;
+    owl:versionIRI <https://purl.org/packagegraph/ontology/hackage/0.15.0> ;
 
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/hackage/shapes> ;
 
-    owl:versionInfo "0.14.0" .
+    owl:versionInfo "0.15.0" .
 
