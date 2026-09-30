@@ -8,6 +8,106 @@
 @prefix vcs: <https://purl.org/packagegraph/ontology/vcs#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+rpm:DependencyDeclaration a owl:Class ;
+    rdfs:label "RPM Dependency Declaration"@en ;
+    IAO:0000115 "An information record of one dependency-related entry occurrence in an immutable RPM primary.xml source, interpreted for a collected package, independently of whether any provider satisfies it."@en ;
+    rdfs:comment "The bounded profile covers Provides, Requires, Conflicts and Obsoletes and six XML-decoded attributes. Occurrence identity preserves exact duplicates. This class is outside pkg:Dependency for this release, without a permanent disjointness axiom precluding future unification."@en ;
+    rdfs:isDefinedBy rpm: ;
+    rdfs:subClassOf owl:Thing .
+
+rpm:DeclarationKind a owl:Class ;
+    rdfs:label "RPM Declaration Kind"@en ;
+    IAO:0000115 "The dependency-related section in RPM primary.xml from which an entry occurrence was recorded."@en ;
+    rdfs:isDefinedBy rpm: ;
+    rdfs:subClassOf owl:Thing .
+
+rpm:Provides a rpm:DeclarationKind ;
+    rdfs:label "Provides"@en ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:Requires a rpm:DeclarationKind ;
+    rdfs:label "Requires"@en ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:Conflicts a rpm:DeclarationKind ;
+    rdfs:label "Conflicts"@en ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:Obsoletes a rpm:DeclarationKind ;
+    rdfs:label "Obsoletes"@en ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:hasDeclaration a owl:ObjectProperty ;
+    rdfs:label "has RPM declaration"@en ;
+    IAO:0000115 "A dependency-related source occurrence recorded for this package in the bounded RPM primary.xml profile."@en ;
+    rdfs:domain pkg:Package ;
+    rdfs:range rpm:DependencyDeclaration ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declaringPackage a owl:ObjectProperty ;
+    rdfs:label "declaring package"@en ;
+    IAO:0000115 "The collected package whose primary.xml record contains this declaration occurrence."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range pkg:Package ;
+    owl:inverseOf rpm:hasDeclaration ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationKind a owl:ObjectProperty ;
+    rdfs:label "declaration kind"@en ;
+    IAO:0000115 "The metadata section containing this occurrence; relation kinds do not share matching semantics."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range rpm:DeclarationKind ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declaredCapability a owl:ObjectProperty ;
+    rdfs:label "declared capability"@en ;
+    IAO:0000115 "The RPM-scoped nominal feature referenced by a simple Provides, Requires or Conflicts entry; absent for Obsoletes selectors and opaque expressions. This link is not a provider selection."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range pkg:Capability ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declaredToken a owl:DatatypeProperty ;
+    rdfs:label "declared token"@en ;
+    IAO:0000115 "The name attribute after exactly one XML decoding step, without trimming, case folding or Unicode normalization. May contain an opaque expression or an Obsoletes package-name selector."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationFlags a owl:DatatypeProperty ;
+    rdfs:label "declaration flags"@en ;
+    IAO:0000115 "The XML-decoded flags attribute, when present. The bounded createrepo_c profile accepts EQ, GE, GT, LE and LT; other flags remain in source evidence and block validated publication."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationEpoch a owl:DatatypeProperty ;
+    rdfs:label "declaration epoch"@en ;
+    IAO:0000115 "The XML-decoded epoch attribute as a string; absence differs from the empty string and no default epoch is synthesized."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationVersion a owl:DatatypeProperty ;
+    rdfs:label "declaration version"@en ;
+    IAO:0000115 "The XML-decoded ver attribute as a string, without reassembly or version comparison."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationRelease a owl:DatatypeProperty ;
+    rdfs:label "declaration release"@en ;
+    IAO:0000115 "The XML-decoded rel attribute as a string; absence differs from a present empty value."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
+rpm:declarationPre a owl:DatatypeProperty ;
+    rdfs:label "declaration pre"@en ;
+    IAO:0000115 "The XML-decoded pre attribute as a string. It is not interpreted as exclusively pre-install ordering; absence differs from a present empty value."@en ;
+    rdfs:domain rpm:DependencyDeclaration ;
+    rdfs:range xsd:string ;
+    rdfs:isDefinedBy rpm: .
+
 rpm:Applications a rpm:RPMGroup ;
     rdfs:label "Applications"@en ;
     rdfs:comment "Application software group"@en .
@@ -594,4 +694,3 @@ rpm: a owl:Ontology ;
     rdfs:seeAlso <https://purl.org/packagegraph/ontology/rpm/shapes> ;
 
     owl:versionInfo "0.15.0" .
-

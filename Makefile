@@ -54,7 +54,11 @@ endef
 $(foreach m,$(MODULES),$(eval $(call MODULE_VALIDATE,$(m))))
 
 # Validate all modules
-validate: validate-all validate-integration validate-negative validate-advisory validate-purls
+validate: validate-all validate-integration validate-negative validate-advisory validate-purls validate-rpm-contract
+
+.PHONY: validate-rpm-contract
+validate-rpm-contract:
+	@$(PYTHON) -m unittest discover -s tests -p 'test_rpm_*.py' -v
 
 .PHONY: validate-purls
 validate-purls:

@@ -117,3 +117,111 @@ ex:glibc-patch-2 a rpm:Patch ;
   rpm:patchDescription "Backport malloc performance improvement from glibc 2.36" ;
   rpm:upstreamStatus "backport" ;
   rdfs:label "glibc-upstream-backport-malloc.patch" .
+
+# Bounded declaration profile examples. The repeated-digit occurrence IRIs and
+# source below are illustrative; source-to-IRI hash vectors live in URI-POLICY.md.
+# Do not pass these fabricated source identifiers off as collection provenance.
+ex:declaration-primary a pkg:DataSnapshot ;
+    rdfs:label "Illustrative immutable primary.xml source" .
+
+ex:glibc-rpm rpm:hasDeclaration
+    <https://packagegraph.github.io/d/rpm-declaration/1111111111111111111111111111111111111111111111111111111111111111>,
+    <https://packagegraph.github.io/d/rpm-declaration/2222222222222222222222222222222222222222222222222222222222222222>,
+    <https://packagegraph.github.io/d/rpm-declaration/3333333333333333333333333333333333333333333333333333333333333333>,
+    <https://packagegraph.github.io/d/rpm-declaration/4444444444444444444444444444444444444444444444444444444444444444>,
+    <https://packagegraph.github.io/d/rpm-declaration/5555555555555555555555555555555555555555555555555555555555555555>,
+    <https://packagegraph.github.io/d/rpm-declaration/6666666666666666666666666666666666666666666666666666666666666666>,
+    <https://packagegraph.github.io/d/rpm-declaration/7777777777777777777777777777777777777777777777777777777777777777>,
+    <https://packagegraph.github.io/d/rpm-declaration/8888888888888888888888888888888888888888888888888888888888888888>,
+    <https://packagegraph.github.io/d/rpm-declaration/9999999999999999999999999999999999999999999999999999999999999999> ;
+    pkg:providesCapability <https://packagegraph.github.io/d/capability/rpm/glibc>,
+        <https://packagegraph.github.io/d/capability/rpm/rtld%28GNU_HASH%29> ;
+    pkg:requiresCapability <https://packagegraph.github.io/d/capability/rpm/rtld%28GNU_HASH%29>,
+        <https://packagegraph.github.io/d/capability/rpm/foo> .
+
+<https://packagegraph.github.io/d/capability/rpm/glibc> a pkg:Capability ;
+    pkg:capabilityName "glibc" ; rdfs:label "glibc" .
+
+<https://packagegraph.github.io/d/capability/rpm/rtld%28GNU_HASH%29> a pkg:Capability ;
+    pkg:capabilityName "rtld(GNU_HASH)" ; rdfs:label "rtld(GNU_HASH)" .
+
+<https://packagegraph.github.io/d/capability/rpm/foo> a pkg:Capability ;
+    pkg:capabilityName "foo" ; rdfs:label "foo" .
+
+<https://packagegraph.github.io/d/capability/rpm/bar> a pkg:Capability ;
+    pkg:capabilityName "bar" ; rdfs:label "bar" .
+
+<https://packagegraph.github.io/d/rpm-declaration/1111111111111111111111111111111111111111111111111111111111111111> a rpm:DependencyDeclaration ;
+    rdfs:label "Provides glibc" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Provides ;
+    rpm:declaredToken "glibc" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/glibc> ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/2222222222222222222222222222222222222222222222222222222222222222> a rpm:DependencyDeclaration ;
+    rdfs:label "Provides rtld(GNU_HASH)" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Provides ;
+    rpm:declaredToken "rtld(GNU_HASH)" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/rtld%28GNU_HASH%29> ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/3333333333333333333333333333333333333333333333333333333333333333> a rpm:DependencyDeclaration ;
+    rdfs:label "Requires rtld(GNU_HASH)" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "rtld(GNU_HASH)" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/rtld%28GNU_HASH%29> ;
+    rpm:declarationPre "1" ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/4444444444444444444444444444444444444444444444444444444444444444> a rpm:DependencyDeclaration ;
+    rdfs:label "Requires foo" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "foo" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/foo> ;
+    rpm:declarationFlags "GE" ; rpm:declarationVersion "1" ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/5555555555555555555555555555555555555555555555555555555555555555> a rpm:DependencyDeclaration ;
+    rdfs:label "Requires foo" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "foo" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/foo> ;
+    rpm:declarationFlags "LT" ; rpm:declarationVersion "2" ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/6666666666666666666666666666666666666666666666666666666666666666> a rpm:DependencyDeclaration ;
+    rdfs:label "Requires foo" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "foo" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/foo> ;
+    rpm:declarationFlags "GE" ; rpm:declarationVersion "1" ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/7777777777777777777777777777777777777777777777777777777777777777> a rpm:DependencyDeclaration ;
+    rdfs:label "Conflicts bar" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Conflicts ;
+    rpm:declaredToken "bar" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/bar> ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/8888888888888888888888888888888888888888888888888888888888888888> a rpm:DependencyDeclaration ;
+    rdfs:label "Obsoletes old-name" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Obsoletes ;
+    rpm:declaredToken "old-name" ;
+    rpm:declarationFlags "LT" ; rpm:declarationVersion "2" ;
+    prov:wasDerivedFrom ex:declaration-primary .
+
+<https://packagegraph.github.io/d/rpm-declaration/9999999999999999999999999999999999999999999999999999999999999999> a rpm:DependencyDeclaration ;
+    rdfs:label "Requires (foo >= 2 or bar)" ;
+    rpm:declaringPackage ex:glibc-rpm ;
+    rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "(foo >= 2 or bar)" ;
+    prov:wasDerivedFrom ex:declaration-primary .

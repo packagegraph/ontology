@@ -217,41 +217,69 @@ pkg:heldBy  a owl:ObjectProperty ;
 
 ## DD-VirtualPackage: provides vs providesCapability Bifurcation
 
-**Pattern:** Two distinct property paths for dependency satisfaction — `provides` (Package→Package) for virtual packages, `providesCapability` (Package→Capability) for named capabilities.
+**Pattern:** `provides` is Package→Package; `providesCapability` is
+Package→Capability, including VirtualPackage targets. Neither path alone is a
+general dependency-satisfaction procedure.
 
 **Why the split:**
 
-`VirtualPackage` is modeled as `rdfs:subClassOf :Capability`, not `rdfs:subClassOf :Package`. The ontological rationale (OntoClean): virtual packages are abstract capability promises without installable artifacts (no size, no checksum, no files). Real packages (`pkg:Package`) are concrete installable units.
+`VirtualPackage` is modeled as `rdfs:subClassOf :Capability`, not
+`rdfs:subClassOf :Package`: the virtual name denotes a capability rather than
+the distribution artifact that may supply it. This is the project's modeling
+choice, informed by the identity analysis advocated by
+[Guarino and Welty's OntoClean methodology](https://doi.org/10.1145/503124.503150),
+not a demonstrated full OntoClean evaluation. The current `pkg:Package`
+definition also admits metadata-only references; not every instance is a
+known installable artifact. Lack of a recorded size or checksum does not decide
+class membership.
 
-This creates a **query bifurcation**: dependency resolution queries must traverse both paths to catch all satisfaction mechanisms.
+Do not put a VirtualPackage at the end of `provides`: its range would infer
+Package membership for an entity already classified as a Capability. Keep the
+package-oriented ranges unchanged and use the capability path for virtual names.
 
 **When to use each:**
 
 | Predicate | Domain | Range | Use Case |
 |---|---|---|---|
-| `provides` | Package | Package | Package X provides Package Y (e.g., `postfix` provides `mail-transport-agent` in Debian) — Y is a VirtualPackage that is ALSO typed as Capability |
-| `providesCapability` | Package | Capability | Package X provides shared library capability (e.g., `openssl` provides `libssl.so.3`) — capability is a named library, not a package |
+| `provides` | Package | Package | An independently justified package-to-package provision assertion; not a virtual name or an unresolved token |
+| `providesCapability` | Package | Capability | A package provides a virtual name such as `mail-transport-agent`, or a named library capability |
 
-**SPARQL pattern for comprehensive dependency satisfaction:**
+**Worked example (illustrative identifiers, not an identifier minting policy):**
+
+```turtle
+@prefix ex: <https://example.org/virtual-package/> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:postfix a pkg:Package ; pkg:packageName "postfix" ;
+    pkg:providesCapability ex:mail-transport-agent .
+ex:mail-transport-agent a pkg:VirtualPackage, pkg:Capability ;
+    pkg:capabilityName "mail-transport-agent" ;
+    rdfs:label "mail-transport-agent" .
+```
+
+**Candidate-provider discovery, not comprehensive dependency satisfaction:**
 
 ```sparql
-SELECT DISTINCT ?provider
+PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+SELECT DISTINCT ?provider ?capability
 WHERE {
-  {
-    ?target pkg:packageName "mail-transport-agent" .
-    ?provider pkg:provides ?target .
-  }
-  UNION
-  {
-    ?capability pkg:capabilityName "mail-transport-agent" .
-    ?provider pkg:providesCapability ?capability .
-  }
+  ?capability pkg:capabilityName "mail-transport-agent" .
+  ?provider pkg:providesCapability ?capability .
 }
 ```
 
-See CQ-PM-03b for a working example.
+Bind a naming-system-qualified capability and selected repository snapshots for
+an operational query. A name-only search can return candidates from different
+naming systems. Version constraints, architecture, repository context and native
+matching semantics require separate assessment; an empty result in an incomplete
+graph is not proof of unsatisfiability. See the
+[bounded RPM declaration contract](rpm-declaration-contract.md).
 
-**Historical note:** An early version modeled VirtualPackage as a subclass of Package. This was rejected during the OntoClean audit because virtual packages lack the rigid properties (size, checksum) that define Package instances. Moving them to Capability eliminated the need for `owl:minCardinality 0` overrides on Package restrictions.
+**Historical correction:** Earlier text contradicted the Capability classification
+by using `provides` for a VirtualPackage. The correction is the predicate, not
+adding Package typing or manufacturing a package name. Missing size/checksum
+values alone would not establish non-membership under OWL's open-world semantics.
 
 ---
 
