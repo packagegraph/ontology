@@ -719,6 +719,7 @@ dcterms:title a owl:AnnotationProperty ;
 
 :providesCapability a owl:ObjectProperty ;
     rdfs:label "provides capability"@en ;
+    skos:scopeNote "In the bounded RPM primary.xml profile this is a lossy token-level projection of at least one simple Provides declaration. Version constraints and occurrence multiplicity remain on the declaration; this edge does not establish provider compatibility or resolution."@en ;
     IAO:0000115 "Associates a package with a capability it provides, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what provides this .so' queries."@en ;
     rdfs:comment "Links a package to a capability it provides"@en ;
     rdfs:domain :Package ;
@@ -800,6 +801,7 @@ dcterms:title a owl:AnnotationProperty ;
 
 :requiresCapability a owl:ObjectProperty ;
     rdfs:label "requires capability"@en ;
+    skos:scopeNote "In the bounded RPM primary.xml profile this is a lossy token-level projection of at least one simple Requires declaration, not necessarily a runtime-only requirement. It does not identify a selected provider or entail directlyDependsOn, and must not be used alone to report resolved package-impact metrics."@en ;
     IAO:0000115 "Associates a package with a capability it requires, such as a shared library (libssl.so.3), virtual package name, or other functionality. Critical for shared library dependency resolution - enables 'what requires this .so' queries and CVE blast radius analysis."@en ;
     rdfs:comment "Links a package to a capability it requires"@en ;
     rdfs:domain :Package ;
@@ -1353,6 +1355,7 @@ xsd:date a rdfs:Datatype .
 
 :Capability a owl:Class ;
     rdfs:label "Capability"@en ;
+    skos:scopeNote "RPM ingestion uses d/capability/rpm/{encoded-token} for the exact XML-decoded token in the RPM naming system. Equality of this nominal reference does not establish ABI compatibility, equal versions, installability or a selected provider. This scoped ingestion convention does not redefine capabilities in other ecosystems."@en ;
     IAO:0000115 "A functional capability provided by or required by a package, such as a shared library (e.g., libssl.so.3), virtual package name, or other abstract functionality. Critical for shared library dependency resolution - enables blast radius analysis via .so linking."@en ;
     rdfs:comment "A capability provided or required by packages (shared library, virtual package, etc.)"@en ;
     rdfs:isDefinedBy : ;

@@ -1,0 +1,24 @@
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <https://example.org/rpm/> .
+
+# Structural fixture: occurrence hashes are exercised separately by URI vectors
+# and by the platform's mandatory source-to-RDF audit, not fabricated here.
+ex:package a pkg:BinaryPackage ;
+    pkg:packageName "example" ; rdfs:label "example" ;
+    pkg:hasVersion ex:version ;
+    rpm:hasDeclaration
+      <https://packagegraph.github.io/d/rpm-declaration/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa> ;
+    pkg:requiresCapability <https://packagegraph.github.io/d/capability/rpm/foo> .
+ex:version a pkg:Version ; pkg:versionString "1" ; rdfs:label "1" .
+<https://packagegraph.github.io/d/capability/rpm/foo> a pkg:Capability ;
+    pkg:capabilityName "foo" ; rdfs:label "foo" .
+ex:primary a pkg:DataSnapshot ; rdfs:label "Immutable primary.xml fixture" .
+<https://packagegraph.github.io/d/rpm-declaration/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>
+    a rpm:DependencyDeclaration ; rdfs:label "Requires foo" ;
+    rpm:declaringPackage ex:package ; rpm:declarationKind rpm:Requires ;
+    rpm:declaredToken "foo" ;
+    rpm:declaredCapability <https://packagegraph.github.io/d/capability/rpm/foo> ;
+    prov:wasDerivedFrom ex:primary .

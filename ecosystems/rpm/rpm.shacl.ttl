@@ -1,6 +1,152 @@
 @prefix rpm: <https://purl.org/packagegraph/ontology/rpm#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix pkg: <https://purl.org/packagegraph/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Validate asserted data without inference first. RDFS can restore missing types
+# or inverse links and is a separate semantic check, not source-fidelity proof.
+rpm:DependencyDeclarationShape a sh:NodeShape ;
+    sh:targetClass rpm:DependencyDeclaration ;
+    sh:targetObjectsOf rpm:hasDeclaration ;
+    sh:targetSubjectsOf rpm:declaringPackage, rpm:declaredToken, rpm:declarationKind ;
+    sh:nodeKind sh:IRI ;
+    sh:pattern "^https://(packagegraph[.]github[.]io/d|purl[.]org/packagegraph/d)/rpm-declaration/[0-9a-f]{64}$" ;
+    sh:property [
+        sh:path rdf:type ; sh:hasValue rpm:DependencyDeclaration ;
+        sh:message "A declaration must be explicitly typed."@en
+    ], [
+        sh:path rpm:declaringPackage ; sh:nodeKind sh:IRI ;
+        sh:class pkg:Package ; sh:minCount 1 ; sh:maxCount 1
+    ], [
+        sh:path rpm:declarationKind ; sh:minCount 1 ; sh:maxCount 1 ;
+        sh:in ( rpm:Provides rpm:Requires rpm:Conflicts rpm:Obsoletes )
+    ], [
+        sh:path rpm:declaredToken ; sh:datatype xsd:string ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:minLength 1
+    ], [
+        sh:path rpm:declaredCapability ; sh:nodeKind sh:IRI ;
+        sh:class pkg:Capability ; sh:maxCount 1
+    ], [
+        sh:path rpm:declarationFlags ; sh:datatype xsd:string ; sh:maxCount 1 ;
+        sh:in ( "EQ" "GE" "GT" "LE" "LT" )
+    ], [
+        sh:path rpm:declarationEpoch ; sh:datatype xsd:string ; sh:maxCount 1
+    ], [
+        sh:path rpm:declarationVersion ; sh:datatype xsd:string ; sh:maxCount 1
+    ], [
+        sh:path rpm:declarationRelease ; sh:datatype xsd:string ; sh:maxCount 1
+    ], [
+        sh:path rpm:declarationPre ; sh:datatype xsd:string ; sh:maxCount 1
+    ], [
+        sh:path rdfs:label ; sh:minCount 1
+    ], [
+        sh:path prov:wasDerivedFrom ; sh:nodeKind sh:IRI ;
+        sh:class pkg:DataSnapshot ; sh:minCount 1 ; sh:maxCount 1
+    ] ;
+    # All four absent, or flags and version both present. Optional empty strings
+    # are preserved; this is not native RPM syntax or satisfiability validation.
+    sh:xone (
+        [ sh:property [ sh:path rpm:declarationFlags ; sh:maxCount 0 ],
+                      [ sh:path rpm:declarationVersion ; sh:maxCount 0 ],
+                      [ sh:path rpm:declarationEpoch ; sh:maxCount 0 ],
+                      [ sh:path rpm:declarationRelease ; sh:maxCount 0 ] ]
+        [ sh:property [ sh:path rpm:declarationFlags ; sh:minCount 1 ],
+                      [ sh:path rpm:declarationVersion ; sh:minCount 1 ] ]
+    ) ;
+    sh:not [ sh:or (
+        [ sh:class pkg:Dependency ] [ sh:class rpm:Dependency ]
+        [ sh:class pkg:PackageEntity ] [ sh:class pkg:Capability ]
+    ) ] ;
+    sh:sparql [
+        sh:message "Simple Provides/Requires/Conflicts require a capability; Obsoletes and opaque expressions prohibit it."@en ;
+        sh:select """
+            PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+            SELECT $this WHERE {
+                $this rpm:declarationKind ?kind ; rpm:declaredToken ?token .
+                BIND(?kind = rpm:Obsoletes || STRSTARTS(STR(?token), "(") AS ?opaque)
+                FILTER((?opaque && EXISTS { $this rpm:declaredCapability ?c }) ||
+                       (!?opaque && NOT EXISTS { $this rpm:declaredCapability ?c }))
+            }
+        """
+    ], [
+        sh:message "Capability name and canonical RPM-scoped URI must match the decoded declaration token."@en ;
+        sh:select """
+            PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+            PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+            SELECT $this WHERE {
+                $this rpm:declaredToken ?token ; rpm:declaredCapability ?cap .
+                FILTER(NOT EXISTS { ?cap pkg:capabilityName ?token } ||
+                    (STR(?cap) != CONCAT("https://packagegraph.github.io/d/capability/rpm/", ENCODE_FOR_URI(STR(?token))) &&
+                     STR(?cap) != CONCAT("https://purl.org/packagegraph/d/capability/rpm/", ENCODE_FOR_URI(STR(?token)))))
+            }
+        """
+    ], [
+        sh:message "Both package/declaration directions must be explicitly serialized and agree."@en ;
+        sh:select """
+            PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+            SELECT $this WHERE {
+                { $this rpm:declaringPackage ?package .
+                  FILTER NOT EXISTS { ?package rpm:hasDeclaration $this } }
+                UNION
+                { ?package rpm:hasDeclaration $this .
+                  FILTER NOT EXISTS { $this rpm:declaringPackage ?package } }
+            }
+        """
+    ], [
+        sh:message "A simple Provides/Requires declaration requires its corresponding token-level shortcut."@en ;
+        sh:select """
+            PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+            PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+            SELECT $this WHERE {
+                $this rpm:declaringPackage ?package ; rpm:declarationKind ?kind ;
+                      rpm:declaredCapability ?cap .
+                FILTER((?kind = rpm:Provides && NOT EXISTS { ?package pkg:providesCapability ?cap }) ||
+                       (?kind = rpm:Requires && NOT EXISTS { ?package pkg:requiresCapability ?cap }))
+            }
+        """
+    ] .
+
+rpm:DeclaredCapabilityShape a sh:NodeShape ;
+    sh:targetObjectsOf rpm:declaredCapability ;
+    sh:nodeKind sh:IRI ;
+    sh:property [ sh:path rdf:type ; sh:hasValue pkg:Capability ],
+                [ sh:path pkg:capabilityName ; sh:datatype xsd:string ;
+                  sh:minCount 1 ; sh:maxCount 1 ; sh:minLength 1 ],
+                [ sh:path rdfs:label ; sh:minCount 1 ] .
+
+rpm:DeclaringPackageShape a sh:NodeShape ;
+    sh:targetSubjectsOf rpm:hasDeclaration ;
+    sh:targetObjectsOf rpm:declaringPackage ;
+    sh:nodeKind sh:IRI ;
+    sh:class pkg:Package ;
+    sh:property [ sh:path pkg:directlyDependsOn ; sh:maxCount 0 ],
+                [ sh:path pkg:directlyProvides ; sh:maxCount 0 ],
+                [ sh:path pkg:hasDependency ; sh:maxCount 0 ],
+                [ sh:path rpm:rpmProvides ; sh:maxCount 0 ],
+                [ sh:path rpm:rpmRequires ; sh:maxCount 0 ],
+                [ sh:path rpm:rpmConflicts ; sh:maxCount 0 ],
+                [ sh:path rpm:rpmObsoletes ; sh:maxCount 0 ] ;
+    sh:sparql [
+        sh:message "Every shortcut on a profiled package needs an appropriate simple declaration; Conflicts/Obsoletes alone cannot support it."@en ;
+        sh:select """
+            PREFIX rpm: <https://purl.org/packagegraph/ontology/rpm#>
+            PREFIX pkg: <https://purl.org/packagegraph/ontology/core#>
+            SELECT $this WHERE {
+                { $this pkg:providesCapability ?cap . BIND(rpm:Provides AS ?kind) }
+                UNION
+                { $this pkg:requiresCapability ?cap . BIND(rpm:Requires AS ?kind) }
+                FILTER NOT EXISTS {
+                    $this rpm:hasDeclaration ?declaration .
+                    ?declaration rpm:declarationKind ?kind ; rpm:declaredCapability ?cap ;
+                                 rpm:declaredToken ?token .
+                    FILTER(!STRSTARTS(STR(?token), "("))
+                }
+            }
+        """
+    ] .
 
 rpm:PatchShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
@@ -9,4 +155,3 @@ rpm:PatchShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path rpm:patchName ] ;
     sh:targetClass rpm:Patch .
-
