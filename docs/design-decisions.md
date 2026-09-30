@@ -223,7 +223,15 @@ general dependency-satisfaction procedure.
 
 **Why the split:**
 
-`VirtualPackage` is modeled as `rdfs:subClassOf :Capability`, not `rdfs:subClassOf :Package`. The ontological rationale (OntoClean): virtual packages are abstract capability promises without installable artifacts (no size, no checksum, no files). Real packages (`pkg:Package`) are concrete installable units.
+`VirtualPackage` is modeled as `rdfs:subClassOf :Capability`, not
+`rdfs:subClassOf :Package`: the virtual name denotes a capability rather than
+the distribution artifact that may supply it. This is the project's modeling
+choice, informed by the identity analysis advocated by
+[Guarino and Welty's OntoClean methodology](https://doi.org/10.1145/503124.503150),
+not a demonstrated full OntoClean evaluation. The current `pkg:Package`
+definition also admits metadata-only references; not every instance is a
+known installable artifact. Lack of a recorded size or checksum does not decide
+class membership.
 
 Do not put a VirtualPackage at the end of `provides`: its range would infer
 Package membership for an entity already classified as a Capability. Keep the

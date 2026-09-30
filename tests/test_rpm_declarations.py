@@ -107,6 +107,21 @@ class DeclarationTests(unittest.TestCase):
                 graph.remove((DECL, predicate, None))
                 self.check(graph, False)
 
+    def test_orphaned_optional_fields_cannot_hide_beside_a_valid_declaration(self):
+        orphan = URIRef(DATA + "rpm-declaration/" + "c" * 64)
+        for predicate, value in (
+            (RPM.declarationFlags, Literal("GTE")),
+            (RPM.declarationEpoch, Literal(1)),
+            (RPM.declarationVersion, Literal(1)),
+            (RPM.declarationRelease, Literal(1)),
+            (RPM.declarationPre, Literal(1)),
+            (RPM.declaredCapability, CAP),
+        ):
+            with self.subTest(predicate=predicate):
+                graph = fixture()  # Nonzero valid focus count cannot conceal the orphan.
+                graph.add((orphan, predicate, value))
+                self.check(graph, False, orphan)
+
     def test_declaration_cannot_be_package_or_dependency(self):
         for kind in (PKG.Dependency, RPM.Dependency, PKG.Package, PKG.PackageIdentity, PKG.Capability):
             with self.subTest(kind=kind):

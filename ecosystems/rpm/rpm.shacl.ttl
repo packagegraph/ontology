@@ -11,7 +11,9 @@
 rpm:DependencyDeclarationShape a sh:NodeShape ;
     sh:targetClass rpm:DependencyDeclaration ;
     sh:targetObjectsOf rpm:hasDeclaration ;
-    sh:targetSubjectsOf rpm:declaringPackage, rpm:declaredToken, rpm:declarationKind ;
+    sh:targetSubjectsOf rpm:declaringPackage, rpm:declaredToken, rpm:declarationKind,
+        rpm:declaredCapability, rpm:declarationFlags, rpm:declarationEpoch,
+        rpm:declarationVersion, rpm:declarationRelease, rpm:declarationPre ;
     sh:nodeKind sh:IRI ;
     sh:pattern "^https://(packagegraph[.]github[.]io/d|purl[.]org/packagegraph/d)/rpm-declaration/[0-9a-f]{64}$" ;
     sh:property [
